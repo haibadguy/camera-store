@@ -30,12 +30,12 @@ services:
       DATABASE_URL: jdbc:postgresql://postgres:5432/camera_store
       DATABASE_USERNAME: camera
       DATABASE_PASSWORD: camera123
-      PORT: 3000
+      PORT: 8080
     depends_on:
       - postgres
       - redis
     ports:
-      - "3000:3000"
+      - "8080:8080"
 
   frontend:
     build:

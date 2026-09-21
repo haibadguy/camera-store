@@ -1,72 +1,81 @@
-﻿# Development Checklist
+# Development Checklist
 
-## Phase 0: Contract vĂ  scope lock
-- [ ] Specification, architecture, JPA entities vĂ  Flyway migrations thá»‘ng nháº¥t
-- [ ] Wishlist items, inventory, camera specifications vĂ  behavior events Ä‘Ă£ chá»‘t
-- [ ] Seed scenarios: guest, cold-start customer, active customer, admin
-- [ ] Gate: migration cháº¡y tá»« database sáº¡ch vĂ  schema review Ä‘áº¡t
+> **Trọng tâm đề tài:** **AI Recommendation System** (Tư vấn cá nhân hóa máy ảnh & thiết bị nhiếp ảnh).  
+> **Phân nhóm:** Nhóm A (Nền tảng tối thiểu) -> Nhóm B (Trọng tâm AI Core) -> Nhóm C (Phần mở rộng Optional).
 
-## Phase 1: Foundation vĂ  design system
-- [ ] PostgreSQL cháº¡y báº±ng Docker Compose; Redis chÆ°a lĂ  dependency báº¯t buá»™c
-- [ ] Config validation, global error format, Swagger vĂ  validation pipe
-- [ ] Frontend routing, layout storefront/admin vĂ  shared UI states
-- [ ] Seed catalog Ä‘á»§ cho browse vĂ  recommendation
-- [ ] Gate: backend/frontend build pass, reset + seed pass
+---
 
-## Phase 2: Catalog vertical slice
-- [ ] Product/category/brand/variant/image queries vĂ  CRUD
-- [ ] Home, catalog, search, filter, sort, pagination
-- [ ] Product detail, variant selection, stock display, review summary
-- [ ] Camera specifications Ä‘Æ°á»£c lÆ°u vĂ  tráº£ qua API
-- [ ] Gate: guest hoĂ n thĂ nh browse â†’ search/filter â†’ detail
+## 📦 NHÓM A: NỀN TẢNG TỐI THIỂU (Phục vụ thu thập dữ liệu & demo AI)
 
-## Phase 3: Identity vĂ  customer account
-- [ ] Register, login, JWT, profile, update profile
-- [ ] Password hashing, DTO validation, role guard
-- [ ] Address CRUD vĂ  protected routes
-- [ ] Auth loading/error/unauthorized states
-- [ ] Gate: customer login Ä‘Æ°á»£c; admin API bá»‹ cháº·n Ä‘Ăºng role
+### Phase 0: Contract & Baseline Lock (DONE)
+- [x] Kiến trúc Spring Boot Modular Monolith, PostgreSQL, Docker Compose thống nhất
+- [x] JPA entities, Flyway migrations nền tảng đã thiết lập
+- [x] Tài liệu kiến trúc và quy chuẩn code đã khóa
+- [x] **Gate:** Docker Compose khởi chạy PostgreSQL/Redis thành công, build baseline pass.
 
-## Phase 4: Customer flow vĂ  behavior
-- [ ] Cart add/update/remove/clear
-- [ ] Wishlist add/remove/list
-- [ ] Review create/list vĂ  duplicate-purchase rule
-- [ ] Track VIEW, ADD_TO_CART, WISHLIST
-- [ ] Related products vĂ  recently viewed fallback
-- [ ] Gate: customer browse â†’ save/cart â†’ review; events cĂ³ trong database
+### Phase 1: Foundation, Global Error & Design System (ACTIVE)
+- [ ] PostgreSQL & Redis chạy bằng Docker Compose
+- [ ] Cấu hình `ApiResponse<T>`, `GlobalExceptionHandler` bắt lỗi toàn cục
+- [ ] Cấu hình Spring Security baseline (CORS Vite, permit Swagger & public endpoints)
+- [ ] Frontend setup: `apiClient.ts` (Axios), TypeScript types khớp Backend DTO
+- [ ] Router frontend (`/`, `/catalog`, `/product/:id`, `/recommendations`), layout shell
+- [ ] **Gate:** Backend/Frontend build pass, Swagger UI mở được tại `http://localhost:8080/swagger-ui.html`.
 
-## Phase 5: Checkout vĂ  order operations
-- [ ] Checkout DTO vĂ  stock validation
-- [ ] JPA transaction: order, items, inventory, clear cart
-- [ ] Fake payment, shipment status vĂ  order status
-- [ ] Customer order history/detail
-- [ ] Admin update order status
-- [ ] Track PURCHASE sau order há»£p lá»‡
-- [ ] Gate: khĂ´ng oversell, khĂ´ng partial order, checkout láº·p láº¡i Ä‘Æ°á»£c
+### Phase 2: Catalog & Camera Specifications
+- [ ] Bảng `categories`, `brands`, `products`, `camera_specifications` qua Flyway
+- [ ] API duyệt sản phẩm (lọc brand, category, khoảng giá, phân trang)
+- [ ] API chi tiết sản phẩm kèm đầy đủ thông số kỹ thuật (Camera Specs)
+- [ ] Frontend trang Catalog & trang Chi tiết máy ảnh (hiển thị bảng thông số)
+- [ ] **Gate:** Khách hàng duyệt sản phẩm -> lọc/tìm kiếm -> xem chi tiết máy ảnh kèm thông số specs hoàn chỉnh.
 
-## Phase 6: Recommendation engine
-- [ ] Product feature dataset vĂ  behavior dataset
-- [ ] Content-based vectorization vĂ  cosine similarity
-- [ ] Python train/predict, artifact vĂ  model version
-- [ ] Similar, personalized vĂ  cold-start APIs
-- [ ] Score, reason, fallback vĂ  inactive/out-of-stock filtering
-- [ ] Offline Precision@K, Recall@K, Hit Rate@K, coverage
-- [ ] Gate: Ă­t nháº¥t ba user scenarios tráº£ káº¿t quáº£ khĂ¡c nhau vĂ  cĂ³ test relevance
+### Phase 3: Identity & Customer Account Cơ Bản
+- [ ] Bảng `users`, `roles` qua Flyway
+- [ ] Đăng ký, đăng nhập, JWT authentication, mật khẩu băm BCrypt
+- [ ] Frontend Modal / Form Đăng nhập, lưu JWT vào Auth State
+- [ ] **Gate:** Đăng nhập thành công, nhận JWT token để định danh người dùng phục vụ cá nhân hóa.
 
-## Phase 7: Admin, metrics vĂ  support
-- [ ] Admin product/category/brand/variant/inventory/user management
-- [ ] Coupon cÆ¡ báº£n
-- [ ] Notification database vĂ  system log cho action quan trá»ng
-- [ ] Recommendation dashboard vĂ  CTR tracking
-- [ ] Redis chá»‰ thĂªm sau khi cĂ³ cache policy cá»¥ thá»ƒ
-- [ ] Gate: admin váº­n hĂ nh Ä‘Æ°á»£c vĂ  xem Ä‘Æ°á»£c recommendation metrics
+### Phase 4: Behavior Tracking (Thu thập dữ liệu hành vi)
+- [ ] Bảng `user_behaviors` ghi nhận sự kiện: `VIEW`, `ADD_TO_CART`
+- [ ] API nhận sự kiện tracking từ frontend
+- [ ] Frontend tự động gửi tracking event khi xem máy ảnh hoặc thêm vào giỏ
+- [ ] Giỏ hàng tối giản (lưu local/session)
+- [ ] **Gate:** Sự kiện `VIEW` và `ADD_TO_CART` được lưu đúng vào PostgreSQL với `user_id` hoặc `session_id`.
 
-## Phase 8: Release
-- [ ] Responsive, loading, empty, error vĂ  out-of-stock states
-- [ ] Security review: auth, authorization, price, stock, secrets, CORS
-- [ ] Backend/frontend/Docker build pass
-- [ ] Swagger/OpenAPI cáº­p nháº­t
-- [ ] Regression smoke flows pass tá»« database sáº¡ch
-- [ ] Demo script, report, slides vĂ  deployment notes
-- [ ] Gate: demo láº·p láº¡i Ä‘Æ°á»£c vĂ  cĂ³ evidence cho recommendation
+---
 
+## 🔥 NHÓM B: TRỌNG TÂM ĐỒ ÁN (AI RECOMMENDATION CORE - DỒN 60-70% THỜI LƯỢNG)
+
+### Phase 5: Recommendation Engine Core (Constraint + Explainable + Content-Based)
+- [ ] Dataset `cameras_seed.csv` chuẩn hóa thông số specs (cảm biến, ngàm lens, megapixel, giá, nhu cầu)
+- [ ] **5a. Content-Based Model:** Python script tiền xử lý, TF-IDF vectorizer trên specs, tính ma trận Cosine Similarity
+- [ ] **5b. Constraint Filtering (Bắt buộc):** Lọc theo ngân sách (budget), lọc theo tương thích ngàm lens (lens mount), lọc theo tình trạng tồn kho, lọc theo mục đích chụp (chân dung, du lịch, vlog, thể thao)
+- [ ] **5c. Explainable Recommendations (Bắt buộc):** Tự động sinh lý do gợi ý ("Phù hợp chụp chân dung nhờ cảm biến Full-frame 33MP", "Tương thích ngàm Canon RF", "Nằm trong ngân sách 50 triệu")
+- [ ] Xuất artifact mô hình (`similarity_matrix.json`) sang `ai/recommendation/models/`
+- [ ] Backend `RecommendationService` đọc artifact offline, nạp cache Redis và cung cấp API tư vấn
+- [ ] Frontend tích hợp giao diện Trợ Lý Tư Vấn AI (Wizard chọn nhu cầu/ngân sách -> hiển thị kết quả kèm lý do)
+- [ ] **Gate:** API tư vấn trả về danh sách gợi ý tuân thủ đúng ràng buộc (ngân sách, ngàm) và có lý do giải thích minh bạch.
+
+### Phase 6: Hybrid & Behavior Integration
+- [ ] Kết hợp dữ liệu lịch sử `user_behaviors` (`VIEW`, `ADD_TO_CART`) vào thuật toán gợi ý
+- [ ] Nâng điểm trọng số cho các sản phẩm/hãng mà người dùng quan tâm gần đây
+- [ ] Xử lý Cold-Start Fallback: Gợi ý máy ảnh nổi bật / bán chạy cho người dùng mới
+- [ ] **Gate:** Khách hàng đã xem máy ảnh Sony sẽ nhận được danh sách gợi ý ưu tiên dòng máy Sony & Lens ngàm E tương thích.
+
+### Phase 7: Đánh Giá Offline & Recommendation Dashboard
+- [ ] Python script đánh giá mô hình offline: Precision@K, Recall@K, Hit Rate@K, Coverage
+- [ ] Lưu log sự kiện nhấp vào gợi ý để tính toán CTR (Click-Through-Rate)
+- [ ] Dashboard quản trị đơn giản hiển thị số liệu đo lường hiệu quả mô hình AI
+- [ ] **Gate:** Có bảng số liệu đánh giá offline (Precision@K...) và báo cáo CTR sẵn sàng đưa vào báo cáo đồ án.
+
+### Phase 8: Polish, Demo & Báo Cáo Đồ Án
+- [ ] Kiểm thử luồng tư vấn gợi ý hoàn chỉnh từ database sạch
+- [ ] Chuẩn bị kịch bản demo (3 kịch bản: khách mới, khách chụp chân dung, khách quay vlog)
+- [ ] Hoàn thiện Slide thuyết minh và Báo cáo đồ án (Word/PDF)
+- [ ] **Gate:** Demo kịch bản gợi ý mượt mà trước hội đồng, bảo vệ đồ án thành công.
+
+---
+
+## 🎁 PHẦN MỞ RỘNG (OPTIONAL / NICE-TO-HAVE - CHỈ LÀM NẾU DƯ THỜI GIAN)
+- [ ] Checkout, Order Transactional, trừ kho tự động
+- [ ] Lịch sử đơn hàng cá nhân
+- [ ] Admin CRUD nâng cao (quản lý sản phẩm, coupon)

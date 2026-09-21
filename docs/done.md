@@ -1,41 +1,33 @@
-﻿# Definition of Done
+# Definition of Done (Tiêu Chuẩn Nghiệm Thu)
 
-## Má»i task
-- [ ] MĂ£ náº±m Ä‘Ăºng module vĂ  khĂ´ng má»Ÿ rá»™ng file scope ngoĂ i yĂªu cáº§u.
-- [ ] Input validation vĂ  error handling phĂ¹ há»£p.
-- [ ] KhĂ´ng phĂ¡ vá»¡ authorization, data ownership hoáº·c public API hiá»‡n cĂ³.
-- [ ] Backend build pass náº¿u Ä‘á»¥ng backend.
-- [ ] Frontend build pass náº¿u Ä‘á»¥ng UI.
-- [ ] Test hoáº·c smoke check phĂ¹ há»£p Ä‘Ă£ cháº¡y.
-- [ ] Documentation/checklist Ä‘Æ°á»£c cáº­p nháº­t náº¿u contract hoáº·c phase thay Ä‘á»•i.
+## Mọi task
+- [ ] Mã nguồn nằm đúng thư mục/module và không làm phát sinh file thừa ngoài phạm vi yêu cầu.
+- [ ] Dữ liệu đầu vào được kiểm tra hợp lệ (validation) và xử lý ngoại lệ tập trung.
+- [ ] Không phá vỡ phân quyền bảo mật, quyền sở hữu dữ liệu hoặc API hiện có.
+- [ ] Backend build thành công (`mvn clean package`) nếu có thay đổi backend.
+- [ ] Frontend build thành công (`npm run build`) nếu có thay đổi giao diện.
+- [ ] Kiểm tra thực tế (smoke test) chạy ổn định, không có lỗi runtime.
+- [ ] Tài liệu/checklist được cập nhật tương ứng nếu có thay đổi hợp đồng API hoặc tiến độ.
 
-## API task
-- [ ] DTO vĂ  validation cĂ³ sáºµn.
-- [ ] Swagger/OpenAPI pháº£n Ă¡nh request, response vĂ  error chĂ­nh.
-- [ ] CĂ³ test cho success, invalid input, unauthorized vĂ  not-found náº¿u phĂ¹ há»£p.
-- [ ] Controller khĂ´ng chá»©a business logic hoáº·c truy cáº­p repository trá»±c tiáº¿p.
+## API task (Backend)
+- [ ] DTO và Jakarta Bean Validation đầy đủ.
+- [ ] Response được bọc đúng chuẩn `ApiResponse<T>`.
+- [ ] Swagger/OpenAPI phản ánh chính xác request, response và mã lỗi.
+- [ ] Controller mỏng, không chứa business logic hay gọi trực tiếp Repository (phải qua Service).
 
 ## Database task
-- [ ] Schema relation, index, uniqueness vĂ  delete behavior Ä‘Ă£ review.
-- [ ] Migration cháº¡y Ä‘Æ°á»£c tá»« database sáº¡ch.
-- [ ] Seed cháº¡y Ä‘Æ°á»£c vĂ  khĂ´ng táº¡o dá»¯ liá»‡u mĂ¢u thuáº«n.
-- [ ] Ghi nhiá»u báº£ng dĂ¹ng transaction khi cáº§n.
+- [ ] Quan hệ schema, chỉ mục (index), tính duy nhất (uniqueness) và ràng buộc khóa ngoại đã được kiểm tra kỹ.
+- [ ] Script migration Flyway chạy thành công trên cơ sở dữ liệu sạch (`mvn flyway:info`).
+- [ ] Dữ liệu seed chạy tốt và không sinh dữ liệu mâu thuẫn.
+- [ ] Thao tác ghi nhiều bảng sử dụng `@Transactional`.
 
-## Commerce task
-- [ ] GiĂ¡ Ä‘Æ°á»£c tĂ­nh tá»« server.
-- [ ] Stock Ä‘Æ°á»£c kiá»ƒm tra vĂ  khĂ´ng thá»ƒ Ă¢m.
-- [ ] Checkout khĂ´ng táº¡o partial order.
-- [ ] Customer chá»‰ xem Ä‘Æ°á»£c dá»¯ liá»‡u cá»§a mĂ¬nh; admin guard hoáº¡t Ä‘á»™ng.
+## Recommendation task (AI)
+- [ ] Thuộc tính máy ảnh (Camera specs) và sự kiện hành vi có nguồn dữ liệu chuẩn hóa, khớp với Database.
+- [ ] Có thuật toán lọc ràng buộc (Constraint filtering) loại bỏ sản phẩm hết hàng hoặc vượt ngân sách.
+- [ ] Có giải thích lý do gợi ý tự động (Explainable reasons).
+- [ ] Có cơ chế Fallback xử lý trường hợp người dùng mới (Cold-start).
+- [ ] Có chỉ số đánh giá offline (Precision@K, Recall@K, Coverage) trước khi xuất bản model artifact mới.
 
-## Recommendation task
-- [ ] Product features vĂ  behavior events cĂ³ nguá»“n dá»¯ liá»‡u rĂµ rĂ ng.
-- [ ] CĂ³ cold-start fallback.
-- [ ] KhĂ´ng tráº£ product inactive hoáº·c out-of-stock.
-- [ ] CĂ³ score/reason/model version hoáº·c metadata phĂ¹ há»£p.
-- [ ] CĂ³ test relevance vĂ  metric offline khi thay Ä‘á»•i model/pipeline.
-
-## Phase completion
-- [ ] Exit gate tÆ°Æ¡ng á»©ng trong `docs/checklist.md` Ä‘Ă£ Ä‘áº¡t.
-- [ ] CĂ³ evidence: command output, smoke flow hoáº·c metric report.
-- [ ] `docs/architecture.md`, `docs/decisions.md` vĂ  `docs/lessons.md` Ä‘Æ°á»£c cáº­p nháº­t náº¿u cáº§n.
-
+## Phase completion (Nghiệm thu phase)
+- [ ] Đạt toàn bộ tiêu chí Exit Gate tương ứng trong `docs/checklist.md`.
+- [ ] Có bằng chứng rõ ràng (lệnh build pass, API trả về đúng kết quả, luồng UI hoạt động mượt mà).

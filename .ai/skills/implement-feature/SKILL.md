@@ -1,72 +1,75 @@
-﻿# Skill: Implement Feature
+# Skill: Implement Feature
 
-## When to use
-- ThĂªm má»™t endpoint má»›i.
-- Táº¡o má»™t module má»›i.
-- Má»Ÿ rá»™ng má»™t tĂ­nh nÄƒng hiá»‡n cĂ³.
+## Khi nào sử dụng
+- Thêm một REST endpoint mới.
+- Tạo một module nghiệp vụ mới trong Spring Boot.
+- Mở rộng một tính năng hiện có.
 
-## Inputs
-- Feature requirement (mĂ´ táº£ ngáº¯n).
-- Module thuá»™c vá» (xem `docs/architecture.md`).
+## Đầu vào cần có
+- Yêu cầu tính năng (mô tả ngắn).
+- Module trực thuộc (tra cứu `docs/architecture.md`).
 
-## Steps (cĂ³ Ä‘iá»u kiá»‡n)
+## Các bước thực hiện (Theo chuẩn Vertical Slice)
 
-### 1. XĂ¡c Ä‘á»‹nh module
-- Náº¿u module chÆ°a cĂ³, táº¡o thÆ° má»¥c theo cáº¥u trĂºc:
-  ```text
-  backend/src/main/java/com/camerastore/modules/<module-name>/
-  â”œâ”€â”€ <Name>.java
-  â”œâ”€â”€ <Name>Controller.java
-  â”œâ”€â”€ <Name>Service.java
-  â””â”€â”€ <Name>Repository.java
-  ```
+### 1. Xác định module nghiệp vụ
+Tạo hoặc định vị thư mục module theo cấu trúc chuẩn:
+```text
+backend/src/main/java/com/camerastore/modules/<module-name>/
+├── <Name>.java                (JPA Entity)
+├── <Name>Controller.java      (REST Controller)
+├── <Name>Service.java         (Business Service)
+├── <Name>Repository.java      (Spring Data JPA Repository)
+└── dto/                       (Request/Response DTOs)
+```
 
-### 2. Náº¿u cáº§n thay Ä‘á»•i schema
-- Cáº­p nháº­t `backend/src/main/resources/db/migration/V<version>__<description>.sql`.
-- Cháº¡y `mvn -q clean test` Ä‘á»ƒ kiá»ƒm tra Flyway migration.
+### 2. Thay đổi cấu trúc Database (nếu có)
+- Tạo file migration mới: `backend/src/main/resources/db/migration/V<version>__<description>.sql`.
+- Chạy `cd backend && mvn test-compile` để kiểm tra cú pháp migration.
 
-### 3. Táº¡o DTO (dĂ¹ng Jakarta Bean Validation)
+### 3. Tạo DTO (sử dụng Jakarta Bean Validation)
 ```java
 public record CreateProductRequest(
-    @NotBlank String name,
-    @NotNull @PositiveOrZero BigDecimal price
+    @NotBlank(message = "Tên sản phẩm không được để trống") 
+    String name,
+    
+    @NotNull(message = "Giá sản phẩm là bắt buộc") 
+    @PositiveOrZero(message = "Giá không được âm") 
+    BigDecimal price
 ) {}
 ```
 
-### 4. Viáº¿t Service
+### 4. Viết Service
 ```java
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-    private final ProductRepository products;
+    private final ProductRepository productRepository;
 
-    public List<Product> findAll() { return products.findAll(); }
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
+    }
 }
 ```
 
-### 5. Viáº¿t Controller
+### 5. Viết Controller (Luôn bọc trong ApiResponse<T>)
 ```java
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/v1/products")
+@RequiredArgsConstructor
+@Tag(name = "Product Catalog", description = "APIs quản lý danh mục máy ảnh")
 public class ProductController {
-    private final ProductService service;
+    private final ProductService productService;
 
     @GetMapping
-    public List<Product> findAll() { return service.findAll(); }
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
+        List<ProductResponse> data = productService.getAllProducts();
+        return ResponseEntity.ok(ApiResponse.<List<ProductResponse>>builder()
+                .code(200)
+                .message("Success")
+                .result(data)
+                .build());
+    }
 }
 ```
-
-### 6. ÄÄƒng kĂ½ Module
-- Đăng ký component bằng package scanning hoặc `@Bean` trong Spring Boot.
-
-### 7. Kiá»ƒm tra
-- Cháº¡y `mvn spring-boot:run` vĂ  kiá»ƒm tra API.
-
-### 8. Cáº­p nháº­t tĂ i liá»‡u
-- Tick checklist trong `docs/checklist.md`.
-- Náº¿u cĂ³ lá»—i báº¥t thÆ°á»ng, ghi vĂ o `docs/lessons.md`.
-
-## Output
-- Code (service, controller, dto, module).
-- Migration (náº¿u cĂ³).
-- Checklist Ä‘Æ°á»£c tick.
-

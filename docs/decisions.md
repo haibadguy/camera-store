@@ -1,4 +1,4 @@
-﻿# Architecture Decisions
+# Architecture Decisions
 
 ## Decision 001: Use a modular monolith
 **Status:** Accepted
@@ -41,4 +41,13 @@
 - Spring Boot owns recommendation endpoints, authorization, filtering and presentation metadata.
 - Every published artifact must have a model version and training timestamp.
 - Realtime or hybrid algorithms are future extensions, not Phase 1 dependencies.
+
+## Decision 005: Redis as cache layer for AI recommendations
+**Status:** Accepted
+
+**Reason:**
+- The cosine similarity matrix and personalized recommendation responses are compute-heavy and should not query PostgreSQL repeatedly.
+- Redis provides ultra-fast lookup (TTL: 1 hour) for `recommendations:similar:{productId}` and `recommendations:personalized:{userId}`.
+- If Redis is down, Spring Boot falls back gracefully to in-memory cache or direct DB queries without breaking the user experience.
+
 

@@ -1,37 +1,29 @@
-﻿# Skill: Review Code / Fix Bug
+# Skill: Review Code / Fix Bug
 
-## When to use
-- Review má»™t pull request hoáº·c Ä‘oáº¡n code.
-- Fix má»™t bug Ä‘Æ°á»£c bĂ¡o cĂ¡o.
+## Khi nào sử dụng
+- Đánh giá (review) một pull request hoặc đoạn mã nguồn mới.
+- Khắc phục (fix) lỗi hoặc sự cố phát sinh trong hệ thống.
 
-## Steps
+## Các bước thực hiện
 
-### 1. Äá»c ngá»¯ cáº£nh
-- Äá»c `docs/coding-style.md` vĂ  `docs/architecture.md`.
-- Náº¿u lĂ  bug: Ä‘á»c description vĂ  tĂ¬m hiá»ƒu cĂ¡ch tĂ¡i hiá»‡n.
+### 1. Đọc bối cảnh
+- Đọc kỹ `docs/coding-style.md` và `docs/architecture.md`.
+- Nếu là bug: đọc mô tả lỗi, xác định thông báo exception và cách tái hiện.
 
-### 2. Náº¿u review code
-- Kiá»ƒm tra cĂ¡c váº¥n Ä‘á»:
-  - [ ] CĂ³ tuĂ¢n theo `docs/coding-style.md` khĂ´ng?
-  - [ ] CĂ³ vi pháº¡m anti-pattern nĂ o khĂ´ng?
-  - [ ] CĂ³ truy cáº­p JPA/Hibernate + Flyway trá»±c tiáº¿p tá»« controller khĂ´ng?
-  - [ ] CĂ³ throw domain-specific exception khĂ´ng?
-  - [ ] CĂ³ validation Ä‘áº§u vĂ o Ä‘áº§y Ä‘á»§ khĂ´ng?
-  - [ ] CĂ³ import vĂ²ng trĂ²n khĂ´ng?
-- NĂªu cá»¥ thá»ƒ váº¥n Ä‘á» vĂ  Ä‘á» xuáº¥t cáº£i tiáº¿n.
+### 2. Tiêu chuẩn Review Code
+Kiểm tra các vấn đề cốt lõi:
+- [ ] Có tuân thủ `docs/coding-style.md` và kiến trúc Modular Monolith không?
+- [ ] Có vi phạm anti-pattern (Controller gọi thẳng Repository, logic nghiệp vụ nằm ở Controller) không?
+- [ ] Controller có bọc response trong `ApiResponse<T>` không?
+- [ ] DTO có đầy đủ Jakarta Bean Validation không?
+- [ ] Có nguy cơ lỗi vòng lặp import (circular dependency) không?
+- [ ] Nếu là tính năng gợi ý: có xử lý constraint filtering và fallback khi cold-start không?
 
-### 3. Náº¿u fix bug
-- XĂ¡c Ä‘á»‹nh nguyĂªn nhĂ¢n gá»‘c rá»….
-- Sá»­a code.
-- Náº¿u bug thĂº vá»‹ hoáº·c khĂ³: ghi vĂ o `docs/lessons.md` vá»›i cáº¥u trĂºc:
-  ```markdown
-  ## [Problem] MĂ´ táº£
-  - **Cause**: ...
-  - **Fix**: ...
-  - **Prevention**: ...
-  ```
+### 3. Xử lý lỗi (Fix Bug)
+- Xác định nguyên nhân gốc rễ (Root Cause).
+- Sửa mã nguồn và chạy lại test để đảm bảo không phát sinh lỗi hồi quy (regression).
+- Nếu là lỗi đặc biệt hoặc phức tạp: ghi chú bài học vào `docs/lessons.md`.
 
-### 4. Sau khi review/fix
-- Náº¿u lĂ  PR, comment káº¿t quáº£ review.
-- Náº¿u fix bug, tick checklist náº¿u cĂ³.
-
+### 4. Sau khi hoàn thành
+- Chạy `cd backend && mvn clean compile` hoặc `cd frontend && npm run build` để kiểm tra tính toàn vẹn.
+- Cập nhật checklist tương ứng nếu có.

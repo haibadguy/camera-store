@@ -1,0 +1,17 @@
+product_id,name,brand,category,price,sensor_type,resolution_mp,lens_mount,video_resolution,continuous_fps,weight_grams,has_ibis,target_need,stock
+1,Sony Alpha A7 IV,Sony,Mirrorless,54990000,Full-frame,33.0,Sony E,4K 60p,10,658,True,portrait,8
+2,Canon EOS R6 Mark II,Canon,Mirrorless,58990000,Full-frame,24.2,Canon RF,4K 60p,40,670,True,sports,5
+3,Fujifilm X-T5,Fujifilm,Mirrorless,42990000,APS-C,40.2,Fujifilm X,6.2K 30p,15,557,True,travel,12
+4,Sony ZV-E10 II,Sony,Vlog Camera,22990000,APS-C,26.0,Sony E,4K 60p,11,377,False,vlog,15
+5,Nikon Z6 III,Nikon,Mirrorless,64990000,Full-frame,24.5,Nikon Z,6K 60p RAW,20,760,True,sports,4
+6,Sony Alpha A7R V,Sony,Mirrorless,89990000,Full-frame,61.0,Sony E,8K 24p,10,723,True,portrait,3
+7,Canon EOS R5,Canon,Mirrorless,79990000,Full-frame,45.0,Canon RF,8K 30p RAW,20,738,True,commercial,4
+8,Canon EOS R8,Canon,Mirrorless,32990000,Full-frame,24.2,Canon RF,4K 60p,40,461,False,travel,9
+9,Fujifilm X-S20,Fujifilm,Mirrorless,31990000,APS-C,26.1,Fujifilm X,6.2K 30p,20,491,True,vlog,7
+10,Fujifilm X100VI,Fujifilm,Compact,47990000,APS-C,40.2,Fixed Lens,6.2K 30p,11,521,True,street,2
+11,Nikon Z8,Nikon,Mirrorless,92990000,Full-frame,45.7,Nikon Z,8K 60p N-RAW,20,910,True,wildlife,3
+12,Nikon Zf,Nikon,Mirrorless,49990000,Full-frame,24.5,Nikon Z,4K 60p,14,710,True,street,6
+13,Sony Alpha A6700,Sony,Mirrorless,35990000,APS-C,26.0,Sony E,4K 120p,11,493,True,wildlife,10
+14,Panasonic Lumix S5 II,Panasonic,Mirrorless,44990000,Full-frame,24.2,L-Mount,6K 30p,30,740,True,vlog,6
+15,Sony ZV-1 II,Sony,Compact,20990000,1-inch,20.1,Fixed Lens,4K 30p,24,292,False,vlog,14
+16,Canon PowerShot V10,Canon,Compact,10990000,1-inch,13.1,Fixed Lens,4K 30p,0,211,False,vlog,18

@@ -10,4 +10,4 @@ spring:
   flyway:
     enabled: true
 server:
-  port: ${PORT:3000}
+  port: ${PORT:8080}

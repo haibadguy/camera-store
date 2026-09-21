@@ -1,6 +1,47 @@
 import { useMemo, useState } from "react";
 import "./styles.css";
 
+// SVG Icons for professional E-Commerce UI (No emojis!)
+const SearchIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+  </svg>
+);
+
+const ShoppingBagIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <path d="M16 10a4 4 0 0 1-8 0"></path>
+  </svg>
+);
+
+const FilterIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+  </svg>
+);
+
+const SparkleIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"></path>
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
+
 type CameraSpec = {
   sensor: string;
   resolution: string;
@@ -31,7 +72,7 @@ type Product = {
 const PRODUCTS_DATA: Product[] = [
   {
     id: 1,
-    name: "Máy ảnh Sony Alpha A7 IV (Chính Hãng)",
+    name: "Sony Alpha A7 IV Body",
     brand: "Sony",
     category: "Mirrorless",
     price: 54990000,
@@ -39,21 +80,21 @@ const PRODUCTS_DATA: Product[] = [
     rating: 4.9,
     reviewsCount: 142,
     stock: 8,
-    badge: "Bán Chạy Nhất",
+    badge: "Bán chạy",
     image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80",
-    description: "Cảm biến Full-frame Exmor R 33.0 MP, quay phim 4K 60p 10-bit 4:2:2, lấy nét tự động AI bắt nét mắt theo thời gian thực.",
-    specs: { sensor: "Full-frame 35mm", resolution: "33.0 MP", mount: "Sony E-mount", video: "4K 60p 10-bit", weight: "658g" },
+    description: "Máy ảnh Full-frame hybrid trang bị cảm biến Exmor R 33.0 MP, quay phim 4K 60p 10-bit và hệ thống lấy nét Real-time Eye AF.",
+    specs: { sensor: "Full-frame", resolution: "33.0 MP", mount: "Sony E", video: "4K 60p", weight: "658g" },
     aiMatchScore: 98,
     aiReasons: [
-      "Phù hợp hoàn hảo cho Chân dung & Sự kiện nhờ cảm biến Full-frame 33MP",
-      "Hệ thống lấy nét mắt Real-time AF chuẩn xác nhất phân khúc",
-      "Nằm đúng khoảng ngân sách 50 - 60 triệu VNĐ"
+      "Cảm biến Full-frame 33MP tối ưu cho nhu cầu chụp chân dung & sự kiện",
+      "Khả năng lấy nét mắt AI chính xác cao theo thời gian thực",
+      "Nằm trong khoảng ngân sách 50 - 60 triệu đồng"
     ],
     useCases: ["portrait", "event", "vlog"]
   },
   {
     id: 2,
-    name: "Máy ảnh Canon EOS R6 Mark II Body",
+    name: "Canon EOS R6 Mark II Body",
     brand: "Canon",
     category: "Mirrorless",
     price: 58990000,
@@ -61,21 +102,21 @@ const PRODUCTS_DATA: Product[] = [
     rating: 4.8,
     reviewsCount: 98,
     stock: 5,
-    badge: "Khuyên Dùng",
+    badge: "Khuyên dùng",
     image: "https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=800&q=80",
-    description: "Tốc độ chụp liên tiếp 40 hình/giây, chống rung IBIS 8 stop, lấy nét Dual Pixel CMOS AF II nhận diện động vật & phương tiện.",
-    specs: { sensor: "Full-frame CMOS", resolution: "24.2 MP", mount: "Canon RF-mount", video: "4K 60p 6K Oversampled", weight: "670g" },
+    description: "Tốc độ chụp liên tiếp 40 hình/giây, hệ thống chống rung IBIS 8 stop và lấy nét Dual Pixel CMOS AF II mượt mà.",
+    specs: { sensor: "Full-frame", resolution: "24.2 MP", mount: "Canon RF", video: "4K 60p", weight: "670g" },
     aiMatchScore: 95,
     aiReasons: [
-      "Tốc độ chụp 40fps siêu nhanh lý tưởng cho thể thao & động vật",
-      "Chống rung trong thân máy 8 stop hỗ trợ chụp đêm không cần tripod",
-      "Tương thích hệ sinh thái Lens Canon RF cao cấp"
+      "Tốc độ chụp 40fps đáp ứng tốt chụp thể thao và chuyển động nhanh",
+      "Chống rung trong thân máy 8 stop hỗ trợ chụp thiếu sáng",
+      "Tương thích với hệ sinh thái ống kính Canon RF"
     ],
     useCases: ["sports", "portrait", "event"]
   },
   {
     id: 3,
-    name: "Máy ảnh Fujifilm X-T5 Body (Silver)",
+    name: "Fujifilm X-T5 Body (Black / Silver)",
     brand: "Fujifilm",
     category: "Mirrorless",
     price: 42990000,
@@ -83,21 +124,21 @@ const PRODUCTS_DATA: Product[] = [
     rating: 4.9,
     reviewsCount: 165,
     stock: 12,
-    badge: "Màu Phim Đẹp",
+    badge: "Mới",
     image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80",
-    description: "Cảm biến APS-C X-Trans CMOS 5 HR 40.2 MP, giả lập màu phim Film Simulation độc quyền, bánh xe điều khiển cơ học cổ điển.",
-    specs: { sensor: "APS-C X-Trans V", resolution: "40.2 MP", mount: "Fujifilm X-mount", video: "6.2K 30p 10-bit", weight: "557g" },
+    description: "Cảm biến APS-C X-Trans 5 HR 40.2 MP, giả lập màu phim Film Simulation độc quyền và thiết kế cơ học hoài cổ.",
+    specs: { sensor: "APS-C", resolution: "40.2 MP", mount: "Fujifilm X", video: "6.2K 30p", weight: "557g" },
     aiMatchScore: 92,
     aiReasons: [
-      "Thiết kế hoài cổ gọn nhẹ (557g) lý tưởng cho phượt & du lịch",
-      "19 chế độ giả lập màu phim trứ danh không cần chỉnh sửa post-prod",
-      "Độ phân giải siêu cao 40.2MP cho chi tiết ảnh sắc nét"
+      "Trọng lượng nhẹ 557g thuận tiện cho du lịch và phượt",
+      "19 chế độ giả lập màu phim không cần chỉnh sửa hậu kỳ",
+      "Độ phân giải 40.2MP chi tiết cho ảnh phong cảnh"
     ],
     useCases: ["travel", "street", "portrait"]
   },
   {
     id: 4,
-    name: "Máy ảnh Sony ZV-E10 II Kit 16-50mm",
+    name: "Sony ZV-E10 II Kit 16-50mm",
     brand: "Sony",
     category: "Vlog Camera",
     price: 22990000,
@@ -105,21 +146,21 @@ const PRODUCTS_DATA: Product[] = [
     rating: 4.7,
     reviewsCount: 210,
     stock: 15,
-    badge: "Vlog & TikTok",
+    badge: "Giá tốt",
     image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80",
-    description: "Máy ảnh chuyên dụng sáng tạo nội dung, micro 3 khoang định hướng có lọc gió, nút làm mờ nền Product Showcase tiện lợi.",
-    specs: { sensor: "APS-C Exmor R", resolution: "26.0 MP", mount: "Sony E-mount", video: "4K 60p 10-bit", weight: "377g" },
+    description: "Máy ảnh thiết kế chuyên dụng cho quay Vlog, màn hình xoay lật 180 độ, micro định hướng 3 khoang lọc gió.",
+    specs: { sensor: "APS-C", resolution: "26.0 MP", mount: "Sony E", video: "4K 60p", weight: "377g" },
     aiMatchScore: 94,
     aiReasons: [
-      "Ngân sách tối ưu dưới 25 triệu VNĐ cho người bắt đầu",
-      "Thiết kế màn hình xoay lật 180 độ & micro chống ồn chuyên quay Vlog",
-      "Trọng lượng siêu nhẹ 377g dễ dàng cầm tay cả ngày"
+      "Ngân sách tối ưu dưới 25 triệu cho người mới bắt đầu quay phim",
+      "Tích hợp tính năng Product Showcase và Background Defocus cho Vlogger",
+      "Trọng lượng nhỏ gọn 377g dễ dàng mang theo hàng ngày"
     ],
     useCases: ["vlog", "travel"]
   },
   {
     id: 5,
-    name: "Máy ảnh Nikon Z6 III Body",
+    name: "Nikon Z6 III Body",
     brand: "Nikon",
     category: "Mirrorless",
     price: 64990000,
@@ -127,21 +168,21 @@ const PRODUCTS_DATA: Product[] = [
     rating: 4.9,
     reviewsCount: 42,
     stock: 4,
-    badge: "Công Nghệ Mới",
+    badge: "Nổi bật",
     image: "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=800&q=80",
-    description: "Cảm biến Partially-stacked CMOS 24.5 MP đột phá, kính ngắm EVF 5.76 triệu điểm ảnh độ sáng 4000 nits siêu thực.",
-    specs: { sensor: "Full-frame Partially-stacked", resolution: "24.5 MP", mount: "Nikon Z-mount", video: "6K 60p N-RAW", weight: "760g" },
+    description: "Cảm biến Partially-stacked CMOS 24.5 MP, quay phim 6K N-RAW và kính ngắm EVF độ sáng 4000 nits.",
+    specs: { sensor: "Full-frame", resolution: "24.5 MP", mount: "Nikon Z", video: "6K 60p RAW", weight: "760g" },
     aiMatchScore: 89,
     aiReasons: [
-      "Cảm biến Partially-Stacked đọc dữ liệu cực nhanh chống biến dạng rolling shutter",
-      "Quay video 6K 60p N-RAW trực tiếp vào thẻ nhớ",
-      "Kính ngắm EVF sáng nhất thế giới 4000 nits"
+      "Cảm biến Partially-stacked đọc dữ liệu nhanh, giảm hiện tượng rolling shutter",
+      "Hỗ trợ định dạng video N-RAW chất lượng cao cho quay chuyên nghiệp",
+      "Tương thích với hệ ngàm Nikon Z"
     ],
     useCases: ["sports", "vlog", "event"]
   },
   {
     id: 6,
-    name: "Ống kính Sony FE 85mm F1.4 GM II",
+    name: "Ống kính Sony FE 85mm f/1.4 GM II",
     brand: "Sony",
     category: "Ống kính",
     price: 47990000,
@@ -149,26 +190,25 @@ const PRODUCTS_DATA: Product[] = [
     rating: 5.0,
     reviewsCount: 34,
     stock: 6,
-    badge: "Master Chân Dung",
+    badge: "Cao cấp",
     image: "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=800&q=80",
-    description: "Ống kính chân dung tiêu cự vàng 85mm khẩu độ F1.4, mô-tơ lấy nét XD Linear êm ái, xóa phông Bokeh tròn mịn nghệ thuật.",
-    specs: { sensor: "Ống kính Fix Chân dung", resolution: "N/A", mount: "Sony E-mount", video: "AF êm ái không thở", weight: "642g" },
+    description: "Ống kính tiêu cự 85mm chuyên chụp chân dung, khẩu độ lớn f/1.4 tạo hiệu ứng bokeh mượt mà.",
+    specs: { sensor: "Ống kính Prime", resolution: "N/A", mount: "Sony E", video: "AF êm ái", weight: "642g" },
     aiMatchScore: 97,
     aiReasons: [
-      "Tiêu chuẩn vàng 85mm F1.4 cho ảnh chân dung xóa phông lung linh",
-      "Thấu kính XA cao cấp triệt tiêu quang sai tuyệt đối",
-      "Tương thích hoàn toàn với các body Sony Full-frame"
+      "Khẩu độ lớn f/1.4 cho khả năng xóa phông chân dung ấn tượng",
+      "Thuộc dòng ống kính G Master cao cấp nhất của Sony",
+      "Lấy nét tự động nhanh và êm ái khi quay phim"
     ],
     useCases: ["portrait", "event"]
   }
 ];
 
 const formatVND = (amount: number) => {
-  return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount);
+  return new Intl.NumberFormat("vi-VN").format(amount) + " ₫";
 };
 
 export default function App() {
-  // Search & Filter States
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -177,18 +217,16 @@ export default function App() {
   const [selectedUseCase, setSelectedUseCase] = useState("All");
   const [sortBy, setSortBy] = useState<"featured" | "price-asc" | "price-desc" | "rating">("featured");
 
-  // UI States
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cartCount, setCartCount] = useState(0);
   const [isAiWizardOpen, setIsAiWizardOpen] = useState(false);
-  const [detailModalProduct, setDetailModalProduct] = useState<Product | null>(null);
+  const [detailProduct, setDetailProduct] = useState<Product | null>(null);
 
-  // Wizard States
+  // Wizard state
   const [wizardStep, setWizardStep] = useState(1);
   const [wizardBudget, setWizardBudget] = useState(50000000);
   const [wizardNeed, setWizardNeed] = useState("portrait");
   const [wizardBrand, setWizardBrand] = useState("All");
 
-  // Filtered products logic
   const filteredProducts = useMemo(() => {
     let result = PRODUCTS_DATA.filter((p) => {
       const matchSearch = searchQuery === "" || `${p.name} ${p.brand} ${p.category}`.toLowerCase().includes(searchQuery.toLowerCase());
@@ -207,13 +245,7 @@ export default function App() {
     return result;
   }, [searchQuery, selectedBrand, selectedCategory, maxPrice, selectedMount, selectedUseCase, sortBy]);
 
-  const addToCart = (product: Product) => {
-    if (!cart.some((item) => item.id === product.id)) {
-      setCart([...cart, product]);
-    }
-  };
-
-  const applyAiWizardResult = () => {
+  const applyWizardFilter = () => {
     setMaxPrice(wizardBudget);
     setSelectedUseCase(wizardNeed);
     setSelectedBrand(wizardBrand);
@@ -221,7 +253,7 @@ export default function App() {
     setWizardStep(1);
   };
 
-  const resetAllFilters = () => {
+  const resetFilters = () => {
     setSearchQuery("");
     setSelectedBrand("All");
     setSelectedCategory("All");
@@ -232,158 +264,160 @@ export default function App() {
   };
 
   return (
-    <div className="store-app">
-      {/* 1. TOP UTILITY HEADER BAR */}
-      <div className="utility-bar">
-        <div className="utility-container">
-          <div className="utility-left">
-            <span>📍 Hệ thống Showroom: Hà Nội • TP. Hồ Chí Minh • Đà Nẵng</span>
-            <span className="divider">|</span>
-            <span>📞 Hotline tư vấn: <strong>1900 6789</strong> (8:00 - 21:30)</span>
+    <div className="store-container">
+      {/* 1. TOP UTILITY BAR */}
+      <div className="top-utility-bar">
+        <div className="site-wrapper top-utility-content">
+          <div className="utility-info">
+            <span>Hệ thống Showroom: Hà Nội • TP.HCM • Đà Nẵng</span>
+            <span className="bullet-sep">•</span>
+            <span>Hotline: 1900 6789</span>
           </div>
-          <div className="utility-right">
-            <a href="#support">Tra cứu đơn hàng</a>
-            <a href="#tradein">Thu cũ đổi mới máy ảnh</a>
-            <a href="#blog">Kinh nghiệm nhiếp ảnh</a>
+          <div className="utility-links">
+            <a href="#support">Trợ giúp & Bảo hành</a>
+            <a href="#tradein">Thu cũ đổi mới</a>
+            <a href="#store-finder">Hệ thống cửa hàng</a>
           </div>
         </div>
       </div>
 
-      {/* 2. MAIN NAVIGATION HEADER */}
-      <header className="main-header">
-        <div className="header-container">
+      {/* 2. MAIN STORE HEADER */}
+      <header className="site-header">
+        <div className="site-wrapper header-content">
           {/* Logo */}
-          <div className="logo-brand" onClick={resetAllFilters}>
-            <div className="logo-icon">📷</div>
-            <div className="logo-text">
-              <span className="brand-name">CAMERA STORE</span>
-              <span className="brand-tagline">Chuyên Thiết Bị Nhiếp Ảnh & Tư Vấn AI</span>
-            </div>
+          <div className="site-logo" onClick={resetFilters}>
+            <span className="logo-main">CAMERA STORE</span>
+            <span className="logo-sub">Hệ thống máy ảnh & thiết bị nhiếp ảnh</span>
           </div>
 
-          {/* Main Search Bar */}
-          <div className="search-bar-wrap">
-            <div className="search-input-group">
-              <span className="search-icon">🔍</span>
+          {/* Search Bar */}
+          <div className="header-search-wrap">
+            <div className="search-input-box">
+              <SearchIcon />
               <input
                 type="text"
-                placeholder="Nhập tên máy ảnh, ống kính, thương hiệu (vd: Sony A7 IV, Canon R6...)"
+                placeholder="Tìm kiếm máy ảnh, ống kính, thiết bị..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               {searchQuery && (
-                <button className="clear-search" onClick={() => setSearchQuery("")}>✕</button>
+                <button className="clear-btn" onClick={() => setSearchQuery("")}>
+                  <CloseIcon />
+                </button>
               )}
             </div>
           </div>
 
-          {/* Right Header Utilities */}
-          <div className="header-actions">
-            <button className="ai-advisor-btn" onClick={() => setIsAiWizardOpen(true)}>
-              <span className="sparkle-icon">✨</span>
-              <div className="btn-text">
-                <small>Chưa biết chọn máy nào?</small>
-                <strong>Trợ Lý Tư Vấn AI</strong>
+          {/* Header Actions */}
+          <div className="header-right-actions">
+            <button className="ai-consult-button" onClick={() => setIsAiWizardOpen(true)}>
+              <SparkleIcon />
+              <div className="btn-label-wrap">
+                <span className="btn-top-label">Gợi ý thông minh</span>
+                <span className="btn-main-label">Tư vấn chọn máy</span>
               </div>
             </button>
 
-            <div className="cart-widget">
-              <div className="cart-icon-wrap">
-                🛒
-                {cart.length > 0 && <span className="cart-badge">{cart.length}</span>}
+            <div className="shopping-cart-widget">
+              <div className="cart-icon-container">
+                <ShoppingBagIcon />
+                {cartCount > 0 && <span className="cart-badge-count">{cartCount}</span>}
               </div>
-              <div className="cart-info">
-                <small>Giỏ hàng</small>
-                <strong>{cart.length} sản phẩm</strong>
+              <div className="cart-text">
+                <span className="cart-label">Giỏ hàng</span>
+                <span className="cart-sub">{cartCount} sản phẩm</span>
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* 3. CATEGORY NAVIGATION STRIP */}
-      <nav className="category-strip">
-        <div className="strip-container">
-          <button className={selectedCategory === "All" ? "strip-item active" : "strip-item"} onClick={() => setSelectedCategory("All")}>
-            Tất Cả Sản Phẩm
+      {/* 3. CATEGORY NAVIGATION BAR */}
+      <nav className="site-nav">
+        <div className="site-wrapper nav-content">
+          <button className={selectedCategory === "All" ? "nav-item active" : "nav-item"} onClick={() => setSelectedCategory("All")}>
+            Tất cả sản phẩm
           </button>
-          <button className={selectedCategory === "Mirrorless" ? "strip-item active" : "strip-item"} onClick={() => setSelectedCategory("Mirrorless")}>
-            Máy Ảnh Mirrorless
+          <button className={selectedCategory === "Mirrorless" ? "nav-item active" : "nav-item"} onClick={() => setSelectedCategory("Mirrorless")}>
+            Máy ảnh Mirrorless
           </button>
-          <button className={selectedCategory === "Ống kính" ? "strip-item active" : "strip-item"} onClick={() => setSelectedCategory("Ống kính")}>
-            Ống Kính (Lens)
+          <button className={selectedCategory === "Ống kính" ? "nav-item active" : "nav-item"} onClick={() => setSelectedCategory("Ống kính")}>
+            Ống kính (Lens)
           </button>
-          <button className={selectedCategory === "Vlog Camera" ? "strip-item active" : "strip-item"} onClick={() => setSelectedCategory("Vlog Camera")}>
-            Máy Ảnh Vlog & Compact
+          <button className={selectedCategory === "Vlog Camera" ? "nav-item active" : "nav-item"} onClick={() => setSelectedCategory("Vlog Camera")}>
+            Máy ảnh Compact & Vlog
           </button>
-          <button className="strip-item ai-tab" onClick={() => setIsAiWizardOpen(true)}>
-            🤖 Thuật Toán Gợi Ý AI (Cosine Specs)
+          <button className="nav-item ai-recommend-link" onClick={() => setIsAiWizardOpen(true)}>
+            <SparkleIcon /> Tư vấn AI theo nhu cầu
           </button>
         </div>
       </nav>
 
-      {/* 4. PROMOTIONAL PROMO HERO BANNER */}
-      <section className="hero-promo-section">
-        <div className="hero-banner-container">
-          <div className="banner-content">
-            <span className="banner-tag">🔥 CHƯƠNG TRÌNH ĐẶC BIỆT</span>
-            <h1>Tư Vấn & Gợi Ý Máy Ảnh Chuẩn Xác Nhờ Thuật Toán AI</h1>
+      {/* 4. PROMO HERO BANNER */}
+      <section className="promo-banner-section">
+        <div className="site-wrapper promo-container">
+          <div className="promo-text-wrap">
+            <span className="promo-tag">HỆ THỐNG GỢI Ý TỰ ĐỘNG</span>
+            <h1>Tư Vấn Chọn Máy Ảnh Phù Hợp Nhu Cầu & Ngân Sách</h1>
             <p>
-              Hệ thống tự động đối chiếu thông số kỹ thuật (Camera Specs: Cảm biến, Ngàm Lens, ISO) 
-              với ngân sách và nhu cầu của bạn để đưa ra danh sách sản phẩm tối ưu nhất kèm <strong>lý do giải thích minh bạch</strong>.
+              Thuật toán tự động phân tích thông số kỹ thuật (Cảm biến, Ngàm Lens, ISO) kết hợp ràng buộc ngân sách 
+              để đưa ra danh sách sản phẩm tối ưu kèm <strong>lý do giải thích chi tiết</strong>.
             </p>
-            <div className="banner-buttons">
-              <button className="btn-primary-large" onClick={() => setIsAiWizardOpen(true)}>
-                ✨ Mở Trợ Lý Tư Vấn AI Ngay
+            <div className="promo-actions">
+              <button className="primary-action-btn" onClick={() => setIsAiWizardOpen(true)}>
+                <SparkleIcon /> Bắt đầu tư vấn ngay
               </button>
-              <button className="btn-outline-large" onClick={() => setSelectedCategory("Mirrorless")}>
-                Xem Danh Mục Máy Ảnh Full-Frame
+              <button className="secondary-action-btn" onClick={() => setSelectedCategory("Mirrorless")}>
+                Xem máy ảnh Mirrorless
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5. MAIN CATALOG & SIDEBAR FILTER SECTION */}
-      <main className="catalog-main-layout">
-        {/* SIDEBAR FILTER PANEL */}
-        <aside className="filter-sidebar">
-          <div className="sidebar-header">
-            <h3>⚙️ Bộ Lọc Tìm Kiếm</h3>
+      {/* 5. MAIN CATALOG LAYOUT */}
+      <main className="site-wrapper main-layout">
+        {/* SIDEBAR FILTER */}
+        <aside className="sidebar-filter-panel">
+          <div className="filter-panel-header">
+            <div className="panel-title">
+              <FilterIcon />
+              <span>Bộ lọc tìm kiếm</span>
+            </div>
             {(selectedBrand !== "All" || selectedUseCase !== "All" || selectedMount !== "All" || maxPrice < 70000000) && (
-              <button className="btn-reset-filters" onClick={resetAllFilters}>Xóa bộ lọc</button>
+              <button className="reset-filter-btn" onClick={resetFilters}>Xóa lọc</button>
             )}
           </div>
 
-          {/* Filter: Nhu cầu chụp */}
-          <div className="filter-group">
-            <h4 className="filter-title">🎯 Nhu Cầu Sử Dụng</h4>
-            <div className="radio-list">
+          {/* Filter Group: Nhu cầu */}
+          <div className="filter-block">
+            <h4 className="filter-heading">Nhu cầu sử dụng</h4>
+            <div className="filter-options-list">
               {[
-                { id: "All", label: "Tất cả nhu cầu" },
-                { id: "portrait", label: "📸 Chụp Chân dung & Xóa phông" },
-                { id: "travel", label: "✈️ Phượt & Du lịch gọn nhẹ" },
-                { id: "vlog", label: "🎥 Quay Vlogging & Youtube" },
-                { id: "sports", label: "🏃 Chụp Thể thao & Động vật" }
+                { id: "All", name: "Tất cả nhu cầu" },
+                { id: "portrait", name: "Chụp chân dung & xóa phông" },
+                { id: "travel", name: "Du lịch & phượt gọn nhẹ" },
+                { id: "vlog", name: "Quay Vlogging & Content" },
+                { id: "sports", name: "Chụp thể thao & chuyển động" }
               ].map((item) => (
-                <label key={item.id} className="radio-item">
+                <label key={item.id} className="radio-option">
                   <input
                     type="radio"
-                    name="usecase"
+                    name="usecase-radio"
                     checked={selectedUseCase === item.id}
                     onChange={() => setSelectedUseCase(item.id)}
                   />
-                  <span>{item.label}</span>
+                  <span>{item.name}</span>
                 </label>
               ))}
             </div>
           </div>
 
-          {/* Filter: Ngân sách */}
-          <div className="filter-group">
-            <h4 className="filter-title">💰 Ngân Sách Tối Đa</h4>
-            <div className="price-slider-wrap">
-              <div className="price-display">{formatVND(maxPrice)}</div>
+          {/* Filter Group: Ngân sách */}
+          <div className="filter-block">
+            <h4 className="filter-heading">Ngân sách tối đa</h4>
+            <div className="price-range-container">
+              <div className="price-current-value">{formatVND(maxPrice)}</div>
               <input
                 type="range"
                 min={20000000}
@@ -392,155 +426,158 @@ export default function App() {
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
               />
-              <div className="price-range-labels">
-                <span>20 Tr</span>
-                <span>70 Tr+</span>
+              <div className="range-bounds">
+                <span>20 triệu</span>
+                <span>70 triệu+</span>
               </div>
             </div>
           </div>
 
-          {/* Filter: Thương hiệu */}
-          <div className="filter-group">
-            <h4 className="filter-title">🏢 Hãng Sản Xuất</h4>
-            <div className="checkbox-list">
+          {/* Filter Group: Hãng sản xuất */}
+          <div className="filter-block">
+            <h4 className="filter-heading">Thương hiệu</h4>
+            <div className="chip-options-grid">
               {["All", "Sony", "Canon", "Fujifilm", "Nikon"].map((brand) => (
                 <button
                   key={brand}
-                  className={selectedBrand === brand ? "filter-chip active" : "filter-chip"}
+                  className={selectedBrand === brand ? "chip-btn active" : "chip-btn"}
                   onClick={() => setSelectedBrand(brand)}
                 >
-                  {brand === "All" ? "Tất cả hãng" : brand}
+                  {brand === "All" ? "Tất cả" : brand}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Filter: Tương thích Ngàm Lens */}
-          <div className="filter-group">
-            <h4 className="filter-title">🔌 Ngàm Lens Tương Thích</h4>
+          {/* Filter Group: Ngàm Lens */}
+          <div className="filter-block">
+            <h4 className="filter-heading">Ngàm Lens tương thích</h4>
             <select
-              className="select-control"
+              className="select-field"
               value={selectedMount}
               onChange={(e) => setSelectedMount(e.target.value)}
             >
               <option value="All">Tất cả ngàm lens</option>
-              <option value="Sony E-mount">Sony E-mount</option>
-              <option value="Canon RF-mount">Canon RF-mount</option>
-              <option value="Fujifilm X-mount">Fujifilm X-mount</option>
-              <option value="Nikon Z-mount">Nikon Z-mount</option>
+              <option value="Sony E">Sony E-mount</option>
+              <option value="Canon RF">Canon RF-mount</option>
+              <option value="Fujifilm X">Fujifilm X-mount</option>
+              <option value="Nikon Z">Nikon Z-mount</option>
             </select>
           </div>
         </aside>
 
-        {/* PRODUCTS GRID CONTENT AREA */}
-        <section className="products-content-area">
-          {/* Toolbar Header */}
-          <div className="products-toolbar">
-            <div className="toolbar-info">
-              <h2>Danh Sách Thiết Bị Nhiếp Ảnh</h2>
-              <span className="count-badge">Tìm thấy {filteredProducts.length} sản phẩm</span>
+        {/* PRODUCT LIST CONTENT */}
+        <section className="catalog-products-section">
+          {/* Toolbar */}
+          <div className="catalog-toolbar">
+            <div className="toolbar-left">
+              <h2>Danh sách thiết bị nhiếp ảnh</h2>
+              <span className="results-count">Hiển thị {filteredProducts.length} sản phẩm</span>
             </div>
 
-            <div className="sort-controls">
-              <label>Sắp xếp theo:</label>
+            <div className="toolbar-right">
+              <label>Sắp xếp:</label>
               <select
-                className="select-control"
+                className="select-field sort-select"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
               >
-                <option value="featured">Sản Phẩm Nổi Bật</option>
+                <option value="featured">Sản phẩm nổi bật</option>
                 <option value="price-asc">Giá: Thấp đến Cao</option>
                 <option value="price-desc">Giá: Cao đến Thấp</option>
-                <option value="rating">Đánh Giá Cao Nhất</option>
+                <option value="rating">Đánh giá cao nhất</option>
               </select>
             </div>
           </div>
 
-          {/* Active Applied Filters Bar */}
+          {/* Active filter tags */}
           {(selectedBrand !== "All" || selectedUseCase !== "All" || selectedMount !== "All" || maxPrice < 70000000) && (
-            <div className="active-filters-bar">
-              <span className="bar-label">Bộ lọc đang bật:</span>
-              {selectedBrand !== "All" && <span className="active-tag">Hãng: {selectedBrand}</span>}
-              {selectedUseCase !== "All" && <span className="active-tag">Nhu cầu: {selectedUseCase}</span>}
-              {selectedMount !== "All" && <span className="active-tag">Ngàm: {selectedMount}</span>}
-              {maxPrice < 70000000 && <span className="active-tag">Dưới: {formatVND(maxPrice)}</span>}
-              <button className="clear-all-text" onClick={resetAllFilters}>Xóa tất cả</button>
+            <div className="active-filter-tags">
+              <span className="tag-label">Bộ lọc đang áp dụng:</span>
+              {selectedBrand !== "All" && <span className="filter-tag">Hãng: {selectedBrand}</span>}
+              {selectedUseCase !== "All" && <span className="filter-tag">Nhu cầu: {selectedUseCase}</span>}
+              {selectedMount !== "All" && <span className="filter-tag">Ngàm: {selectedMount}</span>}
+              {maxPrice < 70000000 && <span className="filter-tag">Dưới: {formatVND(maxPrice)}</span>}
+              <button className="clear-tags-btn" onClick={resetFilters}>Xóa tất cả</button>
             </div>
           )}
 
-          {/* Product Cards Grid */}
+          {/* Products Grid */}
           {filteredProducts.length === 0 ? (
-            <div className="empty-catalog-box">
-              <div className="empty-icon">📷</div>
-              <h3>Không tìm thấy máy ảnh phù hợp</h3>
-              <p>Rất tiếc, không có sản phẩm nào khớp hoàn toàn với các bộ lọc bạn đã chọn.</p>
-              <button className="btn-secondary" onClick={resetAllFilters}>Xóa bộ lọc để xem tất cả</button>
+            <div className="no-products-card">
+              <h3>Không tìm thấy sản phẩm phù hợp</h3>
+              <p>Rất tiếc, không có máy ảnh nào khớp với các tiêu chí lọc hiện tại của bạn.</p>
+              <button className="secondary-action-btn dark" onClick={resetFilters}>Xóa bộ lọc tìm kiếm</button>
             </div>
           ) : (
-            <div className="ecommerce-products-grid">
+            <div className="products-grid">
               {filteredProducts.map((product) => (
-                <article key={product.id} className="ecom-product-card">
-                  {/* Card Thumbnail & Badge */}
-                  <div className="card-thumb-area" onClick={() => setDetailModalProduct(product)}>
+                <article key={product.id} className="product-card">
+                  {/* Image wrap */}
+                  <div className="product-image-container" onClick={() => setDetailProduct(product)}>
                     <img src={product.image} alt={product.name} />
-                    {product.badge && <span className="badge-promo">{product.badge}</span>}
+                    {product.badge && <span className="status-badge">{product.badge}</span>}
                     {product.aiMatchScore && (
-                      <span className="badge-ai-match">🤖 AI Match {product.aiMatchScore}%</span>
+                      <span className="ai-score-badge">Mức độ phù hợp {product.aiMatchScore}%</span>
                     )}
                   </div>
 
-                  {/* Card Body Information */}
-                  <div className="card-info-area">
-                    <div className="brand-meta">{product.brand} • {product.category}</div>
-                    <h3 className="product-name" onClick={() => setDetailModalProduct(product)}>
+                  {/* Card Info */}
+                  <div className="product-card-body">
+                    <div className="product-brand-meta">{product.brand} • {product.category}</div>
+                    <h3 className="product-title" onClick={() => setDetailProduct(product)}>
                       {product.name}
                     </h3>
 
-                    {/* Ratings */}
-                    <div className="rating-row">
-                      <span className="stars">★★★★★</span>
-                      <span className="rating-score">{product.rating}</span>
-                      <span className="reviews-count">({product.reviewsCount} đánh giá)</span>
+                    {/* Rating */}
+                    <div className="rating-summary">
+                      <span className="star-icon">★</span>
+                      <span className="score">{product.rating}</span>
+                      <span className="count">({product.reviewsCount} đánh giá)</span>
                     </div>
 
-                    {/* Key Technical Specs Grid */}
-                    <div className="key-specs-grid">
-                      <div className="spec-pill">📷 {product.specs.sensor}</div>
-                      <div className="spec-pill">📐 {product.specs.resolution}</div>
-                      <div className="spec-pill">🔌 {product.specs.mount}</div>
+                    {/* Technical Specs Tags */}
+                    <div className="specs-pills-row">
+                      <span className="spec-pill">{product.specs.sensor}</span>
+                      <span className="spec-pill">{product.specs.resolution}</span>
+                      <span className="spec-pill">Ngàm {product.specs.mount}</span>
                     </div>
 
-                    {/* EXPLAINABLE REASONS (GIẢI THÍCH LÝ DO GỢI Ý CỦA AI) */}
+                    {/* AI EXPLAINABLE REASONS BOX */}
                     {product.aiReasons && product.aiReasons.length > 0 && (
-                      <div className="ai-explainable-box">
-                        <div className="explain-header">💡 Lý do AI gợi ý cho bạn:</div>
-                        <ul className="explain-list">
-                          {product.aiReasons.map((reason, i) => (
-                            <li key={i}>✓ {reason}</li>
+                      <div className="ai-reason-container">
+                        <div className="reason-title">
+                          <SparkleIcon /> Lý do gợi ý phù hợp:
+                        </div>
+                        <ul className="reason-list">
+                          {product.aiReasons.map((reason, idx) => (
+                            <li key={idx}>
+                              <CheckIcon /> {reason}
+                            </li>
                           ))}
                         </ul>
                       </div>
                     )}
 
-                    {/* Price & Stock Status */}
-                    <div className="price-and-stock">
-                      <div className="price-block">
-                        <div className="current-price">{formatVND(product.price)}</div>
+                    {/* Price and Stock */}
+                    <div className="price-stock-row">
+                      <div className="price-container">
+                        <span className="main-price">{formatVND(product.price)}</span>
                         {product.originalPrice && (
-                          <div className="original-price">{formatVND(product.originalPrice)}</div>
+                          <span className="old-price">{formatVND(product.originalPrice)}</span>
                         )}
                       </div>
-                      <div className="stock-status">
-                        <span className="green-dot">●</span> Còn hàng
+                      <div className="stock-indicator">
+                        <span className="status-dot"></span> Còn hàng
                       </div>
                     </div>
 
-                    {/* Card Actions */}
-                    <div className="card-actions">
-                      <button className="btn-add-cart" onClick={() => addToCart(product)}>
-                        🛒 Thêm vào giỏ
+                    {/* Action buttons */}
+                    <div className="card-buttons-row">
+                      <button className="add-cart-btn" onClick={() => setCartCount(cartCount + 1)}>
+                        Thêm vào giỏ
                       </button>
-                      <button className="btn-quick-view" onClick={() => setDetailModalProduct(product)}>
+                      <button className="view-detail-btn" onClick={() => setDetailProduct(product)}>
                         Chi tiết
                       </button>
                     </div>
@@ -552,46 +589,47 @@ export default function App() {
         </section>
       </main>
 
-      {/* 6. AI RECOMMENDATION WIZARD DIALOG MODAL */}
+      {/* 6. AI CONSULTANT WIZARD MODAL */}
       {isAiWizardOpen && (
-        <div className="modal-backdrop" onClick={() => setIsAiWizardOpen(false)}>
-          <div className="wizard-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={() => setIsAiWizardOpen(false)}>✕</button>
+        <div className="dialog-overlay" onClick={() => setIsAiWizardOpen(false)}>
+          <div className="wizard-dialog-box" onClick={(e) => e.stopPropagation()}>
+            <button className="dialog-close-btn" onClick={() => setIsAiWizardOpen(false)}>
+              <CloseIcon />
+            </button>
 
-            <div className="wizard-header">
-              <span className="sparkle-badge">✨ Thuật Toán AI Recommendation Engine</span>
-              <h2>Trợ Lý Tư Vấn Máy Ảnh Thông Minh</h2>
-              <p>Trả lời 3 câu hỏi nhanh, AI sẽ lọc và đưa ra các máy ảnh tối ưu nhất dành riêng cho bạn!</p>
+            <div className="wizard-dialog-header">
+              <span className="dialog-badge"><SparkleIcon /> Thuật toán gợi ý cá nhân hóa</span>
+              <h2>Trợ Lý Tư Vấn Chọn Máy Ảnh</h2>
+              <p>Phân tích thông số kỹ thuật và nhu cầu sử dụng để tìm thiết bị tối ưu dành cho bạn.</p>
             </div>
 
-            {/* Step Indicator */}
-            <div className="wizard-steps-indicator">
-              <div className={wizardStep >= 1 ? "step-dot active" : "step-dot"}>1. Nhu cầu</div>
-              <div className={wizardStep >= 2 ? "step-dot active" : "step-dot"}>2. Ngân sách</div>
-              <div className={wizardStep >= 3 ? "step-dot active" : "step-dot"}>3. Thương hiệu</div>
+            {/* Steps indicator */}
+            <div className="wizard-step-tracker">
+              <span className={wizardStep >= 1 ? "step-item active" : "step-item"}>1. Nhu cầu chụp</span>
+              <span className="step-sep">•</span>
+              <span className={wizardStep >= 2 ? "step-item active" : "step-item"}>2. Ngân sách</span>
+              <span className="step-sep">•</span>
+              <span className={wizardStep >= 3 ? "step-item active" : "step-item"}>3. Thương hiệu</span>
             </div>
 
-            <div className="wizard-body">
+            <div className="wizard-dialog-body">
               {wizardStep === 1 && (
-                <div className="wizard-step-content">
-                  <h3>Bước 1: Nhu cầu chụp ảnh chính của bạn là gì?</h3>
-                  <div className="options-grid">
+                <div className="step-view">
+                  <h4>Chọn nhu cầu chụp ảnh chính của bạn:</h4>
+                  <div className="cards-selection-grid">
                     {[
-                      { id: "portrait", icon: "📸", title: "Chụp Chân Dung & Xóa Phông", desc: "Ưu tiên cảm biến Full-frame & ống kính khẩu lớn F1.4/F1.8" },
-                      { id: "travel", icon: "✈️", title: "Phượt & Du Lịch Gọn Nhẹ", desc: "Ưu tiên body nhỏ gọn nhẹ dưới 600g & ống kính Zoom đa dụng" },
-                      { id: "vlog", icon: "🎥", title: "Quay Vlogging & Content Creator", desc: "Ưu tiên màn hình xoay lật, quay 4K 60p & chống rung mượt mà" },
-                      { id: "sports", icon: "🏃", title: "Chụp Thể Thao & Động Vật", desc: "Ưu tiên tốc độ chụp liên tiếp siêu nhanh 20-40fps & bắt nét AI" }
-                    ].map((opt) => (
+                      { id: "portrait", title: "Chụp chân dung & xóa phông", desc: "Ưu tiên cảm biến Full-frame và ống kính khẩu độ lớn f/1.4 - f/1.8" },
+                      { id: "travel", title: "Du lịch & phượt gọn nhẹ", desc: "Thân máy nhỏ gọn dưới 600g, màu ảnh đẹp và ống kính đa dụng" },
+                      { id: "vlog", title: "Quay Vlogging & Content Creator", desc: "Màn hình xoay lật 180 độ, quay phim 4K 60p và lấy nét mắt mượt mà" },
+                      { id: "sports", title: "Chụp thể thao & chuyển động", desc: "Tốc độ chụp liên tiếp siêu nhanh 20-40fps và tự động lấy nét AI" }
+                    ].map((item) => (
                       <div
-                        key={opt.id}
-                        className={wizardNeed === opt.id ? "option-card selected" : "option-card"}
-                        onClick={() => setWizardNeed(opt.id)}
+                        key={item.id}
+                        className={wizardNeed === item.id ? "selection-card active" : "selection-card"}
+                        onClick={() => setWizardNeed(item.id)}
                       >
-                        <span className="option-icon">{opt.icon}</span>
-                        <div>
-                          <strong>{opt.title}</strong>
-                          <p>{opt.desc}</p>
-                        </div>
+                        <strong>{item.title}</strong>
+                        <p>{item.desc}</p>
                       </div>
                     ))}
                   </div>
@@ -599,10 +637,10 @@ export default function App() {
               )}
 
               {wizardStep === 2 && (
-                <div className="wizard-step-content">
-                  <h3>Bước 2: Ngân sách dự kiến đầu tư của bạn?</h3>
-                  <div className="budget-slider-box">
-                    <div className="big-budget-display">{formatVND(wizardBudget)}</div>
+                <div className="step-view">
+                  <h4>Ngân sách dự kiến đầu tư của bạn:</h4>
+                  <div className="budget-picker-box">
+                    <div className="budget-value-display">{formatVND(wizardBudget)}</div>
                     <input
                       type="range"
                       min={20000000}
@@ -611,31 +649,31 @@ export default function App() {
                       value={wizardBudget}
                       onChange={(e) => setWizardBudget(Number(e.target.value))}
                     />
-                    <div className="budget-hints">
-                      <span>Dưới 25 triệu (Tối ưu)</span>
-                      <span>50 - 70 triệu (Chuyên nghiệp)</span>
+                    <div className="picker-range-info">
+                      <span>Dưới 25 triệu</span>
+                      <span>50 - 70 triệu+</span>
                     </div>
                   </div>
                 </div>
               )}
 
               {wizardStep === 3 && (
-                <div className="wizard-step-content">
-                  <h3>Bước 3: Bạn có ưu tiên thương hiệu cụ thể nào không?</h3>
-                  <div className="brands-option-grid">
+                <div className="step-view">
+                  <h4>Bạn có ưu tiên thương hiệu cụ thể nào không?</h4>
+                  <div className="brands-list-options">
                     {[
-                      { id: "All", name: "Tất cả thương hiệu (AI tự chọn tối ưu nhất)" },
-                      { id: "Sony", name: "Sony Alpha (Hệ sinh thái ngàm E đa dạng)" },
-                      { id: "Canon", name: "Canon EOS R (Màu da đẹp & Lấy nét AF đỉnh cao)" },
-                      { id: "Fujifilm", name: "Fujifilm (Màu phim giả lập độc quyền)" },
-                      { id: "Nikon", name: "Nikon Z (Độ bền bỉ & Khả năng xử lý N-RAW)" }
+                      { id: "All", name: "Tất cả thương hiệu (Hệ thống tự chọn máy ảnh tối ưu nhất)" },
+                      { id: "Sony", name: "Sony Alpha (Hệ sinh thái ống kính đa dạng nhất)" },
+                      { id: "Canon", name: "Canon EOS R (Màu da đẹp và lấy nét Dual Pixel)" },
+                      { id: "Fujifilm", name: "Fujifilm X (Giả lập màu phim độc quyền)" },
+                      { id: "Nikon", name: "Nikon Z (Độ bền bỉ và chất lượng kính ngắm cao)" }
                     ].map((b) => (
                       <div
                         key={b.id}
-                        className={wizardBrand === b.id ? "brand-option-item selected" : "brand-option-item"}
+                        className={wizardBrand === b.id ? "brand-row-card active" : "brand-row-card"}
                         onClick={() => setWizardBrand(b.id)}
                       >
-                        <strong>{b.name}</strong>
+                        <span>{b.name}</span>
                       </div>
                     ))}
                   </div>
@@ -643,20 +681,20 @@ export default function App() {
               )}
             </div>
 
-            <div className="wizard-footer">
+            <div className="wizard-dialog-footer">
               {wizardStep > 1 && (
-                <button className="btn-secondary" onClick={() => setWizardStep(wizardStep - 1)}>
-                  ← Quay lại
+                <button className="secondary-action-btn dark" onClick={() => setWizardStep(wizardStep - 1)}>
+                  Quay lại
                 </button>
               )}
 
               {wizardStep < 3 ? (
-                <button className="btn-primary" onClick={() => setWizardStep(wizardStep + 1)}>
+                <button className="primary-action-btn" onClick={() => setWizardStep(wizardStep + 1)}>
                   Tiếp theo →
                 </button>
               ) : (
-                <button className="btn-accent-finish" onClick={applyAiWizardResult}>
-                  🚀 Phân Tích & Hiển Thị Gợi Ý AI
+                <button className="apply-ai-btn" onClick={applyWizardFilter}>
+                  <SparkleIcon /> Lọc và hiển thị gợi ý phù hợp
                 </button>
               )}
             </div>
@@ -664,51 +702,51 @@ export default function App() {
         </div>
       )}
 
-      {/* 7. PRODUCT DETAIL SPECS MODAL */}
-      {detailModalProduct && (
-        <div className="modal-backdrop" onClick={() => setDetailModalProduct(null)}>
-          <div className="detail-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={() => setDetailModalProduct(null)}>✕</button>
+      {/* 7. PRODUCT DETAIL SPECS DIALOG */}
+      {detailProduct && (
+        <div className="dialog-overlay" onClick={() => setDetailProduct(null)}>
+          <div className="detail-dialog-box" onClick={(e) => e.stopPropagation()}>
+            <button className="dialog-close-btn" onClick={() => setDetailProduct(null)}>
+              <CloseIcon />
+            </button>
 
-            <div className="detail-grid">
-              <div className="detail-image-box">
-                <img src={detailModalProduct.image} alt={detailModalProduct.name} />
+            <div className="detail-dialog-layout">
+              <div className="detail-media-wrap">
+                <img src={detailProduct.image} alt={detailProduct.name} />
               </div>
 
-              <div className="detail-info-box">
-                <span className="brand-meta">{detailModalProduct.brand} • {detailModalProduct.category}</span>
-                <h2>{detailModalProduct.name}</h2>
-                <div className="price-tag-large">{formatVND(detailModalProduct.price)}</div>
+              <div className="detail-specs-wrap">
+                <div className="product-brand-meta">{detailProduct.brand} • {detailProduct.category}</div>
+                <h2>{detailProduct.name}</h2>
+                <div className="detail-price">{formatVND(detailProduct.price)}</div>
 
-                <p className="detail-desc">{detailModalProduct.description}</p>
+                <p className="detail-description">{detailProduct.description}</p>
 
-                <h4>📋 Bảng Thông Số Kỹ Thuật (Camera Specifications):</h4>
-                <table className="specs-table-detail">
+                <h4>Thông số kỹ thuật chi tiết:</h4>
+                <table className="specs-table">
                   <tbody>
-                    <tr><td>Cảm biến (Sensor)</td><td><strong>{detailModalProduct.specs.sensor}</strong></td></tr>
-                    <tr><td>Độ phân giải (Resolution)</td><td><strong>{detailModalProduct.specs.resolution}</strong></td></tr>
-                    <tr><td>Ngàm Lens (Mount)</td><td><strong>{detailModalProduct.specs.mount}</strong></td></tr>
-                    <tr><td>Quay Video (Video Specs)</td><td><strong>{detailModalProduct.specs.video}</strong></td></tr>
-                    <tr><td>Trọng lượng (Weight)</td><td><strong>{detailModalProduct.specs.weight}</strong></td></tr>
+                    <tr><td>Cảm biến (Sensor)</td><td><strong>{detailProduct.specs.sensor}</strong></td></tr>
+                    <tr><td>Độ phân giải</td><td><strong>{detailProduct.specs.resolution}</strong></td></tr>
+                    <tr><td>Ngàm Lens tương thích</td><td><strong>{detailProduct.specs.mount}</strong></td></tr>
+                    <tr><td>Quay video</td><td><strong>{detailProduct.specs.video}</strong></td></tr>
+                    <tr><td>Trọng lượng body</td><td><strong>{detailProduct.specs.weight}</strong></td></tr>
                   </tbody>
                 </table>
 
-                {detailModalProduct.aiReasons && (
-                  <div className="ai-explainable-box highlight-detail">
-                    <div className="explain-header">🤖 Phân tích Thuật Toán Gợi Ý AI:</div>
-                    <ul className="explain-list">
-                      {detailModalProduct.aiReasons.map((r, i) => (
-                        <li key={i}>✓ {r}</li>
+                {detailProduct.aiReasons && (
+                  <div className="ai-reason-container highlight">
+                    <div className="reason-title"><SparkleIcon /> Đánh giá tư vấn AI:</div>
+                    <ul className="reason-list">
+                      {detailProduct.aiReasons.map((r, idx) => (
+                        <li key={idx}><CheckIcon /> {r}</li>
                       ))}
                     </ul>
                   </div>
                 )}
 
-                <div className="detail-actions">
-                  <button className="btn-add-cart-large" onClick={() => { addToCart(detailModalProduct); setDetailModalProduct(null); }}>
-                    🛒 Thêm Vào Giỏ Hàng
-                  </button>
-                </div>
+                <button className="add-cart-large-btn" onClick={() => { setCartCount(cartCount + 1); setDetailProduct(null); }}>
+                  Thêm vào giỏ hàng
+                </button>
               </div>
             </div>
           </div>
@@ -716,33 +754,35 @@ export default function App() {
       )}
 
       {/* 8. FOOTER */}
-      <footer className="main-footer">
-        <div className="footer-container">
-          <div className="footer-col">
+      <footer className="site-footer">
+        <div className="site-wrapper footer-content">
+          <div className="footer-column">
             <h4>CAMERA STORE</h4>
-            <p>Hệ thống bán lẻ máy ảnh, ống kính chính hãng hàng đầu Việt Nam. Tích hợp AI Recommendation System tư vấn cá nhân hóa.</p>
+            <p>Hệ thống bán lẻ máy ảnh, ống kính chính hãng. Tích hợp công nghệ AI Recommendation System tư vấn cá nhân hóa.</p>
           </div>
-          <div className="footer-col">
-            <h4>Danh Mục Sản Phẩm</h4>
+          <div className="footer-column">
+            <h4>Sản Phẩm Nổi Bật</h4>
             <ul>
-              <li>Máy ảnh Mirrorless</li>
-              <li>Ống kính Sony E-mount</li>
-              <li>Ống kính Canon RF</li>
-              <li>Máy quay Vlog chuyên nghiệp</li>
+              <li>Máy ảnh Full-frame Sony Alpha</li>
+              <li>Máy ảnh Canon EOS R Series</li>
+              <li>Máy ảnh Fujifilm X Series</li>
+              <li>Máy ảnh Nikon Z Series</li>
             </ul>
           </div>
-          <div className="footer-col">
-            <h4>Chính Sách & Trợ Giúp</h4>
+          <div className="footer-column">
+            <h4>Chính Sách Khách Hàng</h4>
             <ul>
-              <li>Chính sách bảo hành 24 tháng</li>
-              <li>Đổi trả trong 30 ngày</li>
+              <li>Bảo hành chính hãng 24 tháng</li>
+              <li>Đổi trả miễn phí trong 30 ngày</li>
               <li>Chương trình Thu cũ đổi mới</li>
-              <li>Hướng dẫn thanh toán trả góp 0%</li>
+              <li>Hỗ trợ kỹ thuật 24/7</li>
             </ul>
           </div>
         </div>
-        <div className="footer-bottom">
-          <p>© 2026 Camera Store Project. Designed with E-Commerce Best Practices.</p>
+        <div className="footer-copyright">
+          <div className="site-wrapper">
+            <p>© 2026 Camera Store Project. Designed with E-Commerce Best Practices.</p>
+          </div>
         </div>
       </footer>
     </div>

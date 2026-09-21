@@ -1,36 +1,38 @@
-﻿# AGENTS.md
+# AGENTS.md
 
 ## Role
-Báº¡n lĂ  AI assistant cho Camera Store - má»™t dá»± Ă¡n Ä‘á»“ Ă¡n thÆ°Æ¡ng máº¡i Ä‘iá»‡n tá»­ vá» mĂ¡y áº£nh. Sá»­ dá»¥ng modular monolith vá»›i Spring Boot, JPA/Hibernate + Flyway, PostgreSQL vĂ  React.
+Bạn là AI assistant cho Camera Store - một dự án đồ án thương mại điện tử chuyên về máy ảnh, tích hợp hệ thống tư vấn & gợi ý cá nhân hóa (Recommendation System). Trọng tâm đồ án là Recommendation System. Sử dụng kiến trúc Modular Monolith với Spring Boot 3, JPA/Hibernate + Flyway, PostgreSQL 17 và React 19.
 
 ## Commands
-- Backend dev: `cd backend && mvn spring-boot:run`
-- Frontend dev: `cd frontend && npm run dev`
-- Migration: Flyway runs automatically on Spring Boot startup; inspect with `cd backend && mvn flyway:info`
+- Backend dev: `cd backend && mvn spring-boot:run` (Port: 8080)
+- Frontend dev: `cd frontend && npm run dev` (Port: 5173)
+- Migration: Flyway tự động chạy khi Spring Boot khởi động; kiểm tra: `cd backend && mvn flyway:info`
 - Backend build: `cd backend && mvn clean package`
 - Frontend build: `cd frontend && npm run build`
 
-## Source of Truth
-Khi thĂ´ng tin mĂ¢u thuáº«n, Æ°u tiĂªn theo thá»© tá»± sau:
-1. `docs/constitution.md` â€“ nguyĂªn táº¯c khĂ´ng thay Ä‘á»•i
-2. `docs/decisions.md` â€“ quyáº¿t Ä‘á»‹nh kiáº¿n trĂºc Ä‘Ă£ Ä‘Æ°á»£c cháº¥p nháº­n
-3. `docs/architecture.md` â€“ kiáº¿n trĂºc tá»•ng thá»ƒ vĂ  business context
-4. `docs/coding-style.md` â€“ quy táº¯c code cá»¥ thá»ƒ
-5. `docs/workflow.md` â€“ quy trĂ¬nh lĂ m viá»‡c
-6. `docs/checklist.md` â€“ tiáº¿n Ä‘á»™ task
+## Source of Truth (Thứ tự ưu tiên khi có mâu thuẫn thông tin)
+1. `docs/FOUNDATION_BASELINE.md` – Bản móng kỹ thuật & ranh giới 3 thành viên
+2. `docs/PROJECT_STATUS_AND_ROADMAP.md` – Lộ trình trọng tâm AI & phân nhóm A/B
+3. `docs/constitution.md` – Nguyên tắc kiến trúc bất biến
+4. `docs/decisions.md` – Quyết định kiến trúc đã được chấp nhận (ADRs)
+5. `docs/architecture.md` – Kiến trúc tổng thể và ranh giới module
+6. `docs/coding-style.md` – Quy tắc code chuẩn
+7. `docs/plan.md` – Kế hoạch phase
+8. `docs/checklist.md` – Danh sách kiểm tra tiến độ
 
-## Scope
-Dá»± Ă¡n nĂ y lĂ  Ä‘á»“ Ă¡n há»c táº­p. Æ¯u tiĂªn giáº£i phĂ¡p Ä‘Æ¡n giáº£n, dá»… báº£o trĂ¬.
-KhĂ´ng giá»›i thiá»‡u cĂ¡c máº«u kiáº¿n trĂºc doanh nghiá»‡p (CQRS, Event Sourcing, DDD Ä‘áº§y Ä‘á»§, Hexagonal, Repository pattern chá»“ng cháº¥t) trá»« khi Ä‘Æ°á»£c yĂªu cáº§u rĂµ rĂ ng.
-TrĂ¡nh táº¡o abstraction khĂ´ng cáº§n thiáº¿t.
+## Scope & Constraints
+- Đồ án tập trung vào hệ thống tư vấn gợi ý thiết bị nhiếp ảnh (Content-based, Constraint filtering, Explainable reasons).
+- Giao diện E-commerce chỉ là nền tảng tối thiểu để hiển thị và thu thập hành vi (`user_behaviors`).
+- Ưu tiên giải pháp đơn giản, dễ bảo trì, dễ demo.
+- Không giới thiệu các mẫu kiến trúc phức tạp (Microservices, CQRS, Event Sourcing, DDD đầy đủ, Hexagonal).
+- Tránh tạo abstraction không cần thiết.
 
-## AI skills
-- Implement feature: load `.ai/skills/implement-feature/SKILL.md`
-- Review code / fix bug: load `.ai/skills/review-code/SKILL.md`
+## AI Skills
+- Implement feature: tham khảo `.ai/skills/implement-feature/SKILL.md`
+- Review code / fix bug: tham khảo `.ai/skills/review-code/SKILL.md`
 
 ## Workflow
-Thá»±c hiá»‡n theo workflow vĂ  phase gates trong `docs/workflow.md`.
+Thực hiện theo chiến lược Vertical Slice: `DB Migration -> Spring Boot API -> React UI -> Smoke Test`.
 
 ## API Reference
-Náº¿u dá»± Ă¡n dĂ¹ng Swagger/OpenAPI, coi Swagger lĂ  nguá»“n sá»± tháº­t duy nháº¥t cho API. KhĂ´ng cáº§n duy trĂ¬ file markdown riĂªng cho API contracts.
-
+Swagger/OpenAPI tại `http://localhost:8080/swagger-ui.html` là nguồn sự thật duy nhất cho API contracts. Mọi response đều bọc trong `ApiResponse<T>`.

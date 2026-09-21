@@ -1,59 +1,56 @@
-﻿# Agent Workflow and Phase Gates
+# Agent Workflow and Phase Gates
 
-## 1. XĂ¡c Ä‘á»‹nh nguá»“n sá»± tháº­t
-Äá»c theo thá»© tá»±:
+## 1. Xác định nguồn sự thật (Source of Truth)
+Đọc tài liệu theo đúng thứ tự ưu tiên:
 
-1. `AGENTS.md`
-2. `docs/constitution.md`
-3. `docs/decisions.md`
-4. `docs/architecture.md`
-5. `docs/plan.md`
-6. `docs/checklist.md`
+1. `docs/FOUNDATION_BASELINE.md` – Bản móng kỹ thuật & ranh giới 3 thành viên
+2. `docs/PROJECT_STATUS_AND_ROADMAP.md` – Lộ trình trọng tâm AI & phân nhóm A/B
+3. `docs/constitution.md` – Nguyên tắc kiến trúc bất biến
+4. `docs/decisions.md` – Quyết định kiến trúc đã được chấp nhận
+5. `docs/architecture.md` – Kiến trúc tổng thể và ranh giới module
+6. `docs/coding-style.md` – Quy tắc code chuẩn
+7. `docs/plan.md` – Kế hoạch phase
+8. `docs/checklist.md` – Danh sách kiểm tra tiến độ
 
-Specification mĂ´ táº£ scope sáº£n pháº©m; plan vĂ  checklist quyáº¿t Ä‘á»‹nh thá»© tá»± triá»ƒn khai.
+Swagger/OpenAPI tại `http://localhost:8080/swagger-ui.html` là nguồn sự thật duy nhất cho API contracts.
 
-## 2. Chá»n Ä‘Ăºng phase vĂ  vertical slice
-- Má»—i task pháº£i ghi rĂµ phase, module, API/UI surface vĂ  acceptance criteria.
-- KhĂ´ng báº¯t Ä‘áº§u phase má»›i khi gate cá»§a phase trÆ°á»›c chÆ°a Ä‘áº¡t.
-- Æ¯u tiĂªn flow hoĂ n chá»‰nh tá»« database â†’ API â†’ UI â†’ smoke test.
-- KhĂ´ng giao cho AI má»™t task bao phá»§ toĂ n bá»™ project.
+## 2. Chọn đúng phase và vertical slice
+- Mỗi task phải ghi rõ phase, module, API/UI surface và acceptance criteria.
+- Không bắt đầu phase mới khi gate của phase trước chưa đạt.
+- Ưu tiên flow hoàn chỉnh theo lát cắt: Database Migration → Spring Boot API → React UI → Smoke Test.
+- Không ôm đồm task quá lớn dàn trải toàn bộ project.
 
-## 3. TrÆ°á»›c khi code
-- XĂ¡c Ä‘á»‹nh entity, authorization, validation, error cases vĂ  API response.
-- Náº¿u Ä‘á»•i schema, kiá»ƒm tra quan há»‡ vĂ  migration trÆ°á»›c khi viáº¿t service.
-- Náº¿u Ä‘á»•i recommendation, xĂ¡c Ä‘á»‹nh feature source, fallback vĂ  metric bá»‹ áº£nh hÆ°á»Ÿng.
-- Giá»›i háº¡n file Ä‘Æ°á»£c phĂ©p thay Ä‘á»•i trong prompt/task.
+## 3. Trước khi code
+- Xác định entity, DTO, validation, error cases và API response (`ApiResponse<T>`).
+- Nếu đổi schema, tạo file Flyway migration mới trước khi viết code Java.
+- Nếu đổi recommendation, xác định feature source, constraint và explainable reason bị ảnh hưởng.
+- Giới hạn file được phép thay đổi trong scope task.
 
 ## 4. Trong khi code
-- TuĂ¢n theo `docs/coding-style.md`.
-- Controller má»ng; business logic náº±m trong service/module.
-- DĂ¹ng DTO validation cho input vĂ  Spring transaction cho checkout.
-- KhĂ´ng tin giĂ¡, role hoáº·c stock do frontend gá»­i lĂªn.
-- KhĂ´ng log password, token hoáº·c dá»¯ liá»‡u nháº¡y cáº£m.
-- Cáº­p nháº­t Swagger khi API thay Ä‘á»•i.
+- Tuân theo `docs/coding-style.md`.
+- Controller mỏng; business logic nằm trong service.
+- Dùng DTO validation cho input.
+- Không tin giá, role hoặc stock do frontend gửi lên (luôn kiểm tra tại server).
+- Không log password, token hoặc dữ liệu nhạy cảm.
+- Cập nhật Swagger khi API thay đổi.
 
-## 5. Sau má»—i task
-Cháº¡y kiá»ƒm tra nhá» nháº¥t phĂ¹ há»£p:
+## 5. Sau mỗi task
+Chạy kiểm tra nhỏ nhất phù hợp:
 
-1. Typecheck/build cá»§a pháº§n vá»«a sá»­a.
-2. Unit/service test cho logic má»›i.
-3. API smoke test cho endpoint quan trá»ng.
-4. Frontend flow test náº¿u sá»­a UI.
-5. Flyway migration/seed check náº¿u sá»­a schema.
+1. Typecheck/build của phần vừa sửa (`mvn clean package` hoặc `npm run build`).
+2. Unit/service test cho logic mới.
+3. API smoke test cho endpoint quan trọng qua Swagger.
+4. Frontend flow test nếu sửa UI.
+5. Flyway migration check nếu sửa schema.
 
-Vá»›i auth, cart, order, inventory vĂ  recommendation, khĂ´ng Ä‘Æ°á»£c chá»‰ dá»±a vĂ o build pass.
+## 6. Gate của phase
+Chỉ tick checklist khi có bằng chứng (evidence):
+- Command đã chạy và kết quả pass;
+- Endpoint/UI flow đã được kiểm tra thực tế;
+- Lỗi chính và boundary cases đã được xử lý;
+- Swagger, schema hoặc docs đã đồng bộ.
 
-## 6. Gate cá»§a phase
-Chá»‰ tick checklist khi cĂ³ evidence:
-
-- command Ä‘Ă£ cháº¡y vĂ  káº¿t quáº£ pass;
-- endpoint/UI flow Ä‘Ă£ kiá»ƒm tra;
-- lá»—i chĂ­nh vĂ  boundary cases Ä‘Ă£ Ä‘Æ°á»£c xá»­ lĂ½;
-- Swagger, schema hoáº·c docs Ä‘Ă£ Ä‘á»“ng bá»™ náº¿u cĂ³ thay Ä‘á»•i.
-
-## 7. Káº¿t thĂºc task
-- Kiá»ƒm tra `docs/done.md`.
-- Cáº­p nháº­t `docs/checklist.md` Ä‘Ăºng má»¥c, khĂ´ng tick thay cho phase khĂ¡c.
-- Cáº­p nháº­t `docs/lessons.md` khi cĂ³ lá»—i báº¥t thÆ°á»ng, migration issue hoáº·c quyáº¿t Ä‘á»‹nh má»›i.
-- KhĂ´ng táº¡o abstraction, service hoáº·c dependency chá»‰ Ä‘á»ƒ lĂ m task â€œcĂ³ váº» Ä‘áº§y Ä‘á»§â€.
-
+## 7. Kết thúc task
+- Kiểm tra `docs/done.md`.
+- Cập nhật `docs/checklist.md` đúng mục, không tick thay cho phase khác.
+- Cập nhật `docs/lessons.md` khi có lỗi bất thường hoặc quyết định mới.

@@ -1,31 +1,30 @@
-﻿# Project Constitution
+# Project Constitution
 
-## Vai trĂ² file nĂ y
-File cá»‘ Ä‘á»‹nh. ÄĂ¢y lĂ  bá»™ quy táº¯c lĂ m viá»‡c khĂ´ng nĂªn thay Ä‘á»•i trong suá»‘t dá»± Ă¡n trá»« khi cĂ³ quyáº¿t Ä‘á»‹nh kiáº¿n trĂºc lá»›n.
+## Vai trò file này
+File cố định. Đây là bộ quy tắc làm việc không nên thay đổi trong suốt dự án trừ khi có quyết định kiến trúc lớn.
 
 ## 1. Architecture rules
-- Prefer a modular monolith over microservices.
-- Keep domains separated by Spring Boot packages/modules.
-- Avoid over-engineering unless the requirement clearly needs it.
+- Ưu tiên modular monolith thay vì microservices.
+- Giữ các domain tách biệt theo Spring Boot packages/modules.
+- Tránh over-engineering trừ khi yêu cầu nghiệp vụ thực sự đòi hỏi.
 
 ## 2. Development rules
-- Build features incrementally.
-- Keep code readable and consistent.
-- Use JPA entities and Flyway migrations as the single source of truth for database modeling.
-- Avoid introducing new services unless necessary.
+- Xây dựng tính năng theo từng lát cắt hoàn chỉnh (Vertical Slice).
+- Giữ code rõ ràng, nhất quán và có kiểm thử.
+- Sử dụng JPA entities và Flyway migrations làm nguồn sự thật duy nhất cho database modeling.
+- Không tự ý thêm dịch vụ hoặc abstraction không cần thiết.
 
 ## 3. Recommendation rules
-- Recommendation logic should be isolated in a dedicated module.
-- Start with content-based filtering.
-- Keep the integration path simple: Spring Boot reads Python artifacts or calls a lightweight wrapper.
-- Do not overcomplicate the first version.
+- Logic recommendation nằm độc lập trong module `recommendations`.
+- Bắt đầu với Content-based filtering kết hợp Constraint filtering và Explainable reasons.
+- Tích hợp đơn giản: Spring Boot đọc model artifact từ Python (file JSON/PKL) và nạp cache Redis.
+- Không phức tạp hóa phiên bản đầu tiên.
 
 ## 4. Documentation rules
-- Update documentation whenever major features are added.
-- Keep architecture notes and implementation docs synchronized.
+- Cập nhật tài liệu mỗi khi có thay đổi kiến trúc hoặc hợp đồng API.
+- Giữ các ghi chú kiến trúc và tài liệu triển khai luôn đồng bộ.
 
 ## 5. Quality rules
-- Validate backend and frontend builds before considering work complete.
-- Ensure key flows work: auth, product browsing, cart, order, recommendation.
-- Keep the project ready for defense and demo.
-
+- Luôn kiểm tra build backend (`mvn clean package`) và frontend (`npm run build`) trước khi hoàn thành task.
+- Đảm bảo các luồng cốt lõi hoạt động: duyệt danh mục, thông số máy ảnh, tư vấn gợi ý AI.
+- Giữ dự án luôn ở trạng thái sẵn sàng demo và báo cáo trước hội đồng.
