@@ -1,42 +1,382 @@
 import { useMemo, useState } from "react";
 import "./styles.css";
 
-type Product = { id: number; name: string; category: string; price: number; stock: number; badge?: string; image: string; description: string };
+type CameraSpec = {
+  sensor: string;
+  resolution: string;
+  mount: string;
+  video: string;
+  weight: string;
+};
+
+type Product = {
+  id: number;
+  name: string;
+  brand: string;
+  category: string;
+  price: number;
+  stock: number;
+  badge?: string;
+  image: string;
+  description: string;
+  specs: CameraSpec;
+  aiReasons?: string[];
+  useCases: string[];
+};
 
 const products: Product[] = [
-	{ id: 1, name: "Lumix S5 II", category: "Mirrorless", price: 32990000, stock: 8, badge: "Popular", image: "https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=900&q=85", description: "Full-frame hybrid camera for ambitious stills and video." },
-	{ id: 2, name: "Fujifilm X-T5", category: "Mirrorless", price: 28990000, stock: 5, badge: "New", image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=85", description: "A tactile APS-C body with a beautifully detailed sensor." },
-	{ id: 3, name: "Canon EOS R6 Mark II", category: "Mirrorless", price: 41990000, stock: 3, image: "https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=900&q=85", description: "Fast autofocus and confident low-light performance." },
-	{ id: 4, name: "Sony FE 35mm F1.4 GM", category: "Lenses", price: 34990000, stock: 6, badge: "Staff pick", image: "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=900&q=85", description: "A luminous everyday prime for portraits and street work." },
-	{ id: 5, name: "Peak Design Everyday 20L", category: "Accessories", price: 5690000, stock: 12, image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85", description: "Organized protection for a camera, lenses and a daily kit." },
-	{ id: 6, name: "Godox V1 Flash", category: "Accessories", price: 4890000, stock: 9, image: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=900&q=85", description: "A compact round-head flash for controlled creative light." },
+  {
+    id: 1,
+    name: "Sony Alpha A7 IV",
+    brand: "Sony",
+    category: "Mirrorless",
+    price: 54990000,
+    stock: 5,
+    badge: "Top AI Recommend",
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=85",
+    description: "Máy ảnh Full-frame hybrid đỉnh cao cho cả chụp ảnh chân dung và quay phim chuyên nghiệp.",
+    specs: { sensor: "Full-frame 35mm", resolution: "33.0 MP", mount: "Sony E-mount", video: "4K 60p 10-bit", weight: "658g" },
+    aiReasons: [
+      "Phù hợp chụp chân dung nhờ cảm biến Full-frame 33MP",
+      "Tương thích ngàm Sony E-mount rộng rãi",
+      "Quay phim 4K 60p sắc nét"
+    ],
+    useCases: ["portrait", "vlog", "travel"]
+  },
+  {
+    id: 2,
+    name: "Fujifilm X-T5",
+    brand: "Fujifilm",
+    category: "Mirrorless",
+    price: 43990000,
+    stock: 8,
+    badge: "Phổ biến",
+    image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=900&q=85",
+    description: "Máy ảnh APS-C 40MP phong cách cổ điển, lý tưởng cho du lịch và nhiếp ảnh đường phố.",
+    specs: { sensor: "APS-C X-Trans V", resolution: "40.2 MP", mount: "Fujifilm X-mount", video: "6.2K 30p", weight: "557g" },
+    aiReasons: [
+      "Nhỏ gọn nhẹ (557g) thích hợp phượt / du lịch",
+      "Màu phim giả lập Fujifilm độc quyền",
+      "Nằm trong ngân sách dưới 45 triệu"
+    ],
+    useCases: ["travel", "street"]
+  },
+  {
+    id: 3,
+    name: "Canon EOS R6 Mark II",
+    brand: "Canon",
+    category: "Mirrorless",
+    price: 59990000,
+    stock: 3,
+    badge: "Chuyên nghiệp",
+    image: "https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=900&q=85",
+    description: "Tốc độ chụp 40fps siêu nhanh, lấy nét AI bắt nét mắt động vật và thể thao chuẩn xác.",
+    specs: { sensor: "Full-frame Dual Pixel", resolution: "24.2 MP", mount: "Canon RF-mount", video: "4K 60p Oversampled", weight: "670g" },
+    aiReasons: [
+      "Tốc độ bắt nét AI 40fps cực đỉnh cho thể thao / động vật",
+      "Cảm biến Full-frame khử nhiễu ISO cao xuất sắc",
+      "Tương thích ngàm Canon RF"
+    ],
+    useCases: ["portrait", "sports", "vlog"]
+  },
+  {
+    id: 4,
+    name: "Sony ZV-E10 II",
+    brand: "Sony",
+    category: "Vlog Camera",
+    price: 21990000,
+    stock: 12,
+    badge: "Giá tốt cho Vlog",
+    image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=900&q=85",
+    description: "Dòng máy ảnh chuyên dụng cho Vlogger, nhỏ gọn, micro 3 khoang lọc gió xuất sắc.",
+    specs: { sensor: "APS-C Exmor R", resolution: "26.0 MP", mount: "Sony E-mount", video: "4K 60p", weight: "377g" },
+    aiReasons: [
+      "Tối ưu ngân sách dưới 25 triệu",
+      "Chuyên dụng cho Vlogging và Livestream",
+      "Siêu siêu nhẹ chỉ 377g"
+    ],
+    useCases: ["vlog", "travel"]
+  },
+  {
+    id: 5,
+    name: "Nikon Z6 III",
+    brand: "Nikon",
+    category: "Mirrorless",
+    price: 64990000,
+    stock: 4,
+    badge: "Mới ra mắt",
+    image: "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=900&q=85",
+    description: "Cảm biến Partially-stacked đầu tiên trên thế giới, màn hình xoay lật linh hoạt.",
+    specs: { sensor: "Full-frame Stacked CMOS", resolution: "24.5 MP", mount: "Nikon Z-mount", video: "6K 60p N-RAW", weight: "760g" },
+    aiReasons: [
+      "Cảm biến Partially-stacked tốc độ xử lý tức thì",
+      "Quay video 6K N-RAW chuyên nghiệp",
+      "Tương thích ngàm Nikon Z"
+    ],
+    useCases: ["sports", "vlog", "portrait"]
+  },
+  {
+    id: 6,
+    name: "Sony FE 85mm F1.4 GM II",
+    brand: "Sony",
+    category: "Ống kính (Lens)",
+    price: 47990000,
+    stock: 6,
+    badge: "Lens Chân dung",
+    image: "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=900&q=85",
+    description: "Ống kính chân dung huyền thoại với khẩu độ F1.4 cho hiệu ứng Bokeh mịn màng.",
+    specs: { sensor: "Ống kính Fix", resolution: "N/A", mount: "Sony E-mount", video: "AF bắt nét im lặng", weight: "642g" },
+    aiReasons: [
+      "Khẩu độ F1.4 xóa phông chân dung đỉnh cao",
+      "Đạt chuẩn G Master cao cấp nhất của Sony"
+    ],
+    useCases: ["portrait"]
+  }
 ];
 
-const formatPrice = (price: number) => `${new Intl.NumberFormat("vi-VN").format(price)} VND`;
+const formatPrice = (price: number) => `${new Intl.NumberFormat("vi-VN").format(price)} VNĐ`;
 
 export default function App() {
-	const [view, setView] = useState<"store" | "admin">("store");
-	const [query, setQuery] = useState("");
-	const [category, setCategory] = useState("All");
-	const [cart, setCart] = useState<number[]>([]);
-	const [adminSection, setAdminSection] = useState("Overview");
-	const visibleProducts = useMemo(() => products.filter((product) => {
-		const matchesCategory = category === "All" || product.category === category;
-		const matchesQuery = !query.trim() || `${product.name} ${product.category}`.toLowerCase().includes(query.trim().toLowerCase());
-		return matchesCategory && matchesQuery;
-	}), [category, query]);
-	const cartProducts = products.filter((product) => cart.includes(product.id));
-	const cartTotal = cartProducts.reduce((total, product) => total + product.price, 0);
-	const addToCart = (product: Product) => setCart((items) => items.includes(product.id) ? items : [...items, product.id]);
+  const [view, setView] = useState<"store" | "consultant">("store");
+  const [selectedBrand, setSelectedBrand] = useState("All");
+  const [selectedUseCase, setSelectedUseCase] = useState("All");
+  const [maxBudget, setMaxBudget] = useState<number>(70000000);
+  const [mountFilter, setMountFilter] = useState("All");
+  const [activeModalProduct, setActiveModalProduct] = useState<Product | null>(null);
 
-	const categories = [{ name: "Mirrorless bodies", count: "12 products", image: products[0].image }, { name: "Prime lenses", count: "18 products", image: products[3].image }, { name: "Field accessories", count: "34 products", image: products[4].image }];
-	return <div className="app-shell">
-		{view === "store" ? <>
-			<div className="announcement">Free delivery on orders over 10,000,000 VND <span>Explore our trade-in program -&gt;</span></div>
-			<header className="topbar"><a className="brand" href="#top"><span className="brand-mark">FC</span><span>FOCUS CAMERA</span></a><nav className="main-nav"><button className="nav-link active" onClick={() => setView("store")}>Shop</button><a className="nav-link" href="#catalog">Cameras</a><a className="nav-link" href="#catalog">Lenses</a><a className="nav-link" href="#journal">Journal</a></nav><div className="top-actions"><button className="account-button">Account</button><button className="cart-button" onClick={() => document.getElementById("cart")?.scrollIntoView({ behavior: "smooth" })}>Bag <strong>{cart.length}</strong></button><button className="admin-switch" onClick={() => setView("admin")}>Admin -&gt;</button></div></header>
-			<main id="top"><section className="hero-section"><div className="hero-copy"><p className="eyebrow">A considered camera store</p><h1>Make room for the shot.</h1><p className="hero-text">Camera bodies, lenses and the tools that make carrying a creative habit feel effortless.</p><button className="primary-button" onClick={() => document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" })}>Explore the collection <span>-&gt;</span></button><div className="hero-stats"><span><strong>24h</strong> dispatch</span><span><strong>30 day</strong> returns</span><span><strong>1:1</strong> kit advice</span></div></div><div className="hero-frame"><img src="https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&fit=crop&w=1200&q=85" alt="Camera on a table ready for a shoot" /><div className="frame-caption">Field notes / 01</div><div className="frame-index">01 / 03</div></div></section><section className="category-section"><div className="section-heading"><div><p className="eyebrow">Start with your way of seeing</p><h2>Shop by intention</h2></div><a className="text-link" href="#catalog">View all categories -&gt;</a></div><div className="category-grid">{categories.map((item) => <a className="category-card" href="#catalog" key={item.name}><img src={item.image} alt="" /><div><span>{item.count}</span><h3>{item.name}</h3></div><b>-&gt;</b></a>)}</div></section><section className="catalog-section" id="catalog"><div className="section-heading"><div><p className="eyebrow">Curated equipment</p><h2>Find your next perspective</h2></div><p className="section-note">{visibleProducts.length} products / ready to ship</p></div><div className="toolbar"><div className="search-box"><span>/</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search cameras, lenses..." aria-label="Search products" /></div><div className="filters">{["All", "Mirrorless", "Lenses", "Accessories"].map((item) => <button key={item} className={category === item ? "filter active" : "filter"} onClick={() => setCategory(item)}>{item}</button>)}</div></div><div className="content-grid"><div className="product-grid">{visibleProducts.map((product) => <article className="product-card" key={product.id}><div className="product-image"><img src={product.image} alt={product.name} />{product.badge && <span className="product-badge">{product.badge}</span>}<button className="wish-button" aria-label={`Save ${product.name}`}>+</button></div><div className="product-meta"><span className="product-category">{product.category}</span><h3>{product.name}</h3><p>{product.description}</p><div className="product-bottom"><strong>{formatPrice(product.price)}</strong><button className="add-button" onClick={() => addToCart(product)}>{cart.includes(product.id) ? "Added" : "+ Add to bag"}</button></div></div></article>)}</div><aside className="cart-panel" id="cart"><div className="panel-title"><h3>Your bag</h3><span>{cart.length} item(s)</span></div>{cartProducts.length === 0 ? <div className="empty-cart"><span className="empty-mark">+</span><p>Your shortlist is empty.</p><small>Add a piece to see the combined storefront and commerce flow.</small></div> : <><div className="cart-items">{cartProducts.map((product) => <div className="cart-item" key={product.id}><img src={product.image} alt="" /><div><strong>{product.name}</strong><span>{formatPrice(product.price)}</span></div></div>)}</div><div className="cart-total"><span>Total</span><strong>{formatPrice(cartTotal)}</strong></div><button className="primary-button full-width">Continue to checkout <span>-&gt;</span></button></>}</aside></div></section><section className="recommendation-section"><div><p className="eyebrow">Selected for your next session</p><h2>Build a quieter, sharper kit.</h2><p>Our recommendation layer pairs the way you shoot with equipment that earns its place in your bag.</p><button className="outline-button">See your recommendations -&gt;</button></div><img src={products[4].image} alt="Camera bag and accessories" /></section><section className="journal-section" id="journal"><div className="section-heading"><div><p className="eyebrow">The Focus journal</p><h2>Notes from the field</h2></div><a className="text-link" href="#top">Read all notes -&gt;</a></div><div className="journal-grid"><article><span>Buying guide / 06 min</span><h3>One body, three ways to start seeing differently.</h3><a href="#catalog">Read story -&gt;</a></article><article><span>Field notes / 04 min</span><h3>Why a small prime lens changes the way you walk.</h3><a href="#catalog">Read story -&gt;</a></article></div></section></main>
-		</> : <main className="admin-layout"><aside className="admin-sidebar"><a className="brand" href="#admin"><span className="brand-mark">FC</span><span>FOCUS / ADMIN</span></a><div className="admin-profile"><span className="avatar">LN</span><div><strong>Lan Nguyen</strong><small>Administrator</small></div></div><p className="sidebar-label">Workspace</p>{["Overview", "Catalog", "Orders", "Customers", "Recommendations"].map((item) => <button key={item} className={adminSection === item ? "side-link active" : "side-link"} onClick={() => setAdminSection(item)}><span>{item === "Overview" ? "O" : item === "Catalog" ? "C" : item === "Orders" ? "D" : item === "Customers" ? "U" : "R"}</span>{item}</button>)}<p className="sidebar-label">System</p><button className="side-link"><span>S</span>Settings</button><button className="back-store" onClick={() => setView("store")}>-&gt; View storefront</button></aside><section className="admin-content"><header className="admin-topbar"><div><span className="breadcrumb">Workspace / {adminSection}</span><h1>{adminSection === "Overview" ? "Good morning, Lan" : adminSection}</h1></div><div className="admin-top-actions"><span className="status-dot">All systems normal</span><button className="icon-button">?</button><span className="avatar small">LN</span></div></header>{adminSection === "Overview" ? <><div className="admin-actions"><button className="secondary-button">Export report</button><button className="primary-button">+ Add product</button></div><div className="metrics"><div><span>Gross sales</span><strong>128.4M</strong><small className="positive">+18.2% this month</small></div><div><span>Orders</span><strong>248</strong><small>32 awaiting fulfillment</small></div><div><span>Products</span><strong>64</strong><small className="warning">8 low in stock</small></div><div><span>Recommendations</span><strong>72%</strong><small className="positive">+6.4% conversion</small></div></div><div className="admin-columns"><section className="dashboard-panel sales-panel"><div className="panel-title"><div><span className="panel-kicker">Performance</span><h2>Sales overview</h2></div><button className="select-button">Last 30 days v</button></div><div className="sales-total"><strong>128,420,000 VND</strong><span>+18.2%</span></div><div className="chart"><div className="chart-grid"><i></i><i></i><i></i><i></i></div>{[42, 58, 48, 72, 65, 82, 70, 90, 76, 94, 86, 100].map((height, index) => <div className="bar-wrap" key={index}><div className="bar" style={{ height: `${height}%` }}></div><small>{index + 1}</small></div>)}</div></section><section className="dashboard-panel"><div className="panel-title"><div><span className="panel-kicker">Live queue</span><h2>Recent orders</h2></div><a className="text-link" href="#admin">View all -&gt;</a></div><div className="order-list">{[["#FC-1048", "Minh Tran", "8,490,000 VND", "Paid"], ["#FC-1047", "An Pham", "34,990,000 VND", "Packing"], ["#FC-1046", "Thu Le", "5,690,000 VND", "Paid"], ["#FC-1045", "Bao Nguyen", "41,990,000 VND", "Shipped"]].map(([id, name, total, status]) => <div className="order-row" key={id}><span className="order-id">{id}</span><div><strong>{name}</strong><small>{total}</small></div><span className={status === "Packing" ? "order-status packing" : "order-status"}>{status}</span></div>)}</div></section></div><section className="dashboard-panel inventory-panel"><div className="panel-title"><div><span className="panel-kicker">Attention needed</span><h2>Inventory health</h2></div><button className="text-link">Manage catalog -&gt;</button></div><div className="admin-table"><div className="table-row table-header"><span>Product</span><span>Category</span><span>Stock</span><span>Price</span><span>Status</span></div>{products.slice(0, 4).map((product) => <div className="table-row" key={product.id}><span className="table-product"><img src={product.image} alt="" /><strong>{product.name}</strong></span><span>{product.category}</span><span>{product.stock}</span><span>{formatPrice(product.price)}</span><span className={product.stock < 5 ? "stock low" : "stock"}>{product.stock < 5 ? "Low stock" : "In stock"}</span></div>)}</div></section></> : <section className="dashboard-panel placeholder-panel"><span className="panel-kicker">{adminSection} module</span><h2>{adminSection} is ready for API wiring.</h2><p>This preview reserves the workflow and navigation surface. The next pass can connect it to Spring Boot endpoints and PostgreSQL data.</p><button className="primary-button" onClick={() => setAdminSection("Overview")}>Back to overview -&gt;</button></section>}</section></main>}
-		<footer><span>FOCUS CAMERA / Local integration preview</span><span>Storefront + admin + recommendation-ready catalog</span></footer>
-	</div>;
+  // AI Filtering logic (Constraint + Recommendation)
+  const recommendedProducts = useMemo(() => {
+    return products.filter((item) => {
+      const matchBrand = selectedBrand === "All" || item.brand === selectedBrand;
+      const matchUseCase = selectedUseCase === "All" || item.useCases.includes(selectedUseCase);
+      const matchBudget = item.price <= maxBudget;
+      const matchMount = mountFilter === "All" || item.specs.mount.toLowerCase().includes(mountFilter.toLowerCase());
+      return matchBrand && matchUseCase && matchBudget && matchMount;
+    });
+  }, [selectedBrand, selectedUseCase, maxBudget, mountFilter]);
+
+  return (
+    <div className="app-shell">
+      {/* Top Banner */}
+      <div className="announcement">
+        🎉 <strong>ĐỒ ÁN CAMERA STORE:</strong> DEMO HỆ THỐNG GỢI Ý & TƯ VẤN MÁY ẢNH AI (RECOMMENDATION SYSTEM)
+      </div>
+
+      {/* Header */}
+      <header className="topbar">
+        <div className="brand" onClick={() => setView("store")}>
+          <span className="brand-mark">📷</span>
+          <span>CAMERA STORE <small>AI Powered</small></span>
+        </div>
+        <nav className="main-nav">
+          <button className={view === "store" ? "nav-link active" : "nav-link"} onClick={() => setView("store")}>
+            Danh mục máy ảnh
+          </button>
+          <button className={view === "consultant" ? "nav-link active ai-highlight" : "nav-link ai-highlight"} onClick={() => setView("consultant")}>
+            ✨ Tư vấn AI cá nhân hóa
+          </button>
+        </nav>
+        <div className="top-actions">
+          <button className="primary-button small" onClick={() => setView("consultant")}>
+            🤖 Trợ lý AI Tư Vấn
+          </button>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="main-container">
+        {/* HERO SECTION */}
+        <section className="hero-banner">
+          <div className="hero-content">
+            <span className="badge-ai">✨ AI Recommendation Engine 2.0</span>
+            <h1>Tìm chiếc Máy Ảnh Hoàn Hảo Dành Riêng Cho Bạn</h1>
+            <p>
+              Hệ thống AI phân tích thông số kỹ thuật (Camera Specs), ngân sách và nhu cầu thực tế 
+              để đưa ra gợi ý **chính xác kèm lý do giải thích minh bạch (Explainable Recommendations)**.
+            </p>
+            <div className="hero-buttons">
+              <button className="primary-button Large" onClick={() => setView("consultant")}>
+                Bắt đầu Tư vấn AI Ngay →
+              </button>
+              <button className="secondary-button" onClick={() => setView("store")}>
+                Xem tất cả sản phẩm
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* AI CONSULTANT MODAL / SECTION */}
+        {view === "consultant" && (
+          <section className="ai-consultant-section">
+            <div className="consultant-header">
+              <h2>🤖 Trợ Lý Tư Vấn Máy Ảnh AI (Constraint & Explainable Engine)</h2>
+              <p>Hãy chọn các tiêu chí ràng buộc của bạn, AI sẽ tự động phân tích và đưa ra máy ảnh tối ưu nhất!</p>
+            </div>
+
+            <div className="filter-card-grid">
+              {/* Constraint 1: Ngân sách */}
+              <div className="filter-box">
+                <label>💰 Ngân sách tối đa:</label>
+                <div className="budget-value">{formatPrice(maxBudget)}</div>
+                <input
+                  type="range"
+                  min={20000000}
+                  max={70000000}
+                  step={5000000}
+                  value={maxBudget}
+                  onChange={(e) => setMaxBudget(Number(e.target.value))}
+                />
+              </div>
+
+              {/* Constraint 2: Nhu cầu chụp */}
+              <div className="filter-box">
+                <label>🎯 Nhu cầu chụp chính:</label>
+                <select value={selectedUseCase} onChange={(e) => setSelectedUseCase(e.target.value)}>
+                  <option value="All">Tất cả nhu cầu</option>
+                  <option value="portrait">📸 Chụp Chân dung (Portrait)</option>
+                  <option value="travel">✈️ Phượt / Du lịch (Travel)</option>
+                  <option value="vlog">🎥 Quay Vlogging / Youtube</option>
+                  <option value="sports">🏃 Chụp Thể thao / Động vật (Sports)</option>
+                </select>
+              </div>
+
+              {/* Constraint 3: Hãng sản xuất */}
+              <div className="filter-box">
+                <label>🏢 Thương hiệu yêu thích:</label>
+                <select value={selectedBrand} onChange={(e) => setSelectedBrand(e.target.value)}>
+                  <option value="All">Tất cả thương hiệu</option>
+                  <option value="Sony">Sony</option>
+                  <option value="Canon">Canon</option>
+                  <option value="Fujifilm">Fujifilm</option>
+                  <option value="Nikon">Nikon</option>
+                </select>
+              </div>
+
+              {/* Constraint 4: Ngàm Lens */}
+              <div className="filter-box">
+                <label>🔌 Tương thích Ngàm (Lens Mount):</label>
+                <select value={mountFilter} onChange={(e) => setMountFilter(e.target.value)}>
+                  <option value="All">Tất cả ngàm</option>
+                  <option value="Sony E-mount">Sony E-mount</option>
+                  <option value="Canon RF-mount">Canon RF-mount</option>
+                  <option value="Fujifilm X-mount">Fujifilm X-mount</option>
+                  <option value="Nikon Z-mount">Nikon Z-mount</option>
+                </select>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* PRODUCT CATALOG GRID */}
+        <section className="catalog-section">
+          <div className="section-title">
+            <h3>
+              {view === "consultant"
+                ? `🎯 Kết quả AI Gợi Ý (${recommendedProducts.length} sản phẩm phù hợp)`
+                : "📸 Danh Sách Máy Ảnh & Thiết Bị"}
+            </h3>
+            <span className="results-count">Hiển thị {recommendedProducts.length} / {products.length} máy ảnh</span>
+          </div>
+
+          <div className="products-grid">
+            {recommendedProducts.length === 0 ? (
+              <div className="no-results">
+                <span>🔍</span>
+                <p>Không tìm thấy máy ảnh nào khớp hoàn toàn với ràng buộc của bạn.</p>
+                <button className="secondary-button" onClick={() => { setMaxBudget(70000000); setSelectedBrand("All"); setSelectedUseCase("All"); setMountFilter("All"); }}>
+                  Đặt lại bộ lọc
+                </button>
+              </div>
+            ) : (
+              recommendedProducts.map((item) => (
+                <div key={item.id} className="product-card">
+                  <div className="card-image-wrap">
+                    <img src={item.image} alt={item.name} />
+                    {item.badge && <span className="card-badge">{item.badge}</span>}
+                  </div>
+
+                  <div className="card-body">
+                    <div className="card-brand">{item.brand} • {item.category}</div>
+                    <h4 className="card-title">{item.name}</h4>
+                    <p className="card-desc">{item.description}</p>
+
+                    {/* Camera Specs preview */}
+                    <div className="specs-pills">
+                      <span>📷 {item.specs.sensor}</span>
+                      <span>📐 {item.specs.resolution}</span>
+                      <span>🔌 {item.specs.mount}</span>
+                    </div>
+
+                    {/* EXPLAINABLE REASONS (Giải thích lý do gợi ý) */}
+                    {item.aiReasons && item.aiReasons.length > 0 && (
+                      <div className="ai-reasons-box">
+                        <div className="reasons-header">💡 Lý do AI gợi ý cho bạn:</div>
+                        <ul>
+                          {item.aiReasons.map((reason, index) => (
+                            <li key={index}>✓ {reason}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    <div className="card-footer">
+                      <div className="price-tag">{formatPrice(item.price)}</div>
+                      <button className="primary-button small" onClick={() => setActiveModalProduct(item)}>
+                        Xem Thông Số Chi Tiết
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+
+        {/* MODAL CHI TIẾT CAMERA SPECS */}
+        {activeModalProduct && (
+          <div className="modal-overlay" onClick={() => setActiveModalProduct(null)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="modal-close" onClick={() => setActiveModalProduct(null)}>✕</button>
+              <div className="modal-header">
+                <span className="modal-brand">{activeModalProduct.brand}</span>
+                <h2>{activeModalProduct.name}</h2>
+                <div className="modal-price">{formatPrice(activeModalProduct.price)}</div>
+              </div>
+
+              <div className="modal-body">
+                <img src={activeModalProduct.image} alt={activeModalProduct.name} className="modal-img" />
+
+                <h4>📋 Bảng Thông Số Kỹ Thuật Chi Tiết (Camera Specifications):</h4>
+                <table className="specs-table">
+                  <tbody>
+                    <tr><td>Cảm biến (Sensor)</td><td><strong>{activeModalProduct.specs.sensor}</strong></td></tr>
+                    <tr><td>Độ phân giải (Resolution)</td><td><strong>{activeModalProduct.specs.resolution}</strong></td></tr>
+                    <tr><td>Ngàm Lens (Mount)</td><td><strong>{activeModalProduct.specs.mount}</strong></td></tr>
+                    <tr><td>Quay Video (Video Specs)</td><td><strong>{activeModalProduct.specs.video}</strong></td></tr>
+                    <tr><td>Trọng lượng (Weight)</td><td><strong>{activeModalProduct.specs.weight}</strong></td></tr>
+                  </tbody>
+                </table>
+
+                {activeModalProduct.aiReasons && (
+                  <div className="ai-reasons-box highlighted">
+                    <div className="reasons-header">🤖 Phân tích AI Recommendation:</div>
+                    <ul>
+                      {activeModalProduct.aiReasons.map((r, i) => (
+                        <li key={i}>✅ {r}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="footer">
+        <p>© 2026 Camera Store — Đồ Án Hệ Thống Gợi Ý Cá Nhân Hóa Thiết Bị Nhiếp Ảnh</p>
+      </footer>
+    </div>
+  );
 }
-
