@@ -1,9 +1,26 @@
-# camera-store
+﻿# Camera Store
 
-A simple starter repository for a camera-store project.
+Monolithic camera e-commerce platform with a Spring Boot backend, React frontend, and a dedicated Python recommendation component.
 
-## Getting started
+## Structure
 
-- Add your project files here.
-- Update this README with installation and usage instructions.
-- Connect this repository to GitHub and push your changes.
+- `backend/`: Spring Boot API, JPA entities, and Flyway migrations
+- `frontend/`: React + Vite UI
+- `ai/`: recommendation training, inference, models, and experiments
+- `docs/`: project source documentation, diagrams, report, and presentation materials
+- `.ai/skills/`: reusable coding and review instructions for AI assistants
+
+## Local stack
+
+- PostgreSQL for the main database
+- Redis for recommendation caching
+- Docker Compose for local infrastructure
+
+## Start here
+
+New team members should follow [docs/setup.md](docs/setup.md) before implementing features.
+The project uses a modular monolith: one Spring Boot backend, one React SPA, PostgreSQL,
+Redis, and Python files for recommendation experiments. Docker containers are runtime
+tooling, not microservices.
+
+

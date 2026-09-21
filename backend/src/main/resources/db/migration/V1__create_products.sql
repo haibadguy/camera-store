@@ -1,0 +1,10 @@
+CREATE TABLE products (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(160) NOT NULL,
+    category VARCHAR(80) NOT NULL,
+    description TEXT NOT NULL,
+    image_url VARCHAR(500) NOT NULL,
+    price NUMERIC(12, 2) NOT NULL,
+    stock INTEGER NOT NULL DEFAULT 0,
+    featured BOOLEAN NOT NULL DEFAULT FALSE
+);
