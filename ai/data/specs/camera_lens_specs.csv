@@ -59,3 +59,82 @@ L032,Olympus,M.Zuiko Digital ED 12-40mm f/2.8 PRO,Lens,Micro Four Thirds,Micro F
 L033,Olympus,M.Zuiko Digital ED 45mm f/1.8,Lens,Micro Four Thirds,Micro Four Thirds,45,1.8,Portrait
 L034,Panasonic,Lumix G 25mm f/1.7 ASPH,Lens,Micro Four Thirds,Micro Four Thirds,25,1.7,Street|Portrait
 L035,Panasonic,Lumix S PRO 24-70mm f/2.8,Lens,L-Mount,Full-frame,24-70,2.8,Event|Landscape
+B026,Sony,Alpha A7 III,Body,Sony E,Full-frame,,,Portrait|Event|Landscape
+B027,Sony,Alpha A7 II,Body,Sony E,Full-frame,,,Travel|Street|Portrait
+B028,Sony,Alpha A7R III,Body,Sony E,Full-frame,,,Commercial|Landscape
+B029,Sony,Alpha A7R IV,Body,Sony E,Full-frame,,,Commercial|Landscape
+B030,Sony,Alpha A6000,Body,Sony E,APS-C,,,Travel|Street|Vlog
+B031,Sony,Alpha A6600,Body,Sony E,APS-C,,,Vlog|Travel|Street
+B032,Sony,Alpha A6100,Body,Sony E,APS-C,,,Travel|Street
+B033,Sony,Alpha A6300,Body,Sony E,APS-C,,,Travel|Street
+B034,Sony,Alpha A6500,Body,Sony E,APS-C,,,Travel|Street|Video
+B035,Sony,Alpha 9,Body,Sony E,Full-frame,,,Sports|Wildlife
+B036,Sony,Alpha 9 II,Body,Sony E,Full-frame,,,Sports|Wildlife
+B037,Sony,Alpha A7C,Body,Sony E,Full-frame,,,Travel|Vlog|Street
+B038,Canon,EOS R,Body,Canon RF,Full-frame,,,Portrait|Travel|Event
+B039,Canon,EOS RP,Body,Canon RF,Full-frame,,,Travel|Portrait
+B040,Canon,EOS R6,Body,Canon RF,Full-frame,,,Portrait|Event|Sports
+B041,Canon,EOS 6D Mark II,Body,Canon EF,Full-frame,,,Portrait|Event|Landscape
+B042,Canon,EOS 6D,Body,Canon EF,Full-frame,,,Portrait|Landscape
+B043,Canon,EOS 5D Mark III,Body,Canon EF,Full-frame,,,Commercial|Portrait
+B044,Canon,EOS 80D,Body,Canon EF,APS-C,,,Sports|Wildlife|Video
+B045,Canon,EOS 70D,Body,Canon EF,APS-C,,,Sports|Vlog
+B046,Canon,EOS Rebel T7,Body,Canon EF,APS-C,,,Travel|Beginner
+B047,Canon,EOS Rebel T6,Body,Canon EF,APS-C,,,Travel|Beginner
+B048,Canon,EOS Rebel T5,Body,Canon EF,APS-C,,,Beginner|Travel
+B049,Canon,EOS Rebel SL2,Body,Canon EF,APS-C,,,Travel|Vlog
+B050,Canon,EOS Rebel SL3,Body,Canon EF,APS-C,,,Travel|Vlog
+B051,Nikon,Z6,Body,Nikon Z,Full-frame,,,Portrait|Event|Video
+B052,Nikon,Z7,Body,Nikon Z,Full-frame,,,Landscape|Commercial
+B053,Nikon,Z7 II,Body,Nikon Z,Full-frame,,,Landscape|Commercial
+B054,Nikon,Z9,Body,Nikon Z,Full-frame,,,Sports|Wildlife|Commercial
+B055,Nikon,Z30,Body,Nikon Z,APS-C,,,Vlog|Travel
+B056,Nikon,Z fc,Body,Nikon Z,APS-C,,,Street|Travel
+B057,Nikon,D750,Body,Nikon F,Full-frame,,,Event|Portrait|Landscape
+B058,Nikon,D500,Body,Nikon F,APS-C,,,Sports|Wildlife
+B059,Nikon,D7500,Body,Nikon F,APS-C,,,Travel|Sports
+B060,Nikon,D5600,Body,Nikon F,APS-C,,,Travel|Beginner
+B061,Fujifilm,X-T4,Body,Fujifilm X,APS-C,,,Video|Travel|Portrait
+B062,Fujifilm,X-T3,Body,Fujifilm X,APS-C,,,Sports|Video|Portrait
+B063,Fujifilm,X-T30 II,Body,Fujifilm X,APS-C,,,Travel|Street
+B064,Fujifilm,X-S10,Body,Fujifilm X,APS-C,,,Vlog|Travel
+B065,Fujifilm,X100V,Body,Fujifilm X,APS-C,,,Street|Travel
+B066,Panasonic,Lumix GH5,Body,Micro Four Thirds,Micro Four Thirds,,,Video|Event
+B067,Panasonic,Lumix GH6,Body,Micro Four Thirds,Micro Four Thirds,,,Video|Commercial
+B068,Panasonic,Lumix G9,Body,Micro Four Thirds,Micro Four Thirds,,,Wildlife|Sports
+B069,Panasonic,Lumix S5,Body,L-Mount,Full-frame,,,Video|Portrait
+L036,Sony,FE 24-105mm f/4 G OSS,Lens,Sony E,Full-frame,24-105,4.0,Event|Travel
+L037,Sony,FE 35mm f/1.4 GM,Lens,Sony E,Full-frame,35,1.4,Street|Portrait
+L038,Sony,FE 20mm f/1.8 G,Lens,Sony E,Full-frame,20,1.8,Landscape|Vlog
+L039,Sony,FE 50mm f/1.2 GM,Lens,Sony E,Full-frame,50,1.2,Portrait|Commercial
+L040,Sony,FE 90mm f/2.8 Macro G OSS,Lens,Sony E,Full-frame,90,2.8,Macro|Portrait
+L041,Sony,E 55-210mm f/4.5-6.3 OSS,Lens,Sony E,APS-C,55-210,4.5,Travel|Sports
+L042,Sony,E 18-135mm f/3.5-5.6 OSS,Lens,Sony E,APS-C,18-135,3.5,Travel|All-around
+L043,Sony,E 10-18mm f/4 OSS,Lens,Sony E,APS-C,10-18,4.0,Landscape|Vlog
+L044,Canon,RF 24-105mm f/4L IS USM,Lens,Canon RF,Full-frame,24-105,4.0,Event|Travel
+L045,Canon,RF 35mm f/1.8 Macro IS STM,Lens,Canon RF,Full-frame,35,1.8,Street|Macro
+L046,Canon,RF 16mm f/2.8 STM,Lens,Canon RF,Full-frame,16,2.8,Vlog|Landscape
+L047,Canon,RF 100mm f/2.8L Macro IS USM,Lens,Canon RF,Full-frame,100,2.8,Macro|Portrait
+L048,Canon,RF-S 18-45mm f/4.5-6.3 IS STM,Lens,Canon RF,APS-C,18-45,4.5,Travel|Vlog
+L049,Canon,RF-S 18-150mm f/3.5-6.3 IS STM,Lens,Canon RF,APS-C,18-150,3.5,Travel|All-around
+L050,Canon,EF 24-105mm f/4L IS II USM,Lens,Canon EF,Full-frame,24-105,4.0,Travel|Event
+L051,Canon,EF 16-35mm f/2.8L III USM,Lens,Canon EF,Full-frame,16-35,2.8,Landscape|Architecture
+L052,Canon,EF 85mm f/1.8 USM,Lens,Canon EF,Full-frame,85,1.8,Portrait
+L053,Canon,EF-S 18-55mm f/3.5-5.6 IS STM,Lens,Canon EF,APS-C,18-55,3.5,Beginner|Travel
+L054,Canon,EF-S 55-250mm f/4-5.6 IS STM,Lens,Canon EF,APS-C,55-250,4.0,Sports|Wildlife
+L055,Canon,EF-S 10-18mm f/4.5-5.6 IS STM,Lens,Canon EF,APS-C,10-18,4.5,Landscape|Vlog
+L056,Nikon,NIKKOR Z 24-120mm f/4 S,Lens,Nikon Z,Full-frame,24-120,4.0,Travel|Event
+L057,Nikon,NIKKOR Z 40mm f/2,Lens,Nikon Z,Full-frame,40,2.0,Street|Everyday
+L058,Nikon,NIKKOR Z 28mm f/2.8,Lens,Nikon Z,Full-frame,28,2.8,Street|Travel
+L059,Nikon,NIKKOR Z DX 16-50mm f/3.5-6.3 VR,Lens,Nikon Z,APS-C,16-50,3.5,Travel|Vlog
+L060,Nikon,NIKKOR Z DX 50-250mm f/4.5-6.3 VR,Lens,Nikon Z,APS-C,50-250,4.5,Travel|Sports
+L061,Nikon,AF-S NIKKOR 50mm f/1.8G,Lens,Nikon F,Full-frame,50,1.8,Portrait|Street
+L062,Nikon,AF-S DX NIKKOR 35mm f/1.8G,Lens,Nikon F,APS-C,35,1.8,Street|Portrait
+L063,Nikon,AF-S NIKKOR 24-70mm f/2.8E ED VR,Lens,Nikon F,Full-frame,24-70,2.8,Event|Commercial
+L064,Fujifilm,XF 18-55mm f/2.8-4 R LM OIS,Lens,Fujifilm X,APS-C,18-55,2.8,Travel|All-around
+L065,Fujifilm,XF 23mm f/1.4 R LM WR,Lens,Fujifilm X,APS-C,23,1.4,Street|Travel
+L066,Fujifilm,XF 27mm f/2.8 R WR,Lens,Fujifilm X,APS-C,27,2.8,Pancake|Everyday
+L067,Fujifilm,XC 15-45mm f/3.5-5.6 OIS PZ,Lens,Fujifilm X,APS-C,15-45,3.5,Travel|Vlog
+L068,Olympus,M.Zuiko Digital ED 14-42mm f/3.5-5.6 EZ,Lens,Micro Four Thirds,Micro Four Thirds,14-42,3.5,Travel|Vlog
+L069,Olympus,M.Zuiko Digital ED 40-150mm f/4-5.6 R,Lens,Micro Four Thirds,Micro Four Thirds,40-150,4.0,Travel|Sports
+L070,Panasonic,Lumix G Vario 12-32mm f/3.5-5.6 ASPH,Lens,Micro Four Thirds,Micro Four Thirds,12-32,3.5,Travel|Street
