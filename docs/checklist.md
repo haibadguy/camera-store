@@ -62,10 +62,10 @@
 - [ ] **Gate:** Khách hàng đã xem máy ảnh Sony sẽ nhận được danh sách gợi ý ưu tiên dòng máy Sony & Lens ngàm E tương thích.
 
 ### Phase 7: Đánh Giá Offline & Recommendation Dashboard
-- [ ] Python script đánh giá mô hình offline: Precision@K, Recall@K, Hit Rate@K, Coverage
+- [ ] Python script đánh giá mô hình offline: Ranking (NDCG@K, Recall@K, Hit@K) và Ràng buộc Ngàm (K-CVR@K, URR@K)
 - [ ] Lưu log sự kiện nhấp vào gợi ý để tính toán CTR (Click-Through-Rate)
 - [ ] Dashboard quản trị đơn giản hiển thị số liệu đo lường hiệu quả mô hình AI
-- [ ] **Gate:** Có bảng số liệu đánh giá offline (Precision@K...) và báo cáo CTR sẵn sàng đưa vào báo cáo đồ án.
+- [ ] **Gate:** Có bảng số liệu đánh giá offline (NDCG, Recall, K-CVR@K, URR@K) và báo cáo CTR sẵn sàng đưa vào báo cáo đồ án.
 
 ### Phase 8: Polish, Demo & Báo Cáo Đồ Án
 - [ ] Kiểm thử luồng tư vấn gợi ý hoàn chỉnh từ database sạch

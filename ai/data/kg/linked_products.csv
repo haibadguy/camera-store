@@ -1,0 +1,258 @@
+parent_asin,amazon_title,detected_brand,category,spec_id,canonical_model,mount,match_tier,confidence
+B073C8Z4SX,"Canon EOS 6D Mark II with EF 24-105mm is STM Lens, WiFi Enabled",Canon,Body,B041,EOS 6D Mark II,Canon EF,Tier 1 (Regex),1.0
+B08L7DHTRL,Nikon Z 7II FX-Format Mirrorless Camera Body Black with Nikon Mount Adapter FTZ II,Nikon,Body,B053,Z7 II,Nikon Z,Tier 1 (Regex),1.0
+B0035LBRM6,"Olympus M.Zuiko Digital ED 9-18mm F4.0-5.6 Lens, for Micro Four Thirds Cameras",Olympus,Lens,L033,M.Zuiko Digital ED 45mm f/1.8,Micro Four Thirds,Tier 3 (Semantic),0.89
+B08C6ZRVC5,Canon RF 100-500mm F4.5-7.1 L is USM Super-Telephoto Lens,Canon,Lens,L017,RF 100-500mm f/4.5-7.1L IS USM,Canon RF,Tier 1 (Regex),1.0
+B086KJM662,Fujifilm X-T4 Mirrorless Digital Camera XF16-80mm Lens Kit - Silver,Fujifilm,Body,B061,X-T4,Fujifilm X,Tier 1 (Regex),1.0
+B08CNW1LW2,"Canon EOS R5 Full-Frame Mirrorless Camera w/ RF24-105mm F4 L is USM Lens Kit - 8K Video, 45 Megapixel Full-Frame CMOS Sensor, DIGIC X Image Processor, Up to 12 fps Mechanical Shutter (Body + Lens)",Canon,Body,B008,EOS R5,Canon RF,Tier 1 (Regex),1.0
+B0028Y5GKK,"PANASONIC LUMIX G VARIO LENS, 7-14MM, F4.0 ASPH., MIRRORLESS MICRO FOUR THIRDS, H-F007014 (USA BLACK)",Panasonic,Lens,L070,Lumix G Vario 12-32mm f/3.5-5.6 ASPH,Micro Four Thirds,Tier 3 (Semantic),0.867
+B00O0ADT5O,Canon EOS 6D 20.1 MP CMOS Digital SLR Camera with 3.0-Inch LCD (Body Only),Canon,Body,B042,EOS 6D,Canon EF,Tier 1 (Regex),1.0
+B076LFCBHY,Canon EOS 5D Mark IV Digital SLR Camera Bundle (Body Only) + Professional Accessory Bundle (14 Items),Canon,Body,B013,EOS 5D Mark IV,Canon EF,Tier 1 (Regex),1.0
+B07Q41ZZ1S,ROKINON IO85AF-E 85mm F1.4 Auto Focus Weather Sealed Lens for Sony E-Mount,Sony,Lens,L010,85mm f/1.4 DG DN Art (Sony E),Sony E,Tier 1 (Regex),1.0
+B01997LHU6,Nikon AF-S FX NIKKOR 24-70mm f/2.8E ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras,Nikon,Lens,L063,AF-S NIKKOR 24-70mm f/2.8E ED VR,Nikon F,Tier 1 (Regex),1.0
+B0B823Z6GR,"Sigma 213965 14-24mm F2.8 DG DN Art for Sony E Mount, Black",Sony,Lens,L009,24-70mm f/2.8 DG DN Art (Sony E),Sony E,Tier 3 (Semantic),0.825
+B081L5HJBP,"Sigma 24-70mm F2.8 DG DN Art for Sony E Lens ,Black",Sony,Lens,L003,FE 24-70mm f/2.8 GM II,Sony E,Tier 1 (Regex),1.0
+B07WQ54BL8,"Canon RF 24-70mm F2.8 L is USM Lens, Black",Canon,Lens,L014,RF 24-70mm f/2.8L IS USM,Canon RF,Tier 1 (Regex),1.0
+B00V8VMXFU,Nikon AF-S Nikkor 50mm f/1.8G Lens,Nikon,Lens,L061,AF-S NIKKOR 50mm f/1.8G,Nikon F,Tier 1 (Regex),1.0
+B07Y29SVXZ,"Canon EOS 90D DSLR Camera w/ 18-55mm Lens Bundle + Canon 75-300mm III Lens, Canon 50mm f/1.8 & 500mm Preset Lens + Camera Case + 96GB Memory + Battery Grip + Speedlight Flash + Professional Bundle",Canon,Body,B014,EOS 90D,Canon EF,Tier 1 (Regex),1.0
+B00O0ADQYS,Canon EOS 70D Digital SLR Camera with 18-55mm STM Lens,Canon,Body,B045,EOS 70D,Canon EF,Tier 1 (Regex),1.0
+B00WUI6M5C,Nikon AF-S NIKKOR 35mm f/1.8G ED Fixed Zoom Lens with Auto Focus for Nikon DSLR Cameras,Nikon,Lens,L062,AF-S DX NIKKOR 35mm f/1.8G,Nikon F,Tier 1 (Regex),1.0
+B00V8VM7SS,Nikon AF-S FX NIKKOR 24-70mm f/2.8G ED Zoom Lens with Auto Focus for Nikon DSLR Cameras,Nikon,Lens,L063,AF-S NIKKOR 24-70mm f/2.8E ED VR,Nikon F,Tier 1 (Regex),1.0
+B075VJK1VM,Canon EF-S 18-55mm f/3.5-5.6 is STM Camera Lens,Canon,Lens,L053,EF-S 18-55mm f/3.5-5.6 IS STM,Canon EF,Tier 2 (Fuzzy),0.85
+B01LQOAAXU,"Canon EOS 5D Mark IV DSLR Camera Body + Vivitar Camera Grip + 64GB Memory Card + Microphone + LED Video Light + 72"" Monopod + SLR Backpack Accessory Bundle",Canon,Body,B013,EOS 5D Mark IV,Canon EF,Tier 1 (Regex),1.0
+B006UL00R6,Fujifilm XF35mmF1.4 R,Fujifilm,Lens,L027,XF 35mm f/1.4 R,Fujifilm X,Tier 1 (Regex),1.0
+B077PSDB4X,Sony Alpha a6000 Mirrorless Digital Camera with 16-50 mm Lens 24.3MP (Silver),Sony,Body,B030,Alpha A6000,Sony E,Tier 1 (Regex),1.0
+B00006I53Q,Canon EF 16-35mm f/2.8L USM Ultra Wide Angle Zoom Lens for Canon SLR Cameras (Discontinued by Manufacturer),Canon,Lens,L051,EF 16-35mm f/2.8L III USM,Canon EF,Tier 1 (Regex),1.0
+B0199BF87K,Sony SEL35F14Z Distagon T FE 35mm f/1.4 ZA Standard-Prime Lens for Mirrorless Cameras,Sony,Lens,L037,FE 35mm f/1.4 GM,Sony E,Tier 1 (Regex),1.0
+B0BKRCVV6W,Sony Alpha 7R V Full-Frame Mirrorless Interchangeable Lens Camera,Sony,Body,B002,Alpha A7R V,Sony E,Tier 1 (Regex),1.0
+B004XXAK5U,"Nikon AF-S NIKKOR 50mm f/1.8G Len [International Version, No Warranty]",Nikon,Lens,L061,AF-S NIKKOR 50mm f/1.8G,Nikon F,Tier 1 (Regex),1.0
+B08C6Y8KS3,"Canon RF 85mm F2 Macro is STM, Compact Medium-Telephoto Black Lens (4234C002)",Canon,Lens,L013,RF 85mm f/2 Macro IS STM,Canon RF,Tier 3 (Semantic),0.882
+B081R4TPP3,"Sony Alpha A6100 Mirrorless Camera with 16-50mm Zoom Lens, Black (ILCE6100L/B)",Sony,Body,B032,Alpha A6100,Sony E,Tier 1 (Regex),1.0
+B07N1LK2FB,Meike 35mm F1.4 Large Aperture Manual Focus Lens APS-C Compatible with Sony E Mount Mirrorless Cameras NEX 3 NEX 3N NEX 5 NEX 5T NEX 5R NEX 6 7 A5000 A5100 A6000 A6100 A6300 A6500 A6600 A6400,Sony,Lens,L037,FE 35mm f/1.4 GM,Sony E,Tier 1 (Regex),1.0
+B008MO0PWE,"Canon EF 50mm f/1.8 II Lens with 3 UV/CPL/ND8 Filters + Hood + Kit for EOS 6D, 70D, 5D Mark II III, Rebel T3, T3i, T4i, T5, T5i, SL1 DSLR Cameras",Canon,Lens,L018,EF 50mm f/1.8 STM,Canon EF,Tier 1 (Regex),1.0
+B08DDYJRXM,Z 5 w/NIKKOR Z 24-50mm f/4-6.3,Nikon,Body,B018,Z5,Nikon Z,Tier 1 (Regex),1.0
+B07NQHBL2G,"Canon EOS RP Mirrorless Camera with RF 24-105mm F/4L is USM Lens, Black - 3380C012",Canon,Body,B039,EOS RP,Canon RF,Tier 1 (Regex),1.0
+B013GQCW5U,"Sony Alpha a6000 Mirrorless Camera Bundle with 16-50mm and 55-210mm Lenses, Gadget Bag, Corel Suite v4.0, Lens Filter, Tripod (9 Items)",Sony,Body,B030,Alpha A6000,Sony E,Tier 1 (Regex),1.0
+B077VKNJGV,Sony - FE 24-105mm F4 G OSS Standard Zoom Lens (SEL24105G),Sony,Lens,L036,FE 24-105mm f/4 G OSS,Sony E,Tier 3 (Semantic),0.875
+B078TMMDZZ,"Canon EF-S 10-18mm f/4.5-5.6 is STM Lens, Lens Only",Canon,Lens,L055,EF-S 10-18mm f/4.5-5.6 IS STM,Canon EF,Tier 3 (Semantic),0.968
+B01BFNQFKY,Sony Alpha a6300 Mirrorless Digital Camera with E PZ 16-50mm F3.5-5.6 OSS Power Zoom Lens (Black),Sony,Body,B033,Alpha A6300,Sony E,Tier 1 (Regex),1.0
+B07X7KL6JM,Sony - FE 24-105mm F4 G OSS Standard Zoom Lens (SEL24105G/2),Sony,Lens,L036,FE 24-105mm f/4 G OSS,Sony E,Tier 3 (Semantic),0.878
+B07VGH44GZ,"Viltrox 85mm F1.8 Auto Focus Lens for Sony,Full Frame,Medium Telephoto Portrait Prime Lens for Sony E Mount A9 A7R3 A7R2 A7M3 A7M2 A7S2 A6500 A6300 A6000",Sony,Lens,L001,FE 85mm f/1.8,Sony E,Tier 1 (Regex),1.0
+B07GSBVD6T,Nikon Z7 FX-Format Mirrorless Camera Body w/ NIKKOR Z 24-70mm f/4 S,Nikon,Body,B052,Z7,Nikon Z,Tier 1 (Regex),1.0
+B0BQ1W58J9,Nikon Z 6II Full Frame 24.5MP 4K Video Mirrorless Digital Camera Bundle 1 Lens Kit with NIKKOR Z FX 24-70mm,Nikon,Body,B016,Z6 II,Nikon Z,Tier 1 (Regex),1.0
+B07GPH7M5X,Nikon Z6 FX-Format Mirrorless Camera Body w/ NIKKOR Z 24-70mm f/4 S,Nikon,Body,B051,Z6,Nikon Z,Tier 1 (Regex),1.0
+B07H62GCN4,Canon EOS R Mirrorless Digital Camera (Body Only)+ Mount Adapter EF-EOS R,Canon,Body,B038,EOS R,Canon RF,Tier 1 (Regex),1.0
+B0BP45S81M,"Canon EOS R6 Mark II RF24-105mm F4-7.1 is STM KIT,Black",Canon,Body,B009,EOS R6 Mark II,Canon RF,Tier 1 (Regex),1.0
+B00HYC1GMI,"OM SYSTEM OLYMPUS M.Zuiko Digital 14-42mm F3.5-5.6 EZ Black For Micro Four Thirds System Camera, Compact 3x zoom Lens",Olympus,Lens,L068,M.Zuiko Digital ED 14-42mm f/3.5-5.6 EZ,Micro Four Thirds,Tier 1 (Regex),1.0
+B08N8KHLKV,"Samyang 35mm F1.8 Auto Focus Compact Full Frame Wide Angle Lens for Sony E Mount, Black (SYIO3518-E)",Sony,Lens,L008,E 35mm f/1.8 OSS,Sony E,Tier 1 (Regex),1.0
+B0B5G2W9XT,Fuji Film Fujinon Lens XF 18-55mm F2.8-4.0 Zoom Lens - International Version (No Warranty),Fujifilm,Lens,L064,XF 18-55mm f/2.8-4 R LM OIS,Fujifilm X,Tier 1 (Regex),1.0
+B06ZYSLP64,Olympus M. Zuiko Digital ED 45mm f1.8 (Black) Lens for Micro 4/3 Cameras - International Version (No Warranty),Olympus,Lens,L033,M.Zuiko Digital ED 45mm f/1.8,Micro Four Thirds,Tier 3 (Semantic),0.848
+B07H4SFG4G,"Canon RF35mm F1.8 is Macro STM Lens, Black",Canon,Lens,L045,RF 35mm f/1.8 Macro IS STM,Canon RF,Tier 1 (Regex),1.0
+B08MK29WJK,"Panasonic LUMIX G9 Mirrorless Camera, Micro Four Thirds, 20.3 Megapixels Plus 80 Megapixel, High-Resolution Mode with LUMIX G Vario 12-60mm F3.5-5.6 Lens (DC-G9MK) , Black",Panasonic,Body,B068,Lumix G9,Micro Four Thirds,Tier 1 (Regex),1.0
+B072WCVTX2,"Sony a6500 4K Mirrorless Camera Body Black Bundle with 32GB Memory Card, Camera Backpack, Shotgun Microphone, Rechargeable LED Light, Power Grip and Accessories (13 Items)",Sony,Body,B034,Alpha A6500,Sony E,Tier 1 (Regex),1.0
+B078GM723Q,Canon EF-S 55-250mm F4-5.6 IS STM Lens with UV Protection Filter - 58 mm,Canon,Lens,L054,EF-S 55-250mm f/4-5.6 IS STM,Canon EF,Tier 3 (Semantic),0.892
+B07B4ZLBGN,Sony a7III Full Frame Mirrorless Interchangeable Lens Camera with 28-70mm Lens + 64GB Memory & Flash a7III Accessory Bundle,Sony,Body,B026,Alpha A7 III,Sony E,Tier 1 (Regex),1.0
+B00D7B9O38,"OM SYSTEM OLYMPUS M.Zuiko Digital 40-150mm F4.0-5.6 R Black For Micro Four Thirds System Camera, 3.75x Zoom Lens, Portable Design",Olympus,Lens,L069,M.Zuiko Digital ED 40-150mm f/4-5.6 R,Micro Four Thirds,Tier 1 (Regex),1.0
+B077966DHV,Canon EOS 6D Mark II Wi-Fi Digital SLR Camera Body with BG-E21 Battery Grip,Canon,Body,B041,EOS 6D Mark II,Canon EF,Tier 1 (Regex),1.0
+B0B6TTH6RW,"Canon EOS R10 (Body Only), Mirrorless Vlogging Camera, 24.2 MP, 4K Video, DIGIC X Image Processor, High-Speed Shooting, Subject Tracking, Compact, Lightweight, Subject Detection, for Content Creators",Canon,Body,B012,EOS R10,Canon RF,Tier 1 (Regex),1.0
+B0076BNKOY,Canon EF24mm f/2.8 is USM Lens,Canon,Lens,L050,EF 24-105mm f/4L IS II USM,Canon EF,Tier 3 (Semantic),0.833
+B07VQWGNHR,NIKON NIKKOR Z 85mm f/1.8 S Portrait Fast Prime Lens for Nikon Z Mirrorless Cameras,Nikon,Lens,L022,NIKKOR Z 85mm f/1.8 S,Nikon Z,Tier 1 (Regex),1.0
+B0771WQ333,"Sony a7R III Mirrorless Camera: 42.4MP Full Frame High Resolution Interchangeable Lens Digital Camera with Front End LSI Image Processor, 4K HDR Video and 3"" LCD Screen - ILCE7RM3/B Body, Black",Sony,Body,B028,Alpha A7R III,Sony E,Tier 1 (Regex),1.0
+B09FFTB9V6,Canon RF16mm F2.8 STM,Canon,Lens,L046,RF 16mm f/2.8 STM,Canon RF,Tier 1 (Regex),1.0
+B01M74YO0G,Sony a6500 4K Mirrorless Digital Camera Body with APS-C Sensor ILCE-6500 + Dual Battery Kit + Travel Bag Carry Case + Flash + 64GB Memory Card + Wireless Remote + Paintshop Software Accessory Bundle,Sony,Body,B034,Alpha A6500,Sony E,Tier 1 (Regex),1.0
+B0092MD6S0,Fujinon XF18-55mmF2.8-4 R LM OIS,Fujifilm,Lens,L064,XF 18-55mm f/2.8-4 R LM OIS,Fujifilm X,Tier 1 (Regex),1.0
+B00WUI6VDK,Canon EF 16-35mm f/2.8L II USM Ultra Wide Angle Zoom Lens,Canon,Lens,L051,EF 16-35mm f/2.8L III USM,Canon EF,Tier 1 (Regex),1.0
+B01FEEGCEO,Sony Alpha a6300 Mirrorless Digital Camera w/16-50mm/3.5-5.6 & E 55-210mm/4.5-6.3 OSS E-Mount Lens,Sony,Body,B033,Alpha A6300,Sony E,Tier 1 (Regex),1.0
+B0BN4BQHXV,Fujifilm X-T5 Mirrorless Digital Camera XF16-80mm Lens Kit - Silver,Fujifilm,Body,B021,X-T5,Fujifilm X,Tier 1 (Regex),1.0
+B07H484HLT,"Canon EOS R, Vlogging and Content Creator Camera 4K UHD, Digital Single-Lens Non-Reflex AF/AE, 0.76 Magnification, OLED Color Electronic Viewfinder, CMOS Sensor, Mirrorless, Full-Frame (Body Only)",Canon,Body,B038,EOS R,Canon RF,Tier 1 (Regex),1.0
+B000V5K3FG,Canon EF-S 18-55mm f/3.5-5.6 IS II SLR Lens,Canon,Lens,L053,EF-S 18-55mm f/3.5-5.6 IS STM,Canon EF,Tier 2 (Fuzzy),0.85
+B0002XNRG4,Canon EF-S 17-85mm f/4-5.6 is USM,Canon,Lens,L055,EF-S 10-18mm f/4.5-5.6 IS STM,Canon EF,Tier 2 (Fuzzy),0.88
+B098CRFXH8,Z fc DX-Format Mirrorless Camera Body w/NIKKOR Z 28mm f/2.8 (SE),Nikon,Body,B056,Z fc,Nikon Z,Tier 1 (Regex),1.0
+B01M0XFDZJ,Canon EF 24-105mm f/3.5-5.6 is STM Lens,Canon,Lens,L053,EF-S 18-55mm f/3.5-5.6 IS STM,Canon EF,Tier 3 (Semantic),0.875
+B09DTKDNMX,Fujinon XF23mmF1.4 R LM WR,Fujifilm,Lens,L065,XF 23mm f/1.4 R LM WR,Fujifilm X,Tier 1 (Regex),1.0
+B01DCPUZ2C,Canon EOS 80D DSLR Camera Body with Altura Photo Complete Accessory and Travel Bundle,Canon,Body,B044,EOS 80D,Canon EF,Tier 1 (Regex),1.0
+B00ET0669Q,Sony 50mm f/1.8 Mid-Range Lens for Sony E Mount Nex Cameras,Sony,Lens,L002,FE 50mm f/1.8,Sony E,Tier 1 (Regex),1.0
+B08V4MG48G,Sony Alpha 1 Full-Frame Interchangeable Lens Mirrorless Camera with Sony CEA-G160T 160GB CFexpress Type A Memory Card (CEAG160T),Sony,Body,B007,Alpha 1,Sony E,Tier 1 (Regex),1.0
+B07MX1VX18,"Sony Alpha a6400 Mirrorless Camera: Compact APS-C Interchangeable Lens Digital Camera with Real-Time Eye Auto Focus, 4K Video, Flip Screen & 16-50mm Lens - E Mount Compatible - ILCE-6400L/B, Black",Sony,Body,B005,Alpha A6400,Sony E,Tier 1 (Regex),1.0
+B08Z7MLP28,Sigma 24mm F/1.4 DG HSM Art Lens for Sony E (401965),Sony,Lens,L009,24-70mm f/2.8 DG DN Art (Sony E),Sony E,Tier 3 (Semantic),0.878
+B07K1QFGVR,Nikon D5600 DX-Format Digital SLR Body (Renewed),Nikon,Body,B060,D5600,Nikon F,Tier 1 (Regex),1.0
+B07JM3H574,"Canon EOS 6D Mark II Wi-Fi DSLR Camera Body - with Pro Battery Grip, TTL Flash, Canon Backpack,128GB Memory, Replacement Battery for LP-E6N, 72"" Monopod, RC-6 Wireless Remote, and More.(19 Items)",Canon,Body,B041,EOS 6D Mark II,Canon EF,Tier 1 (Regex),1.0
+B01M0CP2ZG,Canon EF-S 24mm f/2.8 STM Lens,Canon,Lens,L019,EF 24-70mm f/2.8L II USM,Canon EF,Tier 3 (Semantic),0.863
+B08H9PK7B4,"Panasonic LUMIX S5 Full Frame Mirrorless Camera, 4K Video Recording, L-Mount, DC-S5BODY (Black) + LUMIX S Series Camera Lens, 50mm F1.8 L-Mount Interchangeable Lens for Mirrorless Full Frame Cameras",Panasonic,Body,B069,Lumix S5,L-Mount,Tier 1 (Regex),1.0
+B0753MZHY3,Nikon D850 FX-Format Digital SLR Camera Body,Nikon,Body,B020,D850,Nikon F,Tier 1 (Regex),1.0
+B00WUI60YU,Nikon AF-S NIKKOR 14-24mm f/2.8G ED,Nikon,Lens,L063,AF-S NIKKOR 24-70mm f/2.8E ED VR,Nikon F,Tier 2 (Fuzzy),0.85
+B0785NMZFJ,Canon EF 50mm f/1.8 STM Lens,Canon,Lens,L018,EF 50mm f/1.8 STM,Canon EF,Tier 1 (Regex),1.0
+B07FQ83W5W,Fujinon XF8-16mmF2.8R LM WR Lens,Fujifilm,Lens,L029,XF 16-55mm f/2.8 R LM WR,Fujifilm X,Tier 3 (Semantic),0.855
+B077VY7CT6,Nikon AF-S NIKKOR 70-200mm f/2.8E FL ED VR Lens,Nikon,Lens,L063,AF-S NIKKOR 24-70mm f/2.8E ED VR,Nikon F,Tier 2 (Fuzzy),0.82
+B07SZXDN9X,Sony FE 200-600mm F5.6-6.3 G OSS Super Telephoto Zoom Lens (SEL200600G),Sony,Lens,L006,FE 200-600mm f/5.6-6.3 G OSS,Sony E,Tier 1 (Regex),1.0
+B08MFVH7SV,"Canon RF50mm F1.8 STM for Canon Full Frame Mirrorless RF Mount Cameras [EOS R, EOS RP, EOS R5, EOS R6](4515C002)",Canon,Lens,L012,RF 50mm f/1.8 STM,Canon RF,Tier 1 (Regex),1.0
+B0894BR24H,"YONGNUO YN50mm F1.8S Lens, 50mm F1.8 Larege Aperture, APS-C Standard Prime E-Mount, Auto Manual Focus AF MF USB for Sony Cameras",Sony,Lens,L002,FE 50mm f/1.8,Sony E,Tier 1 (Regex),1.0
+B08FHTV4DB,"Sigma 85mm F1.4 DG DN Sony E (322965), Black",Sony,Lens,L010,85mm f/1.4 DG DN Art (Sony E),Sony E,Tier 1 (Regex),1.0
+B0792KCLZB,"Panasonic Lumix G9 Mirrorless Camera Body 20.3 MP G9KBODY, Lexar 64GB High Speed SD Card U3, Polaroid 72"" Monopod, Spare Battery, Battery Charger, Ritz Gear Cleaning Kit and Accessory Bundle",Panasonic,Body,B068,Lumix G9,Micro Four Thirds,Tier 1 (Regex),1.0
+B07H2LR77Y,Sony E 55-210mm F4.5-6.3 Lens for Sony E-Mount Cameras (Black),Sony,Lens,L041,E 55-210mm f/4.5-6.3 OSS,Sony E,Tier 1 (Regex),1.0
+B00JEI7S22,Sony Alpha ILCE-6000L/B a6000 Digital Camera with 16-50mm Lens Bundle with Accessory Bundle (Black),Sony,Body,B030,Alpha A6000,Sony E,Tier 1 (Regex),1.0
+B09TVFCBZW,"Panasonic LUMIX GH6, 25.2MP Mirrorless Micro Four Thirds Camera with Unlimited C4K/4K 4:2:2 10-bit Video Recording, 7.5-Stop 5-Axis Dual Image Stabilizer, 12-60mm F2.8-4.0 Leica Lens - DC-GH6LK",Panasonic,Body,B067,Lumix GH6,Micro Four Thirds,Tier 1 (Regex),1.0
+B0B6VV8VQD,"Canon EOS R7 RF-S18-150mm F3.5-6.3 is STM Lens Kit, Mirrorless Vlogging Camera, 32.5 MP Image Quality, 4K 60p Video, DIGIC X Image Processor, Dual Pixel CMOS AF, Subject Detection, Content Creators",Canon,Body,B011,EOS R7,Canon RF,Tier 1 (Regex),1.0
+B07H4JQP2M,Fujifilm X-T3 Mirrorless Digital Camera w/XF18-55mm Lens Kit - Silver,Fujifilm,Body,B062,X-T3,Fujifilm X,Tier 1 (Regex),1.0
+B093KB8B7W,Sigma 35mm F1.4 Art DG HSM for Sony E,Sony,Lens,L037,FE 35mm f/1.4 GM,Sony E,Tier 1 (Regex),1.0
+B09CLJJV7X,Sony Alpha ZV-E10 - APS-C Interchangeable Lens Mirrorless Vlog Camera Kit - Black,Sony,Body,B006,ZV-E10,Sony E,Tier 1 (Regex),1.0
+B09YYY6P98,Sony FE 24-70mm F2.8 GM II Lens,Sony,Lens,L003,FE 24-70mm f/2.8 GM II,Sony E,Tier 1 (Regex),1.0
+B00RSQTDMA,Fujinon XF16-55mmF2.8 R LM WR,Fujifilm,Lens,L029,XF 16-55mm f/2.8 R LM WR,Fujifilm X,Tier 1 (Regex),1.0
+B01N7OJNAI,D5600 DX-format Digital SLR w/ AF-S DX NIKKOR 18-140mm f/3.5-5.6G ED VR,Nikon,Body,B060,D5600,Nikon F,Tier 1 (Regex),1.0
+B08Y9Y69JB,NIKON NIKKOR Z 24-70mm f/2.8 S Standard Zoom Lens for Nikon Z Mirrorless Cameras,Nikon,Lens,L023,NIKKOR Z 24-70mm f/2.8 S,Nikon Z,Tier 1 (Regex),1.0
+B00JWUULOY,"Sony Alpha a6000 24.3 MP Interchangeable Lens Camera Bundle with 16-50mm Power Zoom Lens, Sony 55-210mm f/4.5-6.3 Telephoto Lens and Accessories (22 Items)",Sony,Body,B030,Alpha A6000,Sony E,Tier 1 (Regex),1.0
+B00I8BICB2,Sony Alpha a6000 Mirrorless Digital Camera 24.3MP SLR Camera with 3.0-Inch LCD (Black) w/16-50mm Power Zoom Lens,Sony,Body,B030,Alpha A6000,Sony E,Tier 1 (Regex),1.0
+B08SWMH186,Sony FE 35mm F1.4 GM Full-Frame Large-Aperture Wide Angle G Master Lens,Sony,Lens,L037,FE 35mm f/1.4 GM,Sony E,Tier 1 (Regex),1.0
+B06XDVD3JJ,Canon EOS 80D Digital SLR Camera Bundle (Body Only) with Professional Accessory Bundle (15 Items),Canon,Body,B044,EOS 80D,Canon EF,Tier 1 (Regex),1.0
+B00836H3Z8,Sony SAL18135 18-135mm f/3.5-5.6 Zoom Lens,Sony,Lens,L042,E 18-135mm f/3.5-5.6 OSS,Sony E,Tier 3 (Semantic),0.823
+B07GQ6FR5F,NIKON NIKKOR Z 50mm f/1.8 S Standard Fast Prime Lens for Nikon Z Mirrorless Cameras,Nikon,Lens,L021,NIKKOR Z 50mm f/1.8 S,Nikon Z,Tier 1 (Regex),1.0
+B082WW3K85,Canon Digital SLR Camera Body [EOS 80D] with 24.2 Megapixel (APS-C) CMOS Sensor and Dual Pixel CMOS AF - Black,Canon,Body,B044,EOS 80D,Canon EF,Tier 1 (Regex),1.0
+B0B2J6YKSH,Fujinon XF150-600mmF5.6-8 R LM OIS WR Lens,Fujifilm,Lens,L031,XF 70-300mm f/4-5.6 R LM OIS WR,Fujifilm X,Tier 3 (Semantic),0.834
+B07BYM1SN1,SONY E 55-210mm F4.5-6.3 Lens for SONY E-Mount Cameras (Black) (Renewed),Sony,Lens,L041,E 55-210mm f/4.5-6.3 OSS,Sony E,Tier 1 (Regex),1.0
+B077W2XXWR,Sony - FE 50mm F1.8 Standard Lens (SEL50F18F/2),Sony,Lens,L002,FE 50mm f/1.8,Sony E,Tier 1 (Regex),1.0
+B0BB7P6FKB,Panasonic H-FS12032-K Standard Zoom Lens for Micro Four Thirds Lumix G Vario 12-32mm/F3.5-5.6 ASPH./MEGA O.I.S. Black,Panasonic,Lens,L070,Lumix G Vario 12-32mm f/3.5-5.6 ASPH,Micro Four Thirds,Tier 3 (Semantic),0.875
+B00421SGTA,Canon EF-S 18-55mm f/3.5-5.6 IS II SLR Lens,Canon,Lens,L053,EF-S 18-55mm f/3.5-5.6 IS STM,Canon EF,Tier 2 (Fuzzy),0.85
+B00W3SCHNU,Nikon 35mm f/1.8G AF-S DX Lens for Nikon DSLR Cameras (Renewed),Nikon,Lens,L062,AF-S DX NIKKOR 35mm f/1.8G,Nikon F,Tier 1 (Regex),1.0
+B07KB7NW2P,Canon EOS R Mirrorless Digital Camera with 24-105mm Lens (Renewed),Canon,Body,B038,EOS R,Canon RF,Tier 1 (Regex),1.0
+B07B4R53NY,"Sony a7 III (ILCEM3K/B) Full-frame Mirrorless Interchangeable-Lens Camera with 28-70mm Lens with 3-Inch LCD, Black",Sony,Body,B026,Alpha A7 III,Sony E,Tier 1 (Regex),1.0
+B07N2TGFZQ,Sony Alpha a6400 Mirrorless Digital Camera Body Only (Black) and Striker Deluxe Bundle,Sony,Body,B005,Alpha A6400,Sony E,Tier 1 (Regex),1.0
+B08HWRBJHX,Sony Alpha 7C Full-Frame Compact Mirrorless Camera Kit - Silver (ILCE7CL/S),Sony,Body,B037,Alpha A7C,Sony E,Tier 1 (Regex),1.0
+B015HW3LEC,Nikon 24-70mm f/2.8G ED Auto Focus-S Nikkor Wide Angle Zoom Lens (Renewed),Nikon,Lens,L063,AF-S NIKKOR 24-70mm f/2.8E ED VR,Nikon F,Tier 1 (Regex),1.0
+B07BWB3GJY,"Canon 1897C002 EOS 6D Mark II 26.2MP Full-Frame DSLR Camera Body Bundle with 2X 64GB Memory Card, 3X Battery, Battery Grip, Microphone, 1 YR CPS Enhanced Protection Pack and Accessories (15 Items)",Canon,Body,B041,EOS 6D Mark II,Canon EF,Tier 1 (Regex),1.0
+B00WUICQT8,Canon EF 70-200mm f/2.8L USM Telephoto Zoom Lens for SLR Cameras,Canon,Lens,L020,EF 70-200mm f/2.8L IS III USM,Canon EF,Tier 1 (Regex),1.0
+B076V6YCCJ,"Rokinon AF 35mm f/1.4 Auto Focus Wide Angle Full Frame Lens for Sony FE Mount, Black (IO3514-E)",Sony,Lens,L037,FE 35mm f/1.4 GM,Sony E,Tier 1 (Regex),1.0
+B0B9L3SPMZ,Sigma 28-70mm F2.8 DG DN for Sony E,Sony,Lens,L009,24-70mm f/2.8 DG DN Art (Sony E),Sony E,Tier 3 (Semantic),0.908
+B0791W7C8Z,Nikon AF FX NIKKOR 50mm f/1.8D Lens for Nikon DSLR Cameras,Nikon,Lens,L061,AF-S NIKKOR 50mm f/1.8G,Nikon F,Tier 1 (Regex),1.0
+B08M91FQW6,Canon RF100mm F2.8 L Macro is USM,Canon,Lens,L047,RF 100mm f/2.8L Macro IS USM,Canon RF,Tier 1 (Regex),1.0
+B00FY3U206,Canon EOS 5D Mark III 22.3 MP Full Frame CMOS Digital SLR Camera with EF 24-70mm f/4 L IS Kit,Canon,Body,B043,EOS 5D Mark III,Canon EF,Tier 1 (Regex),1.0
+B00JMKHPPM,Sony Alpha a6000 Mirrorless Camera w/ 16-50mm Lens & 64GB Card Bundle (Silver),Sony,Body,B030,Alpha A6000,Sony E,Tier 1 (Regex),1.0
+B082BDMPQT,Sony FE 200-600mm F5.6-6.3 G OSS Super Telephoto Zoom Lens (SEL200600G) (Renewed),Sony,Lens,L006,FE 200-600mm f/5.6-6.3 G OSS,Sony E,Tier 1 (Regex),1.0
+B01N7OJNEX,D5600 DX-format Digital SLR Body,Nikon,Body,B060,D5600,Nikon F,Tier 1 (Regex),1.0
+B07WFQYDD5,"Canon DSLR Camera [EOS 90D] with Built-in Wi-Fi, Bluetooth, DIGIC 8 Image Processor, 4K Video, Dual Pixel CMOS AF, and 3.0 Inch Vari-Angle Touch LCD Screen, [Body Only], Black",Canon,Body,B014,EOS 90D,Canon EF,Tier 1 (Regex),1.0
+B0B764FVCK,Sony Alpha A6600 Mirrorless Camera,Sony,Body,B031,Alpha A6600,Sony E,Tier 1 (Regex),1.0
+B07J21WLDS,Canon EF 50mm f/1.8 STM Lens (Renewed),Canon,Lens,L018,EF 50mm f/1.8 STM,Canon EF,Tier 1 (Regex),1.0
+B076MJZ7X9,Nikon D5600 Digital SLR Camera with 18-55mm VR & 70-300mm DX AF-P Lenses - (Renewed),Nikon,Body,B060,D5600,Nikon F,Tier 1 (Regex),1.0
+B00DQQKUVO,Canon EOS 70D (8469B002) Digital SLR Cameras Black 20.2 MP Digital SLR Camera - Body (International Version - No Warranty),Canon,Body,B045,EOS 70D,Canon EF,Tier 1 (Regex),1.0
+B09VH4J4CL,"Samyang 135mm F1.8 AF Full Frame Auto Focus Telephoto Lens for Sony E Mount Cameras, Black, (SYIO13518-E)",Sony,Lens,L008,E 35mm f/1.8 OSS,Sony E,Tier 1 (Regex),1.0
+B09K4KQTBV,"Sony Alpha 7 IV Full-frame Mirrorless Interchangeable Lens Camera,Body Only , Black",Sony,Body,B001,Alpha A7 IV,Sony E,Tier 1 (Regex),1.0
+B002IKLJV4,"PANASONIC LUMIX G Vario Lens, 14-45MM, F3.5-5.6 ASPH, MIRRORLESS Micro Four Thirds, MEGA O.I.S, H-FS014045 (USA Black)",Panasonic,Lens,L070,Lumix G Vario 12-32mm f/3.5-5.6 ASPH,Micro Four Thirds,Tier 3 (Semantic),0.854
+B00G9ZQIL0,Fujifilm XF27mmF2.8 - Black,Fujifilm,Lens,L066,XF 27mm f/2.8 R WR,Fujifilm X,Tier 1 (Regex),1.0
+B01G7QV56S,Nikon D750 DSLR Camera (Body Only) #1548 (Renewed),Nikon,Body,B057,D750,Nikon F,Tier 1 (Regex),1.0
+B07B6VZQJX,Panasonic LUMIX GH5 4K Mirrorless Camera with Lecia VARIO-Elmarit 12-60mm F2.8-4.0 Lens (DC-GH5LK),Panasonic,Body,B066,Lumix GH5,Micro Four Thirds,Tier 1 (Regex),1.0
+B00B7NJGFE,"Wireless Remote Control + 57"" Tripod For The Nikon D3000, D3200, D3300, D5000, D5100, D5200, D5300, D5500, D7000, D7100, D7200, D90, D600, D610, D800, D800E, D810, D810A, D700, D750, P900 Digital SLR Cameras with Bonus Starter Cleaning Kit",Nikon,Body,B057,D750,Nikon F,Tier 1 (Regex),1.0
+B01MTGC0LN,"Sony Alpha a7II Mirrorless Interchangeable Lens Camera with 28-70mm F3.5-5.6 OSS Lens Bundle with 64GB Memory Card, Dual Battery, Bag, Table-top Tripod, Paintshop Pro and Accessories (10 Items)",Sony,Body,B027,Alpha A7 II,Sony E,Tier 1 (Regex),1.0
+B00KAQX66Y,Canon EF-S 10-18MM is STM Lens,Canon,Lens,L055,EF-S 10-18mm f/4.5-5.6 IS STM,Canon EF,Tier 3 (Semantic),0.893
+B07DVTW1W9,Canon EOS 80D Digital SLR Kit with EF-S 18-55mm f/3.5-5.6 Image Stabilization STM Lens (Black) (Renewed),Canon,Body,B044,EOS 80D,Canon EF,Tier 1 (Regex),1.0
+B071WSD5ZV,Canon EOS 80D Digital SLR Kit with EF-S 18-55mm f/3.5-5.6 Image Stabilization STM Lens - Black (Renewed),Canon,Body,B044,EOS 80D,Canon EF,Tier 1 (Regex),1.0
+B09R4L5BGL,Nikon Z 9 FX-Format Mirrorless Camera Body with Nikon Mount Adapter FTZ II,Nikon,Body,B054,Z9,Nikon Z,Tier 1 (Regex),1.0
+B09HMVJL47,Tamron 28-75mm F/2.8 Di III VXD G2 for Sony E-Mount Full Frame/APS-C (6 Year Limited USA Warranty),Sony,Lens,L011,28-75mm f/2.8 Di III VXD G2 (Sony E),Sony E,Tier 1 (Regex),1.0
+B06X9CV5VK,Sony FE 70-300mm SEL70300G F4.5-5.6 G OSS Lens,Sony,Lens,L006,FE 200-600mm f/5.6-6.3 G OSS,Sony E,Tier 3 (Semantic),0.831
+B00HK8Z9AG,Fujinon XF56mmF1.2 R,Fujifilm,Lens,L028,XF 56mm f/1.2 R WR,Fujifilm X,Tier 1 (Regex),1.0
+B0153WGIW8,"PANASONIC LUMIX G VARIO LENS, 14-140MM, F3.5-5.6 ASPH., MIRRORLESS MICRO FOUR THIRDS, POWER OPTICAL I.S., H-FS14140AK (USA BLACK)",Panasonic,Lens,L070,Lumix G Vario 12-32mm f/3.5-5.6 ASPH,Micro Four Thirds,Tier 3 (Semantic),0.836
+B00005NPOB,Canon EF 85mm f/1.8 USM Telephoto Le,Canon,Lens,L052,EF 85mm f/1.8 USM,Canon EF,Tier 1 (Regex),1.0
+B008UGMLWQ,Canon EF-S 18-135mm f/3.5-5.6 is STM,Canon,Lens,L053,EF-S 18-55mm f/3.5-5.6 IS STM,Canon EF,Tier 2 (Fuzzy),0.96
+B01MAWGVZ4,Sony Alpha a6000 24MP Mirrorless Camera 16-50mm & 55-210mm Zoom Lens (Silver) + 64GB Card + Deluxe Gadget Bag + Extra Battery + Wide Angle Lens + 2X Telephoto Lens + Flash + Remote + Tripod,Sony,Body,B030,Alpha A6000,Sony E,Tier 1 (Regex),1.0
+B009C6VADE,Canon EOS 6D 20.2 MP CMOS Digital SLR Camera with 3.0-Inch LCD (Body Only) - Wi-Fi Enabled - International Version (No Warranty),Canon,Body,B042,EOS 6D,Canon EF,Tier 1 (Regex),1.0
+B0B4B3QYRZ,35mm F1.4 DG DN for Sony E Mount,Sony,Lens,L037,FE 35mm f/1.4 GM,Sony E,Tier 1 (Regex),1.0
+B07Q69JQ2R,Samyang SYIO85AF-E 85mm F1.4 Auto Focus Weather Sealed Lens for Sony E-Mount,Sony,Lens,L010,85mm f/1.4 DG DN Art (Sony E),Sony E,Tier 1 (Regex),1.0
+B079BRLDF7,Fujinon XC15-45mmF3.5-5.6 OIS PZ Lens - Black,Fujifilm,Lens,L067,XC 15-45mm f/3.5-5.6 OIS PZ,Fujifilm X,Tier 1 (Regex),1.0
+B072ZRX9B3,"OLYMPUS M.Zuiko Digital ED 7-14mm F2.8 Pro Lens, for Micro Four Thirds Cameras",Olympus,Lens,L032,M.Zuiko Digital ED 12-40mm f/2.8 PRO,Micro Four Thirds,Tier 3 (Semantic),0.898
+B0125ULYWU,"Canon EOS 70D Video Creator Kit with 18-135mm Lens, Rode VIDEOMIC GO and Sandisk 32GB SD Card Class 10 - Wi-Fi Enabled",Canon,Body,B045,EOS 70D,Canon EF,Tier 1 (Regex),1.0
+B084HGXDN9,Fujifilm X100V Digital Camera - Silver,Fujifilm,Body,B065,X100V,Fujifilm X,Tier 1 (Regex),1.0
+B01LOVWG8C,Sony 16-50mm f/3.5-5.6 OSS Alpha E-Mount Retractable Zoom Lens (Bulk Packaging),Sony,Lens,L007,E 16-50mm f/3.5-5.6 PZ OSS,Sony E,Tier 1 (Regex),1.0
+B07P7RT7M3,Canon RF 24-105mm f/4L is USM Lens (Renewed),Canon,Lens,L044,RF 24-105mm f/4L IS USM,Canon RF,Tier 3 (Semantic),0.857
+B000Q639S8,Olympus 40-150mm f/4.0-5.6 ED Zuiko Digital Lens for Olympus Digital SLR Cameras,Olympus,Lens,L069,M.Zuiko Digital ED 40-150mm f/4-5.6 R,Micro Four Thirds,Tier 3 (Semantic),0.858
+B00PHRVYZG,Nikon D750 FX-format Digital SLR Camera Body,Nikon,Body,B057,D750,Nikon F,Tier 1 (Regex),1.0
+B004L06QC6,Nikon 50mm f/1.8 series E AIS lens (pancake style),Nikon,Lens,L061,AF-S NIKKOR 50mm f/1.8G,Nikon F,Tier 1 (Regex),1.0
+B07Z5M9M7M,"Canon RF 70-200mm F2.8 L is USM Lens, Telephoto Zoom Lens, 3792C002",Canon,Lens,L015,RF 70-200mm f/2.8L IS USM,Canon RF,Tier 1 (Regex),1.0
+B00UW08IDY,Canon EF 70-200mm f/2.8L IS II USM Telephoto Zoom Lens for Canon SLR Cameras,Canon,Lens,L020,EF 70-200mm f/2.8L IS III USM,Canon EF,Tier 1 (Regex),1.0
+B01A7Q0J3Y,"Nikon D500 DX-Format Digital SLR (Body Only), Base",Nikon,Body,B058,D500,Nikon F,Tier 1 (Regex),1.0
+B014C1LO3O,Canon EF 24-70mm f/2.8L II USM Standard Zoom Lens,Canon,Lens,L019,EF 24-70mm f/2.8L II USM,Canon EF,Tier 1 (Regex),1.0
+B00EYWRJ5E,"OM SYSTEM OLYMPUS M.Zuiko Digital 14-42mm F3.5-5.6 IIR Silver For Micro Four Thirds System Camera, Compact 3x zoom Lens",Olympus,Lens,L068,M.Zuiko Digital ED 14-42mm f/3.5-5.6 EZ,Micro Four Thirds,Tier 1 (Regex),1.0
+B00843ERMW,"Panasonic LUMIX G X VARIO LENS, 12-35MM, F2.8 ASPH., PROFESSIONAL MIRRORLESS MICRO FOUR THIRDS, POWER OPTICAL I.S. H-HS12035 (2012 Model - USA BLACK)",Panasonic,Lens,L070,Lumix G Vario 12-32mm f/3.5-5.6 ASPH,Micro Four Thirds,Tier 3 (Semantic),0.855
+B01MQEK9YJ,Sony Alpha a6500 Mirrorless Digital Camera w/SELP18105G E PZ 18-105mm F4 G OSS,Sony,Body,B034,Alpha A6500,Sony E,Tier 1 (Regex),1.0
+B08L7XHBS3,Fujifilm X-S10 Mirrorless Camera Body - Black,Fujifilm,Body,B064,X-S10,Fujifilm X,Tier 1 (Regex),1.0
+B081KJWPPJ,"Sony a9 II Mirrorless Camera: 24.2MP Full Frame Mirrorless Interchangeable Lens Digital Camera with Continuous AF/AE, 4K Video and Built-in Connectivity - Sony Alpha ILCE9M2/B Body - Black",Sony,Body,B035,Alpha 9,Sony E,Tier 1 (Regex),1.0
+B07CH88YR1,"Canon EF 16–35mm f/2.8L III USM Lens, Black (0573C002)",Canon,Lens,L051,EF 16-35mm f/2.8L III USM,Canon EF,Tier 3 (Semantic),0.904
+B072ZS1MG1,"Olympus M.Zuiko Digital ED 14-150mm F4.0-5.6 II Lens, for Micro Four Thirds Cameras (Black)",Olympus,Lens,L068,M.Zuiko Digital ED 14-42mm f/3.5-5.6 EZ,Micro Four Thirds,Tier 3 (Semantic),0.892
+B00FPKDPF2,Fujifilm XF10-24mmF4 R OIS,Fujifilm,Lens,L030,XF 10-24mm f/4 R OIS WR,Fujifilm X,Tier 3 (Semantic),0.897
+B01DCPV0GW,Canon EOS 80D DSLR Camera and Canon EF-S 18-135mm f/3.5-5.6 is USM Lens with Altura Photo Complete Accessory and Travel Bundle,Canon,Body,B044,EOS 80D,Canon EF,Tier 1 (Regex),1.0
+B07X8LT5LP,"7artisans 35mm F1.4 Full Frame Manual Fixed Lens for Sony E-Mount Cameras A7 A7II A7R A7RII A7S A7SII A6500 A6300 A6000 W/Lens Pouch Bag &Antistatic Gloves,Black",Sony,Lens,L037,FE 35mm f/1.4 GM,Sony E,Tier 1 (Regex),1.0
+B0777X2CWK,"Canon EF 24–105mm f/4L is II USM Lens, Black - 1380C002",Canon,Lens,L050,EF 24-105mm f/4L IS II USM,Canon EF,Tier 3 (Semantic),0.925
+B07X9F35QY,Auto-Focus Prime Lens VILTROX 85mm F1.8 Mark II STM Full Frame Portrait Lens for Sony E-Mount Camera A7III A7RIII A7SII A7II A9 A7 A6500 A6400 A6300,Sony,Lens,L001,FE 85mm f/1.8,Sony E,Tier 1 (Regex),1.0
+B07GPRSYG8,Nikon Z6 Full Frame Mirrorless Camera Body,Nikon,Body,B051,Z6,Nikon Z,Tier 1 (Regex),1.0
+B00009R6UC,Canon ES-62 Lens Hood for EF 50mm f/1.8 II (w/ hood adapter 62),Canon,Lens,L018,EF 50mm f/1.8 STM,Canon EF,Tier 1 (Regex),1.0
+B00WUI07XK,Canon Cameras US 2514A002 EF 50mm f/1.8 II Camera Lens - Fixed (Discontinued by Manufacturer),Canon,Lens,L018,EF 50mm f/1.8 STM,Canon EF,Tier 1 (Regex),1.0
+B00APQ9PVE,Canon 18-135mm f/3.5-5.6 EF-S is STM Lens New (White Box),Canon,Lens,L053,EF-S 18-55mm f/3.5-5.6 IS STM,Canon EF,Tier 3 (Semantic),0.832
+B083K3C5P2,Nikon NIKKOR Z 70-200mm f/2.8 S | Professional large aperture telephoto zoom lens for Z series mirrorless cameras | Nikon USA Model,Nikon,Lens,L024,NIKKOR Z 70-200mm f/2.8 VR S,Nikon Z,Tier 1 (Regex),1.0
+B082WVTQMJ,Canon Digital SLR Camera Body [EOS 80D] with EF-S 18-55mm f/3.5-5.6 Image Stabilization STM Lens with 24.2 Megapixel (APS-C) CMOS Sensor and Dual Pixel CMOS AF - Black,Canon,Body,B044,EOS 80D,Canon EF,Tier 1 (Regex),1.0
+B00XLV4GB4,"Canon EF 70-200mm f/2.8L is II USM Zoom Lens, Sandisk 64GB Card, Ritz Gear Cleaning Kit & Accessory Bundle",Canon,Lens,L020,EF 70-200mm f/2.8L IS III USM,Canon EF,Tier 1 (Regex),1.0
+B07VKRGPYB,VILTROX 85mm F1.8 Mark II STM Autofocus Large Aperture Full-Frame Portrait Lens Compatible with Sony E-Mount Cameras A7Ⅲ a7RⅢ a9 a7SⅡ a7RⅡ a7Ⅱ a7S a7 a7R a6400 a6500 with Pergear Dust Blaster,Sony,Lens,L001,FE 85mm f/1.8,Sony E,Tier 1 (Regex),1.0
+B00V8VMLA2,"Nikon AF-S DX NIKKOR 35mm f/1.8G Lens with Auto Focus for Nikon DSLR Cameras, 2183, Black",Nikon,Lens,L062,AF-S DX NIKKOR 35mm f/1.8G,Nikon F,Tier 1 (Regex),1.0
+B09BQVW8L1,Sigma 135mm F1.8 Art DG HSM for Sony E,Sony,Lens,L008,E 35mm f/1.8 OSS,Sony E,Tier 1 (Regex),1.0
+B00IMP0DN4,"Sony Alpha a6000 24.3 Interchangeable Lens Camera with 16-50mm Power Zoom Lens Bundle with Camera Bag, 32GB Memory Card, Training Guide on DVD, Battery, HDMI Cable, Tripod and Accessories (3 Items)",Sony,Body,B030,Alpha A6000,Sony E,Tier 1 (Regex),1.0
+B01B6Y45T0,Canon EOS-1D X Mark II,Canon,Body,B009,EOS R6 Mark II,Canon RF,Tier 2 (Fuzzy),0.86
+B00CPGG9RK,"OM SYSTEM OLYMPUS M.Zuiko Digital 45mm F1.8 Black For Micro Four Thirds System Camera, Compact Design, Beautiful Bokeh, Bright",Olympus,Lens,L033,M.Zuiko Digital ED 45mm f/1.8,Micro Four Thirds,Tier 1 (Regex),1.0
+B08Z75GK14,Canon EF 50mm f/1.8 STM Lens International Version (No Warranty),Canon,Lens,L018,EF 50mm f/1.8 STM,Canon EF,Tier 1 (Regex),1.0
+B01A7Q0KZ6,Nikon D500 DX-Format Digital SLR with 16-80mm ED VR Lens Black,Nikon,Body,B058,D500,Nikon F,Tier 1 (Regex),1.0
+B07BH49JSY,"Samyang SYIO3514-E AF 35mm f/1.4 Auto Focus Wide Angle Full Frame Lens for Sony FE Mount, Black",Sony,Lens,L037,FE 35mm f/1.4 GM,Sony E,Tier 1 (Regex),1.0
+B01KYP855M,Canon EOS 5D Mark IV Full Frame Digital SLR Camera Body Battery Bundle,Canon,Body,B013,EOS 5D Mark IV,Canon EF,Tier 1 (Regex),1.0
+B077H3KD19,Canon EOS 5D Mark IV DSLR Camera ( Body Only ) - Deal-Expo Accessories Bundle,Canon,Body,B013,EOS 5D Mark IV,Canon EF,Tier 1 (Regex),1.0
+B0C62JR3NV,"Panasonic LUMIX Professional 12-35mm Camera Lens G X VARIO II, F2.8 ASPH, Dual I.S. 2.0 with Power O.I.S., Mirrorless Micro Four Thirds, H-HSA12035 (2017 Model, Black)",Panasonic,Lens,L070,Lumix G Vario 12-32mm f/3.5-5.6 ASPH,Micro Four Thirds,Tier 3 (Semantic),0.821
+B00CNZTPGA,Fujifilm XF55-200mmF3.5-4.8 R LM OIS,Fujifilm,Lens,L064,XF 18-55mm f/2.8-4 R LM OIS,Fujifilm X,Tier 3 (Semantic),0.835
+B01097XD0W,Sony Alpha a6000 Digital Camera Wi-Fi w/ 18-55mm 55-210mm Zoom Lens Bundle (Renewed),Sony,Body,B030,Alpha A6000,Sony E,Tier 1 (Regex),1.0
+B07CKHLWGM,Sony 18-135mm F3.5-5.6 OSS APS-C E-Mount Zoom Lens,Sony,Lens,L042,E 18-135mm f/3.5-5.6 OSS,Sony E,Tier 1 (Regex),1.0
+B08TMZ59ZW,Fujifilm Fujinon XF70-300mmF4-5.6 LM OIS WR,Fujifilm,Lens,L031,XF 70-300mm f/4-5.6 R LM OIS WR,Fujifilm X,Tier 3 (Semantic),0.862
+B078TT74V4,Sony FE 85mm f/1.4 GM Lens,Sony,Lens,L010,85mm f/1.4 DG DN Art (Sony E),Sony E,Tier 1 (Regex),1.0
+B0B4MQGC61,Meike 85mm F1.8 Auto Focus Medium Telephoto STM Stepping Motor Full Frame Portrait Lens Compatible with Sony E Mount Mirrorless Cameras,Sony,Lens,L001,FE 85mm f/1.8,Sony E,Tier 1 (Regex),1.0
+B06ZZNK3Y9,Sony E 55-210mm F4.5-6.3 OSS Lens for Sony E-Mount Cameras (Silver),Sony,Lens,L041,E 55-210mm f/4.5-6.3 OSS,Sony E,Tier 1 (Regex),1.0
+B001RTTO4Q,Nikon 35mm f/1.8G AF-S DX,Nikon,Lens,L062,AF-S DX NIKKOR 35mm f/1.8G,Nikon F,Tier 1 (Regex),1.0
+B00007EE8M,Canon 24-70mm f/2.8L EF L-Series Standard Zoom Lens USM,Canon,Lens,L019,EF 24-70mm f/2.8L II USM,Canon EF,Tier 3 (Semantic),0.887
+B00O0ADU4O,Canon EOS 5D Mark III 22.3 MP Full Frame CMOS Digital SLR Camera with EF 24-105mm f/4 L is USM Lens,Canon,Body,B043,EOS 5D Mark III,Canon EF,Tier 1 (Regex),1.0
+B07V5CR8S2,Sony FE 35mm F1.8 Large Aperture Prime Lens (SEL35F18F),Sony,Lens,L008,E 35mm f/1.8 OSS,Sony E,Tier 1 (Regex),1.0
+B08Z4HVBXC,Sony FE 50mm F1.2 GM Full-Frame Large-Aperture G Master Lens,Sony,Lens,L039,FE 50mm f/1.2 GM,Sony E,Tier 1 (Regex),1.0
+B07VCQWDNT,VILTROX 85mm F/1.8 F1.8 Mark II STM Full-Frame 85mm f1.8 ii for AF Auto Focus for Sony E-Mount Camera A7III A7RIII A7SII A7II a6500 a6400 a6300,Sony,Lens,L001,FE 85mm f/1.8,Sony E,Tier 1 (Regex),1.0
+B07P14WBL4,Canon EOS RP Mirrorless Digital Camera Body + Canon EF-EOS R Mount Adapter with Altura Photo Complete Accessory and Travel Bundle,Canon,Body,B038,EOS R,Canon RF,Tier 1 (Regex),1.0
+B08CNWXV8H,"Canon EOS R6 Full-Frame Mirrorless Camera + RF24-105mm F4-7.1 is STM Lens Kit, Black (4082C022)",Canon,Body,B040,EOS R6,Canon RF,Tier 1 (Regex),1.0
+B01DAN5BNE,Canon EOS 80D Digital SLR Kit with EF-S 18-55mm f/3.5-5.6 Image Stabilization STM & Canon EF-S 55-250mm Lens + Polaroid .43x Super Wide Angle & 2.2X HD Telephoto Lens + Memory Cards + Accessory Bundle,Canon,Body,B044,EOS 80D,Canon EF,Tier 1 (Regex),1.0
+B00UB7ZUBG,Canon EF 85mm f/1.8 USM Medium Telephoto Lens for Canon SLR Cameras - Fixed,Canon,Lens,L052,EF 85mm f/1.8 USM,Canon EF,Tier 1 (Regex),1.0
+B07BZ1TVJM,Sony SEL90M28G FE 90mm f/2.8-22 Macro G OSS Lens for Mirrorless Cameras (Renewed),Sony,Lens,L040,FE 90mm f/2.8 Macro G OSS,Sony E,Tier 1 (Regex),1.0
+B08TP8LM5M,Leofoto Lens Foot SF-02 for Sony FE 200-600MM F/5.6-6.3 G OSS E-Mount,Sony,Lens,L006,FE 200-600mm f/5.6-6.3 G OSS,Sony E,Tier 1 (Regex),1.0
+B00C2PJXD6,"Olympus M.Zuiko Digital ED 12-50mm F3.5-6.3 EZ Lens, for Micro Four Thirds Cameras (Black)",Olympus,Lens,L068,M.Zuiko Digital ED 14-42mm f/3.5-5.6 EZ,Micro Four Thirds,Tier 3 (Semantic),0.88
+B07DFSNT1D,"Canon EF 70-200mm f/4L IS II USM Lens for Canon Digital SLR Cameras, White - 2309C002",Canon,Lens,L020,EF 70-200mm f/2.8L IS III USM,Canon EF,Tier 3 (Semantic),0.822
+B0748JMG9F,Canon EOS 6D Mark II Professional Digital Camera: 26 Megapixel Touchscreen Full Frame DSLR Bundle with Canon BG-E21 Battery Grip 64GB SD Card SLR Bag Photographer's Kit,Canon,Body,B041,EOS 6D Mark II,Canon EF,Tier 1 (Regex),1.0
+B07WFQYJYP,Canon Rf 15-35mm F2.8 L is USM,Canon,Lens,L016,RF 15-35mm f/2.8L IS USM,Canon RF,Tier 1 (Regex),1.0
+B01N4KCC2M,D5600 DX-Format Digital SLR w/AF-P DX NIKKOR 18-55mm f/3.5-5.6G VR,Nikon,Body,B060,D5600,Nikon F,Tier 1 (Regex),1.0
+B0779PCYR9,Canon EOS 5D Mark IV DSLR Body - with Canon BG-E20 Battery Grip,Canon,Body,B013,EOS 5D Mark IV,Canon EF,Tier 1 (Regex),1.0
+B07LFXBJF1,Nikon Z6 Mirrorless Camera with 24-70mm f/4 S Lens and FTZ Mount Adapter Bundle (2 Items),Nikon,Body,B051,Z6,Nikon Z,Tier 1 (Regex),1.0
+B00006I53X,Canon EF 70-200mm f/2.8L IS USM Telephoto Zoom Lens for Canon SLR Cameras - White Box(Bulk Packaging),Canon,Lens,L020,EF 70-200mm f/2.8L IS III USM,Canon EF,Tier 1 (Regex),1.0
+B0199BF5KA,"Sony SEL90M28G FE 90mm f/2.8-22 Macro G OSS Standard-Prime Lens for Mirrorless Cameras,Black",Sony,Lens,L040,FE 90mm f/2.8 Macro G OSS,Sony E,Tier 1 (Regex),1.0
+B00WUI38F4,Canon EF 24-105mm f/4 L IS USM Lens for Canon EOS SLR Cameras,Canon,Lens,L050,EF 24-105mm f/4L IS II USM,Canon EF,Tier 3 (Semantic),0.879
+B00IMPJCCW,"Sony ILCE6000L/B Alpha a6000 Mirrorless Digital Camera with 16-50mm Lens Bundle with 64GB Memory Card, Battery, Bag, Training Guide, Charger, 40.5mm Filter Kit, Table-top Tripod and HDMI Cable",Sony,Body,B030,Alpha A6000,Sony E,Tier 1 (Regex),1.0
+B07X27FHSQ,Canon EOS 90D Digital SLR Camera Bundle (Body Only) with Professional Accessory Bundle (14 Items),Canon,Body,B014,EOS 90D,Canon EF,Tier 1 (Regex),1.0
+B000R96FP8,Canon EF-S 18-55mm f/3.5-5.6 IS II SLR Lens,Canon,Lens,L053,EF-S 18-55mm f/3.5-5.6 IS STM,Canon EF,Tier 2 (Fuzzy),0.85
+B00CGYJ8NI,Panasonic Lumix G Vario 14-140mm f/3.5-5.6 Lens (Black),Panasonic,Lens,L070,Lumix G Vario 12-32mm f/3.5-5.6 ASPH,Micro Four Thirds,Tier 3 (Semantic),0.845
+B01BW89AN6,Canon Digital SLR Camera Body [EOS 80D] and EF-S 18-135mm f/3.5-5.6 Image Stabilization USM Lens with 24.2 Megapixel (APS-C) CMOS Sensor and Dual Pixel CMOS AF (Black),Canon,Body,B044,EOS 80D,Canon EF,Tier 1 (Regex),1.0
+B082DYGB7Q,"Canon DSLR Camera [EOS 90D] with 18-135 is USM Lens | Built-in Wi-Fi, Bluetooth, DIGIC 8 Image Processor, 4K Video, Dual Pixel CMOS AF, and 3.0 Inch Vari-Angle Touch LCD Screen, Black",Canon,Body,B014,EOS 90D,Canon EF,Tier 1 (Regex),1.0
+B07PBGPTG6,MEKE 85mm F1.8 Manual Focus Full Frame Large Aperture Standard Medium Portrait Lens with Electronic Aperture & EXIF Information Transmission for Sony E-Mount Cameras A7 A7R A7C A7RII A7SIII A7SII A9,Sony,Lens,L001,FE 85mm f/1.8,Sony E,Tier 1 (Regex),1.0
+B0B6QGL4RM,"Nikon Z 30 with Wide-Angle Zoom Lens | Our Most Compact, Lightweight mirrorless Stills/Video Camera with 16-50mm Zoom Lens | Nikon USA Model",Nikon,Body,B055,Z30,Nikon Z,Tier 1 (Regex),1.0
+B08TP4QYT2,Fujinon XF27mmF2.8 R WR,Fujifilm,Lens,L066,XF 27mm f/2.8 R WR,Fujifilm X,Tier 1 (Regex),1.0
+B07H489XDQ,"Canon RF 24-105mm f/4L IS USM Lens, Black - 2963C002",Canon,Lens,L044,RF 24-105mm f/4L IS USM,Canon RF,Tier 3 (Semantic),0.896
+B07H3JVDJC,Nikon Z6 Mirrorless Digital Camera with Nikon FTZ Mount Adapter Bundle (2 Items),Nikon,Body,B051,Z6,Nikon Z,Tier 1 (Regex),1.0
+B00KQ9RH5G,Canon EF-S 10-18mm f/4.5-5.6 IS STM Zoom Lens for Canon SLR Cameras (Renewed),Canon,Lens,L055,EF-S 10-18mm f/4.5-5.6 IS STM,Canon EF,Tier 3 (Semantic),0.867
+B07DFVF7M4,"Canon EF 70-200mm f/2.8L IS III USM Lens for Canon Digital SLR Cameras, White - 3044C002",Canon,Lens,L020,EF 70-200mm f/2.8L IS III USM,Canon EF,Tier 1 (Regex),1.0
+B0CCH155XZ,"VILTROX 85mm F1.8 Mark II Auto Focus Full Frame Lens for Sony E Mount, STM Large Aperture Medium Telephoto Portrait Fixed Focus Lens for Sony Camera A9 A7R3 A7III A7RIII A7M3 A7S2 A6500 A6300",Sony,Lens,L001,FE 85mm f/1.8,Sony E,Tier 1 (Regex),1.0
+B08N8TJQHK,"Rokinon 35mm F1.8 Auto Focus Compact Full Frame Wide Angle Lens for Sony E Mount, Black, IO3518-E",Sony,Lens,L008,E 35mm f/1.8 OSS,Sony E,Tier 1 (Regex),1.0
+B00W87UZ6W,"Opteka 85mm f/1.8 Manual Focus Aspherical Telephoto Portrait Lens for Sony NEX E-Mount a9, a7r, a7s, a7, a6500, a6300, a6000, a5100, a5000, NEX-7, NEX-6, NEX-5T, NEX-5R & Digital Mirrorless Cameras",Sony,Lens,L001,FE 85mm f/1.8,Sony E,Tier 1 (Regex),1.0
+B008NF8BKK,Canon EF-M 18-55mm f3.5-5.6 is STM Compact System Lens,Canon,Lens,L053,EF-S 18-55mm f/3.5-5.6 IS STM,Canon EF,Tier 3 (Semantic),0.875
+B07KJGM5W6,Nikon D5600 24 MP DX-Format Full HD 1080p Digital SLR Camera Body 1575B - Black (Renewed),Nikon,Body,B060,D5600,Nikon F,Tier 1 (Regex),1.0
+B0CFWKNNJK,"Sony FE 20mm F1.8 G Full-Frame Large-Aperture Ultra-Wide Prime Angle G Lens, Model: SEL20F18G,Black",Sony,Lens,L038,FE 20mm f/1.8 G,Sony E,Tier 1 (Regex),1.0
+B0CGMNQQ7X,Sony FE 70-200mm f/2.8 GM OSS Lens,Sony,Lens,L005,FE 70-200mm f/2.8 GM OSS II,Sony E,Tier 1 (Regex),1.0
+B0BL699P9K,Sony NEW Alpha 7S III Full-frame Interchangeable Lens Mirrorless Camera,Sony,Body,B003,Alpha A7S III,Sony E,Tier 1 (Regex),1.0
+B010FAU86K,Canon EF-S 55-250mm F4-5.6 is STM Lens for Canon SLR Cameras (Renewed),Canon,Lens,L054,EF-S 55-250mm f/4-5.6 IS STM,Canon EF,Tier 3 (Semantic),0.918
+B071R2XGWW,Fujifilm Fujinon GF23mmF4 R LM WR Lens,Fujifilm,Lens,L065,XF 23mm f/1.4 R LM WR,Fujifilm X,Tier 3 (Semantic),0.846
+B00I0O7VXC,Sony E 55-210mm F4.5-6.3 Lens for Sony E-Mount Cameras (Black) - International Version (No Warranty),Sony,Lens,L041,E 55-210mm f/4.5-6.3 OSS,Sony E,Tier 1 (Regex),1.0
+B07KK4BBW8,Sony Alpha a7 III 24MP UHD 4K Mirrorless Digital Camera + 32GB SDHC U3 Card + Lowepro Camera Case + Spare Battery + Cleaning Kit + Memory Wallet + Card Reader + Corel PC Photo Video Art Suite 07,Sony,Body,B026,Alpha A7 III,Sony E,Tier 1 (Regex),1.0
+B0956ZTZJS,85mm F1.4 Art DG HSM for Sony E,Sony,Lens,L010,85mm f/1.4 DG DN Art (Sony E),Sony E,Tier 1 (Regex),1.0
+B07L5RKWC6,Canon EOS R Mirrorless Digital Camera Body + Canon Control Ring Mount Adapter EF-EOS R with Altura Photo Complete Accessory and Travel Bundle,Canon,Body,B038,EOS R,Canon RF,Tier 1 (Regex),1.0
+B00YB10GCQ,"Canon EF 50mm f/1.8 STM Standard Prime Lens with Essentials Bundle Including: 49mm UV Filter, Padded Lens Pouch, Lens Cap Keeper, and Lens Cleaning Pen",Canon,Lens,L018,EF 50mm f/1.8 STM,Canon EF,Tier 1 (Regex),1.0

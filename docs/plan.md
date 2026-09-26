@@ -120,5 +120,5 @@ camera-store/
 - **Phase 4 Exit Gate**: Sự kiện `VIEW` và `ADD_TO_CART` được ghi lại chuẩn xác vào Database Postgres.
 - **Phase 5 Exit Gate (RẤT QUAN TRỌNG)**: API tư vấn gợi ý trả về danh sách sản phẩm tuân thủ ràng buộc (Constraint: budget, lens mount) và có lý do giải thích sinh tự động (Explainable reasons).
 - **Phase 6 Exit Gate**: User có lịch sử xem máy ảnh DSLR nhận danh sách gợi ý cá nhân hóa tương ứng.
-- **Phase 7 Exit Gate**: Có báo cáo metric offline (Precision@K, Recall@K...) + Dashboard đo lường CTR cho Admin.
+- **Phase 7 Exit Gate**: Có báo cáo metric offline (Ranking: NDCG@K, Recall@K, Hit@K; Constraint: K-CVR@K, URR@K) + Dashboard đo lường CTR cho Admin.
 - **Phase 8 Exit Gate**: Demo bài toán tư vấn gợi ý thành công từ DB sạch, sẵn sàng nộp và bảo vệ đồ án.
