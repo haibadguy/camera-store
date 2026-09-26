@@ -1,0 +1,61 @@
+spec_id,brand,canonical_model,category,mount,sensor_format,focal_length_mm,max_aperture,suitable_usecase
+B001,Sony,Alpha A7 IV,Body,Sony E,Full-frame,,,Portrait|Landscape|Street
+B002,Sony,Alpha A7R V,Body,Sony E,Full-frame,,,Portrait|Commercial|Landscape
+B003,Sony,Alpha A7S III,Body,Sony E,Full-frame,,,Vlog|Video
+B004,Sony,Alpha A6700,Body,Sony E,APS-C,,,Sports|Wildlife|Street
+B005,Sony,Alpha A6400,Body,Sony E,APS-C,,,Travel|Street|Vlog
+B006,Sony,ZV-E10,Body,Sony E,APS-C,,,Vlog|Video
+B007,Sony,Alpha 1,Body,Sony E,Full-frame,,,Sports|Wildlife|Commercial
+B008,Canon,EOS R5,Body,Canon RF,Full-frame,,,Portrait|Commercial|Wildlife
+B009,Canon,EOS R6 Mark II,Body,Canon RF,Full-frame,,,Sports|Portrait|Event
+B010,Canon,EOS R8,Body,Canon RF,Full-frame,,,Travel|Portrait
+B011,Canon,EOS R7,Body,Canon RF,APS-C,,,Sports|Wildlife
+B012,Canon,EOS R10,Body,Canon RF,APS-C,,,Travel|Street
+B013,Canon,EOS 5D Mark IV,Body,Canon EF,Full-frame,,,Portrait|Commercial|Event
+B014,Canon,EOS 90D,Body,Canon EF,APS-C,,,Sports|Wildlife
+B015,Nikon,Z8,Body,Nikon Z,Full-frame,,,Sports|Wildlife|Commercial
+B016,Nikon,Z6 II,Body,Nikon Z,Full-frame,,,Portrait|Travel|Event
+B017,Nikon,Z6 III,Body,Nikon Z,Full-frame,,,Sports|Portrait|Video
+B018,Nikon,Z5,Body,Nikon Z,Full-frame,,,Travel|Street
+B019,Nikon,Z50,Body,Nikon Z,APS-C,,,Travel|Vlog
+B020,Nikon,D850,Body,Nikon F,Full-frame,,,Landscape|Commercial|Portrait
+B021,Fujifilm,X-T5,Body,Fujifilm X,APS-C,,,Travel|Street|Landscape
+B022,Fujifilm,X-H2S,Body,Fujifilm X,APS-C,,,Sports|Wildlife|Video
+B023,Fujifilm,X-S20,Body,Fujifilm X,APS-C,,,Vlog|Travel
+B024,Panasonic,Lumix S5 II,Body,L-Mount,Full-frame,,,Vlog|Video|Event
+B025,OM System,OM-1,Body,Micro Four Thirds,Micro Four Thirds,,,Wildlife|Sports|Macro
+L001,Sony,FE 85mm f/1.8,Lens,Sony E,Full-frame,85,1.8,Portrait
+L002,Sony,FE 50mm f/1.8,Lens,Sony E,Full-frame,50,1.8,Portrait|Street
+L003,Sony,FE 24-70mm f/2.8 GM II,Lens,Sony E,Full-frame,24-70,2.8,Event|Landscape|Portrait
+L004,Sony,FE 16-35mm f/2.8 GM II,Lens,Sony E,Full-frame,16-35,2.8,Landscape|Architecture|Vlog
+L005,Sony,FE 70-200mm f/2.8 GM OSS II,Lens,Sony E,Full-frame,70-200,2.8,Sports|Wildlife|Portrait
+L006,Sony,FE 200-600mm f/5.6-6.3 G OSS,Lens,Sony E,Full-frame,200-600,5.6,Wildlife|Sports
+L007,Sony,E 16-50mm f/3.5-5.6 PZ OSS,Lens,Sony E,APS-C,16-50,3.5,Travel|Vlog
+L008,Sony,E 35mm f/1.8 OSS,Lens,Sony E,APS-C,35,1.8,Street|Portrait
+L009,Sigma,24-70mm f/2.8 DG DN Art (Sony E),Lens,Sony E,Full-frame,24-70,2.8,Event|Landscape|Portrait
+L010,Sigma,85mm f/1.4 DG DN Art (Sony E),Lens,Sony E,Full-frame,85,1.4,Portrait
+L011,Tamron,28-75mm f/2.8 Di III VXD G2 (Sony E),Lens,Sony E,Full-frame,28-75,2.8,Event|Travel|Portrait
+L012,Canon,RF 50mm f/1.8 STM,Lens,Canon RF,Full-frame,50,1.8,Portrait|Street
+L013,Canon,RF 85mm f/2 Macro IS STM,Lens,Canon RF,Full-frame,85,2.0,Portrait|Macro
+L014,Canon,RF 24-70mm f/2.8L IS USM,Lens,Canon RF,Full-frame,24-70,2.8,Event|Landscape|Portrait
+L015,Canon,RF 70-200mm f/2.8L IS USM,Lens,Canon RF,Full-frame,70-200,2.8,Sports|Portrait|Event
+L016,Canon,RF 15-35mm f/2.8L IS USM,Lens,Canon RF,Full-frame,15-35,2.8,Landscape|Architecture|Vlog
+L017,Canon,RF 100-500mm f/4.5-7.1L IS USM,Lens,Canon RF,Full-frame,100-500,4.5,Wildlife|Sports
+L018,Canon,EF 50mm f/1.8 STM,Lens,Canon EF,Full-frame,50,1.8,Portrait|Street
+L019,Canon,EF 24-70mm f/2.8L II USM,Lens,Canon EF,Full-frame,24-70,2.8,Event|Landscape
+L020,Canon,EF 70-200mm f/2.8L IS III USM,Lens,Canon EF,Full-frame,70-200,2.8,Sports|Wildlife|Portrait
+L021,Nikon,NIKKOR Z 50mm f/1.8 S,Lens,Nikon Z,Full-frame,50,1.8,Portrait|Street
+L022,Nikon,NIKKOR Z 85mm f/1.8 S,Lens,Nikon Z,Full-frame,85,1.8,Portrait
+L023,Nikon,NIKKOR Z 24-70mm f/2.8 S,Lens,Nikon Z,Full-frame,24-70,2.8,Event|Landscape
+L024,Nikon,NIKKOR Z 70-200mm f/2.8 VR S,Lens,Nikon Z,Full-frame,70-200,2.8,Sports|Portrait
+L025,Nikon,NIKKOR Z 14-30mm f/4 S,Lens,Nikon Z,Full-frame,14-30,4.0,Landscape|Architecture
+L026,Nikon,NIKKOR Z 180-600mm f/5.6-6.3 VR,Lens,Nikon Z,Full-frame,180-600,5.6,Wildlife|Sports
+L027,Fujifilm,XF 35mm f/1.4 R,Lens,Fujifilm X,APS-C,35,1.4,Street|Portrait
+L028,Fujifilm,XF 56mm f/1.2 R WR,Lens,Fujifilm X,APS-C,56,1.2,Portrait
+L029,Fujifilm,XF 16-55mm f/2.8 R LM WR,Lens,Fujifilm X,APS-C,16-55,2.8,Event|Landscape
+L030,Fujifilm,XF 10-24mm f/4 R OIS WR,Lens,Fujifilm X,APS-C,10-24,4.0,Landscape|Architecture
+L031,Fujifilm,XF 70-300mm f/4-5.6 R LM OIS WR,Lens,Fujifilm X,APS-C,70-300,4.0,Wildlife|Sports
+L032,Olympus,M.Zuiko Digital ED 12-40mm f/2.8 PRO,Lens,Micro Four Thirds,Micro Four Thirds,12-40,2.8,Landscape|Travel|Event
+L033,Olympus,M.Zuiko Digital ED 45mm f/1.8,Lens,Micro Four Thirds,Micro Four Thirds,45,1.8,Portrait
+L034,Panasonic,Lumix G 25mm f/1.7 ASPH,Lens,Micro Four Thirds,Micro Four Thirds,25,1.7,Street|Portrait
+L035,Panasonic,Lumix S PRO 24-70mm f/2.8,Lens,L-Mount,Full-frame,24-70,2.8,Event|Landscape

@@ -34,4 +34,14 @@ build/
 .DS_Store
 Thumbs.db
 
-
+# AI Data & Checkpoints
+ai/data/raw/
+ai/data/processed/*.txt
+ai/data/processed/*.json
+ai/data/processed/*.jsonl
+ai/data/processed/*.csv
+ai/data/kg/*.pt
+ai/data/kg/*.npz
+ai/checkpoints/
+*.gz
+*.parquet
