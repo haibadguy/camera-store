@@ -1,0 +1,24 @@
+{
+  "model": "R-GCN variant (HeteroConv+SAGEConv)",
+  "note": "SAGEConv per-relation via HeteroConv. Not Schlichtkrull et al. exact formulation.",
+  "config": {
+    "n_layers": 2,
+    "emb_dim": 64,
+    "lr": 0.0025,
+    "l2": 0.0001,
+    "batch_size": 16384
+  },
+  "best_epoch": 2,
+  "best_val_ndcg10": 0.28286170479333744,
+  "results": {
+    "hit@5": 0.3089145745768488,
+    "ndcg@5": 0.21856575938977524,
+    "hit@10": 0.4250965579915938,
+    "ndcg@10": 0.2559857653527653,
+    "hit@20": 0.5546262637737135,
+    "ndcg@20": 0.2887062593714442,
+    "cvr@5": 0.44115755627009645,
+    "cvr@10": 0.3784163987138264,
+    "cvr@20": 0.35510450160771706
+  }
+}

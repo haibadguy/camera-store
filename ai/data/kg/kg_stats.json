@@ -1,0 +1,47 @@
+{
+  "node_counts": {
+    "user": 70424,
+    "item": 28867,
+    "mount": 8,
+    "usecase": 7
+  },
+  "edge_counts_forward": {
+    "interacted_with": 482149,
+    "compatible_with": 3258,
+    "has_mount": 257,
+    "suitable_for": 441
+  },
+  "item_type_counts": {
+    "body": 106,
+    "lens": 151,
+    "accessory": 28610
+  },
+  "coverage": {
+    "items_with_kg_edges": 257,
+    "items_without_kg_edges": 28610,
+    "pct_items_without_kg_edges": 99.11,
+    "users_with_linked_body_in_train": 2491
+  },
+  "compat_skipped": 0,
+  "compat_skip_rate_pct": 0.0,
+  "unknown_mounts": [],
+  "unknown_usecase_labels": [
+    "All-around",
+    "Architecture",
+    "Beginner",
+    "Commercial",
+    "Event",
+    "Everyday",
+    "Macro",
+    "Pancake",
+    "Video"
+  ],
+  "notes": {
+    "train_interactions": 482149,
+    "full_kcore_interactions": 622997,
+    "val_interactions": 70424,
+    "test_interactions": 70424,
+    "requires_adapter": "Out of scope — native mount compatibility only",
+    "learnable_embeddings": "Defined in model (Mục 5), not stored in data.pt"
+  }
+}

@@ -1,0 +1,102 @@
+============================================================
+BƯỚC 1: LOAD INPUTS
+============================================================
+→ N_USERS = 70,424  |  N_ITEMS = 28,867
+body_idx sample : [('B073C8Z4SX', 0), ('B08L7DHTRL', 1)]
+lens_idx  sample: [('B0035LBRM6', 0), ('B08C6ZRVC5', 1)]
+→ linked_products: 257 rows  |  M: (106, 151)  nnz=3258
+→ df_linked columns: ['parent_asin', 'amazon_title', 'detected_brand', 'category', 'spec_id', 'canonical_model', 'mount', 'match_tier', 'confidence']
+→ df_linked category: {'Lens': 151, 'Body': 106}
+
+============================================================
+BƯỚC 2: ASIN → IID MAPPING
+============================================================
+→ linked sau join: 257  (dropped 0)
+
+============================================================
+BƯỚC 3: ITEM TYPE FEATURE  [body=0 | lens=1 | accessory=2]
+============================================================
+→ body=106  |  lens=151  |  accessory=28610  |  total=28867
+
+============================================================
+BƯỚC 4: USER-ITEM EDGES  (train.txt)
+============================================================
+→ user-item edges: 482,149
+→ Saved: ai/data/kg/user_item_train_edges.csv
+
+============================================================
+BƯỚC 5: COMPATIBLE_WITH EDGES
+============================================================
+→ compatible edges: 3258  |  skipped: 0 (0.00%)
+→ Saved: ai/data/kg/compatible_item_edges.csv
+
+============================================================
+BƯỚC 6: HAS_MOUNT EDGES
+============================================================
+→ has_mount edges: 257
+
+============================================================
+BƯỚC 7: SUITABLE_FOR EDGES
+============================================================
+[WARN] Usecase labels không map được: {'Event', 'Pancake', 'All-around', 'Commercial', 'Macro', 'Architecture', 'Everyday', 'Video', 'Beginner'}
+→ suitable_for edges: 441
+
+============================================================
+BƯỚC 8: ASSEMBLE HETERODATA
+============================================================
+
+Edge types sau ToUndirected():
+  ('user', 'interacted_with', 'item'): 482,149
+  ('item', 'compatible_with', 'item'): 6,516
+  ('item', 'has_mount', 'mount'): 257
+  ('item', 'suitable_for', 'usecase'): 441
+  ('item', 'rev_interacted_with', 'user'): 482,149
+  ('mount', 'rev_has_mount', 'item'): 257
+  ('usecase', 'rev_suitable_for', 'item'): 441
+
+HeteroData(
+  user={ num_nodes=70424 },
+  item={ x=[28867, 3] },
+  mount={ x=[8, 8] },
+  usecase={ x=[7, 7] },
+  (user, interacted_with, item)={ edge_index=[2, 482149] },
+  (item, compatible_with, item)={ edge_index=[2, 6516] },
+  (item, has_mount, mount)={ edge_index=[2, 257] },
+  (item, suitable_for, usecase)={ edge_index=[2, 441] },
+  (item, rev_interacted_with, user)={ edge_index=[2, 482149] },
+  (mount, rev_has_mount, item)={ edge_index=[2, 257] },
+  (usecase, rev_suitable_for, item)={ edge_index=[2, 441] }
+)
+
+============================================================
+BƯỚC 9: VALIDATION CHECKS
+============================================================
+  ✅ PASS: uid max (70423) < N_USERS (70424)
+  ✅ PASS: iid max (user-item) (28866) < N_ITEMS (28867)
+  ✅ PASS: compat iid in range
+  ✅ PASS: mount idx in [0, 7]
+  ✅ PASS: item_type body == 106 (got 106)
+  ✅ PASS: item_type lens == 151 (got 151)
+  ✅ PASS: has_mount edges (257) == linked items (257)
+  ✅ PASS: compatible edges (3258) == nnz(M) (3258)
+  ✅ PASS: usecase idx in [0, 6]
+
+✅ Tất cả validation PASSED
+
+10 compatible pairs sanity check:
+  [Canon EF]  EOS 6D Mark II  →  EF-S 18-55mm f/3.5-5.6 IS STM
+  [Canon EF]  EOS 6D Mark II  →  EF 16-35mm f/2.8L III USM
+  [Canon EF]  EOS 6D Mark II  →  EF 50mm f/1.8 STM
+  [Canon EF]  EOS 6D Mark II  →  EF-S 10-18mm f/4.5-5.6 IS STM
+  [Canon EF]  EOS 6D Mark II  →  EF-S 55-250mm f/4-5.6 IS STM
+  [Canon EF]  EOS 6D Mark II  →  EF 24-105mm f/4L IS II USM
+  [Canon EF]  EOS 6D Mark II  →  EF 16-35mm f/2.8L III USM
+  [Canon EF]  EOS 6D Mark II  →  EF-S 18-55mm f/3.5-5.6 IS STM
+  [Canon EF]  EOS 6D Mark II  →  EF-S 10-18mm f/4.5-5.6 IS STM
+  [Canon EF]  EOS 6D Mark II  →  EF-S 18-55mm f/3.5-5.6 IS STM
+
+============================================================
+BƯỚC 10: SAVE ARTIFACTS
+============================================================
+✅ ai/data/kg/kg_hetero.pt
+✅ ai/data/kg/kg_stats.json

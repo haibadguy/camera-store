@@ -42,6 +42,8 @@ ai/data/processed/*.jsonl
 ai/data/processed/*.csv
 ai/data/kg/*.pt
 ai/data/kg/*.npz
+ai/data/kg/user_item_train_edges.csv
 ai/checkpoints/
+results/*.pt
 *.gz
 *.parquet
