@@ -286,7 +286,12 @@ Hai quan hệ `crops_sensor` và `requires_adapter` lưu riêng làm cạnh củ
 **Hệ quả đã làm trong phiên 07/10:**
 - File chấm mù `ai/survey/content3/label_dev_50.csv`, tạo bởi `make_label_dev.py` với seed 20261007. Mẫu chia 12 tầng: thân 14, ống 22, phụ kiện/khác 14.
 - Kết quả quy tắc khảo sát của 50 mẫu nằm riêng ở `ai/data/survey/label_dev_50_rule.csv` (không đưa lên git; chạy lại script sẽ tạo lại giống hệt). Lưu ý: quy tắc khảo sát vẫn **gộp** EF/EF-S và FX/DX, nên khi so phải so ở mức họ ngàm, hoặc dùng quy tắc mới.
-- Hướng dẫn chấm: `docs/labeling_guide.md`. Có thêm cột `khung` (ff/apsc/khac) để phân biệt mức `crops_sensor`; chờ Nam duyệt.
+- Hướng dẫn chấm: `docs/labeling_guide.md`. Có thêm cột `khung` (ff/apsc/khac) để phân biệt mức `crops_sensor`; Nam đã duyệt.
+
+**Chốt thêm (07/10/2026, chi tiết ở nhật ký STATUS.md, QĐ 7–9):**
+- giữ cột `khung`;
+- ống APS-C hãng thứ ba "for Canon" trên thân Canon full-frame xếp "không chắc": M có thêm giá trị "không biết", lưu bằng ma trận đánh dấu riêng, và các cặp này bị loại khỏi ràng buộc cứng và CVR. Trên thân Canon APS-C thì vẫn là `compatible_with`;
+- ống ngàm T ghi theo ngàm của vòng T đi kèm; tiêu đề không rõ vòng nào thì ghi `khong_chac`.
 
 ## 5. Câu hỏi đã gửi Nam (đã trả lời ở mục 4)
 

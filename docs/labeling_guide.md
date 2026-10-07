@@ -48,6 +48,7 @@ Người chấm: Nam (chấm một mình, theo quyết định ngày 07/10/2026)
 | `khac_ngam` | Ngàm khác | Ghi tên ngàm vào `ghi_chu` |
 | `khong_co` | Sản phẩm không có ngàm, hoặc không phụ thuộc ngàm | Máy compact, túi, pin, ống gắn ren phía trước… |
 | `khong_ro` | Có ngàm, nhưng trang không cho biết là ngàm nào | Ghi lý do vào `ghi_chu` |
+| `khong_chac` | Ống ngàm T bán kèm vòng T, nhưng tiêu đề **không nói rõ** vòng cho ngàm nào | Chỉ dùng cho ca ống ngàm T (xem mục Ca khó) |
 | `nhieu` | Trang bán **nhiều bản ngàm**, hoặc phụ kiện hợp với nhiều ngàm | Liệt kê các ngàm vào `ghi_chu` |
 | `A>B` | Ngàm chuyển: ống ngàm A lên thân ngàm B | Vd `canon_ef>mft` |
 
@@ -79,11 +80,15 @@ Người chấm: Nam (chấm một mình, theo quyết định ngày 07/10/2026)
 | **Ống hãng thứ ba có ô chọn ngàm trên trang** | `ong`, `nhieu`, liệt kê ngàm vào `ghi_chu`. Nếu trang không có ô chọn mà tiêu đề ghi rõ 1 ngàm thì ghi ngàm đó | B000EXV0QQ "Tamron SP AF17-50mm … for Nikon-D" → xem trang: có nhiều bản ngàm thì `nhieu` |
 | **"for Sony Alpha"** (có thể A hoặc E) | Xem trang hoặc mã model. Không xác định được thì `khong_ro` | B00D6BOXOY "Samyang 85mm F1.4 for Sony Alpha" |
 | **"for Canon" / "for Nikon"** không nói rõ ngàm | Nếu tiêu đề có "DSLR / SLR" hoặc model DSLR → `canon_ef` / `nikon_f`. Còn lại xem trang; không rõ thì `khong_ro` | B014MC1HUI "Tamron 18-200mm for Canon APS-C Digital SLR" → `ong`, `canon_ef`, `apsc` |
-| **Ống mirror / tele rẻ ngàm T kèm vòng T** | `ong`, ghi ngàm của vòng T đi kèm (vd `canon_ef`), ghi_chu `T-mount + vòng T` | |
+| **Ống mirror / tele rẻ ngàm T kèm vòng T** | `ong`, ghi ngàm của vòng T đi kèm (vd `canon_ef`), ghi_chu `T-mount + vòng T`. Tiêu đề không nói rõ vòng cho ngàm nào thì `ngam` = `khong_chac` | Ví dụ minh họa (tự đặt, không phải sản phẩm thật): "500mm f/8 Mirror Lens + T-Mount Ring for Canon EOS" → `ong`, `canon_ef`; "500mm f/8 Mirror Lens with T-Mount" → `ong`, `khong_chac` |
+| **Ống APS-C hãng thứ ba "for Canon"** (Sigma DC, Tamron Di II…) | `ong`, `canon_ef`, `khung` = `apsc`. Người chấm chỉ ghi sự thật về ngàm và khung; việc cặp này lắp lên thân nào xếp mức gì là do bảng luật quyết định (xem cuối file) | B014MC1HUI "Tamron 18-200mm Di-II for Canon APS-C Digital SLR" → `ong`, `canon_ef`, `apsc` |
 | **Máy phim thay được ống kính** | `than`, ghi ngàm (vd `canon_fd`, `nikon_f`), `khung` = `ff` | |
 
-## Chưa chắc, cần Nam xác nhận
+## Các điểm đã chốt (Nam, 07/10/2026)
 
-1. **Thêm cột `khung`.** Nam yêu cầu 3 cột (`loai`, `ngam`, `ghi_chu`). Tôi thêm `khung` vì quyết định 2 (`crops_sensor`, EF/EF-S, DX/FX…) cần biết ống và thân là full-frame hay APS-C. Nếu Nam muốn bỏ, có thể gộp vào `ngam` (vd `nikon_f_dx`).
-2. **Ống hãng thứ ba "for Canon" vòng ảnh APS-C** (Sigma DC, Tamron Di II): tôi ghi `canon_ef` + `apsc` vì theo tôi biết các ống này dùng ngàm EF, không phải EF-S. **Điều này chưa đối chiếu tài liệu hãng.** Hệ quả cho bảng luật: ống này lắp vật lý được lên thân Canon full-frame nhưng ảnh bị tối góc, mà phần lớn DSLR Canon full-frame không có chế độ tự cắt khung. Vậy cặp này thuộc mức `crops_sensor` hay "không lắp được"? Cần Nam quyết khi viết file cấu hình luật.
-3. **Ống ngàm T kèm vòng T:** ghi theo vòng T (như trên) hay ghi `t_mount`?
+1. **Giữ cột `khung`.** Quyết định 2 (`crops_sensor`, EF/EF-S, DX/FX…) cần biết ống và thân là full-frame hay APS-C.
+2. **Ống APS-C hãng thứ ba "for Canon" (Sigma DC, Tamron Di II…):**
+   - Trên **thân Canon full-frame**: cặp này xếp **"không chắc"**. Ma trận M có thêm giá trị "không biết", lưu bằng một ma trận đánh dấu riêng. Các cặp "không biết" bị loại khỏi ràng buộc cứng và khỏi CVR.
+   - Trên **thân Canon APS-C**: vẫn là `compatible_with`.
+   - Khi chấm vẫn ghi `canon_ef` + `apsc` như bảng trên. *Vẫn chưa đối chiếu tài liệu hãng việc các ống này dùng ngàm EF chứ không phải EF-S; sẽ kiểm khi viết file cấu hình luật.*
+3. **Ống ngàm T kèm vòng T:** ghi theo ngàm của vòng (vd `canon_ef`). Tiêu đề không nói rõ vòng nào thì ghi `khong_chac`.

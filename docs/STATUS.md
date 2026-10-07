@@ -120,7 +120,7 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 - [ ] Giữ hay bỏ Spring Boot (đề xuất: bỏ, chỉ dùng FastAPI + React)
 - [ ] Phân công lại vai trò sau khi đề tài chuyển hướng AI
 - [x] Nội dung 3: 6 câu [HỎI] của khảo sát → **đã chốt 07/10** (xem nhật ký và `docs/content3_survey.md` mục 4)
-- [ ] Nội dung 3: 3 điểm chưa chắc ở cuối `docs/labeling_guide.md` (giữ cột `khung`? ống hãng thứ ba APS-C "for Canon" trên thân full-frame xếp mức nào? ống ngàm T ghi theo vòng T hay `t_mount`?)
+- [x] Nội dung 3: 3 điểm chưa chắc trong `docs/labeling_guide.md` → **đã chốt 07/10** (xem nhật ký)
 - [x] Có bỏ bản ghi lặp trước k-core không? → **Có**, mỗi cặp (user, item) giữ 1 dòng sớm nhất (07/10, xem nhật ký)
 
 ## 7. Nhật ký quyết định
@@ -142,3 +142,6 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 | 07/10/2026 | **QĐ nội dung 3 – 5:** giữ nguyên tập test. Khi đánh giá, báo kết quả tách hai nhóm: item test cùng ngàm và khác ngàm với thân máy đã biết. Ghi rõ hạn chế: chỉ biết những thân máy người dùng có viết đánh giá | 326/1.065 (30,6%) người dùng trong kịch bản mua ống khác ngàm và không có ngàm chuyển chính hãng; bỏ họ khỏi test là chọn dữ liệu theo nhãn test |
 | 07/10/2026 | **QĐ nội dung 3 – 6:** Nam chấm tay một mình: 50 mẫu dev, 200 mẫu test (mẫu test lấy sau, loại các ASIN đã có trong dev) | Không có người chấm thứ hai nên không tính được kappa; ghi đây là hạn chế |
 | 07/10/2026 | Tạo file chấm mù `ai/survey/content3/label_dev_50.csv` (script `make_label_dev.py`, seed 20261007, 12 tầng) và `docs/labeling_guide.md`. Kết quả quy tắc để riêng ở `ai/data/survey/label_dev_50_rule.csv` (không đưa lên git, chạy lại script sẽ tạo lại giống hệt) | Để đo độ chính xác thật của quy tắc xác định loại và ngàm |
+| 07/10/2026 | **QĐ nội dung 3 – 7:** giữ cột `khung` (ff / apsc / khac) trong file chấm tay | Quyết định 2 cần biết khổ của thân và ống để phân biệt `compatible_with` với `crops_sensor` (vd DX trên FX) |
+| 07/10/2026 | **QĐ nội dung 3 – 8:** ống APS-C hãng thứ ba "for Canon" (Sigma DC, Tamron Di II…) trên thân Canon full-frame xếp **"không chắc"** ở mức từng cặp. M có thêm giá trị "không biết", lưu bằng một ma trận đánh dấu riêng; các cặp này bị loại khỏi ràng buộc cứng và CVR. Cùng ống đó trên thân Canon APS-C vẫn là `compatible_with` | Ống lắp vật lý được nhưng ảnh bị tối góc, và phần lớn DSLR Canon full-frame không tự cắt khung, nên không xếp chắc chắn vào `crops_sensor` hay "không lắp được". Việc các ống này dùng ngàm EF (không phải EF-S) **chưa đối chiếu tài liệu hãng**, sẽ kiểm khi viết file cấu hình luật |
+| 07/10/2026 | **QĐ nội dung 3 – 9:** ống ngàm T bán kèm vòng T ghi theo ngàm của vòng (vd `canon_ef`); tiêu đề không nói rõ vòng nào thì ghi `khong_chac` (giá trị mới của cột `ngam`) | Người mua lắp ống lên thân qua vòng T đi kèm, nên ngàm thực tế là ngàm của vòng |
