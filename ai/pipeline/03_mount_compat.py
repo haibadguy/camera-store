@@ -9,7 +9,8 @@ Việc làm:
   5. Xuất ma trận M nhị phân (1 = lắp trực tiếp), ma trận đánh dấu "không biết", danh sách cặp theo mức.
 
 Quyết định áp dụng (STATUS.md, 07/10/2026): QĐ 1 (không dùng Compatible Mountings), QĐ 2 (4 mức), QĐ 3 (M chỉ thân x ống),
-QĐ 4 (ống hãng thứ ba nhiều biến thể -> không chắc, loại khỏi M), QĐ 8 (cặp "không biết" lưu ma trận riêng).
+QĐ 4 (ống hãng thứ ba nhiều biến thể -> không chắc, loại khỏi M), QĐ 8 (cặp "không biết" lưu ma trận riêng),
+QĐ 16 (08/10: mọi cặp có thân máy phim -> "không biết"; luật có trường body_film trong mount_rules.toml).
 
 Chạy từ thư mục gốc repo:
   ai\\.venv\\Scripts\\python.exe ai/pipeline/03_mount_compat.py --out-dir ai/data/kg_new
@@ -134,12 +135,14 @@ class Rules:
             return self.order.index(lens_k) <= self.order.index(body_k)
         return lens_k == "ff" and body_k == "khac"      # vd APS-H: ống FF phủ được
 
-    def level(self, bm, bk, lm, lk):
-        key = (bm, bk, lm, lk)
+    def level(self, bm, bk, lm, lk, bfilm=False):
+        key = (bm, bk, lm, lk, bfilm)
         if key in self.cache:
             return self.cache[key]
         res = (self.default, "", False)
         for r in self.rules:
+            if "body_film" in r and r["body_film"] != bfilm:      # QĐ 16: luật riêng cho thân máy phim
+                continue
             if not self._match(r["body_mount"], bm) or not self._match(r["body_khung"], bk):
                 continue
             if r["lens_mount"] == "=":
@@ -192,7 +195,7 @@ def main():
                  categories=" > ".join(m["categories"]), title=m["title"])
         attrs.append(a)
 
-    cols = ["iid", "parent_asin", "item_type", "mount", "khung", "mount_source", "evidence", "uncertain",
+    cols = ["iid", "parent_asin", "item_type", "mount", "khung", "may_phim", "mount_source", "evidence", "uncertain",
             "uncertain_reason", "n_child_asin", "cm_raw", "categories", "title"]
     with open(os.path.join(args.out_dir, "item_attributes.csv"), "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
@@ -214,7 +217,8 @@ def main():
         log(f"• {typ}: nguồn ngàm / trạng thái: {dict(c.most_common())}")
     log(f"• thân có 1 ngàm: {len(bodies):,} | ống có 1 ngàm: {len(lenses_all):,} "
         f"(trong đó 'không chắc' QĐ 4: {len(lenses_all) - len(lenses):,}) -> ống vào M: {len(lenses):,}")
-    log(f"• khung thân: {dict(collections.Counter(a['khung'] for a in bodies))}")
+    log(f"• khung thân: {dict(collections.Counter(a['khung'] for a in bodies))} | thân máy phim (QĐ 16): "
+        f"{sum(a['may_phim'] for a in bodies)}")
     log(f"• khung ống : {dict(collections.Counter(a['khung'] for a in lenses_all))}")
     log(f"• ngàm thân : {dict(collections.Counter(a['mount'] for a in bodies).most_common())}")
     log(f"• ngàm ống  : {dict(collections.Counter(a['mount'] for a in lenses_all).most_common())}")
@@ -231,7 +235,8 @@ def main():
         w.writerow(["body_asin", "body_iid", "lens_asin", "lens_iid", "level", "rule_id", "lens_uncertain", "crop_unknown"])
         for b in bodies:
             for l in lenses_all:
-                lev, rid, cu = rules.level(b["mount"], b["khung"] or "khong_ro", l["mount"], l["khung"] or "khong_ro")
+                lev, rid, cu = rules.level(b["mount"], b["khung"] or "khong_ro", l["mount"], l["khung"] or "khong_ro",
+                                           b["may_phim"])
                 if l["uncertain"]:
                     level_cnt["(ống không chắc) " + lev] += 1
                 else:

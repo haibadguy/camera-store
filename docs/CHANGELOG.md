@@ -6,6 +6,90 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 08/10/2026 (tiếp): QĐ 16 thân máy phim; sửa 2 lỗi gán ngàm; đo holdout lần hai; phân loại ca sai của holdout. Nhánh `nam/content3`
+
+Làm theo thứ tự Nam giao: (1) máy phim, (2) sửa 2 lỗi ngàm, (3) chốt quy tắc và đo holdout lần hai, (4) mới xem ca sai của holdout, **không sửa quy tắc nữa**.
+
+**Sửa gì**
+1. **QĐ 16: mọi cặp (thân máy phim, ống) xếp "không biết".** Các cặp này bị loại khỏi M và CVR nhưng vẫn giữ trong đồ thị.
+   - `mount_detect.py`:
+     - ghi chú của các luật dòng máy phim nay bắt đầu bằng nhãn `[phim]` (EOS phim, Canon FD, Nikon F phim, Minolta, Leica M phim, Spotmatic, Pentax K phim);
+     - thân có cờ `may_phim = True` nếu khớp luật có nhãn này, hoặc chủ thể tiêu đề có chữ "film".
+   - `03_mount_compat.py`:
+     - `item_attributes.csv` thêm cột `may_phim`;
+     - bộ áp luật nhận điều kiện mới `body_film`.
+   - `ai/config/mount_rules.toml` (v0.3):
+     - thêm luật `film_body_unknown` (`body_film = true`, mọi ngàm, mọi khung → `unknown`), đặt đầu tiên;
+     - kèm lý do: máy phim không có chế độ cắt khung; nhiều ống đời mới không lấy nét hoặc không chỉnh được khẩu độ trên máy phim.
+   - Đúng như Nam giao, luật áp cho **mọi** cặp, kể cả cặp khác ngàm (vd thân Nikon phim + ống Canon). Các cặp này trước là `incompatible`, nay là `unknown`.
+2. **Sửa 2 lỗi gán ngàm thấy ngoài holdout** (`mount_detect.py`, nhánh ống):
+   - **Bỏ phần combo nói về ngàm chuyển** (`drop_adapter_bundle`):
+     - Sau dấu nối "&", "+", "with" hay "w/", đoạn nào có adapter / converter / MC-xx và nhắc ngàm thì bị bỏ trước khi tìm ngàm. Không bỏ nếu đoạn đó là ngàm T hay teleconverter.
+     - Ví dụ "Sigma 150-600mm … (for Canon EOS) & MC-11 Mount Converter … for Sony FE & E-Mount": trước gán `sony_e`, nay `khong_ro`. Tiêu đề chỉ ghi "Canon EOS", không nói rõ EF hay RF, nên ống rời khỏi M.
+   - **Cài QĐ 9 cho ống ngàm T** (nguồn ngàm `vong_t`):
+     - Ngàm lấy theo vòng T đi kèm: tên ngàm khác trong tiêu đề, dòng máy được nhắc, hoặc hãng + DSLR.
+     - Có vòng/adapter mà không biết cho máy nào → `khong_ro`. Không nói gì đến vòng → giữ `t_mount`.
+   - Ngoài holdout chỉ 5 ống đổi ngàm, Claude đã xem cả 5:
+
+     | ASIN | Tiêu đề (rút gọn) | Trước | Sau |
+     |---|---|---|---|
+     | B08GQ2VHQ6 | Lightdow 420-800mm … + T Mount Ring for Nikon D3500… | `t_mount` | `nikon_f` |
+     | B07NPP2X4N | Lightdow 420-800mm … + T-Mount for Nikon D5500… | `t_mount` | `nikon_f` |
+     | B07MW118KD | JINTU 420-800mm … + T-Mount for Canon EOS Rebel… | `t_mount` | `canon_ef` |
+     | B00GB3PDIE | Opteka 650-2600mm … T-Mount Adapter … for Canon DSLR Cameras | `t_mount` | `canon_ef` |
+     | B078S8GL8Y | Sigma 150-600mm (for Canon EOS) & MC-11 … | `sony_e` | `khong_ro` |
+3. `eval_split_report.py` thêm cờ `--holdout-errors`. Cờ này được thêm **sau** lần đo holdout thứ hai, chỉ để phân loại ca sai cho báo cáo.
+
+**Ảnh hưởng: M** (`ai/data/kg/mount_compat_log.txt`)
+
+| Chỉ số | Sau sửa loại (lần 1) | Sau QĐ 16 + sửa ngàm |
+|---|---:|---:|
+| Thân có 1 ngàm / trong đó máy phim | 538 / 17 | 538 / 17 |
+| Ống có 1 ngàm / vào M | 1.167 / 1.037 | 1.166 / 1.036 |
+| Ống `t_mount` | 5 | 1 |
+| Kích thước M | 538 × 1.037 | 538 × 1.036 |
+| Cặp M = 1 | 75.690 | **73.050** |
+| … cờ "chưa rõ có cắt khung" | 2.186 | 1.892 |
+| Cặp "không biết" | 2.960 | **19.932** (trong đó 17.612 = 17 thân phim × 1.036 ống, luật `film_body_unknown`) |
+
+**Ảnh hưởng: độ chính xác.** Lần đo holdout thứ hai, log `ai/data/survey/run_typefix_report_lan2.log`.
+- Kết quả **giống hệt lần một** ở cả hai nửa. File `eval_external_matches.csv` của hai lần giống nhau từng ô (bản lần một lưu ở `ai/data/survey/before_typefix/eval_external_matches_lan1.csv`).
+- Lý do: thay đổi lần này không chạm vào loại; 5 ống đổi ngàm và 17 thân phim không làm đổi ô chấm nào.
+- Holdout: loại 565/571 = 98,9% (Lensfun), 305/315 = 96,8% (Wikidata), theo sản phẩm 598/612 = 97,7%. Ngàm Lensfun 391/402 = 97,3%, Wikidata 266/266. Khung thân 204/204 (Lensfun), 132/133 (openMVG).
+
+**Phân loại ca sai của holdout** (xem SAU khi chốt; `eval_split_report.py --holdout --holdout-errors`, log `ai/data/survey/run_holdout_errors.log`; Claude đọc từng ca, không phải người chấm độc lập)
+
+*Loại: 14 sản phẩm sai.*
+- **11 ca đáp án sai, quy tắc đúng.** Bước khớp tên bắt nhầm:
+  - phụ kiện: ốp silicon TG-3, ốp Nikon 1 AW1, kính dán Galaxy S8, cốc mắt ngắm Nikon D7000, cốc mắt ngắm Lumix G9, sách "Canon EOS Rebel T6s Expanded Guides";
+  - máy quay: Canon XH A1 bị khớp thành máy phim A-1, Canon VIXIA HF R50 thành EOS R50;
+  - ống: Nikon 70-210mm f/4 thành thân Nikon F4, Helios 44-2 "for Nikon" thành thân Nikon F2;
+  - bộ máy: OM System OM-1 + 12-40mm, Wikidata ghi là ống, thực tế là bộ máy + ống. Quy tắc xếp thân là đúng.
+- **2 ca quy tắc sai:**
+  - B000683VIY "Konica Minolta Dimage A200 … Digital Camera" (máy ống liền) → quy tắc ra thân `sony_a`, vì luật dòng máy Sony A bắt "A200".
+  - B00L2PN5L8 "Canon EF-S 55-250mm … for Canon EOS 7D, 60D…" nằm trong danh mục thân → quy tắc ra thân, vì luật cũ của nhánh danh mục thân thấy dòng máy 7D.
+  - Cả 2 ca đều đã sai từ trước lần sửa này.
+- **1 ca cả hai cùng sai:** B09J21XNFS "Tokina at-X PRO 12-28 F4 DX Lens for Nikon". Đáp án ghi "thân Nikon F4"; quy tắc ra "phụ kiện" vì tiêu đề không có chữ "mm" nên không nhận ra tiêu cự. Đúng phải là ống.
+
+*Ngàm: 11 ô sai (đều Lensfun), cả 11 là đáp án sai.*
+- 7 ô: Canon EF 75-300mm III. Lensfun ghi `EF-S` theo máy dùng để hiệu chỉnh; đây là lỗi đã biết của Lensfun (hạn chế 3 trong STATUS).
+- Zeiss 21mm Distagon **ZE** (bản ngàm Canon EF): Lensfun ghi ngàm mà bước ánh xạ không đổi được sang mã của nhóm (`khac_ngam`).
+- Olympus **M.Zuiko** 40-150mm (MFT) bị khớp với Zuiko Digital 40-150mm (Four Thirds) vì cùng tiêu cự và khẩu độ.
+- Samyang AF 85mm F1.4 **RF Mount**: Lensfun chỉ có bản ngàm E.
+- Sony **FE** 35mm F1.4 GM bị khớp với Sony 35mm f/1.4 G (ngàm A).
+
+*Khung thân: 1 ô sai, quy tắc sai.*
+- B005HTHX22 "Panasonic Lumix DMC-S1 … Digital Camera" là máy compact. Luật dòng máy Lumix S (L-mount) bắt "S1" nên quy tắc ra thân `l_mount`, ff. Đây thực chất là lỗi **loại**, nhưng openMVG không có đáp án loại nên chỉ lộ ra ở cột khung.
+
+**Tóm lại:** trên holdout, sau khi đọc từng ca sai, quy tắc sai ở **4 sản phẩm**: 3 sai loại (Dimage A200, EF-S 55-250, Tokina 12-28) + 1 lộ ra ở cột khung (DMC-S1). Mọi ca sai ngàm còn lại là do đáp án.
+- Mới đọc các ca **lệch** với đáp án. Các ca quy tắc và đáp án cùng sai giống nhau thì không phát hiện được.
+
+**Lỗi quy tắc đã biết, KHÔNG sửa** (theo yêu cầu của Nam, để giữ số holdout)
+- 4 ca trên.
+- "Pentax K1000 Manual Focus SLR Film Camera" (ngoài holdout) vẫn là "khác", vì từ "manual" nằm trong danh sách từ phụ kiện (để bắt sách hướng dẫn). Phát hiện khi kiểm cờ máy phim, sau khi Nam đã giới hạn phạm vi sửa.
+
+---
+
 ## 08/10/2026: Sửa lỗi phân loại thân / ống / phụ kiện (`mount_detect.py`), chấm holdout một lần. Nhánh `nam/content3`
 
 **Cách làm (giữ số đo độc lập, QĐ 13)**

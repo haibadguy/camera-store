@@ -8,17 +8,17 @@ NỘI DUNG 3 — LOẠI SẢN PHẨM, NGÀM, MA TRẬN TƯƠNG THÍCH
 THỐNG KÊ LOẠI / NGÀM
 • loại: {'phu_kien': 24301, 'than': 544, 'khac': 1758, 'ong': 1337}
 • than: nguồn ngàm / trạng thái: {'dong_may': 531, 'tieu_de': 7, 'khong_ro': 6}
-• ong: nguồn ngàm / trạng thái: {'tieu_de': 841, 'hang_slr': 270, 'khong_ro': 168, 'dong_may_nhac_toi': 58}
+• ong: nguồn ngàm / trạng thái: {'tieu_de': 836, 'hang_slr': 270, 'khong_ro': 169, 'dong_may_nhac_toi': 58, 'vong_t': 4}
 • phu_kien: nguồn ngàm / trạng thái: {'khong_co': 23138, 'tieu_de': 1110, 'dong_may_nhac_toi': 27, 'hang_slr': 26}
-• thân có 1 ngàm: 538 | ống có 1 ngàm: 1,167 (trong đó 'không chắc' QĐ 4: 130) -> ống vào M: 1,037
-• khung thân: {'ff': 105, 'khac': 103, 'apsc': 329, 'khong_ro': 1}
-• khung ống : {'ff': 464, 'khong_ro': 218, 'apsc': 345, 'khac': 140}
+• thân có 1 ngàm: 538 | ống có 1 ngàm: 1,166 (trong đó 'không chắc' QĐ 4: 130) -> ống vào M: 1,036
+• khung thân: {'ff': 105, 'khac': 103, 'apsc': 329, 'khong_ro': 1} | thân máy phim (QĐ 16): 17
+• khung ống : {'ff': 463, 'khong_ro': 218, 'apsc': 345, 'khac': 140}
 • ngàm thân : {'canon_efs': 98, 'nikon_f': 86, 'mft': 71, 'sony_e': 57, 'canon_ef': 35, 'pentax_k': 33, 'sony_a': 32, 'fuji_x': 29, 'samsung_nx': 20, 'canon_efm': 16, 'nikon_z': 13, 'canon_rf': 12, 'nikon_1': 10, 'four_thirds': 8, 'pentax_q': 5, 'l_mount': 4, 'fuji_g': 3, 'sigma_sa': 2, 'leica_m': 2, 'canon_fd': 2}
-• ngàm ống  : {'canon_ef': 271, 'nikon_f': 259, 'sony_e': 209, 'mft': 114, 'fuji_x': 72, 'pentax_k': 45, 'canon_efs': 41, 'sony_a': 39, 'canon_rf': 24, 'canon_efm': 22, 'nikon_z': 20, 'four_thirds': 19, 'samsung_nx': 11, 'nikon_1': 7, 'leica_m': 5, 't_mount': 5, 'canon_fd': 2, 'm42': 1, 'l_mount': 1}
+• ngàm ống  : {'canon_ef': 273, 'nikon_f': 261, 'sony_e': 208, 'mft': 114, 'fuji_x': 72, 'pentax_k': 45, 'canon_efs': 41, 'sony_a': 39, 'canon_rf': 24, 'canon_efm': 22, 'nikon_z': 20, 'four_thirds': 19, 'samsung_nx': 11, 'nikon_1': 7, 'leica_m': 5, 'canon_fd': 2, 't_mount': 1, 'm42': 1, 'l_mount': 1}
 
 MA TRẬN M (thân x ống, không gồm ống 'không chắc')
-• kích thước: 538 x 1,037 = 557,906 cặp
-• M = 1: 75,690 (13.57%) | không biết: 2,960 (0.53%)
-• số cặp theo mức: {'incompatible': 463307, 'compatible_with': 73032, '(ống không chắc) incompatible': 57751, 'requires_adapter': 15949, '(ống không chắc) compatible_with': 9131, 'unknown': 2960, 'crops_sensor': 2658, '(ống không chắc) requires_adapter': 2316, '(ống không chắc) unknown': 410, '(ống không chắc) crops_sensor': 332}
-• trong các cặp M = 1, gắn cờ 'chưa rõ có cắt khung' (QĐ 11): 2,186
-• số cặp theo luật: {'(mặc định)': 461872, 'same_mount_lens_covers_body': 37862, 'canon_ef_efs_on_efs_body': 27734, 'same_mount_body_apsc_lens_unknown_khung': 5250, 'canon_ef_efs_on_efm_adapter': 4528, 'canon_ef_efs_on_rf_adapter': 3396, 'canon_ef_apsc_on_ef_ff_body': 2924, 'nikon_f_on_z_adapter': 2847, 'nikon_f_on_1_adapter': 2190, 'same_mount_ff_body_lens_khung_unknown_autocrop': 2186, 'nikon_dx_on_fx_f': 1716, 'sony_a_on_e_adapter': 1710, 'canon_efs_on_ef_body': 1435, 'four_thirds_on_mft_adapter': 1278, 'sony_e_apsc_on_ff': 810, 'pentax_da_on_k_ff': 84, 'same_mount_other': 36, 'sony_dt_on_a_ff': 32, 'nikon_dx_on_fx_z': 16}
+• kích thước: 538 x 1,036 = 557,368 cặp
+• M = 1: 73,050 (13.11%) | không biết: 19,932 (3.58%)
+• số cặp theo mức: {'incompatible': 448381, 'compatible_with': 70854, '(ống không chắc) incompatible': 55849, 'unknown': 19932, 'requires_adapter': 16005, '(ống không chắc) compatible_with': 8950, '(ống không chắc) unknown': 2524, '(ống không chắc) requires_adapter': 2362, 'crops_sensor': 2196, '(ống không chắc) crops_sensor': 255}
+• trong các cặp M = 1, gắn cờ 'chưa rõ có cắt khung' (QĐ 11): 1,892
+• số cặp theo luật: {'(mặc định)': 447274, 'same_mount_lens_covers_body': 35780, 'canon_ef_efs_on_efs_body': 27930, 'film_body_unknown': 17612, 'same_mount_body_apsc_lens_unknown_khung': 5252, 'canon_ef_efs_on_efm_adapter': 4560, 'canon_ef_efs_on_rf_adapter': 3420, 'nikon_f_on_z_adapter': 2847, 'canon_ef_apsc_on_ef_ff_body': 2288, 'nikon_f_on_1_adapter': 2190, 'same_mount_ff_body_lens_khung_unknown_autocrop': 1892, 'sony_a_on_e_adapter': 1710, 'four_thirds_on_mft_adapter': 1278, 'nikon_dx_on_fx_f': 1254, 'canon_efs_on_ef_body': 1107, 'sony_e_apsc_on_ff': 810, 'pentax_da_on_k_ff': 84, 'same_mount_other': 32, 'sony_dt_on_a_ff': 32, 'nikon_dx_on_fx_z': 16}

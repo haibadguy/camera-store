@@ -30,8 +30,8 @@
 # =============================================================================
 
 [meta]
-version = "0.2"
-date = "2026-10-07"
+version = "0.3"
+date = "2026-10-08"
 default_level = "incompatible"
 khung_order = ["ff", "apsc"]   # ff phủ được apsc; "khac" chỉ khớp với chính nó
 
@@ -116,6 +116,21 @@ ghi_chu = "Xác nhận luôn: ống DC bản Canon dùng ngàm EF (không phải
 # =============================================================================
 # LUẬT RIÊNG (đặt trước luật chung)
 # =============================================================================
+
+# ---------------- Thân máy phim (QĐ 16, đặt ĐẦU TIÊN) ----------------
+# body_film = true: chỉ khớp thân có cờ may_phim (mount_detect.py: luật dòng máy có nhãn "[phim]" hoặc tiêu đề ghi "film").
+# Luật không có trường body_film thì khớp mọi thân, nhưng thân máy phim luôn dừng ở luật này trước.
+[[rule]]
+id = "film_body_unknown"
+body_film = true
+body_mount = "*"
+body_khung = "*"
+lens_mount = "*"
+lens_khung = "*"
+level = "unknown"
+source = ""
+kiem_chung = "quyet_dinh_nhom"
+note = "QĐ 16 (Nam, 08/10/2026): mọi cặp (thân máy phim, ống) xếp 'không biết' -> loại khỏi M và CVR, vẫn giữ trong đồ thị. Lý do: máy phim không có chế độ cắt khung (ống APS-C/DX bị tối góc); nhiều ống đời mới không lấy nét (motor trong ống, giao tiếp điện tử) hoặc không chỉnh được khẩu độ (ống G/E không có vòng khẩu) trên máy phim. Không có nguồn hãng cho từng cặp nên không xếp chắc chắn."
 
 # ---------------- Canon EF / EF-S (DSLR) ----------------
 [[rule]]

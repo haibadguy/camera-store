@@ -231,9 +231,9 @@ BODY_SERIES = [
     ("canon|eos", r"\b(?:eos[\s-]?)?(?:5ds\s?r?|5d|6d|1ds|1d\s?x|1d\s?c)(?:\s?(?:mark|mk)\s?(?:ii|iii|iv|2|3|4))?\b",
      "canon_ef", "ff", "DSLR full-frame"),
     ("canon|eos", r"\beos[\s-]?1v\b|\beos\b.*\b(?:film|35mm)\b|\b(?:elan|rebel\s+(?:g(?:ii)?|k2|ti|2000|x))\b", "canon_ef", "ff",
-     "máy phim EOS"),
+     "[phim] EOS"),
     ("canon", r"\b(?:ae-1(?:\s+program)?|a-1|at-1|av-1|al-1|ftb|t50|t70|t90)\b|(?<![\d.])f-1\b(?!\.)", "canon_fd", "ff",
-     "máy phim Canon FD"),
+     "[phim] Canon FD"),
     ("canon|eos", r"\b(?:eos[\s-]?)?1d(?:\s?(?:mark|mk)\s?(?:ii|iii|iv|2|3|4)\s?n?)?\b", "canon_ef", "khac",
      "APS-H (1D Mk I-IV)"),
     ("canon|eos", r"\b(?:eos[\s-]?)?(?:10d|d30|d60)\b", "canon_ef", "apsc", "APS-C đời đầu, không nhận EF-S"),
@@ -243,7 +243,7 @@ BODY_SERIES = [
     ("nikon", r"\bz\s?(?:50|30|fc)\b|\bz\s?50\s?ii\b", "nikon_z", "apsc", "Z DX"),
     ("nikon", r"\bz\s?(?:5|6|7|8|9|f)(?:\s?(?:ii|iii|2|3))?\b", "nikon_z", "ff", "Z FX"),
     ("nikon", r"\bd(?:3[sx]?|4s?|5|6|600|610|700|750|780|800e?|810a?|850)\b|\bdf\b", "nikon_f", "ff", "DSLR FX"),
-    ("nikon", r"\bnikon\s+(?:f\d{1,3}|f100|fm\d?|fe\d?|n\d{2,4})\b", "nikon_f", "ff", "máy phim ngàm F"),
+    ("nikon", r"\bnikon\s+(?:f\d{1,3}|f100|fm\d?|fe\d?|n\d{2,4})\b", "nikon_f", "ff", "[phim] Nikon ngàm F"),
     ("nikon", r"\bd\d{2,4}[a-z]?\b|\bd-?\d{3,4}\b|\bd[12][hx]s?\b", "nikon_f", "apsc", "DSLR DX (gồm D1/D2)"),
     ("nikon", r"\bnikon\s+1\b|\bnikon\s+(?:j[1-5]|v[1-3]|s[12]|aw1)\b", "nikon_1", "khac", "Nikon 1"),
     ("fuji", r"\bfinepix\s+s[1235]\s?pro\b", "nikon_f", "apsc", "Fujifilm S Pro (ngàm F)"),
@@ -259,7 +259,7 @@ BODY_SERIES = [
                            r"|\b(?:dslr-?)?a(?:100|200|230|290|300|330|350|380|390|450|500|550|560|580|700)[a-z]{0,2}\b"
                            r"|\bmaxxum\s+\d+d\b|\bdynax\s+\d+d\b", "sony_a", "apsc", "A APS-C"),
     ("minolta|maxxum|dynax", r"\b(?:maxxum|dynax)\s+\d{1,4}(?:xi|si|i)?\b", "sony_a", "ff",
-     "Minolta Maxxum/Dynax phim (ngàm A)"),
+     "[phim] Minolta Maxxum/Dynax (ngàm A)"),
     # Fujifilm
     ("fuji", r"\bx-?(?:t|e|pro|h|a|m)\d|\bx-?s\d{2}", "fuji_x", "apsc", "Fujifilm X (X-S10/S20; X-S1 là máy ống liền)"),
     ("fuji", r"\bgfx\b", "fuji_g", "khac", "GFX medium format"),
@@ -274,11 +274,11 @@ BODY_SERIES = [
     ("leica", r"\b(?:cl|tl\d?)\b", "l_mount", "apsc", "Leica CL/TL"),
     ("leica", r"\bm(?:9|10|11|240|262)\b|\bm-[ep]\b|\bm\s+typ", "leica_m", "ff", "Leica M số"),
     ("leica", r"\bm8(?:\.2)?\b", "leica_m", "khac", "Leica M8 (APS-H, crop 1,33)"),
-    ("leica", r"\bm[2-7]\b", "leica_m", "ff", "Leica M phim 35mm"),
+    ("leica", r"\bm[2-7]\b", "leica_m", "ff", "[phim] Leica M 35mm"),
     # Pentax
-    ("pentax|asahi", r"\bspotmatic\b", "m42", "ff", "Spotmatic (máy phim ngàm M42)"),
+    ("pentax|asahi", r"\bspotmatic\b", "m42", "ff", "[phim] Spotmatic (ngàm M42)"),
     ("pentax", r"\bk-?1000\b|\bme\s+(?:super|f)\b|\bmx\b(?!-)|\bsuper\s+program\b|\bprogram\s+(?:a|plus)\b"
-               r"|\b(?:zx|mz|pz)-\d+\b", "pentax_k", "ff", "máy phim ngàm K"),
+               r"|\b(?:zx|mz|pz)-\d+\b", "pentax_k", "ff", "[phim] Pentax ngàm K"),
     ("pentax", r"\bk-?1\b", "pentax_k", "ff", "K-1"),
     ("pentax", r"\bk-?(?:\d{1,2}|\d{2,3}d|\d{3,4}|s\d|r|x|p|f|01|m)(?:\s?i{2,3})?\b|\bkp\b|\*ist|\bk\d{3}d\b", "pentax_k", "apsc", "K APS-C"),
     ("pentax", r"\bpentax\s+q(?:\d+|-s1)?\b", "pentax_q", "khac", "Pentax Q"),
@@ -359,6 +359,25 @@ THIRD_PARTY = re.compile(r"\b(sigma|tamron|tokina|rokinon|samyang|bower|opteka|y
                          r"neewer|zeiss|voigtlander|lensbaby|vivitar|venus|laowa|irix|kenko|altura|jintu|lightdow)\b", re.I)
 
 
+FILM_TAG = "[phim]"     # ghi chú của luật dòng máy phim trong BODY_SERIES bắt đầu bằng nhãn này
+
+# Phần combo nói về ngàm chuyển / bộ chuyển đổi (không phải ngàm của ống): "& MC-11 Mount Converter ... for Sony E".
+# Vòng / adapter ngàm T KHÔNG bỏ, vì theo QĐ 9 ngàm của ống ngàm T là ngàm của vòng.
+_BUNDLE_SEP = re.compile(r"\s&\s|\s\+|\+\s|\swith\s|\sw/")
+_ADAPTER_PART = re.compile(r"\b(?:adapter|converter|mc-\d+)\b")
+
+
+def drop_adapter_bundle(t):
+    for mo in _BUNDLE_SEP.finditer(t):
+        seg = t[mo.end():]
+        nxt = _BUNDLE_SEP.search(seg)
+        part = seg[:nxt.start()] if nxt else seg
+        if _ADAPTER_PART.search(part) and find_mounts(seg) and "t_mount" not in find_mounts(part) \
+                and not re.search(r"\btele-?\s?converter|\bteleconverter", part):
+            return t[:mo.start()]
+    return t
+
+
 # -----------------------------------------------------------------------------
 # 6. Hàm tổng hợp cho 1 sản phẩm
 # -----------------------------------------------------------------------------
@@ -369,7 +388,7 @@ def classify_item(title, cats, n_child_asin=0):
     h = head(t)
     g = category_group(cats)
     out = dict(item_type="phu_kien", mount="khong_co", khung="", mount_source="", evidence="",
-               uncertain=False, uncertain_reason="")
+               uncertain=False, uncertain_reason="", may_phim=False)
 
     # ---- Loại ----
     # 1) Tiêu đề trước: thân / ống nói rõ trong chủ thể của tiêu đề thì không cần danh mục
@@ -407,6 +426,8 @@ def classify_item(title, cats, n_child_asin=0):
     # ---- Ngàm + khung ----
     if typ == "than":
         s = body_series(title)
+        # Máy phim (QĐ 16): luật dòng máy có nhãn [phim], hoặc chủ thể tiêu đề có chữ "film"
+        out["may_phim"] = bool(s and s[3].startswith(FILM_TAG)) or bool(re.search(r"\bfilm\b", subject(t)))
         if s:
             out.update(mount=s[0], khung=s[1], mount_source="dong_may", evidence=s[2])
         else:
@@ -420,14 +441,22 @@ def classify_item(title, cats, n_child_asin=0):
             else:
                 out.update(mount="khong_ro")
     elif typ == "ong":
-        tm = find_mounts(h) or find_mounts(t)
+        tl = drop_adapter_bundle(t)        # bỏ phần combo nói về ngàm chuyển (vd "& MC-11 Mount Converter ... Sony E")
+        tm = find_mounts(h) or find_mounts(tl)
         src = "tieu_de"
         if not tm:
-            tm = find_series_mount(t)
+            tm = find_series_mount(tl)
             src = "dong_may_nhac_toi"
         if not tm:
-            tm = find_slr_mount(t)
+            tm = find_slr_mount(tl)
             src = "hang_slr"
+        # QĐ 9: ống ngàm T -> ngàm của vòng T đi kèm; có vòng/adapter mà không rõ cho máy nào -> không rõ
+        if "t_mount" in tm and len(tm) <= 2:
+            ring = {m: v for m, v in tm.items() if m != "t_mount"} or find_series_mount(tl) or find_slr_mount(tl)
+            if len(ring) == 1:
+                tm, src = ring, "vong_t"
+            elif re.search(r"\b(?:ring|adapter)\b", tl) or ring:
+                tm, src = {}, "vong_t"
         if len(tm) == 1:
             m = next(iter(tm))
             k, kev = lens_khung(title, m)

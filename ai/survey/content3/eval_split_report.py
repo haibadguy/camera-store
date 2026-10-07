@@ -3,7 +3,8 @@ Báo kết quả eval_external.py tách theo 2 nửa của eval_split.csv (QĐ 1
 
   fix     : được xem ca sai để sửa quy tắc.
   holdout : chỉ in SỐ TỔNG, và chỉ khi có cờ --holdout (chấm một lần, sau khi đã chốt quy tắc).
-            Script KHÔNG có chế độ in ca sai của holdout.
+            --holdout-errors (thêm 08/10/2026, SAU lần đo holdout thứ hai): in ca sai của holdout để phân loại
+            "đáp án sai" / "quy tắc sai" cho báo cáo. Không sửa quy tắc theo các ca này.
 
 Chạy:
   ai\\.venv\\Scripts\\python.exe ai/survey/content3/eval_split_report.py                 # bảng nửa fix
@@ -60,6 +61,8 @@ def main():
     ap.add_argument("--matches", default="ai/data/survey/eval_external_matches.csv")
     ap.add_argument("--errors", action="store_true", help="in ca sai loại / ngàm / khung của nửa FIX")
     ap.add_argument("--holdout", action="store_true", help="in bảng số tổng của nửa HOLDOUT (chấm một lần)")
+    ap.add_argument("--holdout-errors", action="store_true",
+                    help="cùng --holdout: in ca sai của HOLDOUT. CHỈ dùng sau khi đã chốt quy tắc")
     args = ap.parse_args()
     half = {r["parent_asin"]: r["nua"] for r in csv.DictReader(open(SPLIT, encoding="utf-8"))}
     rows = list(csv.DictReader(open(args.matches, encoding="utf-8-sig")))
@@ -69,16 +72,22 @@ def main():
     fix = [r for r in rows if half[r["parent_asin"]] == "fix"]
     table(fix, f"NỬA FIX ({len({r['parent_asin'] for r in fix})} sản phẩm)")
     if args.errors:
-        print("\n--- ca sai của nửa FIX ---")
-        for r in sorted(fix, key=lambda r: (r["loai_dap_an"], r["loai_quy_tac"], r["parent_asin"], r["nguon"])):
-            bad = [k for k in ("loai_dung", "ngam_dung", "khung_dung") if r[k] == "0"]
-            if bad:
-                print(f"{r['nguon'][:4]} {r['parent_asin']} sai={','.join(b[:-5] for b in bad)} | đáp án {r['loai_dap_an']}/"
-                      f"{r['ngam_dap_an']}/{r['khung_dap_an']} | quy tắc {r['loai_quy_tac']}/{r['ngam_quy_tac']}/"
-                      f"{r['khung_quy_tac']} | {r['title'][:110]} || {r['ten_nguon']}")
+        print_errors(fix, "FIX")
     if args.holdout:
         ho = [r for r in rows if half[r["parent_asin"]] == "holdout"]
         table(ho, f"NỬA HOLDOUT ({len({r['parent_asin'] for r in ho})} sản phẩm)")
+        if args.holdout_errors:
+            print_errors(ho, "HOLDOUT")
+
+
+def print_errors(rows, name):
+    print(f"\n--- ca sai của nửa {name} ---")
+    for r in sorted(rows, key=lambda r: (r["loai_dap_an"], r["loai_quy_tac"], r["parent_asin"], r["nguon"])):
+        bad = [k for k in ("loai_dung", "ngam_dung", "khung_dung") if r[k] == "0"]
+        if bad:
+            print(f"{r['nguon'][:4]} {r['parent_asin']} sai={','.join(b[:-5] for b in bad)} | đáp án {r['loai_dap_an']}/"
+                  f"{r['ngam_dap_an']}/{r['khung_dap_an']} | quy tắc {r['loai_quy_tac']}/{r['ngam_quy_tac']}/"
+                  f"{r['khung_quy_tac']} | {r['title'][:110]} || {r['ten_nguon']}")
 
 
 if __name__ == "__main__":
