@@ -13,6 +13,7 @@ Tóm tắt (tại 07/10/2026 — chi tiết và bản mới nhất xem STATUS.md
 - **Lộ trình:** 10 nội dung theo mail của cô ngày 22/09/2026. Cô dặn: làm đến đâu phải hiểu đến đó.
 - **Hướng cũ đã bỏ:** bản đề xuất 16/09 (Spring Boot, chấm điểm theo quy tắc). Phần Spring Boot/React trong `AGENTS.md` và `docs/` cũ không còn là hướng chính.
 - **Dữ liệu:** Amazon Reviews 2023, nhóm Electronics. Code AI nằm trong `ai/pipeline/`.
+- **Thay đổi so với bản của Hải:** xem `docs/CHANGELOG.md`.
 - **Tình hình:** nội dung 1–5 đã có code (của Hải, commit `62abf54`) nhưng có lỗi phải sửa (R-GCN gọi sai tên, số liệu mâu thuẫn, cách đo sampled thay vì full ranking, độ phủ ngàm chỉ 0,9%...). Nội dung 6–10 chưa bắt đầu.
 
 ## 2. Nguyên tắc
@@ -26,6 +27,11 @@ Tóm tắt (tại 07/10/2026 — chi tiết và bản mới nhất xem STATUS.md
 ## 3. Quy trình
 
 - Làm việc trên nhánh riêng, không push khi Nam chưa đồng ý.
+- **Mỗi lần sửa code hoặc dữ liệu của Hải** (so với commit `62abf54`), phải ghi thêm một mục vào `docs/CHANGELOG.md` (mục mới nhất ở trên cùng), viết tiếng Việt đơn giản, gồm:
+  - **Sửa gì** (file, hàm, quy tắc mới);
+  - **Vì sao** (kèm bằng chứng, ví dụ cụ thể);
+  - **Ảnh hưởng thế nào**: bảng số cũ → số mới, lấy từ output script đã chạy;
+  - Ghi cả các điểm đã kiểm chứng là đúng, các chỗ báo cáo của Hải ghi sai, và những chỗ phía sau phải chạy lại hoặc sửa theo.
 - **Cuối mỗi phiên:**
   1. Cập nhật `docs/STATUS.md`: bảng trạng thái (đúng thang Kế hoạch / Đã triển khai / Đã kiểm thử / Đã đánh giá, chỉ nâng mức khi có bằng chứng) và **nhật ký quyết định**.
   2. Tóm tắt ngắn cho Nam: **đã làm gì**, **kết quả** (kèm số liệu và nguồn), **còn chưa chắc gì**.

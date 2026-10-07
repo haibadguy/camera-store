@@ -30,10 +30,10 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 | # | Nội dung | Trạng thái | Ghi chú |
 |---|---|---|---|
 | 1 | Pipeline tổng quát | Đã triển khai (tài liệu) | Cần cập nhật sau khi sửa nội dung 3 và 5 |
-| 2 | Thu thập, lọc k-core, chia train/val/test | **Đã kiểm thử** (07/10) | Chạy lại trên máy Nam: số chính khớp, 2 số trong báo cáo sai, dữ liệu gốc có bản ghi lặp y hệt. Xem mục 4 |
-| 3 | Entity Linking, ma trận M | Đã triển khai, **cần làm lại một phần** | Độ phủ chỉ 8,9%. Xem mục 4 |
-| 4 | Đồ thị tri thức | Đã triển khai, **cần làm lại sau nội dung 3** | 99% sản phẩm không có cạnh tri thức |
-| 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4 |
+| 2 | Thu thập, lọc k-core, chia train/val/test | **Đã kiểm thử** (07/10) | Nhánh `nam/fix-data`: đã gộp tương tác lặp, số mới 67.661 users / 27.940 items / 595.515 tương tác. Báo cáo 2 chưa cập nhật theo số mới. Xem mục 4 và `docs/CHANGELOG.md` |
+| 3 | Entity Linking, ma trận M | Đã triển khai, **cần làm lại một phần** | Độ phủ chỉ 8,9%. Xem mục 4. **Phải chạy lại trên dữ liệu mới** (mã item đã đổi) |
+| 4 | Đồ thị tri thức | Đã triển khai, **cần làm lại sau nội dung 3** | 99% sản phẩm không có cạnh tri thức. **Phải chạy lại trên dữ liệu mới** |
+| 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `common_05.py` còn ghi cứng `N_USERS`/`N_ITEMS` cũ |
 | 6 | Module ràng buộc cứng và mềm | Chưa bắt đầu | |
 | 7 | Mô hình gợi ý theo bộ (GNN có quan hệ) | Chưa bắt đầu | |
 | 8 | Giải thích (path-based) | Chưa bắt đầu | |
@@ -44,19 +44,19 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 
 ### Giữ lại
 - Lọc domain camera, k-core (k=5), chia leave-one-out theo thời gian: logic đúng, có seed cố định.
-- Kết quả sau k-core: 70.424 người dùng, 28.867 sản phẩm, 622.997 tương tác.
+- Kết quả sau k-core (bản của Hải, chạy lại khớp): 70.424 người dùng, 28.867 sản phẩm, 622.997 tương tác. **Từ 07/10 dùng số mới sau khi gộp lặp: 67.661 / 27.940 / 595.515** (xem lỗi 9).
 - Bảng ánh xạ ngàm và định nghĩa ma trận M đúng ý cô.
 
 ### Lỗi phải sửa
 1. **"R-GCN variant" không phải R-GCN:** code dùng `SAGEConv` trong `HeteroConv`. Phải cài R-GCN thật (`RGCNConv`) hoặc KGAT, và gọi đúng tên.
-2. **Số liệu mâu thuẫn:** train ghi 482.149 tương tác ở báo cáo 2, nhưng 470.009 ở báo cáo 5 (do `load_train` dùng `set` nên gộp tương tác lặp). Số người dùng tính CVR lúc 2.491, lúc 2.488. Phải thống nhất và giải thích.
+2. **Số liệu mâu thuẫn:** train ghi 482.149 tương tác ở báo cáo 2, nhưng 470.009 ở báo cáo 5 (do `load_train` dùng `set` nên gộp tương tác lặp). Số người dùng tính CVR lúc 2.491, lúc 2.488. Phải thống nhất và giải thích. *(07/10: phần train đã hết mâu thuẫn sau khi gộp lặp — cả hai cách đếm đều ra 460.193. Phần CVR chưa kiểm.)*
 3. **Thiếu file trên GitHub:** `compatibility_matrix.npz` và `kg_hetero.pt` không có trong repo, dù cô yêu cầu nộp.
 4. **Cách đo:** đang dùng "1 đúng + 99 ngẫu nhiên" (sampled). Nên dùng xếp hạng toàn bộ sản phẩm (full ranking) làm kết quả chính, theo Krichene & Rendle (2020). Báo cáo Recall@K riêng như cô yêu cầu, kèm giải thích vì sao bằng Hit@K khi mỗi người dùng chỉ có một sản phẩm test.
 5. **Bảng thông số 139 dòng không ghi nguồn:** cần thêm cột nguồn (URL) và ngày thu thập, ưu tiên các nguồn cô nêu (Kaggle, Wikidata, DPReview). Nhãn mục đích sử dụng phải ghi rõ là quy tắc nhóm tự đặt, kèm căn cứ.
 6. **Mẫu kiểm định 50 sản phẩm không có cột nhãn của người chấm.** Con số 94% chưa kiểm chứng được. Đã thấy ít nhất một ca sai: "Canon EF 50mm f/1.8 II" bị khớp thành bản "STM".
 7. **Tài liệu có dấu hiệu AI viết** (đường dẫn `file:///d:/`, giọng phóng đại). Phải viết lại bằng giọng của nhóm, đúng mức độ thực tế.
 8. **Báo cáo 2 có 2 số sai ở dòng "Sau Domain Filtering"** (phát hiện khi chạy lại 07/10): users trước k-core là **2.502.236** (báo cáo ghi "~2,1M ước tính"); sản phẩm có tương tác trước k-core là **253.208** (báo cáo ghi 72.775 — thực ra là số sản phẩm *sau vòng 1* k-core). Kéo theo TB/user đúng là 1,62 (không phải 1,92). Giải thích ở Phụ lục A "toàn bộ 72.775 items đều thỏa mãn ở vòng 1" cũng sai.
-9. **Dữ liệu gốc có bản ghi lặp y hệt** (cùng user, asin, nội dung, timestamp — đã kiểm trong `Electronics.jsonl.gz`). Trong 16.195 dòng lặp (user, item) sau k-core: **13.079 là bản ghi lặp y hệt**, chỉ 3.116 là đánh giá lại ở thời điểm khác. Báo cáo 2 giải thích tất cả là "mua lại" — sai. Hệ quả: 2.396/2.544 user có item test = item val chỉ vì cùng một đánh giá bị lặp; bản ghi lặp cũng được đếm vào bậc k-core. Chưa sửa, chờ Nam quyết (đề xuất: bỏ bản ghi trùng hoàn toàn trước k-core).
+9. **Dữ liệu gốc có bản ghi lặp y hệt** (cùng user, asin, nội dung, timestamp — đã kiểm trong `Electronics.jsonl.gz`). Trong 16.195 dòng lặp (user, item) sau k-core: **13.079 là bản ghi lặp y hệt**, chỉ 3.116 là đánh giá lại ở thời điểm khác. Báo cáo 2 giải thích tất cả là "mua lại" — sai. Hệ quả: 2.396/2.544 user có item test = item val chỉ vì cùng một đánh giá bị lặp; bản ghi lặp cũng được đếm vào bậc k-core. **Đã sửa 07/10 (nhánh `nam/fix-data`):** mỗi cặp (user, parent_asin) giữ 1 dòng sớm nhất trước k-core; bỏ 51.199 dòng (45.684 bản sao y hệt + 5.515 đánh giá lại). Sau sửa: val = test, test ∈ train, val ∈ train đều = 0.
 
 ### Kết quả chạy lại bước 01–02 trên máy Nam (07/10/2026)
 - Dữ liệu gốc: `Electronics.jsonl.gz` 6.474.438.619 B (sha256 `17b2c5f3…4a28`), `meta_Electronics.jsonl.gz` 1.312.900.427 B (sha256 `a4a196a1…790d`), Last-Modified trên server 16/01/2025.
@@ -66,8 +66,15 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 - Log: `ai/data/processed/run01_nam.log`, `run02_nam.log`, `prekcore_stats_nam.json`.
 - Chưa kiểm: 18.286.191 users thô (script không đếm), Bảng 2.3 (1.414 body / 1.462 lens), mục 5 của báo cáo 2.
 
+### Kết quả sau khi gộp tương tác lặp (07/10/2026, nhánh `nam/fix-data`)
+- Script 01 (đã sửa): 4.042.112 → bỏ 51.199 → 3.990.913 tương tác vào k-core → hội tụ sau 14 vòng: **67.661 users, 27.940 items, 595.515 tương tác**, sparsity 99,968%, TB 8,80/user. RAM đỉnh 2,02 GiB.
+- Script 02 (không sửa): train **460.193**, val/test 67.661 mỗi tập.
+- Kiểm tra rò rỉ: val = test **0**, test ∈ train **0**, val ∈ train **0**; dòng lặp (user, item) trong CSV **0**. Còn 4 user có 2 item khác nhau cùng timestamp ở ranh giới (thứ tự do sort quyết định, vẫn tái lập được).
+- Log: `ai/data/processed/run01_fix.log`, `run02_fix.log`. Đầu ra bản cũ sao lưu ở `ai/data/processed_v62abf54/`.
+- Bảng so sánh đầy đủ cũ → mới: `docs/CHANGELOG.md`.
+
 ### Vấn đề cốt lõi
-- 99% sản phẩm trong dữ liệu là phụ kiện. Chỉ 257/28.867 sản phẩm (0,9%) được xác định ngàm.
+- 99% sản phẩm trong dữ liệu là phụ kiện. Chỉ 257/28.867 sản phẩm (0,9%) được xác định ngàm. *(Số theo dữ liệu cũ; cần tính lại trên 27.940 sản phẩm mới.)*
 - Vì vậy LightGCN chỉ gợi ý sai ngàm khoảng 3%: vấn đề mà đề tài muốn giải quyết gần như không xuất hiện trong thí nghiệm, và đồ thị tri thức gần như rỗng.
 - Nguyên nhân: ngàm được suy ra bằng cách khớp đúng tên model với bảng 139 dòng, quá chặt.
 
@@ -94,7 +101,7 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 - [ ] Chốt hướng sửa vấn đề cốt lõi ở mục 4
 - [ ] Giữ hay bỏ Spring Boot (đề xuất: bỏ, chỉ dùng FastAPI + React)
 - [ ] Phân công lại vai trò sau khi đề tài chuyển hướng AI
-- [ ] Có bỏ bản ghi lặp y hệt (user, item, timestamp) trước k-core không? Nếu có thì mọi số từ bước 2 trở đi sẽ đổi (lỗi 9, mục 4)
+- [x] Có bỏ bản ghi lặp trước k-core không? → **Có**, mỗi cặp (user, item) giữ 1 dòng sớm nhất (07/10, xem nhật ký)
 
 ## 7. Nhật ký quyết định
 
@@ -104,3 +111,5 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 | 07/10/2026 | Dựng môi trường `ai/.venv` (Python 3.12.10, torch 2.14.1+cu126, PyG 2.8.0.post1) trên nhánh `nam/setup`; thêm `CLAUDE.md` | Chạy thử: `torch.cuda.is_available()` = True, GPU GTX 1660 Ti, `RGCNConv` chạy được trên GPU. RecBole 1.2.0 import gói gốc được nhưng import `recbole.quick_start` lỗi thiếu `ray` — pipeline hiện không dùng RecBole |
 | 07/10/2026 | Chốt `ai/requirements-lock.txt` (pip freeze) làm môi trường chuẩn; thêm mục "An toàn" vào `CLAUDE.md` | Để kết quả tái lập được trên đúng phiên bản thư viện; repo dùng chung với Hải nên chỉ làm trên nhánh riêng |
 | 07/10/2026 | Nội dung 2 nâng lên "Đã kiểm thử"; giữ nguyên code 01/02 (không sửa) | Chạy lại ra đúng số chính của Hải, RAM đỉnh 2,03 GiB vừa máy. Phát hiện 2 số sai trong báo cáo và vấn đề bản ghi lặp y hệt — ghi ở mục 4, lỗi 8–9, chờ Nam quyết có lọc trùng hay không |
+| 07/10/2026 | **Gộp tương tác lặp trước k-core:** mỗi cặp (user, parent_asin) chỉ giữ 1 tương tác có timestamp sớm nhất (sửa `01_filter_camera_domain.py`, nhánh `nam/fix-data`). Số mới: 67.661 users / 27.940 items / 595.515 tương tác, train 460.193 | (1) Bài toán là gợi ý sản phẩm người dùng chưa có, nên mỗi cặp user–item chỉ tính 1 lần. (2) Bản ghi lặp gây rò rỉ val/test: bản cũ có 2.544 user có val = test (2.396 do bản sao y hệt) và 1.166 user có test nằm trong train. (3) Đánh giá xếp hạng toàn bộ (`full_catalog_cvr`, `common_05.py:182-186`, và full ranking dự định dùng làm kết quả chính) loại các item đã có trong train, nên giữ lặp khiến item test không bao giờ trúng → kết quả sai. Lưu ý: `sampled_eval` (1+99) không loại item train, ở đó giữ lặp có thể làm kết quả đẹp giả. Sau sửa, cả ba loại trùng đều = 0 |
+| 07/10/2026 | Thêm `docs/CHANGELOG.md` và quy tắc ghi CHANGELOG vào `CLAUDE.md` | Để Hải biết chính xác những gì đã đổi so với commit `62abf54` |
