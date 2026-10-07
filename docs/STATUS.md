@@ -1,6 +1,6 @@
 # TRẠNG THÁI ĐỒ ÁN — Camera Recommender
 
-Cập nhật lần cuối: 08/10/2026 (nội dung 3: sửa lỗi phân loại, QĐ 16 máy phim, chốt quy tắc, đo holdout lần hai, nhánh `nam/content3`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
+Cập nhật lần cuối: 08/10/2026 (nội dung 4: đề xuất thiết kế đồ thị, Nam chốt 8 câu, chưa viết code, nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
 
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
@@ -42,7 +42,7 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 - khung thân đúng 100% (Lensfun) / 99,2% (openMVG).
 
 Đọc từng ca sai của holdout: quy tắc chỉ sai ở 4 sản phẩm, còn lại là đáp án sai. Chi tiết ở CHANGELOG. Script 04/05 chưa đọc đầu ra mới |
-| 4 | Đồ thị tri thức | Đã triển khai, **cần làm lại sau nội dung 3** | 99% sản phẩm không có cạnh tri thức. **Phải chạy lại trên dữ liệu mới** |
+| 4 | Đồ thị tri thức | Đã triển khai (bản cũ của Hải), **đang làm lại: mới có thiết kế** | Bản cũ: 99% sản phẩm không có cạnh tri thức; script 04 hiện không chạy được với đầu ra mới của nội dung 3. Thiết kế mới đã chốt 08/10 (`docs/content4_design.md`, mục 9), **chưa viết code**. Chưa có số đo độ chính xác tiêu cự / khẩu độ |
 | 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`/`item_map.json` (07/10, nhánh `nam/content3`) |
 | 6 | Module ràng buộc cứng và mềm | Chưa bắt đầu | |
 | 7 | Mô hình gợi ý theo bộ (GNN có quan hệ) | Chưa bắt đầu | |
@@ -143,6 +143,12 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
    - Hệ quả: 17 thân phim không có ràng buộc cứng nào.
    - Nhận biết máy phim dựa vào luật dòng máy có nhãn `[phim]` hoặc chữ "film" trong tiêu đề. Máy phim không khớp luật nào và không ghi "film" sẽ bị coi là máy số.
 
+### Hạn chế cần nêu trong báo cáo (nội dung 4) — đã biết từ khâu thiết kế (08/10/2026)
+1. **Không có dải ISO.** Amazon có trường "Expanded ISO Minimum / Maximum" ở 424/544 thân, nhưng không nhất quán: 31/247 dòng máy có hơn một giá trị (vd Rebel T7i ghi 12800 / 25600 / 51200 tùy listing), và lẫn ISO gốc với ISO mở rộng. Wikidata (tra 08/10), Lensfun, openMVG không có ISO; DPReview không có dữ liệu mở. Số liệu: `ai/survey/content4/survey_specs.py`, log `ai/data/survey/run_c4_survey_specs.log`.
+2. **Nhãn mục đích gắn theo khổ ống được thiết kế, không theo thân người dùng.** Ví dụ ống FF 50mm không có nhãn "chân dung", dù trên thân APS-C thì góc nhìn tương đương 80mm.
+3. **Nhãn mục đích là quy tắc nhóm tự đặt** (theo tài liệu hãng), không phải nhãn thật, nên không đo độ chính xác được.
+4. **Khổ của ống chưa đo bằng nguồn độc lập** (kế thừa hạn chế 4 của nội dung 3), mà luật mục đích lại dùng khổ ống để quy đổi tiêu cự.
+
 ### Chia đôi tập đánh giá (08/10/2026) — để sửa lỗi phân loại mà số đo vẫn độc lập
 - 1.493 sản phẩm khớp được chia thành **fix 746 / holdout 747**, phân tầng theo loại của đáp án:
 
@@ -183,7 +189,10 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 - [x] Nội dung 3: sửa lỗi phân loại trên nửa **fix**, rồi chấm holdout một lần → **đã làm** (08/10, QĐ 15)
 - [x] Nội dung 3: thân máy phim trong M → **mọi cặp xếp "không biết"** (QĐ 16, 08/10)
 - [x] Nội dung 3: xem ca sai của holdout để tách "đáp án sai" / "quy tắc sai" → **đã làm sau lần đo thứ hai, không sửa quy tắc** (mục 4, hạn chế 6e)
-- [ ] Nội dung 4–5: sửa `04_build_knowledge_graph.py` và `common_05.py` để đọc đầu ra nội dung 3 mới (hiện không chạy được)
+- [ ] Nội dung 4–5: sửa `04_build_knowledge_graph.py` và `common_05.py` để đọc đầu ra nội dung 3 mới (hiện không chạy được). Thiết kế đã chốt 08/10, code để phiên sau
+- [x] Nội dung 4: 8 câu [HỎI] của đề xuất thiết kế → **đã chốt 08/10** (`docs/content4_design.md` mục 9, nhật ký)
+- [ ] Nội dung 4: mẫu số chính xác của CVR mới (số ống "chấm được" trong top-K? có tính phụ kiện không?) và người dùng không có ống nào chấm được trong top-K thì bỏ hay tính 0
+- [ ] Nội dung 4: xác nhận cách "đánh dấu" cạnh `has_spec → mount` của phụ kiện / ngàm chuyển (Claude hiểu: cờ "đầu nguồn là phụ kiện"; với ngàm chuyển, cờ "phía ống / phía thân")
 - [x] Có bỏ bản ghi lặp trước k-core không? → **Có**, mỗi cặp (user, item) giữ 1 dòng sớm nhất (07/10, xem nhật ký)
 
 ## 7. Nhật ký quyết định
@@ -225,3 +234,12 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 | 08/10/2026 | Sau lần đo thứ hai mới xem ca sai của holdout (`eval_split_report.py --holdout-errors`), phân loại "đáp án sai" / "quy tắc sai" để đưa vào báo cáo. Không sửa quy tắc | Nam yêu cầu. Quy tắc sai ở 4 sản phẩm (Dimage A200, EF-S 55-250 trong danh mục thân, Tokina 12-28 không có "mm", Lumix DMC-S1); 11 ca sai loại khác và cả 11 ô sai ngàm là do đáp án |
 | 08/10/2026 | Nội dung 3 giữ mức **Đã kiểm thử** (chưa lên "Đã đánh giá") | Đã có số đo trên holdout và đã phân tích ca sai. Còn thiếu Red Team, và Nam chưa tự trình bày lại được |
 | 08/10/2026 | `eval_external.py` thêm tham số `--ours / --out-csv / --out-json`; đưa `eval_split_report.py` lên git; chạy đánh giá với `PYTHONHASHSEED=0` | Để chạy thử vào thư mục nháp mà không ghi đè kết quả chính. Logic khớp tên không đổi. Cột `ten_nguon` (tên hiển thị) đổi giữa các lần chạy do thứ tự `set`, nhưng các cột đúng/sai không đổi: đã kiểm bằng cách chạy lại bản trước sửa |
+| 08/10/2026 | **Nội dung 4: khảo sát và đề xuất thiết kế đồ thị** (nhánh `nam/content4` tách từ `nam/content3`), **chưa viết code pipeline**. Script khảo sát ở `ai/survey/content4/` (`survey_specs.py`, `survey_kg_counts.py`, `survey_usecase_draft.py`), log `ai/data/survey/run_c4_*.log`. Đề xuất ở `docs/content4_design.md` | Ước tính khoảng 95.650 nút; cạnh `interacted_with` 460.193 (chỉ train), `compatible_with` 70.854, `crops_sensor` 2.196, `requires_adapter` 16.005. Tiêu đề đọc được tiêu cự + khẩu độ ở 1.285/1.337 ống. Không dùng lại được bước khớp ống của `eval_external.py` để đo tiêu cự / khẩu độ, vì bước đó khớp bằng chính hai thuộc tính này (vòng lặp). Thử khớp không dùng thuộc tính cần đo: tiêu cự trùng 202/301, khẩu độ 528/554; phần lớn ca lệch là do khớp nhầm, nên **chưa có số đo** |
+| 08/10/2026 | **QĐ nội dung 4 – 1:** nút tiêu cự theo **tiêu cự thật**, 6 khoảng `<24 / 24–35 / 36–70 / 71–135 / 136–300 / >300` mm; ống zoom nối mọi khoảng nó đi qua. Tiêu cự quy đổi 35mm chỉ dùng trong luật mục đích | Nam chốt. Nút tiêu cự không phụ thuộc khổ ống (218 ống không rõ khổ vẫn có cạnh) |
+| 08/10/2026 | **QĐ nội dung 4 – 2:** bỏ ISO, ghi hạn chế kèm lý do | Không có nguồn đáng tin (mục 4, hạn chế nội dung 4, điểm 1) |
+| 08/10/2026 | **QĐ nội dung 4 – 3:** 5 nhãn mục đích: chân dung, phong cảnh, thể thao/chim, vlog, macro. Mỗi luật phải có nguồn (đọc toàn văn). Vlog phải định nghĩa lại cho khác phong cảnh dựa trên nguồn; không có căn cứ thì bỏ nhãn vlog | Luật vlog nháp (`lo` ≤ 24mm) trùng hẳn với phong cảnh (`lo` ≤ 35mm), nên nhãn vlog nháp không thêm thông tin |
+| 08/10/2026 | **QĐ nội dung 4 – 4:** nhãn mục đích gắn theo khổ mà ống được thiết kế cho; ghi hạn chế | Đồ thị gắn nhãn cho ống, không cho từng cặp thân–ống |
+| 08/10/2026 | **QĐ nội dung 4 – 5:** 130 ống "không chắc" ngàm (QĐ 3–4): giữ nút và cạnh `has_spec`, không nối cạnh tương thích | Ngàm không chắc thì không được làm ràng buộc |
+| 08/10/2026 | **QĐ nội dung 4 – 6:** CVR mới: loại cặp "không biết" và ống "không chắc" khỏi cả tử số lẫn mẫu số | Bản hiện tại của `common_05.py` tính cả hai loại này là vi phạm, trái QĐ 3–4, 3–8, 3–16. Mẫu số chính xác còn chờ xác nhận (mục 6) |
+| 08/10/2026 | **QĐ nội dung 4 – 7:** phụ kiện có ngàm (954) và ngàm chuyển (155) nối `has_spec → mount`, có đánh dấu | Để gợi ý được hood, teleconverter, ngàm chuyển đúng ngàm. Cách đánh dấu cụ thể chờ xác nhận (mục 6) |
+| 08/10/2026 | **QĐ nội dung 4 – 8:** quan hệ nối ống với mục đích sử dụng tên là `suitable_for` | Cô có nêu thực thể "mục đích sử dụng" nhưng không nêu quan hệ nào nối tới nó |
