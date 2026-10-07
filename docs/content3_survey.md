@@ -257,7 +257,38 @@ Ghi chú:
 
 ---
 
-## 4. Câu hỏi cần Nam chốt trước khi viết code
+## 4. Quyết định của Nam (07/10/2026)
+
+Các quyết định này thay cho phần đề xuất ở mục 3 khi hai bên khác nhau.
+
+| # | Câu hỏi | Quyết định | Lý do / căn cứ |
+|---|---|---|---|
+| 1 | Dùng `Compatible Mountings`? | **Không dùng trong bản chính**, chỉ lưu để phân tích | Nhiễu (mục 1): 493 máy compact vẫn có ngàm; lệch tiêu đề 4,8% ống / 5,4% thân |
+| 2 | Gộp hay tách EF/EF-S? | **Tách, áp dụng cho mọi hãng.** Mỗi cặp (thân, ống) xếp 1 trong 4 mức (xem dưới). M = 1 khi lắp trực tiếp | Gộp thì sai ở các ca như ống EF-S trên thân 5D |
+| 3 | M có phụ kiện không? | **Chỉ thân × ống.** Phụ kiện có ngàm thì lưu ngàm làm thuộc tính, đánh dấu là phụ kiện | Đúng phạm vi cô yêu cầu |
+| 4 | 104 ống kính nhiều biến thể | Đánh dấu **"không chắc"**: loại khỏi M và khỏi CVR, vẫn giữ trong đồ thị | Không biết người dùng mua bản ngàm nào |
+| 5 | 30,6% ca mua khác ngàm | **Giữ nguyên tập test**; báo kết quả tách 2 nhóm: item test cùng ngàm / khác ngàm với thân đã biết. Ghi rõ hạn chế: chỉ biết các thân máy người dùng có viết đánh giá | Bỏ ca khó khỏi test là chọn dữ liệu theo nhãn |
+| 6 | Người chấm | **Nam chấm một mình**: 50 dev + 200 test | Không tính được kappa → ghi là hạn chế |
+
+**4 mức tương thích (quyết định số 2).** Ví dụ trước, định nghĩa sau:
+
+| Cặp (thân, ống) | Mức | M |
+|---|---|---|
+| Canon 5D (EF, full-frame) + Canon EF 50mm | `compatible_with`: lắp trực tiếp, đủ khung hình | 1 |
+| Canon R10 (RF, APS-C) + RF-S 18-150mm | `compatible_with` | 1 |
+| Nikon D750 (FX) + ống Nikon DX | `crops_sensor`: lắp trực tiếp nhưng ảnh bị cắt về APS-C | 1 |
+| Sony a7 III (FE) + ống Sony E (APS-C); Canon R5 + RF-S | `crops_sensor` | 1 |
+| Canon R6 + ống EF/EF-S; Nikon Z6 + ống F; Olympus E-M1 + ống Four Thirds | `requires_adapter`: cần ngàm chuyển chính hãng | 0 |
+| Canon 5D + ống EF-S; Canon 80D + ống EF-M | không lắp được | 0 |
+
+Hai quan hệ `crops_sensor` và `requires_adapter` lưu riêng làm cạnh của đồ thị tri thức. Bảng luật sẽ viết thành file cấu hình dễ đọc; mỗi luật ghi nguồn hoặc lý do, ưu tiên tài liệu chính thức của hãng. Chỗ chưa chắc thì đánh dấu và hỏi Nam. **Phiên 07/10 chưa viết file này.**
+
+**Hệ quả đã làm trong phiên 07/10:**
+- File chấm mù `ai/survey/content3/label_dev_50.csv`, tạo bởi `make_label_dev.py` với seed 20261007. Mẫu chia 12 tầng: thân 14, ống 22, phụ kiện/khác 14.
+- Kết quả quy tắc khảo sát của 50 mẫu nằm riêng ở `ai/data/survey/label_dev_50_rule.csv` (không đưa lên git; chạy lại script sẽ tạo lại giống hệt). Lưu ý: quy tắc khảo sát vẫn **gộp** EF/EF-S và FX/DX, nên khi so phải so ở mức họ ngàm, hoặc dùng quy tắc mới.
+- Hướng dẫn chấm: `docs/labeling_guide.md`. Có thêm cột `khung` (ff/apsc/khac) để phân biệt mức `crops_sensor`; chờ Nam duyệt.
+
+## 5. Câu hỏi đã gửi Nam (đã trả lời ở mục 4)
 
 1. **[HỎI 1]** Có dùng `Compatible Mountings` làm dự phòng không?
    - Có: thêm 61 thân + 98 ống, và thêm 112 người dùng cho kịch bản. Nhưng trường này đã thấy sai nhiều.
