@@ -1,6 +1,6 @@
 # TRẠNG THÁI ĐỒ ÁN — Camera Recommender
 
-Cập nhật lần cuối: 07/10/2026 · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
+Cập nhật lần cuối: 07/10/2026 (chạy lại bước 01–02) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
 
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
@@ -30,7 +30,7 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 | # | Nội dung | Trạng thái | Ghi chú |
 |---|---|---|---|
 | 1 | Pipeline tổng quát | Đã triển khai (tài liệu) | Cần cập nhật sau khi sửa nội dung 3 và 5 |
-| 2 | Thu thập, lọc k-core, chia train/val/test | Đã triển khai | Logic đúng. Chưa chạy lại trên máy Nam |
+| 2 | Thu thập, lọc k-core, chia train/val/test | **Đã kiểm thử** (07/10) | Chạy lại trên máy Nam: số chính khớp, 2 số trong báo cáo sai, dữ liệu gốc có bản ghi lặp y hệt. Xem mục 4 |
 | 3 | Entity Linking, ma trận M | Đã triển khai, **cần làm lại một phần** | Độ phủ chỉ 8,9%. Xem mục 4 |
 | 4 | Đồ thị tri thức | Đã triển khai, **cần làm lại sau nội dung 3** | 99% sản phẩm không có cạnh tri thức |
 | 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4 |
@@ -55,6 +55,16 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 5. **Bảng thông số 139 dòng không ghi nguồn:** cần thêm cột nguồn (URL) và ngày thu thập, ưu tiên các nguồn cô nêu (Kaggle, Wikidata, DPReview). Nhãn mục đích sử dụng phải ghi rõ là quy tắc nhóm tự đặt, kèm căn cứ.
 6. **Mẫu kiểm định 50 sản phẩm không có cột nhãn của người chấm.** Con số 94% chưa kiểm chứng được. Đã thấy ít nhất một ca sai: "Canon EF 50mm f/1.8 II" bị khớp thành bản "STM".
 7. **Tài liệu có dấu hiệu AI viết** (đường dẫn `file:///d:/`, giọng phóng đại). Phải viết lại bằng giọng của nhóm, đúng mức độ thực tế.
+8. **Báo cáo 2 có 2 số sai ở dòng "Sau Domain Filtering"** (phát hiện khi chạy lại 07/10): users trước k-core là **2.502.236** (báo cáo ghi "~2,1M ước tính"); sản phẩm có tương tác trước k-core là **253.208** (báo cáo ghi 72.775 — thực ra là số sản phẩm *sau vòng 1* k-core). Kéo theo TB/user đúng là 1,62 (không phải 1,92). Giải thích ở Phụ lục A "toàn bộ 72.775 items đều thỏa mãn ở vòng 1" cũng sai.
+9. **Dữ liệu gốc có bản ghi lặp y hệt** (cùng user, asin, nội dung, timestamp — đã kiểm trong `Electronics.jsonl.gz`). Trong 16.195 dòng lặp (user, item) sau k-core: **13.079 là bản ghi lặp y hệt**, chỉ 3.116 là đánh giá lại ở thời điểm khác. Báo cáo 2 giải thích tất cả là "mua lại" — sai. Hệ quả: 2.396/2.544 user có item test = item val chỉ vì cùng một đánh giá bị lặp; bản ghi lặp cũng được đếm vào bậc k-core. Chưa sửa, chờ Nam quyết (đề xuất: bỏ bản ghi trùng hoàn toàn trước k-core).
+
+### Kết quả chạy lại bước 01–02 trên máy Nam (07/10/2026)
+- Dữ liệu gốc: `Electronics.jsonl.gz` 6.474.438.619 B (sha256 `17b2c5f3…4a28`), `meta_Electronics.jsonl.gz` 1.312.900.427 B (sha256 `a4a196a1…790d`), Last-Modified trên server 16/01/2025.
+- Khớp với Hải: 43.886.944 review, 1.610.012 meta, 253.260 sản phẩm camera, 4.042.112 tương tác camera, cả 14 vòng k-core, 70.424 users / 28.867 items / 622.997 tương tác, sparsity 99,969%, phân vị bậc user, phân bố sao, train 482.149 (470.009 nếu gộp lặp), các số trùng train/val/test (1.290 / 1.166 / 2.544).
+- Script 02 chạy 2 lần cho file đầu ra giống hệt (sha256) → seed 42 tái lập được.
+- RAM đỉnh script 01: 2,03 GiB → không cần sửa đọc từng phần. Thời gian: 01 ≈ 6,4 phút, 02 ≈ 83 giây.
+- Log: `ai/data/processed/run01_nam.log`, `run02_nam.log`, `prekcore_stats_nam.json`.
+- Chưa kiểm: 18.286.191 users thô (script không đếm), Bảng 2.3 (1.414 body / 1.462 lens), mục 5 của báo cáo 2.
 
 ### Vấn đề cốt lõi
 - 99% sản phẩm trong dữ liệu là phụ kiện. Chỉ 257/28.867 sản phẩm (0,9%) được xác định ngàm.
@@ -84,6 +94,7 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 - [ ] Chốt hướng sửa vấn đề cốt lõi ở mục 4
 - [ ] Giữ hay bỏ Spring Boot (đề xuất: bỏ, chỉ dùng FastAPI + React)
 - [ ] Phân công lại vai trò sau khi đề tài chuyển hướng AI
+- [ ] Có bỏ bản ghi lặp y hệt (user, item, timestamp) trước k-core không? Nếu có thì mọi số từ bước 2 trở đi sẽ đổi (lỗi 9, mục 4)
 
 ## 7. Nhật ký quyết định
 
@@ -92,3 +103,4 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 | 07/10/2026 | Không làm lại từ đầu, giữ khung của Hải và sửa | Khung code và nội dung 2 dùng được |
 | 07/10/2026 | Dựng môi trường `ai/.venv` (Python 3.12.10, torch 2.14.1+cu126, PyG 2.8.0.post1) trên nhánh `nam/setup`; thêm `CLAUDE.md` | Chạy thử: `torch.cuda.is_available()` = True, GPU GTX 1660 Ti, `RGCNConv` chạy được trên GPU. RecBole 1.2.0 import gói gốc được nhưng import `recbole.quick_start` lỗi thiếu `ray` — pipeline hiện không dùng RecBole |
 | 07/10/2026 | Chốt `ai/requirements-lock.txt` (pip freeze) làm môi trường chuẩn; thêm mục "An toàn" vào `CLAUDE.md` | Để kết quả tái lập được trên đúng phiên bản thư viện; repo dùng chung với Hải nên chỉ làm trên nhánh riêng |
+| 07/10/2026 | Nội dung 2 nâng lên "Đã kiểm thử"; giữ nguyên code 01/02 (không sửa) | Chạy lại ra đúng số chính của Hải, RAM đỉnh 2,03 GiB vừa máy. Phát hiện 2 số sai trong báo cáo và vấn đề bản ghi lặp y hệt — ghi ở mục 4, lỗi 8–9, chờ Nam quyết có lọc trùng hay không |
