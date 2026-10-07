@@ -31,7 +31,14 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 |---|---|---|---|
 | 1 | Pipeline tổng quát | Đã triển khai (tài liệu) | Cần cập nhật sau khi sửa nội dung 3 và 5 |
 | 2 | Thu thập, lọc k-core, chia train/val/test | **Đã kiểm thử** (07/10) | Nhánh `nam/fix-data`: đã gộp tương tác lặp, số mới 67.661 users / 27.940 items / 595.515 tương tác. Báo cáo 2 chưa cập nhật theo số mới. Xem mục 4 và `docs/CHANGELOG.md` |
-| 3 | Entity Linking, ma trận M | Đã triển khai, **cần làm lại một phần** | Độ phủ chỉ 8,9%. **Đã khảo sát dữ liệu cho thiết kế mới (07/10)**, xem `docs/content3_survey.md`. 6 quyết định thiết kế đã chốt (07/10). Đã có file chấm mù 50 mẫu dev + hướng dẫn chấm. Việc tiếp: Nam chấm dev, viết file cấu hình luật ngàm, rồi mới viết pipeline. **Phải chạy lại trên dữ liệu mới** (mã item đã đổi) |
+| 3 | Entity Linking, ma trận M | **Đã kiểm thử** (07/10, bản mới) | Độ phủ chỉ 8,9%. **Đã khảo sát dữ liệu cho thiết kế mới (07/10)**, xem `docs/content3_survey.md`. **Bản mới đã ghi vào `ai/data/kg/`** (bản cũ sao lưu ở `kg_v62abf54/`): 482 thân × 886 ống, 56.276 cặp M = 1 (1.638 cặp có cờ "chưa rõ có cắt khung"), 1.836 cặp "không biết".
+
+Đối chiếu nguồn ngoài (`eval_external.py`):
+- ngàm đúng 98,1% (Lensfun, 685 sản phẩm) và 100% (Wikidata, 450); 13 ca lệch đều do đáp án hoặc bước khớp;
+- khung thân đúng 100% (Lensfun, 351) và 99,5% (openMVG, 215);
+- **loại chỉ đúng 87,8% / 83,3%**: ống và thân bị Amazon xếp sai danh mục nên quy tắc xếp thành phụ kiện / khác.
+
+Chưa sửa lỗi loại. Script 04/05 chưa đọc đầu ra mới. **Phải chạy lại trên dữ liệu mới** (mã item đã đổi) |
 | 4 | Đồ thị tri thức | Đã triển khai, **cần làm lại sau nội dung 3** | 99% sản phẩm không có cạnh tri thức. **Phải chạy lại trên dữ liệu mới** |
 | 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`/`item_map.json` (07/10, nhánh `nam/content3`) |
 | 6 | Module ràng buộc cứng và mềm | Chưa bắt đầu | |
@@ -121,6 +128,11 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 - [ ] Phân công lại vai trò sau khi đề tài chuyển hướng AI
 - [x] Nội dung 3: 6 câu [HỎI] của khảo sát → **đã chốt 07/10** (xem nhật ký và `docs/content3_survey.md` mục 4)
 - [x] Nội dung 3: 3 điểm chưa chắc trong `docs/labeling_guide.md` → **đã chốt 07/10** (xem nhật ký)
+- [x] Nội dung 3: tải nguồn đáp án ngoài → **có** (07/10), xem `docs/DATA_SOURCES.md`
+- [x] Nội dung 3: ống không rõ khung trên thân FF có chế độ cắt → **M = 1**, cờ "chưa rõ có cắt khung" (QĐ 11)
+- [x] Nội dung 3: ghi đè `ai/data/kg/` → **đã làm** (sao lưu ở `kg_v62abf54/`)
+- [ ] Nội dung 3: sửa lỗi phân loại (ống / thân nằm sai danh mục Amazon) thế nào để số đo vẫn độc lập?
+- [ ] Nội dung 3: có đưa `item_attributes.csv`, `compat_pairs.csv` (~7 MB mỗi file) và các file `.npz` lên git không (cô yêu cầu nộp M)? Có xoá các file cũ đã lỗi thời trong `ai/data/kg/` không?
 - [x] Có bỏ bản ghi lặp trước k-core không? → **Có**, mỗi cặp (user, item) giữ 1 dòng sớm nhất (07/10, xem nhật ký)
 
 ## 7. Nhật ký quyết định
@@ -145,3 +157,11 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 | 07/10/2026 | **QĐ nội dung 3 – 7:** giữ cột `khung` (ff / apsc / khac) trong file chấm tay | Quyết định 2 cần biết khổ của thân và ống để phân biệt `compatible_with` với `crops_sensor` (vd DX trên FX) |
 | 07/10/2026 | **QĐ nội dung 3 – 8:** ống APS-C hãng thứ ba "for Canon" (Sigma DC, Tamron Di II…) trên thân Canon full-frame xếp **"không chắc"** ở mức từng cặp. M có thêm giá trị "không biết", lưu bằng một ma trận đánh dấu riêng; các cặp này bị loại khỏi ràng buộc cứng và CVR. Cùng ống đó trên thân Canon APS-C vẫn là `compatible_with` | Ống lắp vật lý được nhưng ảnh bị tối góc, và phần lớn DSLR Canon full-frame không tự cắt khung, nên không xếp chắc chắn vào `crops_sensor` hay "không lắp được". Việc các ống này dùng ngàm EF (không phải EF-S) **chưa đối chiếu tài liệu hãng**, sẽ kiểm khi viết file cấu hình luật |
 | 07/10/2026 | **QĐ nội dung 3 – 9:** ống ngàm T bán kèm vòng T ghi theo ngàm của vòng (vd `canon_ef`); tiêu đề không nói rõ vòng nào thì ghi `khong_chac` (giá trị mới của cột `ngam`) | Người mua lắp ống lên thân qua vòng T đi kèm, nên ngàm thực tế là ngàm của vòng |
+| 07/10/2026 | **QĐ nội dung 3 – 10: đổi cách đo độ chính xác, Nam không chấm tay.** (1) Tìm nguồn thông số bên ngoài có ngàm và khung (ưu tiên Wikidata, Kaggle/GitHub), báo giấy phép và độ phủ, hỏi Nam trước khi tải. (2) Nguồn này **chỉ làm đáp án đối chiếu, không dùng trong quy tắc**, để hai bên độc lập. (3) Mẫu dev 50: Claude tự chấm để tìm lỗi và sửa quy tắc. (4) Bỏ mẫu test 200 chấm tay | Nam không có thời gian chấm tay. Hạn chế đã biết: đáp án ngoài chỉ phủ được các sản phẩm khớp được tên model, và bước khớp tên cũng có thể sai. Phần dev do Claude chấm không độc lập với người viết quy tắc |
+| 07/10/2026 | **Viết pipeline nội dung 3 mới** (`03_mount_compat.py`, `mount_detect.py`, `ai/config/mount_rules.toml`); chạy thử vào `ai/data/kg_new/`, **chưa** ghi đè `ai/data/kg/`. Claude tự chấm dev 50 (`label_dev_50_claude.csv`) và sửa luật theo các lỗi tìm được: ngàm suy từ dòng máy được nhắc trong tiêu đề ống, teleconverter dùng luật hãng + DSLR, ống/kính lọc gắn ren → không có ngàm, thêm dấu hiệu FF cho Nikon AF-D/Zeiss, bổ sung luật dòng máy cho D2X, 60Da, K2000, Alpha 7R… | Kết quả dev sau khi sửa: loại 49/50, ngàm 46/50, khung 43/50, mọi giá trị đã gán đều khớp (chỉ là kiểm tra nội bộ). Nguồn của các luật: phần lớn là trang hãng (Canon, Nikon, Sony support, Ricoh, Sigma); ngàm chuyển FT1, LA-EA, MMF mới có nguồn bán lẻ. URL mới kiểm qua tóm tắt kết quả tìm kiếm, chưa đọc toàn văn |
+| 07/10/2026 | Khảo sát nguồn đáp án ngoài (chưa tải dữ liệu): **Lensfun** (dữ liệu CC BY-SA 3.0, 59 file XML ~5,2 MB, có ngàm + hệ số crop cho máy và ống); **Wikidata** (CC0, ngàm qua P2935 "connector": khoảng 360 mẫu máy + 596 mẫu ống); **openMVG CameraSensorSizeDatabase** (MIT, chỉ có bề rộng cảm biến → dùng cho khung thân); Kaggle "1000 Cameras" không có ngàm → loại | Chờ Nam duyệt trước khi tải. Độ phủ trên sản phẩm của nhóm chưa đếm được nếu chưa tải |
+| 07/10/2026 | **QĐ nội dung 3 – 11:** thân FF có chế độ cắt khung chính hãng (Nikon F/Z, Sony E/A, Canon RF, Pentax K) + ống cùng ngàm không rõ khung → M = 1, mức `compatible_with` kèm cờ `crop_unknown` ("chưa rõ có cắt khung") | Dù ống là FF hay APS-C thì vẫn lắp trực tiếp. Sau khi áp: M = 1 tăng từ 54.638 lên 56.276 cặp, "không biết" giảm từ 3.474 xuống 1.836 |
+| 07/10/2026 | **QĐ nội dung 3 – 12:** tải Lensfun, openMVG, Wikidata vào `ai/data/external/` (không lên git), ghi ở `docs/DATA_SOURCES.md`. Sao lưu `ai/data/kg/` sang `kg_v62abf54/` rồi ghi đè bằng đầu ra mới | Nam duyệt. Giấy phép: Lensfun CC BY-SA 3.0, openMVG MIT, Wikidata CC0 |
+| 07/10/2026 | Thêm vào `CLAUDE.md`: không gửi thông tin cá nhân (email, tên…) ra bên ngoài trong yêu cầu web | Phiên trước, một lần gọi API Wikidata đã kèm email của Nam trong User-Agent |
+| 07/10/2026 | Mở và đọc cả 14 trang nguồn của bảng luật; thay 3 nguồn bán lẻ bằng trang hãng; `kiem_chung = "da_doc_trang"` kèm câu trích | Theo yêu cầu của Nam. Không có luật nào không xác nhận được. Hai chỗ là suy rộng (đã ghi trong TOML): danh sách thân không nhận EF-S trên trang Canon dừng ở 6D; câu về LA-EA của Sony nói về ống DT |
+| 07/10/2026 | Đo độ chính xác bằng nguồn ngoài (`eval_external.py`): khớp tên chắc chắn 1.493 sản phẩm. Ngàm đúng 98,1% (Lensfun) / 100% (Wikidata); khung thân 100% / 99,5% (openMVG); loại 87,8% / 83,3%. Bước khớp đã được sửa 3 lần **ở phía đánh giá** (loại tiêu đề phụ kiện; khớp ống phải trùng mọi token tên; lớp "product model" của Wikidata), **không sửa quy tắc** | Các sửa này làm cho đáp án đúng hơn, không đụng tới quy tắc. Quy tắc giữ nguyên để số đo độc lập. Chi tiết ca sai ở CHANGELOG |

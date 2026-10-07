@@ -6,6 +6,109 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 07/10/2026: Ghi đè `ai/data/kg/` bằng đầu ra nội dung 3 mới; QĐ 11; đo độ chính xác bằng nguồn ngoài. Nhánh `nam/content3`
+
+**Sửa gì**
+1. **Sao lưu rồi ghi đè `ai/data/kg/`.**
+   - Bản cũ chép sang `ai/data/kg_v62abf54/` (10 file, kiểm sha256 khớp từng file; không đưa lên git).
+   - Chạy `03_mount_compat.py --out-dir ai/data/kg --overwrite`. Các file bị thay: `body_index.json`, `lens_index.json`. File mới: `item_attributes.csv`, `compat_pairs.csv`, `compatibility_matrix.npz`, `unknown_mask.npz`, `mount_compat_stats.json`, `mount_compat_log.txt`.
+   - **Các file cũ của Hải vẫn nằm trong `ai/data/kg/` và nay đã cũ**, vì pipeline mới không ghi đè chúng: `linked_products.csv`, `compatible_item_edges.csv`, `compatibility_stats.json`, `kg_stats.json`, `mount_mapping.json`, `validation_*`, `unlinked_audit_samples_50.csv`. Script 04 cũ vẫn đọc các file này.
+2. **QĐ 11** (`ai/config/mount_rules.toml`, luật `same_mount_ff_body_lens_khung_unknown_autocrop`):
+   - Áp cho thân FF ở các ngàm có chế độ cắt khung chính hãng (Nikon F/Z, Sony E/A, Canon RF, Pentax K), gắn ống cùng ngàm nhưng không rõ khung.
+   - Kết quả: M = 1, mức `compatible_with`, kèm cờ `crop_unknown = 1` ("chưa rõ có cắt khung").
+   - `compat_pairs.csv` có thêm cột `crop_unknown`.
+3. **Nguồn của luật:**
+   - Mở và đọc cả 14 trang; mỗi nguồn ghi URL, câu trích nguyên văn, `kiem_chung = "da_doc_trang"`.
+   - Ba nguồn bán lẻ (B&H) được thay bằng trang hãng: thông cáo Nikon FT1 (2011), trang hỗ trợ Sony về ống DT (có câu nói ngàm chuyển LA-EA), thông cáo Olympus về E-P2 (nói MMF-1).
+   - Trang Sigma xác nhận ống DC bản Canon dùng **ngàm EF**. Điểm "chưa đối chiếu" của QĐ 8 nay đã có nguồn.
+
+**Ảnh hưởng** (`ai/data/kg/mount_compat_log.txt`)
+
+| Chỉ số | Trước QĐ 11 (`kg_new`) | Sau QĐ 11 (`kg`) |
+|---|---:|---:|
+| Kích thước M | 482 × 886 | 482 × 886 |
+| Cặp M = 1 | 54.638 | **56.276** |
+| … trong đó cờ "chưa rõ có cắt khung" | – | 1.638 |
+| Cặp "không biết" | 3.474 | **1.836** |
+
+**Độ chính xác so với nguồn ngoài** (`ai/survey/content3/eval_external.py`, log `ai/data/survey/run_eval_external.log`; nguồn ở `docs/DATA_SOURCES.md`)
+
+Cách đọc bảng:
+- Mỗi nguồn chỉ chấm trên các sản phẩm khớp tên chắc chắn.
+- "Gán" là số sản phẩm mà quy tắc đưa ra 1 ngàm / 1 khung.
+- "Để trống" là quy tắc trả "không rõ".
+
+| Nguồn | Khớp được | Loại đúng | Ngàm: đúng / gán (để trống) | Khung thân: đúng / gán (để trống) |
+|---|---:|---:|---:|---:|
+| Lensfun | 1.119 (551 thân/máy, 568 ống) | 983/1.119 (87,8%) | 672/685 = **98,1%** (12) | 351/351 = **100%** (1) |
+| openMVG | 635 máy | – | – | 214/215 = **99,5%** (2) |
+| Wikidata | 610 (297 thân, 313 ống) | 508/610 (83,3%) | 450/450 = **100%** (2) | – |
+
+Tổng cộng 1.493 sản phẩm khác nhau khớp được ít nhất một nguồn.
+
+Các ca sai, Claude đã đọc từng ca:
+- **Ngàm, 13 ca lệch với Lensfun: không ca nào là lỗi quy tắc.**
+  - 7 ca: Lensfun ghi ngàm "EF-S" cho ống EF 75-300 III, vì ghi theo máy dùng để hiệu chỉnh.
+  - 6 ca: khớp nhầm sang bản ngàm khác mà Lensfun chỉ có một bản, vd Sony FE 50mm f/1.4 ZA bị khớp với "Sony 50mm f/1.4" ngàm A; Samyang AF 85mm bản RF với bản E; Voigtlander 15mm bản Leica M với bản E; Zeiss ZE.
+- **Khung, 1 ca sai với openMVG: lỗi quy tắc thật.** Fujifilm X-S1 là máy bridge 2011, nhưng luật dòng máy `x-s\d` coi là thân X-mount.
+- **Loại, khoảng 100–140 ca sai mỗi nguồn: phần lớn là lỗi quy tắc thật.** Quy tắc tin danh mục Amazon:
+  - ống kính bán kèm combo nằm ở "Accessory Kits" / "Accessory Bundles" bị xếp `phu_kien` (Lensfun: 59 + 18 ca);
+  - thân máy bị Amazon xếp vào "Point & Shoot" / "Instant Cameras" bị xếp `khac` (vd Olympus PEN E-P1, Pentax K-01, Nikon D3300);
+  - máy phim SLR (danh mục Film Cameras) bị xếp `khac`;
+  - còn một ít là lỗi khớp: chữ "f4" trong khẩu độ bị khớp với máy phim "Nikon F4"; "Canon VIXIA HF R50" bị khớp với "EOS R50".
+- **Hệ quả:** độ chính xác khi quy tắc **đã gán** ngàm hoặc khung rất cao, nhưng **độ phủ** bị giới hạn bởi lỗi phân loại. Các ống, thân bị xếp nhầm thành phụ kiện / khác thì không vào M.
+
+**Chưa làm / phải làm theo**
+- **Chưa sửa lỗi phân loại** vừa tìm được. Nếu sửa theo chính tập đánh giá này thì số đo lần sau không còn độc lập. Cần Nam quyết cách làm.
+- Script 04 và `common_05.py` (CVR) chưa đọc đầu ra mới (xem mục bên dưới).
+
+---
+
+## 07/10/2026: Nội dung 3 bản mới — `03_mount_compat.py` (xác định ngàm tách khỏi khớp model). Nhánh `nam/content3`
+
+**Sửa gì**
+- **Thêm** (không sửa file của Hải):
+  - `ai/pipeline/03_mount_compat.py`: pipeline chính;
+  - `ai/pipeline/mount_detect.py`: bộ nhận diện loại / ngàm / khung;
+  - `ai/config/mount_rules.toml`: bảng luật tương thích, mỗi luật có nguồn hoặc lý do.
+- `03_entity_linking_matrix.py` của Hải **giữ nguyên**. Từ nay nó chỉ còn vai trò khớp model để lấy thông số (bước 3d). Ma trận M **không** lấy từ nó nữa.
+- Cách mới, ví dụ trước:
+  - "Sigma 30mm DC DN for Sony E-mount" → đọc chữ "E-mount" → ngàm `sony_e`; chữ "DC" → khung `apsc`. Cách cũ bỏ sót ống này vì nó không có trong bảng 139 model.
+  - "Nikon D3200" → luật dòng máy → `nikon_f`, `apsc`.
+  - Cặp (D750, ống DX) → mức `crops_sensor`, M = 1.
+- Loại sản phẩm lấy từ danh mục, có lọc thêm bằng tiêu đề. Bản cũ coi 801 máy compact là "thân máy"; bản mới xếp chúng vào `khac`.
+- Ma trận M có 5 mức (QĐ 2, 8): `compatible_with`, `crops_sensor` (M = 1); `requires_adapter`, `incompatible`, `unknown` (M = 0). Cặp `unknown` lưu ở ma trận riêng `unknown_mask.npz`.
+- 113 ống hãng thứ ba có nhiều asin con được đánh dấu "không chắc" (QĐ 4): không vào M, vẫn có trong `item_attributes.csv` và `compat_pairs.csv`.
+
+**Vì sao**
+- Bản cũ chỉ gán được ngàm cho 257/28.867 sản phẩm (0,9%), vì phải khớp đúng tên model với bảng 139 dòng.
+- Bản cũ có 1.414 "thân máy" thì hơn một nửa là máy compact không có ngàm.
+- Bằng chứng ở `docs/content3_survey.md`.
+
+**Ảnh hưởng** (số mới từ `03_mount_compat.py --out-dir ai/data/kg_new`, log ở `ai/data/kg_new/mount_compat_log.txt`)
+
+| Chỉ số | Bản cũ (62abf54, dữ liệu cũ) | Bản mới (dữ liệu sau gộp lặp) |
+|---|---:|---:|
+| "Thân máy" theo phân loại | 1.414 | 488 (`than`); thêm 1.802 `khac` (compact, máy quay…) |
+| "Ống kính" theo phân loại | 1.462 | 1.143 (`ong`) |
+| Thân có ngàm (vào M) | (257 thân + ống) | **482** |
+| Ống có ngàm | | 999, trong đó 886 vào M và 113 "không chắc" |
+| Kích thước M | (theo bảng cũ) | 482 × 886 |
+| Cặp M = 1 | | 54.638 (12,79%) |
+| Cặp "không biết" | không có mức này | 3.474 (0,81%) |
+| User có thân trong M ở train và item test là ống trong M | (chưa tính) | 951. Ống test so với thân đã có: 661 `compatible_with`, 9 `crops_sensor`, 10 `requires_adapter`, 23 `unknown`, 248 `incompatible` (`ai/survey/content3/scenario_kgnew.py`) |
+
+**Đã kiểm chứng / chưa**
+- Kiểm trên 50 mẫu dev do Claude tự chấm (`check_dev.py`): loại đúng 49/50, ngàm 46/50, khung 43/50. Mọi giá trị quy tắc **đã gán** đều khớp nhãn; các chỗ lệch là quy tắc để "không rõ" (vd chỉ ghi "for Canon"). **Đây không phải số đánh giá chính thức**, vì người chấm và người viết quy tắc là một.
+- Chưa đối chiếu với nguồn thông số bên ngoài (chờ Nam duyệt tải về, QĐ 10).
+
+**Phải làm theo**
+- **Chưa ghi vào `ai/data/kg/`.** Đầu ra mới đang ở `ai/data/kg_new/`, chờ Nam đồng ý ghi đè.
+- Script 04 đọc `linked_products.csv` (đầu ra cũ) → phải sửa để đọc `item_attributes.csv` và `compat_pairs.csv`. Bỏ `assert after == 257`.
+- `common_05.py` (CVR): chỉ tính các ống có trong `lens_index.json`, và bỏ các cặp có trong `unknown_mask.npz` (QĐ 4, 8).
+
+---
+
 ## 07/10/2026: Bỏ số ghi cứng trong `common_05.py` và `04_build_knowledge_graph.py`. Nhánh `nam/content3`
 
 **Sửa gì**

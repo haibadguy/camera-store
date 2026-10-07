@@ -1,7 +1,14 @@
-# Hướng dẫn chấm tay: loại sản phẩm và ngàm
+# Hướng dẫn chấm: loại sản phẩm và ngàm
 
-Dùng cho: `ai/survey/content3/label_dev_50.csv` (50 mẫu dev), sau này là 200 mẫu test.
-Người chấm: Nam (chấm một mình, theo quyết định ngày 07/10/2026).
+> **Cách đo đã đổi (QĐ 10, ngày 07/10/2026): Nam KHÔNG chấm tay nữa.**
+> - **Mẫu dev 50** (`ai/survey/content3/label_dev_50.csv`): Claude tự chấm theo đúng hướng dẫn này, kết quả ở `label_dev_50_claude.csv`. Chỉ dùng để **tìm lỗi và sửa quy tắc**, không dùng làm số đánh giá. Script so sánh: `ai/survey/content3/check_dev.py`. Hạn chế: người chấm và người viết quy tắc là một, nên không độc lập.
+> - **Số đánh giá chính thức** sẽ đối chiếu với một **nguồn thông số bên ngoài** (ứng viên: Lensfun, Wikidata, openMVG; chờ Nam duyệt trước khi tải). Nguồn này **chỉ làm đáp án**, không đưa vào quy tắc, để hai bên độc lập.
+> - Mẫu test 200 do người chấm tay: **bỏ**.
+> - **Đã đo (07/10/2026)** bằng Lensfun, openMVG, Wikidata: `ai/survey/content3/eval_external.py`. Kết quả ở `docs/CHANGELOG.md`, nguồn ở `docs/DATA_SOURCES.md`. Bước đối chiếu quy đổi ngàm/khung của nguồn ngoài về đúng các mã trong bảng dưới.
+>
+> Bảng giá trị `loai` / `ngam` / `khung` dưới đây vẫn là **từ vựng chung** của quy tắc (`ai/pipeline/mount_detect.py`), của file luật (`ai/config/mount_rules.toml`) và của bước đối chiếu với nguồn ngoài.
+
+Phần dưới giữ nguyên để tham khảo, vì Claude chấm dev theo đúng các quy ước này.
 
 ## Quy tắc chung
 
