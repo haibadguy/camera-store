@@ -1,6 +1,6 @@
 # TRẠNG THÁI ĐỒ ÁN — Camera Recommender
 
-Cập nhật lần cuối: 07/10/2026 (khảo sát nội dung 3, nhánh `nam/content3`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
+Cập nhật lần cuối: 08/10/2026 (nội dung 3: chia đôi tập đánh giá, dọn `ai/data/kg/`, nhánh `nam/content3`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
 
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
@@ -108,6 +108,33 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 2. **Hai người chấm tay độc lập khoảng 200 mẫu** để đo độ chính xác thật của việc xác định ngàm.
 3. **Thêm kịch bản đánh giá "gợi ý ống kính cho người đã có thân máy"**, nơi vấn đề tương thích thực sự xuất hiện.
 
+### Hạn chế cần nêu trong báo cáo (nội dung 3)
+1. **Phía đánh giá đã chỉnh bước khớp tên 3 lần sau khi xem các ca sai; quy tắc không đổi.** Ba lần chỉnh (`ai/survey/content3/eval_external.py`, 07/10/2026):
+   - (a) Bỏ các tiêu đề mà phần đầu có từ phụ kiện. Ví dụ "Nikon D5 AN-DC15 Camera Strap" bị khớp thành thân D5.
+   - (b) Khớp ống kính phải trùng **mọi token** trong tên ống của nguồn, không chỉ tiêu cự + khẩu độ. Ví dụ "Canon EF 75-300mm" bị khớp với bản RF 75-300 của Wikidata.
+   - (c) Ống kính nằm ở lớp "product model" của Wikidata bị coi là máy ảnh.
+
+   Cả ba lần chỉnh đều làm đáp án đúng hơn, nhưng đều được quyết **sau khi đã xem kết quả**. Số liệu báo cáo là số sau lần chỉnh thứ 3.
+2. **Chỉ chấm được trên 1.493 sản phẩm khớp tên chắc chắn** (trên 27.940). Đó là các sản phẩm có tên model rõ ràng, thường dễ hơn các sản phẩm khác, nên độ chính xác trên toàn bộ dữ liệu có thể thấp hơn.
+3. **Đáp án ngoài cũng có lỗi.** Lensfun ghi ngàm và crop của ống theo máy dùng để hiệu chỉnh (vd EF 75-300 III bị ghi "EF-S"), nên không dùng Lensfun để chấm khung của ống. Wikidata không có khổ cảm biến. openMVG không có ngàm.
+4. **Chưa đo được khung của ống kính** bằng nguồn độc lập.
+5. **Mẫu dev 50 do Claude chấm**, tức người chấm cũng là người viết quy tắc, nên không độc lập (QĐ 10). Không có người chấm thứ hai, nên không tính được độ đồng thuận (kappa).
+6. **Lỗi phân loại đã biết, chưa sửa:** quy tắc tin danh mục Amazon. Ống bán kèm combo ("Accessory Kits"), thân bị Amazon xếp vào "Point & Shoot", và máy phim SLR đều bị xếp sai loại, nên bị loại khỏi M.
+7. **Không biết người dùng mua bản ngàm nào** khi một `parent_asin` gộp nhiều bản (113 ống "không chắc", QĐ 4). Chỉ biết những thân máy mà người dùng có viết đánh giá (QĐ 5).
+8. **Nguồn của luật:** đọc trang hãng ngày 07/10/2026. Hai chỗ là suy rộng (danh sách thân Canon không nhận EF-S trên trang hãng dừng ở 6D; câu về LA-EA của Sony nói về ống DT).
+
+### Chia đôi tập đánh giá (08/10/2026) — để sửa lỗi phân loại mà số đo vẫn độc lập
+- 1.493 sản phẩm khớp được chia thành **fix 746 / holdout 747**, phân tầng theo loại của đáp án:
+
+  | Loại đáp án | fix | holdout |
+  |---|---:|---:|
+  | thân (`than`) | 351 | 352 |
+  | ống (`ong`) | 316 | 316 |
+  | máy ống liền / khác (`khac`) | 79 | 79 |
+
+- Script `ai/survey/content3/split_eval.py`, seed 20261008. Danh sách lưu ở `ai/survey/content3/eval_split.csv` (sha256 `FECEE371…3C0B`; chạy 2 lần cho kết quả giống hệt).
+- **Quy ước:** khi sửa quy tắc chỉ được xem các ca sai thuộc nửa **fix**. Nửa **holdout** chỉ được chấm **một lần**, sau khi đã chốt quy tắc. Số chính thức sau khi sửa là số trên holdout.
+
 ## 5. Lộ trình 2 tháng (đề xuất, chờ Nam chốt)
 
 | Tuần | Việc |
@@ -131,8 +158,10 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 - [x] Nội dung 3: tải nguồn đáp án ngoài → **có** (07/10), xem `docs/DATA_SOURCES.md`
 - [x] Nội dung 3: ống không rõ khung trên thân FF có chế độ cắt → **M = 1**, cờ "chưa rõ có cắt khung" (QĐ 11)
 - [x] Nội dung 3: ghi đè `ai/data/kg/` → **đã làm** (sao lưu ở `kg_v62abf54/`)
-- [ ] Nội dung 3: sửa lỗi phân loại (ống / thân nằm sai danh mục Amazon) thế nào để số đo vẫn độc lập?
-- [ ] Nội dung 3: có đưa `item_attributes.csv`, `compat_pairs.csv` (~7 MB mỗi file) và các file `.npz` lên git không (cô yêu cầu nộp M)? Có xoá các file cũ đã lỗi thời trong `ai/data/kg/` không?
+- [x] Nội dung 3: sửa lỗi phân loại thế nào để số đo vẫn độc lập → **chia đôi fix / holdout** (08/10); việc sửa để phiên sau
+- [x] Nội dung 3: đưa lên git các file `.npz`, `item_attributes.csv`, `compat_pairs.csv`; `git rm` các file cũ trong `ai/data/kg/` → **đã làm** (08/10)
+- [ ] Nội dung 3: sửa lỗi phân loại trên nửa **fix**, rồi chấm holdout một lần (phiên sau)
+- [ ] Nội dung 4–5: sửa `04_build_knowledge_graph.py` và `common_05.py` để đọc đầu ra nội dung 3 mới (hiện không chạy được)
 - [x] Có bỏ bản ghi lặp trước k-core không? → **Có**, mỗi cặp (user, item) giữ 1 dòng sớm nhất (07/10, xem nhật ký)
 
 ## 7. Nhật ký quyết định
@@ -165,3 +194,6 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 | 07/10/2026 | Thêm vào `CLAUDE.md`: không gửi thông tin cá nhân (email, tên…) ra bên ngoài trong yêu cầu web | Phiên trước, một lần gọi API Wikidata đã kèm email của Nam trong User-Agent |
 | 07/10/2026 | Mở và đọc cả 14 trang nguồn của bảng luật; thay 3 nguồn bán lẻ bằng trang hãng; `kiem_chung = "da_doc_trang"` kèm câu trích | Theo yêu cầu của Nam. Không có luật nào không xác nhận được. Hai chỗ là suy rộng (đã ghi trong TOML): danh sách thân không nhận EF-S trên trang Canon dừng ở 6D; câu về LA-EA của Sony nói về ống DT |
 | 07/10/2026 | Đo độ chính xác bằng nguồn ngoài (`eval_external.py`): khớp tên chắc chắn 1.493 sản phẩm. Ngàm đúng 98,1% (Lensfun) / 100% (Wikidata); khung thân 100% / 99,5% (openMVG); loại 87,8% / 83,3%. Bước khớp đã được sửa 3 lần **ở phía đánh giá** (loại tiêu đề phụ kiện; khớp ống phải trùng mọi token tên; lớp "product model" của Wikidata), **không sửa quy tắc** | Các sửa này làm cho đáp án đúng hơn, không đụng tới quy tắc. Quy tắc giữ nguyên để số đo độc lập. Chi tiết ca sai ở CHANGELOG |
+| 08/10/2026 | **QĐ nội dung 3 – 13:** chia đôi 1.493 sản phẩm khớp được thành fix 746 / holdout 747 (phân tầng theo loại đáp án, seed 20261008, `ai/survey/content3/eval_split.csv`). Sửa lỗi phân loại để phiên sau, chỉ được xem ca sai ở nửa fix; holdout chấm một lần sau khi chốt quy tắc | Để sửa quy tắc dựa trên ca sai mà vẫn có số đo độc lập |
+| 08/10/2026 | **QĐ nội dung 3 – 14:** đưa lên git `compatibility_matrix.npz`, `unknown_mask.npz`, `item_attributes.csv`, `compat_pairs.csv` (thêm ngoại lệ `!` trong `.gitignore`); gỡ khỏi nhánh 8 file cũ của Hải trong `ai/data/kg/` (đã kiểm sha256 trùng bản sao lưu `kg_v62abf54/`); không đưa dữ liệu gốc và dữ liệu nguồn ngoài | Cô yêu cầu nộp ma trận M; các file cũ dùng mã sản phẩm cũ, không còn đúng. Hệ quả: script 04 và `common_05.py` hiện không chạy được cho tới khi sửa (ghi ở CHANGELOG) |
+| 08/10/2026 | Thêm mục "Hạn chế cần nêu trong báo cáo (nội dung 3)" vào mục 4 | Nam yêu cầu. Gồm việc phía đánh giá đã chỉnh bước khớp tên 3 lần sau khi xem ca sai, trong khi quy tắc không đổi |

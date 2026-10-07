@@ -6,6 +6,26 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 08/10/2026: Gỡ các file nội dung 3–4 cũ của Hải khỏi `ai/data/kg/`; đưa đầu ra mới lên git. Nhánh `nam/content3`
+
+**Sửa gì**
+- `git rm` 8 file cũ trong `ai/data/kg/`: `linked_products.csv`, `compatible_item_edges.csv`, `compatibility_stats.json`, `kg_stats.json`, `mount_mapping.json`, `validation_log.txt`, `validation_samples_50.csv`, `unlinked_audit_samples_50.csv`.
+  - Trước khi gỡ, đã kiểm sha256: cả 8 file giống hệt bản sao lưu ở `ai/data/kg_v62abf54/` (bản này không lên git).
+  - Muốn xem lại bản của Hải thì lấy từ commit `62abf54`.
+- Đưa lên git đầu ra nội dung 3 mới: `compatibility_matrix.npz` (M), `unknown_mask.npz` (ma trận "không biết"), `item_attributes.csv`, `compat_pairs.csv`.
+  - `.gitignore` vẫn chặn `ai/data/kg/*.npz`, nhưng thêm ngoại lệ `!` cho đúng 2 file `.npz` này.
+- Dữ liệu gốc (`ai/data/raw/`) và dữ liệu nguồn ngoài (`ai/data/external/`) vẫn **không** lên git.
+
+**Vì sao**
+- Các file cũ được sinh từ cách khớp model cũ (257 sản phẩm có ngàm) và mã sản phẩm cũ, nên không còn đúng với dữ liệu sau gộp lặp.
+- Cô yêu cầu nộp ma trận M (lỗi 3 trong STATUS).
+
+**Ảnh hưởng / phải làm theo**
+- `04_build_knowledge_graph.py` đọc `linked_products.csv`, `compatibility_matrix.npz` theo định dạng cũ, `body_index.json`, `lens_index.json`, nên **hiện không chạy được**. Phải sửa để đọc `item_attributes.csv` và `compat_pairs.csv`.
+- `common_05.py` đọc `compatible_item_edges.csv` (đã gỡ), nên các baseline nội dung 5 cũng phải sửa theo.
+
+---
+
 ## 07/10/2026: Ghi đè `ai/data/kg/` bằng đầu ra nội dung 3 mới; QĐ 11; đo độ chính xác bằng nguồn ngoài. Nhánh `nam/content3`
 
 **Sửa gì**

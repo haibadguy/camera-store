@@ -46,6 +46,9 @@ ai/data/interim/
 ai/data/kg_new/
 ai/data/kg/*.pt
 ai/data/kg/*.npz
+# Ma trận nội dung 3 phải nộp (cô yêu cầu) -> đưa lên git
+!ai/data/kg/compatibility_matrix.npz
+!ai/data/kg/unknown_mask.npz
 ai/data/kg/user_item_train_edges.csv
 ai/checkpoints/
 results/*.pt
