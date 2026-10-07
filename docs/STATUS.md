@@ -91,3 +91,4 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 |---|---|---|
 | 07/10/2026 | Không làm lại từ đầu, giữ khung của Hải và sửa | Khung code và nội dung 2 dùng được |
 | 07/10/2026 | Dựng môi trường `ai/.venv` (Python 3.12.10, torch 2.14.1+cu126, PyG 2.8.0.post1) trên nhánh `nam/setup`; thêm `CLAUDE.md` | Chạy thử: `torch.cuda.is_available()` = True, GPU GTX 1660 Ti, `RGCNConv` chạy được trên GPU. RecBole 1.2.0 import gói gốc được nhưng import `recbole.quick_start` lỗi thiếu `ray` — pipeline hiện không dùng RecBole |
+| 07/10/2026 | Chốt `ai/requirements-lock.txt` (pip freeze) làm môi trường chuẩn; thêm mục "An toàn" vào `CLAUDE.md` | Để kết quả tái lập được trên đúng phiên bản thư viện; repo dùng chung với Hải nên chỉ làm trên nhánh riêng |

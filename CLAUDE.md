@@ -36,5 +36,14 @@ Tóm tắt (tại 07/10/2026 — chi tiết và bản mới nhất xem STATUS.md
 - **RAM thường chỉ trống khoảng 5–6 GB** → dữ liệu lớn phải đọc từng phần (chunk / streaming), không nạp cả file vào bộ nhớ.
 - Python 3.12. Máy có cả Python 3.14 là bản mặc định của `py`, nên **luôn dùng venv** `ai/.venv`:
   - Chạy: `ai\.venv\Scripts\python.exe <script>`
-  - Tạo lại: `py -3.12 -m venv ai\.venv`, rồi cài torch từ `https://download.pytorch.org/whl/cu126`, sau đó `pip install -r ai/requirements.txt`.
+- **Môi trường chuẩn để tái lập kết quả là `ai/requirements-lock.txt`** (pip freeze từ `ai/.venv`, có sẵn dòng index CUDA 12.6 cho torch). Kết quả báo cáo phải chạy trên đúng các phiên bản này; đổi phiên bản thư viện thì cập nhật lại file lock và ghi vào nhật ký quyết định trong STATUS.md.
+  - Tạo lại: `py -3.12 -m venv ai\.venv`, rồi `ai\.venv\Scripts\python.exe -m pip install -r ai/requirements-lock.txt`.
+  - `ai/requirements.txt` chỉ ghi phiên bản tối thiểu, không dùng để tái lập kết quả.
 - Dự án và dữ liệu đặt ở ổ E.
+
+## 5. An toàn
+
+- **Khi Nam chưa đồng ý thì không:** xóa file nằm ngoài git, `git push`, `git reset`, `git clean`, `git checkout --`.
+- Không cài thư viện ra ngoài `ai/.venv`.
+- Không sửa hay ghi đè dữ liệu gốc trong `ai/data/raw`.
+- Repo dùng chung với Hải: **không commit lên `main`**, chỉ làm trên nhánh riêng.
