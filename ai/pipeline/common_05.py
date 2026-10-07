@@ -2,8 +2,8 @@
 05_common.py — Utilities dung chung cho tat ca scripts Muc 5.
 
 Hai protocol danh gia:
-  - Sampled (1+99): Hit@K, NDCG@K  -- 70,424 users
-  - Full-catalog:   CVR@K           -- 2,491 users co body linked trong train
+  - Sampled (1+99): Hit@K, NDCG@K  -- tat ca users (N_USERS)
+  - Full-catalog:   CVR@K           -- users co body linked trong train
 """
 
 import json
@@ -33,8 +33,15 @@ KG_PT         = DATA_DIR / "kg" / "kg_hetero.pt"
 COMPAT_CSV    = DATA_DIR / "kg" / "compatible_item_edges.csv"
 KG_STATS      = DATA_DIR / "kg" / "kg_stats.json"
 
-N_USERS = 70424
-N_ITEMS = 28867
+USER_MAP_JSON = DATA_DIR / "processed" / "user_map.json"
+ITEM_MAP_JSON = DATA_DIR / "processed" / "item_map.json"
+
+# Lay so user/item tu file map cua Muc 2 (khong ghi cung).
+# Dung len() nhu 04_build_knowledge_graph.py: id lien tuc 0..N-1.
+with open(USER_MAP_JSON, encoding="utf-8") as _f:
+    N_USERS = len(json.load(_f))
+with open(ITEM_MAP_JSON, encoding="utf-8") as _f:
+    N_ITEMS = len(json.load(_f))
 K_LIST  = [5, 10, 20]
 SEED    = 42
 

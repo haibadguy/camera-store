@@ -6,6 +6,33 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 07/10/2026: Bỏ số ghi cứng trong `common_05.py` và `04_build_knowledge_graph.py`. Nhánh `nam/content3`
+
+**Sửa gì**
+- `ai/pipeline/common_05.py`: `N_USERS` và `N_ITEMS` không còn ghi cứng `70424` / `28867`. Nay đọc từ `ai/data/processed/user_map.json` và `item_map.json` rồi lấy `len()`, giống cách `04_build_knowledge_graph.py` đã làm. Sửa luôn docstring đầu file (bỏ "70,424 users", "2,491 users").
+- `ai/pipeline/04_build_knowledge_graph.py`, phần ghi `kg_stats.json` (mục `notes`):
+  - `full_kcore_interactions`: trước ghi cứng `622997`, nay đọc `filtered_interactions` trong `ai/data/processed/filtering_stats.json`.
+  - `val_interactions`, `test_interactions`: trước ghi cứng `70424`, nay đếm số dòng của `val.txt` / `test.txt` (hàm mới `count_lines`).
+
+**Vì sao**
+- Sau khi gộp tương tác lặp (mục bên dưới), số người dùng và sản phẩm đã đổi. Ví dụ: nếu để `N_ITEMS = 28867` trong khi chỉ còn 27.940 sản phẩm, LightGCN sẽ tạo thừa 927 embedding sản phẩm "ma", còn bộ lấy mẫu âm có thể bốc trúng mã sản phẩm không tồn tại.
+- Lấy số từ file đầu ra của bước 2 thì lần sau dữ liệu đổi cũng không phải sửa tay.
+
+**Ảnh hưởng (kiểm bằng lệnh Python chạy ngày 07/10/2026)**
+
+| Hằng số | Cũ (ghi cứng) | Mới (đọc từ file) |
+|---|---:|---:|
+| `common_05.N_USERS` | 70.424 | 67.661 |
+| `common_05.N_ITEMS` | 28.867 | 27.940 |
+| `kg_stats.notes.full_kcore_interactions` | 622.997 | 595.515 |
+| `kg_stats.notes.val_interactions` / `test_interactions` | 70.424 / 70.424 | 67.661 / 67.661 |
+
+**Chưa làm / phải sửa tiếp**
+- **Chưa chạy lại toàn bộ script 04**, vì script 04 cần đầu ra của script 03 (nội dung 3), mà nội dung 3 đang được thiết kế lại.
+- Script 04 còn một chỗ ghi cứng nữa: `assert after == 257` (số sản phẩm đã gán ngàm theo bản cũ). Chỗ này phụ thuộc kết quả nội dung 3 nên chưa sửa; khi làm lại nội dung 3 phải bỏ hoặc thay.
+
+---
+
 ## 07/10/2026: Bước 01–02 (lọc dữ liệu, chia train/val/test). Nhánh `nam/fix-data`
 
 ### 1. Những điểm đã kiểm chứng là đúng (không sửa)

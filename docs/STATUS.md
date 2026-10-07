@@ -1,6 +1,6 @@
 # TRẠNG THÁI ĐỒ ÁN — Camera Recommender
 
-Cập nhật lần cuối: 07/10/2026 (chạy lại bước 01–02) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
+Cập nhật lần cuối: 07/10/2026 (khảo sát nội dung 3, nhánh `nam/content3`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
 
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
@@ -31,9 +31,9 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 |---|---|---|---|
 | 1 | Pipeline tổng quát | Đã triển khai (tài liệu) | Cần cập nhật sau khi sửa nội dung 3 và 5 |
 | 2 | Thu thập, lọc k-core, chia train/val/test | **Đã kiểm thử** (07/10) | Nhánh `nam/fix-data`: đã gộp tương tác lặp, số mới 67.661 users / 27.940 items / 595.515 tương tác. Báo cáo 2 chưa cập nhật theo số mới. Xem mục 4 và `docs/CHANGELOG.md` |
-| 3 | Entity Linking, ma trận M | Đã triển khai, **cần làm lại một phần** | Độ phủ chỉ 8,9%. Xem mục 4. **Phải chạy lại trên dữ liệu mới** (mã item đã đổi) |
+| 3 | Entity Linking, ma trận M | Đã triển khai, **cần làm lại một phần** | Độ phủ chỉ 8,9%. **Đã khảo sát dữ liệu cho thiết kế mới (07/10)**, xem `docs/content3_survey.md`; đang chờ Nam trả lời 6 câu [HỎI] trước khi viết code. **Phải chạy lại trên dữ liệu mới** (mã item đã đổi) |
 | 4 | Đồ thị tri thức | Đã triển khai, **cần làm lại sau nội dung 3** | 99% sản phẩm không có cạnh tri thức. **Phải chạy lại trên dữ liệu mới** |
-| 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `common_05.py` còn ghi cứng `N_USERS`/`N_ITEMS` cũ |
+| 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`/`item_map.json` (07/10, nhánh `nam/content3`) |
 | 6 | Module ràng buộc cứng và mềm | Chưa bắt đầu | |
 | 7 | Mô hình gợi ý theo bộ (GNN có quan hệ) | Chưa bắt đầu | |
 | 8 | Giải thích (path-based) | Chưa bắt đầu | |
@@ -78,6 +78,24 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 - Vì vậy LightGCN chỉ gợi ý sai ngàm khoảng 3%: vấn đề mà đề tài muốn giải quyết gần như không xuất hiện trong thí nghiệm, và đồ thị tri thức gần như rỗng.
 - Nguyên nhân: ngàm được suy ra bằng cách khớp đúng tên model với bảng 139 dòng, quá chặt.
 
+### Khảo sát cho nội dung 3 (07/10/2026, nhánh `nam/content3`, chi tiết ở `docs/content3_survey.md`)
+
+Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.940 sản phẩm.
+
+- **Script 03 cũ phân loại sai nhiều.** Trên dữ liệu mới, quy tắc của script 03 cho 1.364 "thân máy" / 1.434 "ống kính".
+  - Trong 1.364 "thân máy", chỉ 494 là máy thay được ống kính; 826 là máy compact, máy chụp lấy liền, máy phim (không có ngàm).
+  - Trong 1.434 "ống kính", 49 thuộc danh mục kính thiên văn, kính hiển vi, kính lọc, ống kính máy quay…
+- **`details["Compatible Mountings"]` nhiễu**, không dùng một mình được:
+  - 493 máy compact vẫn bị ghi ngàm;
+  - khi cả tiêu đề và trường này đều cho 1 ngàm, hai bên lệch nhau ở 4,8% ống kính và 5,4% thân máy.
+- **Quy tắc đề xuất** (ngàm lấy từ tiêu đề; thân máy suy từ dòng máy; ống kính dùng luật "hãng + DSLR"):
+  - 445 thân + 967 ống có ngàm = 5,05% số sản phẩm (cũ 0,9%), tức 85,1% số thân và ống thật;
+  - 8,83% số tương tác.
+  - **Chưa đo độ chính xác.** Claude xem sơ bộ 25 thân + 25 ống được gán ngàm, thấy đúng cả, nhưng đó chưa phải nhãn chuẩn.
+- **Kịch bản "gợi ý ống kính cho người đã có thân máy":** có 1.065 người dùng. Trong đó 326 người (30,6%) mua ống khác ngàm và không có ngàm chuyển chính hãng → ảnh hưởng cách đánh giá ràng buộc cứng.
+- **Rủi ro gộp biến thể:** 104/967 ống kính có ngàm là ống hãng thứ ba có > 1 asin con. Ngàm trong tiêu đề có thể không đúng với bản người dùng đã mua.
+- **Phát hiện phụ:** `camera_items_meta.jsonl` (đầu ra script 01) bỏ mất các trường `details`, `features`, `description`. Muốn dùng phải đọc lại từ file gốc.
+
 ### Hướng sửa (đề xuất, chờ Nam chốt)
 1. **Tách hai việc:** xác định ngàm trực tiếp từ tiêu đề và metadata Amazon (ví dụ "for Canon EF", "Sony E-mount") để tăng độ phủ cho ma trận M; khớp model để lấy thông số chi tiết thì giữ cách cũ, chấp nhận độ phủ thấp hơn.
 2. **Hai người chấm tay độc lập khoảng 200 mẫu** để đo độ chính xác thật của việc xác định ngàm.
@@ -101,6 +119,7 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 - [ ] Chốt hướng sửa vấn đề cốt lõi ở mục 4
 - [ ] Giữ hay bỏ Spring Boot (đề xuất: bỏ, chỉ dùng FastAPI + React)
 - [ ] Phân công lại vai trò sau khi đề tài chuyển hướng AI
+- [ ] Nội dung 3: trả lời 6 câu [HỎI] ở cuối `docs/content3_survey.md` (dùng `Compatible Mountings` làm dự phòng không; gộp hay tách EF/EF-S; M có mở rộng sang phụ kiện không; xử lý ống kính nhiều biến thể; đánh giá 30,6% ca mua khác ngàm; ai là người chấm thứ hai)
 - [x] Có bỏ bản ghi lặp trước k-core không? → **Có**, mỗi cặp (user, item) giữ 1 dòng sớm nhất (07/10, xem nhật ký)
 
 ## 7. Nhật ký quyết định
@@ -113,3 +132,5 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 | 07/10/2026 | Nội dung 2 nâng lên "Đã kiểm thử"; giữ nguyên code 01/02 (không sửa) | Chạy lại ra đúng số chính của Hải, RAM đỉnh 2,03 GiB vừa máy. Phát hiện 2 số sai trong báo cáo và vấn đề bản ghi lặp y hệt — ghi ở mục 4, lỗi 8–9, chờ Nam quyết có lọc trùng hay không |
 | 07/10/2026 | **Gộp tương tác lặp trước k-core:** mỗi cặp (user, parent_asin) chỉ giữ 1 tương tác có timestamp sớm nhất (sửa `01_filter_camera_domain.py`, nhánh `nam/fix-data`). Số mới: 67.661 users / 27.940 items / 595.515 tương tác, train 460.193 | (1) Bài toán là gợi ý sản phẩm người dùng chưa có, nên mỗi cặp user–item chỉ tính 1 lần. (2) Bản ghi lặp gây rò rỉ val/test: bản cũ có 2.544 user có val = test (2.396 do bản sao y hệt) và 1.166 user có test nằm trong train. (3) Đánh giá xếp hạng toàn bộ (`full_catalog_cvr`, `common_05.py:182-186`, và full ranking dự định dùng làm kết quả chính) loại các item đã có trong train, nên giữ lặp khiến item test không bao giờ trúng → kết quả sai. Lưu ý: `sampled_eval` (1+99) không loại item train, ở đó giữ lặp có thể làm kết quả đẹp giả. Sau sửa, cả ba loại trùng đều = 0 |
 | 07/10/2026 | Thêm `docs/CHANGELOG.md` và quy tắc ghi CHANGELOG vào `CLAUDE.md` | Để Hải biết chính xác những gì đã đổi so với commit `62abf54` |
+| 07/10/2026 | Nhánh `nam/content3` (tách từ `nam/fix-data`): `common_05.py` lấy `N_USERS`/`N_ITEMS` từ `user_map.json`/`item_map.json`; `04_build_knowledge_graph.py` lấy số tương tác từ `filtering_stats.json`, `val.txt`, `test.txt` | Số cũ ghi cứng (70.424 / 28.867) không còn đúng sau khi gộp lặp. Đã kiểm: đọc ra 67.661 / 27.940, val/test 67.661, k-core 595.515. Chưa chạy toàn bộ script 04 vì phụ thuộc nội dung 3 (còn `assert after == 257`). Ghi ở CHANGELOG |
+| 07/10/2026 | Khảo sát dữ liệu cho nội dung 3, **chưa viết pipeline**. Script khảo sát để ở `ai/survey/content3/`, đầu ra ở `ai/data/survey/` (không đưa lên git) | Để thiết kế lại nội dung 3 dựa trên số đếm thật. Kết quả và 6 câu hỏi chờ Nam chốt ở `docs/content3_survey.md` |

@@ -47,6 +47,9 @@ if sys.platform == "win32":
 USER_MAP   = "ai/data/processed/user_map.json"
 ITEM_MAP   = "ai/data/processed/item_map.json"
 TRAIN_TXT  = "ai/data/processed/train.txt"
+VAL_TXT    = "ai/data/processed/val.txt"
+TEST_TXT   = "ai/data/processed/test.txt"
+FILTER_STATS_JSON = "ai/data/processed/filtering_stats.json"
 LINKED_CSV = "ai/data/kg/linked_products.csv"
 COMPAT_NPZ = "ai/data/kg/compatibility_matrix.npz"
 BODY_IDX   = "ai/data/kg/body_index.json"
@@ -90,6 +93,12 @@ def log(msg: str) -> None:
     log_lines.append(msg)
 
 
+def count_lines(path: str) -> int:
+    """Đếm số dòng có dữ liệu (val/test: mỗi dòng = 1 tương tác của 1 user)."""
+    with open(path, encoding="utf-8") as f:
+        return sum(1 for line in f if len(line.split()) >= 2)
+
+
 # ── BƯỚC 1: Load inputs ───────────────────────────────────────────────
 log("=" * 60)
 log("BƯỚC 1: LOAD INPUTS")
@@ -97,6 +106,7 @@ log("=" * 60)
 
 user_map = json.load(open(USER_MAP, encoding="utf-8"))
 item_map = json.load(open(ITEM_MAP, encoding="utf-8"))
+FILTER_STATS = json.load(open(FILTER_STATS_JSON, encoding="utf-8"))
 body_idx = json.load(open(BODY_IDX, encoding="utf-8"))
 lens_idx = json.load(open(LENS_IDX, encoding="utf-8"))
 
@@ -428,9 +438,9 @@ stats = {
     "unknown_usecase_labels": sorted(unknown_uc),
     "notes": {
         "train_interactions": int(user_item_ei.shape[1]),
-        "full_kcore_interactions": 622997,
-        "val_interactions": 70424,
-        "test_interactions": 70424,
+        "full_kcore_interactions": FILTER_STATS["filtered_interactions"],
+        "val_interactions": count_lines(VAL_TXT),
+        "test_interactions": count_lines(TEST_TXT),
         "requires_adapter": "Out of scope — native mount compatibility only",
         "learnable_embeddings": "Defined in model (Mục 5), not stored in data.pt",
     },

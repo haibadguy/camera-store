@@ -41,6 +41,7 @@ ai/data/processed/*.json
 ai/data/processed/*.jsonl
 ai/data/processed/*.csv
 ai/data/processed_*/
+ai/data/survey/
 ai/data/kg/*.pt
 ai/data/kg/*.npz
 ai/data/kg/user_item_train_edges.csv
