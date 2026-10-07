@@ -42,6 +42,61 @@ FIXED_CAM_CATS = ["Point & Shoot Digital", "Instant Cameras", "Film Cameras", "U
 NON_PHOTO_CATS = ["Service Plans", "Electronics Warranties"]
 
 
+# --- Loại theo TIÊU ĐỀ (ưu tiên hơn danh mục; sửa lỗi phân loại 08/10/2026) ---
+# "Chủ thể" = phần tiêu đề trước for / fits / compatible / with / + / & / bundle...: nơi nói sản phẩm chính là gì.
+# Khác head(): GIỮ "(" và " - " để không cắt mất khẩu độ ("Sony E 55-210mm (SEL55210) F4.5-6.3") hay "(Body Only)".
+SUBJ_CUT = re.compile(r"(?:^|[\s(\[,])(?:for|fits?|compatible|designed|works|with|w/|bundles?|bundled|includes?|including|"
+                      r"plus|consists?)\b|\s\+|\+\s|\s&\s")
+
+
+def subject(t):
+    return SUBJ_CUT.split(t, maxsplit=1)[0]
+
+
+# Từ cho biết chủ thể là MÁY ẢNH (thân)
+# ("camera lens" không tính; "kit" chỉ tính khi có tiêu cự, vd "X-T30 XF18-55mm Kit" = máy + ống kit)
+CAM_NOUN = re.compile(r"\bcameras?\b(?!\s+lens)|\bbody\b|\bdslr\b|\bd-slr\b|\bslr\b|\bmirrorless\b|\brangefinder\b|\bdslm\b|"
+                      r"\binterchangeable\b|\bcompact\s+system\b|\d\s?mp\b|\bmegapixels?\b|\d\s?mm\b.*\bkit\b")
+# Chủ thể có các từ này thì KHÔNG phải thân máy (phụ kiện nhắc tên máy: pin, ốp, sách hướng dẫn, cốc mắt ngắm...)
+ACC_BODY = re.compile(r"\b(?:accessor(?:y|ies)|replacement|eyepiece|housing|armou?r|coupler|introduction|guide|book|dvd|"
+                      r"manual|training|monopod|shutter|release|dummy|plate|rig|light|microphone|mic|memory|card|lcd|"
+                      r"glass|shield|guard|hot\s?shoe|leash|wrap|sleeve|holster|tether|stand|dock|controller|trigger|"
+                      r"intervalometer|gps|receiver|transmitter|lens\s+mount|mount\s+adapter|starter\s+kit|software|"
+                      r"upgrade|firmware)\b|monopod|tripod")
+# Dòng máy ống liền (compact) của các hãng: có tên hãng nhưng không có ngàm
+COMPACT_LINE = re.compile(r"\b(?:cyber-?shot|dsc-|powershot|coolpix|finepix|ixus|elph|easyshare|stylus|tough|pixpro|"
+                          r"lumix\s+(?:dmc-|dc-)?(?:fz|zs|tz|lx|fx|fh|fs|sz|ts|xs|lf|zr)\d*)")
+# Chủ thể có tiêu cự + khẩu độ nhưng không phải ống máy ảnh
+LENS_NEG_TITLE = re.compile(r"\b(?:telescopes?|microscopes?|binoculars?|monoculars?|spotting|scope|projector|cctv|"
+                            r"cs[\s-]mount|security|surveillance|webcam|dash|camcorders?|drone|gopro|magnifier|loupe|"
+                            r"eyepiece|barlow|glasses|sunglasses|replica|keychains?|key\s+chains?|shotglass|toy|"
+                            r"covers?|neoprene|camo(?:uflage)?|foot|plate|collar|handle|quick[\s-]?release|replacement|"
+                            r"(?:tripod|mount|adapter|step-?(?:up|down)|reverse|reversing)\s+rings?|"
+                            r"(?:1\.4|1\.7|2\.0|2)\s?x)\b|\w+scope\b|\badapt\w*"
+                            r"|\d\s?mp\b|\bmegapixels?\b|\b(?:digital|compact|bridge|video|action|instant|underwater|"
+                            r"film)\s+cameras?\b")
+
+
+def title_body(t):
+    """Chủ thể của tiêu đề nói đây là THÂN MÁY: có dòng máy + từ chỉ máy ảnh, không có từ phụ kiện / dòng compact,
+    và không có tiêu cự+khẩu độ đứng TRƯỚC dòng máy (tránh 'Canon EF 50mm f/1.8 ... Rebel')."""
+    s = SUBJ_CUT.split(t, maxsplit=1)[0].split(",")[0]
+    if not CAM_NOUN.search(s) or ACC_WORDS.search(s) or ACC_BODY.search(s) or LENS_NEG.search(s) or COMPACT_LINE.search(s):
+        return False
+    hit = body_series_match(s)
+    if not hit:
+        return False
+    lp = LENS_POS.search(s)
+    return not (lp and lp.start() < hit.start())
+
+
+def title_lens(t):
+    """Chủ thể của tiêu đề là ỐNG KÍNH: có tiêu cự + khẩu độ, không có từ phụ kiện / máy ảnh / kính thiên văn..."""
+    s = subject(t)
+    return bool(LENS_POS.search(s)) and not LENS_NEG.search(s) and not LENS_NEG_TITLE.search(s) \
+        and not COMPACT_LINE.search(s)
+
+
 def category_group(cats):
     p = " > ".join(cats)
     if "Lenses > Camera Lenses" in p:
@@ -175,8 +230,10 @@ BODY_SERIES = [
     ("canon|eos", r"\beos[\s-]?m(?:\d{1,3})?(?:\s?mark\s?ii)?\b", "canon_efm", "apsc", "EOS M"),
     ("canon|eos", r"\b(?:eos[\s-]?)?(?:5ds\s?r?|5d|6d|1ds|1d\s?x|1d\s?c)(?:\s?(?:mark|mk)\s?(?:ii|iii|iv|2|3|4))?\b",
      "canon_ef", "ff", "DSLR full-frame"),
-    ("canon|eos", r"\beos[\s-]?1v\b|\beos\b.*\b(?:film|35mm)\b|\b(?:elan|rebel\s+(?:g|k2|ti|2000|x))\b", "canon_ef", "ff",
+    ("canon|eos", r"\beos[\s-]?1v\b|\beos\b.*\b(?:film|35mm)\b|\b(?:elan|rebel\s+(?:g(?:ii)?|k2|ti|2000|x))\b", "canon_ef", "ff",
      "máy phim EOS"),
+    ("canon", r"\b(?:ae-1(?:\s+program)?|a-1|at-1|av-1|al-1|ftb|t50|t70|t90)\b|(?<![\d.])f-1\b(?!\.)", "canon_fd", "ff",
+     "máy phim Canon FD"),
     ("canon|eos", r"\b(?:eos[\s-]?)?1d(?:\s?(?:mark|mk)\s?(?:ii|iii|iv|2|3|4)\s?n?)?\b", "canon_ef", "khac",
      "APS-H (1D Mk I-IV)"),
     ("canon|eos", r"\b(?:eos[\s-]?)?(?:10d|d30|d60)\b", "canon_ef", "apsc", "APS-C đời đầu, không nhận EF-S"),
@@ -201,11 +258,14 @@ BODY_SERIES = [
     ("sony|alpha|minolta", r"\bdslr-?a\d{3}|\bslt-?a\d{2}|\bilca-?\d{2}|\ba(?:33|35|37|55|57|58|65|68|77)(?:v|\s?ii)?\b"
                            r"|\b(?:dslr-?)?a(?:100|200|230|290|300|330|350|380|390|450|500|550|560|580|700)[a-z]{0,2}\b"
                            r"|\bmaxxum\s+\d+d\b|\bdynax\s+\d+d\b", "sony_a", "apsc", "A APS-C"),
+    ("minolta|maxxum|dynax", r"\b(?:maxxum|dynax)\s+\d{1,4}(?:xi|si|i)?\b", "sony_a", "ff",
+     "Minolta Maxxum/Dynax phim (ngàm A)"),
     # Fujifilm
-    ("fuji", r"\bx-?(?:t|e|pro|h|s|a|m)\d", "fuji_x", "apsc", "Fujifilm X"),
+    ("fuji", r"\bx-?(?:t|e|pro|h|a|m)\d|\bx-?s\d{2}", "fuji_x", "apsc", "Fujifilm X (X-S10/S20; X-S1 là máy ống liền)"),
     ("fuji", r"\bgfx\b", "fuji_g", "khac", "GFX medium format"),
     # Olympus / OM / Panasonic
-    ("olympus|om system|om-d", r"\bom-d\b|\be-m\d|\be-p[lm]?\d|\bpen-f\b|\bom-[15]\b(?!.*\bfilm\b)", "mft", "khac", "MFT"),
+    ("olympus|om system|om-d", r"\bom-d\b|\be-m\d|\be-p[lm]?\d|\bpen-f\b|\bom-[15]\b(?!.*\b(?:film|35mm)\b)", "mft", "khac",
+     "MFT (OM-1/OM-5 số; OM-1 phim 35mm ngàm OM thì loại)"),
     ("olympus", r"\b(?:evolt\s+)?e-?(?:1|3|5|30|300|330|400|410|420|450|500|510|520|600|620)\b", "four_thirds", "khac",
      "Four Thirds DSLR"),
     ("panasonic|lumix", r"\b(?:dmc-|dc-)?g(?:h|x|f|m)?\d{1,3}[a-z]{0,6}\b", "mft", "khac", "Lumix G (MFT)"),
@@ -213,15 +273,31 @@ BODY_SERIES = [
     ("leica", r"\bsl\d?\b", "l_mount", "ff", "Leica SL"),
     ("leica", r"\b(?:cl|tl\d?)\b", "l_mount", "apsc", "Leica CL/TL"),
     ("leica", r"\bm(?:9|10|11|240|262)\b|\bm-[ep]\b|\bm\s+typ", "leica_m", "ff", "Leica M số"),
+    ("leica", r"\bm8(?:\.2)?\b", "leica_m", "khac", "Leica M8 (APS-H, crop 1,33)"),
+    ("leica", r"\bm[2-7]\b", "leica_m", "ff", "Leica M phim 35mm"),
     # Pentax
+    ("pentax|asahi", r"\bspotmatic\b", "m42", "ff", "Spotmatic (máy phim ngàm M42)"),
+    ("pentax", r"\bk-?1000\b|\bme\s+(?:super|f)\b|\bmx\b(?!-)|\bsuper\s+program\b|\bprogram\s+(?:a|plus)\b"
+               r"|\b(?:zx|mz|pz)-\d+\b", "pentax_k", "ff", "máy phim ngàm K"),
     ("pentax", r"\bk-?1\b", "pentax_k", "ff", "K-1"),
     ("pentax", r"\bk-?(?:\d{1,2}|\d{2,3}d|\d{3,4}|s\d|r|x|p|f|01|m)(?:\s?i{2,3})?\b|\bkp\b|\*ist|\bk\d{3}d\b", "pentax_k", "apsc", "K APS-C"),
     ("pentax", r"\bpentax\s+q(?:\d+|-s1)?\b", "pentax_q", "khac", "Pentax Q"),
     # Samsung, Sigma
-    ("samsung", r"\bnx\s?\d{1,4}[a-z]*\b(?!.*\bmini\b)|\bgalaxy\s+nx\b", "samsung_nx", "apsc", "Samsung NX"),
+    ("samsung", r"\bnx\s?\d{1,4}(?![\d-]|\s?mm)[a-z]*\b(?!.*\bmini\b)|\bgalaxy\s+nx\b", "samsung_nx", "apsc",
+     "Samsung NX (không bắt 'NX 60mm', 'NX 18-55mm' của ống)"),
     ("sigma", r"\bsd\s?(?:1|9|10|14|15)\b|\bsd\s+quattro\b", "sigma_sa", "apsc", "Sigma SD"),
 ]
 _SERIES = [(re.compile(r"\b(?:" + b + r")"), re.compile(p), m, k, n) for b, p, m, k, n in BODY_SERIES]
+
+
+def body_series_match(s):
+    """Như body_series nhưng trả về đối tượng khớp (để biết vị trí). s đã viết thường."""
+    for brand, r, m, k, n in _SERIES:
+        if brand.search(s):
+            mo = r.search(s)
+            if mo:
+                return mo
+    return None
 
 
 def body_series(title):
@@ -296,7 +372,15 @@ def classify_item(title, cats, n_child_asin=0):
                uncertain=False, uncertain_reason="")
 
     # ---- Loại ----
-    if g == "lens_cat":
+    # 1) Tiêu đề trước: thân / ống nói rõ trong chủ thể của tiêu đề thì không cần danh mục
+    #    (ống bán kèm combo nằm ở "Accessory Kits", thân bị xếp vào "Point & Shoot", máy phim SLR...).
+    #    Ống theo tiêu đề chỉ áp cho danh mục "khác": danh mục ống / thân / máy ống liền đã có luật riêng bên dưới.
+    if g != "non_photo" and title_body(t):
+        typ = "than"
+    elif g == "other" and title_lens(t):
+        typ = "ong"
+    # 2) Không rõ từ tiêu đề: dùng danh mục như cũ
+    elif g == "lens_cat":
         if LENS_NEG.search(h):
             typ = "phu_kien"
         elif LENS_POS.search(t) or (re.search(r"\d\s?mm", t) and find_mounts(title)):

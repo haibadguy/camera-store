@@ -6,6 +6,103 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 08/10/2026: Sửa lỗi phân loại thân / ống / phụ kiện (`mount_detect.py`), chấm holdout một lần. Nhánh `nam/content3`
+
+**Cách làm (giữ số đo độc lập, QĐ 13)**
+- Chỉ xem ca sai của nửa **fix** (`eval_split_report.py --errors`, chỉ in nửa fix). Ngoài ra chỉ xem các sản phẩm **không** nằm trong holdout (lọc theo `eval_split.csv` trước khi in).
+- Log tổng của `eval_external.py` có lẫn số của holdout nên trong lúc sửa chỉ ghi ra file nháp, không đọc.
+- Chốt quy tắc xong mới chạy lại pipeline vào `ai/data/kg/` và chấm holdout **một lần**.
+- Bước khớp tên của phía đánh giá **không sửa**. `eval_external.py` chỉ thêm tham số `--ours / --out-csv / --out-json` để chạy vào thư mục nháp.
+
+**Ca sai loại của nửa fix trước khi sửa: 84 sản phẩm**, chia 2 nhóm:
+- **68 ca quy tắc sai thật**, do quy tắc tin danh mục Amazon:
+  - 47 ống bán kèm combo bị xếp phụ kiện. Amazon xếp chúng vào "Accessory Kits", "Accessory Bundles", "Filter Sets", thậm chí "Tablets" hay "Microscope Accessories". Ví dụ: "Canon EF 50mm f/1.8 STM Lens with 3pc Filter Kit…", "Fujinon XF33mmF1.4 R LM WR" (danh mục Tablets).
+  - 15 thân thành "khác": 11 thân bị xếp "Point & Shoot" (Olympus E-P1, Lumix G3, Sony a6000…), 1 thân trong "Instant Cameras" (Nikon D5500), 3 máy phim SLR (Canon EOS Rebel 2000, Nikon F100, Canon AE-1 Program).
+  - 3 thân thành phụ kiện: Leica M8 (thiếu luật dòng máy), Olympus E-5 nằm trong danh mục ống, Sony a7 III bán kèm combo.
+  - 2 thân bán kèm ống nằm trong danh mục ống thành "ống": Sony a5100 + 16-50mm, Fujifilm X-T30 + XF18-55mm.
+  - 1 máy ống liền thành thân: Fujifilm X-S1 bị luật dòng máy Fuji X bắt nhầm.
+- **16 ca đáp án sai**, quy tắc đúng. Bước khớp tên bắt nhầm phụ kiện có nhắc tên máy:
+  - pin LP-E6 "Canon EOS 60D EOS 7D EOS 5D Mark II", dây bấm mềm, chân máy, ốp, cốc mắt ngắm A6500, DC coupler Lumix;
+  - sách "Introduction To Canon EOS 70D", ống chuyển đổi gắn ren "0.42x … for Canon Rebel SL1";
+  - bộ cốc hình ống kính "LenZcup EF Shotglass", vỏ chống nước RX100, ống phụ gắn ngoài ZV-1…
+
+**Sửa gì** (`ai/pipeline/mount_detect.py`)
+1. **Loại xét theo tiêu đề trước, danh mục chỉ là dự phòng.** "Chủ thể" là phần tiêu đề trước *for / fits / compatible / with / w/ / + / & / bundle / includes…*. Khác `head()` cũ ở chỗ giữ "(" và " - ".
+   - **Thân theo tiêu đề** (`title_body`, áp cho mọi danh mục trừ bảo hành): chủ thể (cắt thêm ở dấu phẩy) phải có đủ:
+     - một luật dòng máy;
+     - một từ chỉ máy ảnh: camera (trừ "camera lens"), body, DSLR, SLR, mirrorless, rangefinder, DSLM, interchangeable, "xx MP"; hoặc "kit" kèm tiêu cự;
+     - không có từ phụ kiện (ACC_WORDS, LENS_NEG, danh sách mới `ACC_BODY`: accessory, replacement, eyepiece, housing, coupler, introduction, guide, book, monopod, shutter release, starter kit, software, upgrade…);
+     - không thuộc dòng máy compact (Cyber-shot, PowerShot, Coolpix, FinePix, Lumix FZ/ZS/LX…);
+     - không có tiêu cự + khẩu độ đứng trước dòng máy.
+   - **Ống theo tiêu đề** (`title_lens`, chỉ áp cho danh mục "khác"; danh mục ống / thân / máy ống liền vẫn dùng luật cũ):
+     - chủ thể có tiêu cự + khẩu độ;
+     - không có từ phụ kiện: hood, cap, filter… và danh sách mới `LENS_NEG_TITLE` (cover, foot, plate, tripod ring, quick release, *scope, adapt*, 1.4x/2x, replica, shotglass, MP, "digital camera"…);
+     - không thuộc dòng máy compact.
+2. **Luật dòng máy** (`BODY_SERIES`):
+   - thêm máy phim Canon FD (AE-1, AE-1 Program, A-1, AT-1, AV-1, AL-1, FTb, T50/T70/T90, F-1) → `canon_fd`, ff;
+   - thêm máy phim Pentax ngàm K (K1000, ME Super, MX, Program A/Plus, ZX-/MZ-/PZ-) → `pentax_k`, ff;
+   - thêm Spotmatic → `m42`, ff;
+   - thêm máy phim Minolta Maxxum/Dynax → `sony_a`, ff;
+   - thêm Leica M8 → `leica_m`, khung `khac` (APS-H, crop 1,33); Leica M2–M7 phim → `leica_m`, ff;
+   - "Rebel GII" thêm vào luật máy phim EOS;
+   - luật Fuji X không bắt X-S1 (máy ống liền), chỉ bắt X-S10/X-S20;
+   - luật Samsung NX không bắt "NX 60mm", "NX 18-55mm" (đó là tên ống). Nếu không sửa, luật thân theo tiêu đề sẽ biến 10 ống Samsung NX thành thân;
+   - Olympus OM-1/OM-5: thêm "35mm" vào điều kiện loại máy phim ngàm OM.
+3. Ngàm, khung, bảng luật tương thích (`mount_rules.toml`) và `03_mount_compat.py`: **không đổi**.
+
+**Kiểm tra phụ trước khi chốt** (không dùng holdout)
+- Đổi loại trên các sản phẩm **ngoài holdout** (so `item_attributes.csv` trước/sau, script nháp): phụ kiện → ống 138, khác → thân 32, phụ kiện → thân 7, ống → thân 2, thân → khác 1 (X-S1). Claude đọc hết từng tiêu đề.
+  - 2 lượt sửa đầu còn sai: 10 ống Samsung NX, "Canon Digital Rebel Kit with Case…", "Nikon D3000-D5000 DSLR Starter Kit", "Water Resistant Kit CVR-XT2", phần mềm "V-Log L Upgrade", vòng chân máy, đế tháo nhanh, áo trùm ống, ống ngắm phụ (guidescope), teleconverter 1.4X. Đã chặn hết bằng các luật ở mục 2 và danh sách từ phụ kiện.
+  - Bản chốt: Claude xem lại hết, không thấy ca đổi sai.
+- Mẫu dev 50 (`label_dev_50_claude.csv`), chỉ tính 36 mẫu **không** thuộc holdout (14 mẫu dev nằm trong holdout): trước = sau = loại 35/36, ngàm 32/36, khung 30/36.
+
+**Ảnh hưởng: độ chính xác so với nguồn ngoài**
+- Script: `eval_external.py` rồi `eval_split_report.py --holdout`. Log: `ai/data/survey/run_typefix_report.log`.
+- Bản "trước": `ai/data/survey/before_typefix/eval_external_matches.csv`. Đã chạy lại từ mã commit `68ffa56`: mọi cột đúng/sai giống hệt. Chỉ cột tên hiển thị `ten_nguon` khác ở 24 dòng, do thứ tự `set` của Python; từ nay chạy với `PYTHONHASHSEED=0`.
+- Khoảng tin cậy 95% (Wilson) ghi trong ngoặc.
+
+| Chỉ số | Fix trước | Fix sau | **Holdout trước** | **Holdout sau** |
+|---|---:|---:|---:|---:|
+| Loại đúng, Lensfun | 481/548 = 87,8% | 535/548 = 97,6% | 502/571 = 87,9% [85,0–90,3] | **565/571 = 98,9%** [97,7–99,5] |
+| Loại đúng, Wikidata | 245/295 = 83,1% | 283/295 = 95,9% | 263/315 = 83,5% [79,0–87,2] | **305/315 = 96,8%** [94,3–98,3] |
+| Loại đúng theo sản phẩm (đúng ở mọi nguồn) | 514/598 = 86,0% | 582/598 = 97,3% | 527/612 = 86,1% [83,1–88,6] | **598/612 = 97,7%** [96,2–98,6] |
+| Ngàm đúng / gán, Lensfun | 314/319 = 98,4% | 352/357 = 98,6% | 358/366 = 97,8% [95,7–98,9] | 391/402 = 97,3% [95,2–98,5] |
+| Ngàm đúng / gán, Wikidata | 212/212 | 239/239 | 238/238 | 266/266 |
+| Khung thân đúng / gán, Lensfun | 161/161 | 177/177 | 190/190 | 204/204 |
+| Khung thân đúng / gán, openMVG | 93/94 | 106/106 | 121/121 | 132/133 = 99,2% |
+
+Bảng nhầm loại của holdout sau sửa (đáp án → quy tắc): thân → phụ kiện 5, thân → khác 2, thân → ống 1, ống → thân 1, khác → phụ kiện 2, khác → thân 1.
+- **Chưa xem từng ca sai của holdout**, nên chưa biết bao nhiêu trong 14 ca là đáp án sai. Ở nửa fix, 16/16 ca còn lại đều là đáp án sai.
+- Ngàm theo Lensfun ở holdout: số được gán tăng 366 → 402 (thêm thân/ống vừa được nhận đúng loại), số sai tăng 8 → 11. Chưa xem 3 ca sai mới.
+
+**Ảnh hưởng: số sản phẩm và ma trận M** (`ai/data/kg/mount_compat_log.txt`)
+
+| Chỉ số | Trước | Sau |
+|---|---:|---:|
+| Thân (`than`) | 488 | **544** |
+| Ống (`ong`) | 1.143 | **1.337** |
+| Máy ống liền / khác (`khac`) | 1.802 | 1.758 |
+| Phụ kiện | 24.507 | 24.301 |
+| Thân có 1 ngàm (hàng của M) | 482 | **538** |
+| Ống có 1 ngàm / "không chắc" QĐ 4 / vào M | 999 / 113 / 886 | **1.167 / 130 / 1.037** |
+| Kích thước M | 482 × 886 | **538 × 1.037** |
+| Cặp M = 1 | 56.276 | **75.690** |
+| … trong đó cờ "chưa rõ có cắt khung" (QĐ 11) | 1.638 | 2.186 |
+| Cặp "không biết" | 1.836 | 2.960 |
+
+**Còn chưa chắc / phải làm theo**
+- **Máy phim trong M (cần Nam quyết).** Sau sửa có 17 thân máy phim (Nikon F 7, Canon EF 8, Canon FD 2); trước chỉ có 2.
+  - Bảng luật đang coi chúng là thân FF. Nên ống DX trên thân Nikon phim bị xếp `crops_sensor` (M = 1): **462 cặp**, trước sửa 53. Luật QĐ 11 còn cho thêm **294 cặp** M = 1 có cờ, trước sửa 36.
+  - Nhưng máy phim **không có chế độ cắt khung**: ống DX sẽ tối góc. Thân cơ như FM-10 còn không chỉnh được khẩu độ với ống G (không có vòng khẩu).
+  - Canon EF phim + EF-S → `incompatible`: đúng.
+- Hai ống mới được nhận loại có ngàm chưa chuẩn (lỗi bước gán ngàm, không thuộc lần sửa này):
+  - "Sigma 150-600mm … (for Canon EOS) & MC-11 Mount Converter" bị gán `sony_e`;
+  - "Lightdow 420-800mm … + T Mount Ring for Nikon" bị gán `t_mount`, trong khi QĐ 9 nói phải theo ngàm của vòng.
+- Kết quả holdout là **lần chấm duy nhất**. Nếu sửa thêm quy tắc thì holdout không còn độc lập.
+- Script 04 / `common_05.py` vẫn chưa đọc được đầu ra mới (như mục dưới).
+
+---
+
 ## 08/10/2026: Gỡ các file nội dung 3–4 cũ của Hải khỏi `ai/data/kg/`; đưa đầu ra mới lên git. Nhánh `nam/content3`
 
 **Sửa gì**

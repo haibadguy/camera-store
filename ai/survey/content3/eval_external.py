@@ -300,7 +300,14 @@ def ctoks(s):
 
 
 def main():
-    ours = list(csv.DictReader(open(OURS, encoding="utf-8")))
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--ours", default=OURS)
+    ap.add_argument("--out-csv", default=OUT_CSV)
+    ap.add_argument("--out-json", default=OUT_JSON)
+    args = ap.parse_args()
+    out_csv, out_json = args.out_csv, args.out_json
+    ours = list(csv.DictReader(open(args.ours, encoding="utf-8")))
     lf_c, lf_l = load_lensfun()
     om_c = load_openmvg()
     wd_c, wd_l = load_wikidata()
@@ -374,10 +381,10 @@ def main():
         print(f"  khung: đáp án có {st['khung_n']}; quy tắc gán {st['khung_gan']}, đúng {pct(st['khung_dung'], st['khung_gan'])}; "
               f"quy tắc để trống {st['khung_bo_trong']}")
     cols = list(rows[0].keys())
-    with open(OUT_CSV, "w", encoding="utf-8-sig", newline="") as f:
+    with open(out_csv, "w", encoding="utf-8-sig", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols); w.writeheader(); w.writerows(rows)
-    json.dump(summary, open(OUT_JSON, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
-    print(f"\n-> {OUT_CSV} ({len(rows)} dòng), {OUT_JSON}")
+    json.dump(summary, open(out_json, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+    print(f"\n-> {out_csv} ({len(rows)} dòng), {out_json}")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # TRẠNG THÁI ĐỒ ÁN — Camera Recommender
 
-Cập nhật lần cuối: 08/10/2026 (nội dung 3: chia đôi tập đánh giá, dọn `ai/data/kg/`, nhánh `nam/content3`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
+Cập nhật lần cuối: 08/10/2026 (nội dung 3: sửa lỗi phân loại, chấm holdout một lần, nhánh `nam/content3`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
 
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
@@ -31,14 +31,14 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 |---|---|---|---|
 | 1 | Pipeline tổng quát | Đã triển khai (tài liệu) | Cần cập nhật sau khi sửa nội dung 3 và 5 |
 | 2 | Thu thập, lọc k-core, chia train/val/test | **Đã kiểm thử** (07/10) | Nhánh `nam/fix-data`: đã gộp tương tác lặp, số mới 67.661 users / 27.940 items / 595.515 tương tác. Báo cáo 2 chưa cập nhật theo số mới. Xem mục 4 và `docs/CHANGELOG.md` |
-| 3 | Entity Linking, ma trận M | **Đã kiểm thử** (07/10, bản mới) | Độ phủ chỉ 8,9%. **Đã khảo sát dữ liệu cho thiết kế mới (07/10)**, xem `docs/content3_survey.md`. **Bản mới đã ghi vào `ai/data/kg/`** (bản cũ sao lưu ở `kg_v62abf54/`): 482 thân × 886 ống, 56.276 cặp M = 1 (1.638 cặp có cờ "chưa rõ có cắt khung"), 1.836 cặp "không biết".
+| 3 | Entity Linking, ma trận M | **Đã kiểm thử** (08/10, đã sửa lỗi phân loại) | Thiết kế mới dựa trên khảo sát 07/10 (`docs/content3_survey.md`). **Bản mới trong `ai/data/kg/`** (bản của Hải sao lưu ở `kg_v62abf54/`): 538 thân × 1.037 ống, 75.690 cặp M = 1 (2.186 cặp có cờ "chưa rõ có cắt khung"), 2.960 cặp "không biết".
 
-Đối chiếu nguồn ngoài (`eval_external.py`):
-- ngàm đúng 98,1% (Lensfun, 685 sản phẩm) và 100% (Wikidata, 450); 13 ca lệch đều do đáp án hoặc bước khớp;
-- khung thân đúng 100% (Lensfun, 351) và 99,5% (openMVG, 215);
-- **loại chỉ đúng 87,8% / 83,3%**: ống và thân bị Amazon xếp sai danh mục nên quy tắc xếp thành phụ kiện / khác.
+**Đã sửa lỗi phân loại (08/10):** xét loại theo tiêu đề trước, danh mục chỉ là dự phòng. Kết quả chấm một lần trên nửa **holdout** (747 sản phẩm):
+- loại đúng **98,9%** (Lensfun) / **96,8%** (Wikidata); trước sửa 87,9% / 83,5%;
+- ngàm đúng 97,3% (Lensfun, 402) / 100% (Wikidata, 266);
+- khung thân đúng 100% (Lensfun) / 99,2% (openMVG).
 
-Chưa sửa lỗi loại. Script 04/05 chưa đọc đầu ra mới. **Phải chạy lại trên dữ liệu mới** (mã item đã đổi) |
+Chi tiết ở CHANGELOG. **Còn chờ Nam:** cách xử lý thân máy phim trong M (mục 6). Script 04/05 chưa đọc đầu ra mới |
 | 4 | Đồ thị tri thức | Đã triển khai, **cần làm lại sau nội dung 3** | 99% sản phẩm không có cạnh tri thức. **Phải chạy lại trên dữ liệu mới** |
 | 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`/`item_map.json` (07/10, nhánh `nam/content3`) |
 | 6 | Module ràng buộc cứng và mềm | Chưa bắt đầu | |
@@ -119,7 +119,10 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 3. **Đáp án ngoài cũng có lỗi.** Lensfun ghi ngàm và crop của ống theo máy dùng để hiệu chỉnh (vd EF 75-300 III bị ghi "EF-S"), nên không dùng Lensfun để chấm khung của ống. Wikidata không có khổ cảm biến. openMVG không có ngàm.
 4. **Chưa đo được khung của ống kính** bằng nguồn độc lập.
 5. **Mẫu dev 50 do Claude chấm**, tức người chấm cũng là người viết quy tắc, nên không độc lập (QĐ 10). Không có người chấm thứ hai, nên không tính được độ đồng thuận (kappa).
-6. **Lỗi phân loại đã biết, chưa sửa:** quy tắc tin danh mục Amazon. Ống bán kèm combo ("Accessory Kits"), thân bị Amazon xếp vào "Point & Shoot", và máy phim SLR đều bị xếp sai loại, nên bị loại khỏi M.
+6. **Lỗi phân loại: đã sửa 08/10.** Trước khi sửa, quy tắc tin danh mục Amazon nên ống bán kèm combo, thân bị xếp vào "Point & Shoot" và máy phim SLR bị xếp sai loại. Sau khi sửa, số đo trên holdout là 98,9% / 96,8% (Lensfun / Wikidata). Cần nêu trong báo cáo:
+   - (a) Luật mới được viết sau khi xem 84 ca sai của nửa fix. Ngoài nửa fix, chỉ xem thêm các sản phẩm không thuộc holdout.
+   - (b) Đáp án ngoài có lỗi khớp tên. Cả 16 ca sai còn lại ở nửa fix đều là đáp án sai (pin, sách, ốp… có nhắc tên máy). 14 ca sai ở holdout chưa xem.
+   - (c) Holdout đã dùng: nếu sửa thêm quy tắc thì không còn tập đo độc lập.
 7. **Không biết người dùng mua bản ngàm nào** khi một `parent_asin` gộp nhiều bản (113 ống "không chắc", QĐ 4). Chỉ biết những thân máy mà người dùng có viết đánh giá (QĐ 5).
 8. **Nguồn của luật:** đọc trang hãng ngày 07/10/2026. Hai chỗ là suy rộng (danh sách thân Canon không nhận EF-S trên trang hãng dừng ở 6D; câu về LA-EA của Sony nói về ống DT).
 
@@ -160,7 +163,18 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 - [x] Nội dung 3: ghi đè `ai/data/kg/` → **đã làm** (sao lưu ở `kg_v62abf54/`)
 - [x] Nội dung 3: sửa lỗi phân loại thế nào để số đo vẫn độc lập → **chia đôi fix / holdout** (08/10); việc sửa để phiên sau
 - [x] Nội dung 3: đưa lên git các file `.npz`, `item_attributes.csv`, `compat_pairs.csv`; `git rm` các file cũ trong `ai/data/kg/` → **đã làm** (08/10)
-- [ ] Nội dung 3: sửa lỗi phân loại trên nửa **fix**, rồi chấm holdout một lần (phiên sau)
+- [x] Nội dung 3: sửa lỗi phân loại trên nửa **fix**, rồi chấm holdout một lần → **đã làm** (08/10, QĐ 15)
+- [ ] Nội dung 3: **thân máy phim trong M.** Sau sửa có 17 thân phim (trước 2). Bảng luật coi chúng là thân FF có chế độ cắt khung, nên:
+  - ống DX trên Nikon phim bị xếp `crops_sensor`, M = 1: 462 cặp;
+  - luật QĐ 11 cho thêm 294 cặp M = 1 có cờ.
+
+  Thực tế máy phim không cắt khung được (ống DX bị tối góc). Các hướng:
+  - (a) thêm luật: thân phim + ống APS-C → `unknown`;
+  - (b) thêm luật: thân phim + ống APS-C → `incompatible`;
+  - (c) bỏ máy phim khỏi M, chỉ giữ trong đồ thị.
+
+  Chờ Nam chọn.
+- [ ] Nội dung 3: có xem 14 ca sai loại của holdout để tách "đáp án sai" / "quy tắc sai" không? Chỉ để báo cáo; nếu xem thì không sửa quy tắc theo đó nữa.
 - [ ] Nội dung 4–5: sửa `04_build_knowledge_graph.py` và `common_05.py` để đọc đầu ra nội dung 3 mới (hiện không chạy được)
 - [x] Có bỏ bản ghi lặp trước k-core không? → **Có**, mỗi cặp (user, item) giữ 1 dòng sớm nhất (07/10, xem nhật ký)
 
@@ -197,3 +211,5 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 | 08/10/2026 | **QĐ nội dung 3 – 13:** chia đôi 1.493 sản phẩm khớp được thành fix 746 / holdout 747 (phân tầng theo loại đáp án, seed 20261008, `ai/survey/content3/eval_split.csv`). Sửa lỗi phân loại để phiên sau, chỉ được xem ca sai ở nửa fix; holdout chấm một lần sau khi chốt quy tắc | Để sửa quy tắc dựa trên ca sai mà vẫn có số đo độc lập |
 | 08/10/2026 | **QĐ nội dung 3 – 14:** đưa lên git `compatibility_matrix.npz`, `unknown_mask.npz`, `item_attributes.csv`, `compat_pairs.csv` (thêm ngoại lệ `!` trong `.gitignore`); gỡ khỏi nhánh 8 file cũ của Hải trong `ai/data/kg/` (đã kiểm sha256 trùng bản sao lưu `kg_v62abf54/`); không đưa dữ liệu gốc và dữ liệu nguồn ngoài | Cô yêu cầu nộp ma trận M; các file cũ dùng mã sản phẩm cũ, không còn đúng. Hệ quả: script 04 và `common_05.py` hiện không chạy được cho tới khi sửa (ghi ở CHANGELOG) |
 | 08/10/2026 | Thêm mục "Hạn chế cần nêu trong báo cáo (nội dung 3)" vào mục 4 | Nam yêu cầu. Gồm việc phía đánh giá đã chỉnh bước khớp tên 3 lần sau khi xem ca sai, trong khi quy tắc không đổi |
+| 08/10/2026 | **QĐ nội dung 3 – 15: sửa lỗi phân loại trong `mount_detect.py`, xét theo tiêu đề trước, danh mục là dự phòng.** "Thân theo tiêu đề" cần dòng máy + từ chỉ máy ảnh, không có từ phụ kiện / dòng compact. "Ống theo tiêu đề" (chỉ áp cho danh mục "khác") cần tiêu cự + khẩu độ, không có từ phụ kiện. Thêm luật dòng máy cho máy phim (Canon FD, Pentax K, M42, Minolta, Leica M), Leica M8; bỏ X-S1; không bắt "NX 60mm". Chạy lại `03_mount_compat.py` vào `ai/data/kg/`, chấm holdout một lần | Nam yêu cầu, theo quy ước QĐ 13: chỉ xem ca sai của nửa fix (84 ca: 68 lỗi quy tắc, 16 đáp án sai) và các sản phẩm ngoài holdout. Không đổi bước khớp tên, bảng luật, ngàm. Kết quả holdout: loại 87,9% → 98,9% (Lensfun), 83,5% → 96,8% (Wikidata); M 482 × 886 → 538 × 1.037; M = 1: 56.276 → 75.690. Bảng đầy đủ ở CHANGELOG. Phát sinh câu hỏi về thân máy phim trong M (mục 6) |
+| 08/10/2026 | `eval_external.py` thêm tham số `--ours / --out-csv / --out-json`; đưa `eval_split_report.py` lên git; chạy đánh giá với `PYTHONHASHSEED=0` | Để chạy thử vào thư mục nháp mà không ghi đè kết quả chính. Logic khớp tên không đổi. Cột `ten_nguon` (tên hiển thị) đổi giữa các lần chạy do thứ tự `set`, nhưng các cột đúng/sai không đổi: đã kiểm bằng cách chạy lại bản trước sửa |
