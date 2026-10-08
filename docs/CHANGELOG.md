@@ -6,6 +6,35 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 08/10/2026 (khuya, tiếp): nội dung 4, việc 2 — đo bước đọc tiêu cự / khẩu độ từ tiêu đề ống (đăng ký trước). Nhánh `nam/content4`
+
+Theo kế hoạch `docs/reviews/n4_focal_aperture_plan.md` (commit `c14300e`; sửa đổi mục 9 ở commit `e47e941`, **trước khi chạy holdout**). Không sửa code của Hải; mọi file dưới đây là file mới của nội dung 4.
+
+**Sửa gì**
+1. **Bộ đọc riêng cho đồ thị:** `ai/pipeline/lens_specs.py`.
+   - v0 chép nguyên `head_main` + `lens_sig` từ `eval_external.py`, để sửa ở đây không làm đổi bộ đánh giá của nội dung 3.
+   - v1 sửa 3 chỗ:
+     - S1: dải "f/1.8-22" là dải từ mở lớn nhất tới khép nhỏ nhất → bỏ số 22; dải toàn ≥ 11 như "f/22-32" → bỏ, đọc khẩu độ kế tiếp;
+     - S2: "12mm - 24mm";
+     - S3: khẩu độ đứng ngay sau "with".
+   - Có thêm hàm khoảng nút (`focal_nodes`, `aperture_node`).
+2. **Đáp án ngoài khớp không dùng thuộc tính cần đo:** `fa_match.py`. Kèm `fetch_wikidata_focal.py` (tải Wikidata P2151, 821 item, sha256 `42feaf8d…`).
+3. **Đo, đếm phân loại, kiểm:** `fa_eval.py`, `fa_errors.py`, `fa_reader_diff.py`, `test_lens_specs.py` (38/38 đúng).
+
+**Holdout: chạy một lần** (log `ai/data/survey/n4_fa/run_fa_eval_holdout_20261008.log`, file `fa_holdout_20261008.csv`). 325 ống, 570 ô. Khoảng tin cậy 95%: bootstrap theo cụm (mục nguồn), B = 10.000, seed 20261009. Không thấy lỗi script; không chạy lại. Số ghi ở đây **trước khi mở file ca lệch của holdout**.
+
+| Chỉ số (bộ đọc mới v1) | Lensfun | Wikidata | Theo ống |
+|---|---|---|---|
+| T1 tiêu cự đúng mm | 162/202 = 80,2% [70,4–89,7] | 108/140 = 77,1% [68,5–85,2] | 200/270 = 74,1% [65,9–81,9] |
+| **T2 tiêu cự đúng khoảng nút** | 165/202 = 81,7% [71,7–91,2] | 116/140 = 82,9% [75,4–89,9] | 211/270 = 78,1% [69,9–85,9] |
+| K1 khẩu độ đúng số f (a1, a2) | 223/228 = 97,8% [95,8–99,5] | — | — |
+| **K2 khẩu độ đúng khoảng nút** | 223/228 = 97,8% [95,8–99,5] | — | — |
+| K3 [phụ] a1 đúng | 223/228 = 97,8% [95,8–99,5] | — | — |
+| K4 [phụ] khẩu độ đầu tele đúng | 223/228 = 97,8% [95,8–99,5] | — | — |
+
+- Bộ đọc cũ trên cùng holdout: mọi số tiêu cự **giống hệt**. Khẩu độ: K1 222/228 = 97,4%, K2 223/228, K3 223/228, K4 222/228. Tức là sửa S1–S3 chỉ đổi 1 ô (K1, K4 tăng 1).
+- **Đọc số cho đúng:** trên nửa fix, 86/90 ô lệch là do đáp án (khớp nhầm sang ống khác mà nguồn có, hoặc Wikidata chỉ ghi 1 giá trị P2151 cho zoom), chỉ 2 ô do bộ đọc (kế hoạch 9.1). Vì vậy số tiêu cự thô là **cận dưới**, phần thiếu chủ yếu do bước khớp, không phải do bộ đọc. Holdout: 72 ống có đáp án tiêu cự từ cả hai nguồn, **chỉ 53 ống hai đáp án trùng** (nửa fix: 72/75), dấu hiệu nhiều ca khớp nhầm.
+
 ## 08/10/2026 (khuya): lần đo thứ 3 của nội dung 3 (đăng ký trước). Nhánh `nam/content4`
 
 Theo kế hoạch `docs/reviews/n3_eval_lan3_plan.md` (commit `42da14b`; mục 8 đã chốt và mục 9 sửa đổi ở commit `fb30c65`, **trước khi đo**). Quy tắc không đổi (`ea6abb0`). Holdout **không sạch** (kế hoạch mục 2), nên đây là phép đo lại có điều chỉnh, không phải phép đo độc lập.

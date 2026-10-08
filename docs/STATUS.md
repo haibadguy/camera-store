@@ -48,7 +48,10 @@ Red Team lần 1: `docs/reviews/redteam_n3_lan1.md`. Đã sửa phần code: T1,
 - đọc ca sai (Claude, cũng là người viết luật; bảng `ai/survey/content3/n3_lan3_holdout_errors.csv`): trong 13 sản phẩm lệch về loại, 2 do quy tắc (1 ca đáp án cũng sai); thêm 1 sản phẩm sai loại lộ ra ở cột khung (DMC-S1); 11 ô ngàm sai đều do đáp án.
 
 Không phải số độc lập (hạn chế 10 ở mục 4). Số phụ (cùng H733): bộ đánh giá `lan3` ("sau khi sửa lỗi bộ đánh giá tìm từ ca holdout đã xem") loại 99,6% / 99,0%; `truoc_0710` ("dựng lại theo mô tả, mã gốc không còn") loại 99,1% / 93,3%, ngàm Wikidata 90,6%. Số lần đo 2 (H747, quy tắc trước `e8b39e6`): loại 98,9% / 96,8%, ngàm 97,3% / 100%, giữ để đối chiếu. Script 04/05 chưa đọc đầu ra mới |
-| 4 | Đồ thị tri thức | Đã triển khai (bản cũ của Hải), **đang làm lại: mới có thiết kế** | Bản cũ: 99% sản phẩm không có cạnh tri thức; script 04 hiện không chạy được với đầu ra mới của nội dung 3. Thiết kế mới đã chốt 08/10 (`docs/content4_design.md`, mục 9), **chưa viết code pipeline**. Việc 1 (luật mục đích) xong 08/10: `ai/config/usecase_rules.toml` v0.2, 4 nhãn, mọi câu trích kiểm trên bản sao đã lưu. Chưa có số đo độ chính xác tiêu cự / khẩu độ |
+| 4 | Đồ thị tri thức | Đã triển khai (bản cũ của Hải), **đang làm lại: mới có thiết kế** | Bản cũ: 99% sản phẩm không có cạnh tri thức; script 04 hiện không chạy được với đầu ra mới của nội dung 3. Thiết kế mới đã chốt 08/10 (`docs/content4_design.md`, mục 9), **chưa viết code pipeline**. Việc 1 (luật mục đích) xong 08/10: `ai/config/usecase_rules.toml` v0.2, 4 nhãn, mọi câu trích kiểm trên bản sao đã lưu. **Việc 2: đã đo holdout (08/10 khuya)**, kế hoạch `docs/reviews/n4_focal_aperture_plan.md`, log `ai/data/survey/n4_fa/run_fa_eval_holdout_20261008.log`. Bộ đọc `ai/pipeline/lens_specs.py` v1:
+- tiêu cự đúng khoảng nút: Lensfun 165/202 = 81,7% [71,7–91,2], Wikidata 116/140 = 82,9% [75,4–89,9];
+- khẩu độ đúng khoảng nút: 223/228 = 97,8% [95,8–99,5];
+- số tiêu cự thô là cận dưới, phần lớn ca lệch là do khớp nhầm (chi tiết ở CHANGELOG) |
 | 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`/`item_map.json` (07/10, nhánh `nam/content3`) |
 | 6 | Module ràng buộc cứng và mềm | Chưa bắt đầu | |
 | 7 | Mô hình gợi ý theo bộ (GNN có quan hệ) | Chưa bắt đầu | |
