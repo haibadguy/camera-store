@@ -49,7 +49,11 @@ ai/data/kg/*.npz
 # Ma trận nội dung 3 phải nộp (cô yêu cầu) -> đưa lên git
 !ai/data/kg/compatibility_matrix.npz
 !ai/data/kg/unknown_mask.npz
+# Đồ thị tri thức nội dung 4 phải nộp (19 MB) -> đưa lên git
+!ai/data/kg/kg_hetero.pt
 ai/data/kg/user_item_train_edges.csv
+# cạnh user -> item = đúng train.txt (train.txt không lên git; đã có trong kg_hetero.pt)
+ai/data/kg/kg_edges_interacted_with.csv
 ai/checkpoints/
 results/*.pt
 *.gz

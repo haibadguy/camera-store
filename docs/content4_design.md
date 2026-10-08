@@ -1,6 +1,6 @@
 # Nội dung 4 — Đề xuất thiết kế đồ thị tri thức G = (V, E, R)
 
-Ngày 08/10/2026, nhánh `nam/content4`. **Chưa viết code pipeline** (riêng bộ đọc tiêu cự / khẩu độ đã có: `ai/pipeline/lens_specs.py`). Nam đã chốt 8 câu [HỎI] ngày 08/10/2026 (xem **mục 9**). Khi mục 9 khác với các mục 1–8 thì **tin mục 9**.
+Ngày 08/10/2026, nhánh `nam/content4`. **Đã viết code và dựng đồ thị (08/10 khuya):** `ai/pipeline/04_build_knowledge_graph.py`, `usecase_labels.py`, `lens_specs.py`; số thật ở `ai/data/kg/kg_stats.json`, kiểm tra ở `ai/data/kg/kg_validation_log_20261008_lan1.txt` (xem mục 5, 6, 7 và CHANGELOG 08/10 khuya, tiếp 2). Nam đã chốt 8 câu [HỎI] ngày 08/10/2026 (xem **mục 9**). Khi mục 9 khác với các mục 1–8 thì **tin mục 9**.
 
 **Cập nhật số 08/10/2026 khuya.** Các số ở mục 2, 3, 4, 5, 6 đã tính lại trên `ai/data/kg/` hiện tại, tức nội dung 3 sau khi sửa theo Red Team (`ea6abb0`) và bộ đọc `lens_specs` v1. Số cũ để trong ngoặc khi cần đối chiếu.
 
@@ -48,7 +48,7 @@ Lưu ý rút ra từ chính ví dụ này: ống EF 50mm là ống full-frame, t
 | `usecase` (mục đích sử dụng) | 4: chân dung, phong cảnh, thể thao/chim, macro (vlog đã bỏ, QĐ 4-11) | luật nhóm đặt (mục 4, `ai/config/usecase_rules.toml`) | Không đo được: đây là quy tắc, không phải sự thật |
 | ~~dải ISO~~ | 0 | **không có nguồn đáng tin**, xem mục 3.3 | — |
 
-Tổng khoảng 95.650 nút. Mỗi `item` có thêm vector đặc trưng: one-hot loại (4 chiều) và các số đọc được (tiêu cự min/max, khẩu độ ở hai đầu), để trống thì ghi 0 kèm cờ "không có".
+Tổng khoảng 95.650 nút (**thật: 95.646**, `kg_stats.json`). Mỗi `item` có thêm vector đặc trưng: one-hot loại (4 chiều) và các số đọc được (tiêu cự min/max, khẩu độ ở hai đầu), để trống thì ghi 0 kèm cờ "không có".
 
 ## 3. Thuộc tính kỹ thuật: nguồn của từng cái
 
@@ -71,7 +71,7 @@ Lấy nguyên từ nội dung 3, không thêm quy tắc mới.
   - "Maximum Aperture" chỉ có 6 ống;
   - "Focal Length Description" có 873 ống, nhưng có chỗ ghi tiêu cự quy đổi chứ không phải tiêu cự thật. Ví dụ Sony DT 11-18mm ghi "16.5–27 mm", Sony 50mm DT ghi "75 mm";
   - có chỗ ghi nhầm khẩu độ vào ô tiêu cự (Sigma 24-70 ghi "F 2.8").
-- **Nút tiêu cự = khoảng tiêu cự quy đổi 35mm.** Mốc theo cách chia của Canon (wide-angle tới ~35mm, dưới ~24mm là ultra-wide, từ 400mm trở lên là super-tele): `<24`, `24–35`, `36–70`, `71–135`, `136–300`, `>300`.
+- *(Đã thay bằng QĐ mục 9 số 1: nút tiêu cự theo **tiêu cự thật**; code dùng tiêu cự thật. Đoạn dưới giữ làm dấu vết.)* **Nút tiêu cự = khoảng tiêu cự quy đổi 35mm.** Mốc theo cách chia của Canon (wide-angle tới ~35mm, dưới ~24mm là ultra-wide, từ 400mm trở lên là super-tele): `<24`, `24–35`, `36–70`, `71–135`, `136–300`, `>300`.
   - Ống zoom nối tới mọi khoảng mà nó phủ.
   - Quy đổi bằng hệ số crop theo khổ ống: ff 1,0; apsc 1,5 (Canon 1,6); four_thirds 2,0; nikon_1 2,7. Ống không rõ khổ (205 ống, cũ 218) thì tính với cả 1,0 và 1,6, chỉ nối các khoảng mà cả hai cách tính cùng cho ra.
   - Tiêu cự thật (chưa quy đổi) vẫn giữ trong vector đặc trưng, để phần giải thích nói được con số cụ thể.
@@ -145,13 +145,19 @@ Xem [HỎI 3].
 | `compatible_with` | thân → ống | 70.472 (cũ 70.854) | `compat_pairs.csv`, mức compatible_with, ống chắc chắn |
 | `crops_sensor` | thân → ống | 2.248 (cũ 2.196) | như trên, mức crops_sensor |
 | `requires_adapter` | thân → ống | 16.301 (cũ 16.005) | như trên, mức requires_adapter (ngàm chuyển chính hãng) |
-| `has_spec` | item → mount | ≈ 2.968 (thân 537 + ống 1.167 + phụ kiện 954 + ngàm chuyển 155 × 2 đầu) | nội dung 3 |
-| `has_spec` | item → sensor_format | ≈ 1.498 (thân 536 + ống 962 có khung khác "không rõ") | nội dung 3 |
+| `has_spec` | item → mount | 2.968 (thân 537 + ống 1.167 + phụ kiện 954 + ngàm chuyển 155 × 2 đầu) | nội dung 3 |
+| `has_spec` | item → sensor_format | 1.498 (thân 536 + ống 962 có khung khác "không rõ") | nội dung 3; khung "khac" tra theo ngàm (xem dưới) |
 | `has_spec` | item → focal_range | 2.427 (zoom nối nhiều khoảng; `count_spec_nodes.py`) | tiêu đề, mục 3.2 |
 | `has_spec` | item → aperture_class | 1.288 | tiêu đề, mục 3.2 |
 | `suitable_for` | item → usecase | 1.080 (560 + 287 + 147 + 86) | luật mục 4 |
 
 Số cạnh thân–ống lấy từ `ai/data/kg/mount_compat_stats.json`; cạnh `has_spec → mount / sensor_format` tính tay từ `run_c4_survey_counts_20261008_n4fa.log`.
+
+**Số thật sau khi dựng (08/10 khuya, `kg_stats.json`): trùng mọi số trong bảng.** Tổng 558.475 cạnh xuôi. Chi tiết khi cài đặt:
+- `has_spec → mount` có 2 thuộc tính cạnh (QĐ 4-10): `src_phu_kien` (1 = nguồn là phụ kiện) và `phia` (0 không phải ngàm chuyển, 1 phía ống, 2 phía thân). Ngàm chuyển "A>B": A phía ống, B phía thân.
+- `compatible_with` có thêm thuộc tính `crop_unknown` (cờ QĐ 3-11; 1.686 cạnh).
+- Khung "khac" → khổ theo ngàm: mft / four_thirds → four_thirds; nikon_1 → one_inch; fuji_g → medium; pentax_q → small; canon_ef (EOS-1D) và leica_m (M8) → aps_h. Theo khổ: ff 575, apsc 681, four_thirds 212, one_inch 17, aps_h 6, small 4, medium 3.
+- **Cạnh ngược:** `ToUndirected()` mặc định không tạo `rev_*` cho quan hệ item → item mà gộp cạnh ngược vào chính quan hệ đó. Code dùng `ToUndirected(merge=False)` để mọi quan hệ đều có `rev_*` (18 loại cạnh).
 
 - Các cặp mức "không biết" (5.846 cặp, gồm 2.819 cặp có thân máy phim theo QĐ 16 đã sửa; cũ: 19.932 / 17.612) **không có cạnh**.
 - Cặp của 134 ống "không chắc" (QĐ 4; cũ 130): không nối cạnh tương thích (QĐ 4-5).
@@ -179,6 +185,8 @@ Số cạnh thân–ống lấy từ `ai/data/kg/mount_compat_stats.json`; cạn
 8. Chạy script 2 lần, sha256 của các file đầu ra phải giống nhau.
 
 **B. Đọc bằng mắt:** in 10 cạnh ngẫu nhiên (seed cố định) của mỗi quan hệ, kèm tiêu đề sản phẩm.
+
+**Kết quả A, B (08/10 khuya):** cả 8 kiểm tra A ĐẠT (log `ai/data/kg/kg_validation_log_20261008_lan1.txt`; kiểm tra 8: 13/13 file trùng sha256, `kg_sha256_lan1_vs_lan2_20261008.txt`). Mục B in trong cùng log.
 
 **C. Độ chính xác tiêu cự / khẩu độ, đo bằng nguồn ngoài như nội dung 3:**
 - **Nguồn đáp án:**
@@ -223,6 +231,7 @@ Số cạnh thân–ống lấy từ `ai/data/kg/mount_compat_stats.json`; cạn
 
   Như vậy cặp `requires_adapter` vẫn bị tính là vi phạm (theo QĐ 2, M = 0). Người dùng chỉ có thân máy phim thì không bị tính.
   - Bản hiện tại tính mọi ống không nằm trong tập hợp lệ là vi phạm. Tức là cả ống "không chắc" và ống mức "không biết" đều bị tính, trái với QĐ 4, 8, 16.
+- **Đã cài 08/10 khuya theo QĐ 4-9** (`judge_lens`, `full_catalog_cvr`; kiểm thử dựng tay `ai/survey/content4/test_cvr.py`, 20/20 đúng). Thân nằm ngoài M không có giá trị M nên không bao giờ cho phán "vi phạm". `build_train_bodies` lấy mọi thân trong train. **Lưu ý:** ví dụ (D3500 + FM, ống Canon EF → không chấm được) của QĐ 4-9 viết khi QĐ 3-16 còn xếp mọi cặp thân phim là "không biết". Sau Red Team T4, cặp thân phim + ống khác ngàm là "không lắp được", nên trên dữ liệu thật ống EF đó bị tính **vi phạm** (STATUS mục 6).
 - **`05c_rgcn_train.py` sẽ không chạy được** với sơ đồ mới: code này ghi cứng nút `mount` và `usecase` trong `forward`. Việc này thuộc nội dung 5 và 7 (phải cài R-GCN thật, lỗi 1), không sửa ở đây.
 
 ## 8. Các câu [HỎI]
@@ -270,5 +279,5 @@ Số cạnh thân–ống lấy từ `ai/data/kg/mount_compat_stats.json`; cạn
 **Việc phiên sau** (theo thứ tự):
 1. ~~**Đọc toàn văn các trang nguồn cho luật mục đích** (mục 4).~~ **Đã làm 08/10/2026**, xem bảng cập nhật ở mục 4. Trích câu, lưu bản sao, ghi vào file cấu hình luật như đã làm với `mount_rules.toml`. Tìm căn cứ cho vlog (khác phong cảnh) và macro; không có căn cứ cho vlog thì bỏ nhãn vlog.
 2. ~~**Đo độ chính xác tiêu cự / khẩu độ**~~ **Đã làm 08/10/2026 khuya** (mục 6C; kế hoạch `docs/reviews/n4_focal_aperture_plan.md`). Kèm theo: `usecase_rules.toml` v0.3 (bỏ câu trích có "..."), đếm lại nhãn mục đích bằng bộ đọc v1 (mục 4).
-3. **Sửa `04_build_knowledge_graph.py` và `common_05.py`** theo mục 5, 7 và các quyết định trên.
-4. **Xây đồ thị và chạy các kiểm tra ở mục 6.** Ghi CHANGELOG, STATUS, DATA_SOURCES.
+3. ~~**Sửa `04_build_knowledge_graph.py` và `common_05.py`**~~ **Đã làm 08/10/2026 khuya.**
+4. ~~**Xây đồ thị và chạy các kiểm tra ở mục 6.**~~ **Đã làm 08/10/2026 khuya** (6A ĐẠT cả). Ghi CHANGELOG, STATUS.

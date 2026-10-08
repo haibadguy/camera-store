@@ -1,0 +1,19 @@
+Kiểm tra 8 (content4_design mục 6A): chạy 04_build_knowledge_graph.py 2 lần, so sha256 đầu ra
+lần 1: --run-label 20261008_lan1 --out-dir ai/data/kg
+lần 2: --run-label 20261008_lan2 --out-dir ai/data/kg_draft_c4_lan2
+
+TRÙNG ec6c1801606eb94a908458fb90ea8efb449cda47bcd1f37b4b1e7eb8a50dd8f8 kg_hetero.pt (19189651 B)
+TRÙNG 8fb1b4cbc05ce66f54ee3238aa827ea8e5eed76989df56d7909d903505fbb9d4 kg_node_index.json (4346374 B)
+TRÙNG bd44ebd4db2b352d1d8708eecdc8913cae10c6ca7498695a7ec65c33d21f1d29 kg_stats.json (2482 B)
+TRÙNG b7554f71489c1f3896111e48943e551ef4f8eb0fb6910d2170fd12ad508ed301 kg_edges_interacted_with.csv (5698981 B)
+TRÙNG 77c8d5c86d824a028bef6838759499702952f537d891ae204610cac607c9bb60 kg_edges_compatible_with.csv (5667265 B)
+TRÙNG a2a052a5210f9e7f547da6db46ec91111dbf6138aa2989bafdc75240201c688e kg_edges_crops_sensor.csv (155221 B)
+TRÙNG 177447cd04689586eb099767bf5924782cec4c7a62306e6075024a4013364a94 kg_edges_requires_adapter.csv (1269412 B)
+TRÙNG 2fb578fed9e8aefcd6fa7135fdf9dad53f7ddeb9afe97d6526ffc28d2c90046d kg_edges_has_spec_mount.csv (504723 B)
+TRÙNG 408052fa49f8e1192096b9002c50a59b811c0a940767f3ef6eb71108fe10e878 kg_edges_has_spec_sensor_format.csv (202213 B)
+TRÙNG 6ea97d4c492efd9800ed360f956337891d5e2edd4f07611fed0d019116caeab3 kg_edges_has_spec_focal_range.csv (299171 B)
+TRÙNG f548b013236f1865e6b3eb717d52cc313ac7c6705532b61d2b8eb7b879de0c63 kg_edges_has_spec_aperture_class.csv (157281 B)
+TRÙNG 927795fc26b9ef1cec9014605661dd4668d8fe1d69e4d279664023e6e3b85c44 kg_edges_suitable_for.csv (135157 B)
+TRÙNG bc256c3b3727ebf1f507796ea84e98bcca60de6ae35b396a6f5df46626cd2563 kg_validation_log (nội dung log lần 1 vs lần 2)
+
+=> 13/13 file trùng sha256

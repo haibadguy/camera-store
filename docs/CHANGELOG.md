@@ -6,6 +6,81 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 08/10/2026 (khuya, tiếp 2): nội dung 4, việc 3–4 — viết lại `04_build_knowledge_graph.py`, sửa `common_05.py` (CVR theo QĐ 4-9). Nhánh `nam/content4`
+
+Theo `docs/content4_design.md` mục 2, 5, 6, 7, 9. **Không sửa** `05a/05b/05c` và `05_evaluate.py` (nội dung 5).
+
+**Sửa gì**
+1. **`ai/pipeline/04_build_knowledge_graph.py`: viết lại toàn bộ.** Bản của Hải đọc `linked_products.csv` + bảng 139 dòng (đã gỡ khỏi git ở QĐ 3-14), `assert` cứng 257 / 106 / 151, nên không chạy được với đầu ra nội dung 3 mới.
+   - Đầu vào: `item_attributes.csv`, `compat_pairs.csv`, `compatibility_matrix.npz`, `unknown_mask.npz`, `body_index.json`, `lens_index.json` (nội dung 3); `train/val/test.txt`; `mount_rules.toml`, `usecase_rules.toml`. Không đọc CSV của script khảo sát.
+   - Nút (7 loại): `user`, `item` (vector 9 chiều: one-hot 4 loại + tiêu cự min/max, khẩu độ min/max, cờ "có số"), `mount`, `sensor_format`, `focal_range`, `aperture_class`, `usecase`.
+   - Cạnh (9 loại xuôi): `interacted_with`; `compatible_with`, `crops_sensor`, `requires_adapter` (bỏ mức `unknown` và ống "không chắc", QĐ 4-5); `has_spec` tới 4 loại nút thuộc tính; `suitable_for`.
+   - `has_spec → mount` có 2 thuộc tính cạnh (QĐ 4-10): `src_phu_kien` (1 = nguồn là phụ kiện) và `phia` (0 không phải ngàm chuyển, 1 phía ống, 2 phía thân). Ngàm chuyển `"A>B"` → 2 cạnh: A là phía ống, B là phía thân (vd `leica_m>mft` "Leica M to Micro 4/3").
+   - `compatible_with` mang thêm thuộc tính `crop_unknown` (cờ QĐ 3-11, lấy nguyên từ `compat_pairs.csv`).
+   - Khổ cảm biến: khung `ff` / `apsc` giữ nguyên; khung `khac` tra theo ngàm: `mft`, `four_thirds` → four_thirds; `nikon_1` → one_inch; `fuji_g` → medium; `pentax_q` → small; `canon_ef` (EOS-1D) và `leica_m` (M8) → aps_h. Ngàm `khac` ngoài bảng này thì script DỪNG.
+   - Cạnh ngược: `ToUndirected(merge=False)`. Lý do: với cạnh item → item, `ToUndirected()` mặc định **gộp** cạnh ngược vào chính quan hệ đó (thành vô hướng, số cạnh nhân đôi), không tạo `rev_*` như thiết kế mục 5 viết. `merge=False` tạo `rev_*` cho mọi quan hệ.
+   - Mọi danh sách cạnh được sắp xếp → đầu ra tái lập được.
+   - Kiểm tra mục 6A (1)–(7) chạy trong script; sai một điều kiện thì DỪNG (mã thoát 2) và không ghi đầu ra. Mục 6B in vào log.
+   - Log tên mới theo `--run-label` (`kg_validation_log_<nhãn>.txt`); đã có thì DỪNG. Các file đầu ra khác cần `--overwrite` mới ghi đè.
+2. **`ai/pipeline/usecase_labels.py` (mới):** chép nguyên hàm `crops`, `labels_at`, `label` của `ai/survey/content4/count_usecase.py`, để script 04 gắn nhãn mục đích từ `usecase_rules.toml` + `lens_specs.read_title`. Việc kiểm nguồn / câu trích vẫn do `count_usecase.py` làm.
+3. **`ai/pipeline/common_05.py`** (content4_design mục 7, QĐ 4-9):
+   - `load_item_type()` đọc `item_attributes.csv`, 4 mã: 0 thân, 1 ống, 2 phụ kiện, **3 khác** (trước: `argmax` của `kg_hetero.pt`, 3 mã, máy ống liền bị gộp vào phụ kiện);
+   - `load_body_to_lenses()` đọc `kg_edges_compatible_with.csv` + `kg_edges_crops_sensor.csv` (tức M = 1; trước: `compatible_item_edges.csv` của Hải);
+   - **`build_train_bodies()`: lấy mọi thân trong train** (trước: chỉ thân có ít nhất một ống M = 1). Lý do: QĐ 4-9 "xét các thân người dùng có trong train"; nếu bỏ thân máy phim thì cặp "không biết" của nó không còn chặn được phán "vi phạm". Giữ nguyên chữ ký hàm;
+   - **CVR mới** (`judge_lens`, `full_catalog_cvr`): ống chấm được khi nằm trong M, không "không chắc", và (a) có thân M = 1 → không vi phạm, hoặc (b) mọi thân M = 0 và không cặp nào "không biết" → vi phạm; còn lại không chấm được. Thân nằm ngoài M (không xác định được ngàm) không có giá trị M, nên không bao giờ cho (b). Gộp **micro**; người dùng không có ống chấm được trong top-K bị bỏ. Trả kèm `cvr_n_users@K`, `cvr_n_lenses@K`, `cvr_n_violations@K`, `cvr_n_users_with_body`; `cvr@K = nan` khi không có ống nào chấm được. Trước: vi phạm = mọi ống không thuộc tập hợp lệ, chia K, người dùng không có ống thì CVR = 0;
+   - bỏ `import torch`, `pandas` (không còn dùng).
+4. **Kiểm thử, đối chiếu:** `ai/survey/content4/test_cvr.py` (dựng tay + tra dữ liệu thật), `check_suitable_for_vs_survey.py`.
+5. `.gitignore`: đưa `kg_hetero.pt` lên git (19,2 MB); không đưa `kg_edges_interacted_with.csv` (chính là `train.txt`, vốn không lên git).
+
+**Vì sao**
+- Script 04 cũ không chạy được, và đồ thị cũ gần như rỗng: 99,11% sản phẩm không có cạnh tri thức nào.
+- CVR cũ tính ống "không chắc" và cặp "không biết" là vi phạm, trái QĐ 3-4, 3-8, 3-16 (QĐ 4-6).
+
+**Ảnh hưởng: đồ thị cũ (Hải, `kg_v62abf54/kg_stats.json`) → mới (`ai/data/kg/kg_stats.json`, log `ai/data/kg/kg_validation_log_20261008_lan1.txt`)**
+
+| | Cũ | Mới |
+|---|---:|---:|
+| Nút `user` / `item` | 70.424 / 28.867 | 67.661 / 27.940 (dữ liệu sau gộp lặp) |
+| Loại nút thuộc tính | `mount` 8, `usecase` 7 | `mount` 23, `sensor_format` 7, `focal_range` 6, `aperture_class` 5, `usecase` 4 |
+| Tổng số nút | 99.306 | **95.646** |
+| `interacted_with` | 482.149 | **460.193** |
+| `compatible_with` (thân → ống) | 3.258 | **70.472** |
+| `crops_sensor` | — | **2.248** |
+| `requires_adapter` | — (ghi "ngoài phạm vi") | **16.301** |
+| `has_spec → mount` (cũ: `has_mount`) | 257 | **2.968** (thân 537, ống 1.167, phụ kiện 954, ngàm chuyển 155 × 2) |
+| `has_spec → sensor_format` | — | **1.498** (ff 575, apsc 681, four_thirds 212, one_inch 17, aps_h 6, small 4, medium 3) |
+| `has_spec → focal_range` | — | **2.427** |
+| `has_spec → aperture_class` | — | **1.288** |
+| `suitable_for` | 441 | **1.080** (phong cảnh 560, thể thao/chim 287, chân dung 147, macro 86) |
+| Sản phẩm có ít nhất một cạnh tri thức | 257 (0,89%) | **2.974 (10,64%)** |
+
+Số mới khớp các số dự kiến trong `content4_design` mục 3.2, 5 (từ `count_spec_nodes.py`, `count_usecase.py`, `mount_compat_stats.json`). Tổng nút dự kiến "khoảng 95.650" → thật 95.646.
+
+**Kiểm tra mục 6A** (log `kg_validation_log_20261008_lan1.txt`): cả 8 ĐẠT.
+1. Chỉ số nút trong khoảng, không cạnh lặp, ở cả 18 loại cạnh (kể cả `rev_*`); ba quan hệ thân–ống đều đi từ thân tới ống.
+2. `interacted_with` = đúng tập cặp `train.txt`, 460.193; giao val = 0, giao test = 0.
+3. `compatible_with` 70.472 + `crops_sensor` 2.248 = 72.720 = nnz(M), trùng từng cặp với M; `requires_adapter` 16.301 = số dòng tương ứng của `compat_pairs.csv`; ba quan hệ không trùng cặp; 0 cặp thuộc `unknown_mask`; 0 cạnh tới 134 ống "không chắc".
+4. Mọi cạnh có `rule_id` đúng mức và khớp ngàm hai đầu theo `mount_rules.toml` (sai 0). `crops_sensor`: 2.248/2.248 cùng ngàm; `requires_adapter`: 0/16.301 cùng ngàm, đúng 10 cặp ngàm có ngàm chuyển trong bảng luật.
+5. 1.704 thân + ống có 1 ngàm: đúng 1 cạnh, trùng cột `mount`; 954 phụ kiện: 1 cạnh có cờ; 155 ngàm chuyển: 2 cạnh (phía ống, phía thân); tổng 2.968 = 1.704 + 954 + 2 × 155.
+6. 18 thân máy phim: 0 cạnh thân–ống.
+7. `torch.load` đọc lại khớp từng tensor; đồ thị đồng nhất 95.646 nút, 1.116.950 cạnh, 18 quan hệ; 1 lớp `RGCNConv` chạy trên GTX 1660 Ti, ra (95.646, 16), hữu hạn.
+8. Chạy 2 lần (lần 2 vào `ai/data/kg_draft_c4_lan2/`): **13/13 file trùng sha256**, kể cả nội dung log (`ai/data/kg/kg_sha256_lan1_vs_lan2_20261008.txt`).
+
+**Đã kiểm chứng thêm**
+- Nhãn mục đích của pipeline trùng từng ống với bảng của `count_usecase.py` (1.080 cạnh, 980 ống, 0 ống lệch; log `ai/data/survey/run_c4_suitable_for_vs_survey_20261008.log`).
+- Kiểm thử CVR (`test_cvr.py`, log `ai/data/survey/run_c4_test_cvr_20261008_lan2.log`; `_lan1` có một dòng đếm ghi nhãn sai "thân máy phim", đã sửa nhãn, các số khác giống hệt): 20/20 ca dựng tay đúng, gồm ví dụ QĐ 4-9 (D3500 + FM, ống Canon EF, giả định cặp (FM, EF) "không biết") → không chấm được; gộp micro 2/3 khác macro 0,5; người dùng không có ống chấm được bị bỏ; không ai chấm được → `nan`.
+- Trên dữ liệu thật: 10.406 người dùng có thân trong train (quy tắc cũ của `build_train_bodies` trên cùng dữ liệu: 10.226); 71 người có thân ngoài M; 108 người có thân máy phim; 216 người có thân trong M mà không có ống M = 1 nào (34 thân như vậy, 18 là máy phim).
+
+**Phát hiện: ví dụ của QĐ 4-9 không còn đúng với dữ liệu hiện tại.** QĐ 4-9 ghi cặp (FM, Canon EF) là "không biết" theo QĐ 16 bản đầu. Nhưng QĐ 16 đã sửa theo Red Team T4: cặp mà luật thường cho "không lắp được" (khác ngàm) giữ "không lắp được". Tra dữ liệu thật: (FM-10, Canon EF 50mm f/1.8 STM) không có M = 1, cũng không thuộc "không biết". Vì vậy người dùng có D3200 + FM-10 mà top-K có ống Canon EF thì ống đó **bị tính vi phạm** (không có D3500 trong dữ liệu nên dùng D3200). Code làm đúng định nghĩa "chấm được"; chỉ có câu ví dụ là cũ. Chờ Nam xác nhận (STATUS mục 6).
+
+**Phía sau phải chạy lại / sửa theo**
+- `05c_rgcn_train.py` **không chạy được** với đồ thị mới: code này ghi cứng nút `mount` (8) / `usecase` (7), `Linear(3, ...)` cho `item.x` (nay 9 chiều), quan hệ `has_mount`. Thuộc nội dung 5 / 7 (lỗi 1), không sửa ở đây.
+- `05a_popularity.py` (MountAware) lọc theo `cvr_users`: do `build_train_bodies` nay lấy mọi thân, người dùng chỉ có thân không có ống M = 1 nào (máy phim, thân ngoài M…) bị lọc **mọi** ống. Trước đây những người này không bị lọc gì. Cần xem lại khi chạy lại nội dung 5.
+- Kết quả CVR của mọi mô hình phải tính lại; số cũ (vd 2.491 / 2.488 người dùng) không còn so được. `05_evaluate.py` chỉ đọc `cvr@K`, các khóa mới không làm hỏng bảng.
+- Chưa chạy lại bất kỳ script 05 nào.
+
+---
+
 ## 08/10/2026 (khuya, tiếp): nội dung 4, việc 2 — đo bước đọc tiêu cự / khẩu độ từ tiêu đề ống (đăng ký trước). Nhánh `nam/content4`
 
 Theo kế hoạch `docs/reviews/n4_focal_aperture_plan.md` (commit `c14300e`; sửa đổi mục 9 ở commit `e47e941`, **trước khi chạy holdout**). Không sửa code của Hải; mọi file dưới đây là file mới của nội dung 4.
