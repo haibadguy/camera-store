@@ -122,12 +122,57 @@ Quy ước chung:
 
 Log: `run_eval_fix_{ma_ea6abb0,lan2,lan3,truoc_0710}_20261008.log`, `run_compare_fix_ea6abb0_vs_lan2_20261008.log`, `run_compare_fix_lan2_vs_lan3_20261008.log`, `run_compare_fix_lan2_vs_truoc0710_20261008.log`.
 
-## 8. Câu hỏi chờ Nam (trước khi đo)
+## 8. Câu hỏi chờ Nam (trước khi đo) → đã chốt 08/10/2026
 
 - **H1. Sản phẩm mới khớp được ngoài 1.493 (tập N).** Sửa S2 (và bản `truoc_0710`) chỉ có tác dụng trên những sản phẩm này. Đề xuất: báo riêng, ghi rõ "không độc lập", không gộp vào số chính. Nếu không báo thì nói rõ S2 không đo được trên holdout.
+  - **Nam chốt:** báo riêng tập N, ghi "**không độc lập, chỉ tham khảo**", **tách riêng phần máy phim**. Ở chế độ `lan3`, chữ "Manual Focus" không làm tiêu đề bị loại (mục 9.2).
 - **H2. Số chính của báo cáo:** H733 + `lan3` (đề xuất), hay H747?
+  - **Nam chốt:** số chính = **H733, quy tắc `ea6abb0`, bộ đánh giá `lan2`**. Lý do: các sửa N4 chỉ tác động lên ca holdout đã xem (mục 2.4) và đều có lợi cho quy tắc, nên không đưa vào số chính. Báo kèm:
+    - `lan3`, ghi "**sau khi sửa lỗi bộ đánh giá tìm từ ca holdout đã xem**";
+    - `truoc_0710`, ghi "**dựng lại theo mô tả, mã gốc không còn**";
+    - cả H747.
 - **H3. `khac_ngam`:** làm đúng như danh sách (bỏ mọi ô `khac_ngam`), hay chỉ bỏ ô có ngàm không rõ ("Generic", lỗi gõ "Pentak K") mà vẫn chấm ngàm có thật nhóm không có mã (Minolta MD, Olympus OM…)? Kế hoạch hiện tại theo danh sách: bỏ mọi ô.
+  - **Nam chốt:** ô `khac_ngam` **chỉ bỏ khi quy tắc cũng không gán ngàm cụ thể**. Nếu quy tắc gán một ngàm cụ thể mà nguồn ghi một ngàm thật khác (vd Minolta MD, Olympus OM) thì tính **SAI**. Cách cài: mục 9.3.
 
 ## 9. Sửa đổi kế hoạch
 
-(chưa có)
+Ghi ngày 08/10/2026, **trước khi đo** (chưa chạy bộ đánh giá nào trên holdout). Commit riêng.
+
+**9.1. Số chính (thay mục 6.3).** Số chính = H733, quy tắc `ea6abb0`, bộ đánh giá `lan2`, kèm khoảng bootstrap (mục 5.6). Bảng phụ: cùng các chỉ số với `lan3` và `truoc_0710`, trên H733 và H747, kèm nhãn ở H2. Thêm cột "lần đo 2" (file `ai/data/survey/eval_external_matches.csv`, quy tắc trước `e8b39e6`, đã có từ trước) để tách phần chênh do sửa quy tắc; file này không có cột `cum_nguon` nên chỉ báo điểm, không báo khoảng.
+
+**9.2. Sửa thêm bộ đánh giá `lan3` (theo H1): "manual" đứng trước "focus" không còn là từ phụ kiện.**
+- Cài: trong `ACC_EVAL_LAN3_WORDS`, `manual` → `manual(?![\s-]*focus)`. Vd "Pentax K1000 Manual Focus SLR Film Camera" không còn bị loại; "Instruction Manual", "User Manual", "Canon 5D Manual" vẫn bị loại.
+- Chiều tác động: chỉ ngoài 1.493. Mẫu mới chỉ khớp ở chỗ mẫu cũ khớp, nên tập bị loại chỉ thu hẹp; mọi sản phẩm của 1.493 đã qua bộ lọc có "manual" (mục 2.5). **Trên H747: không đổi.** Kiểm trên nửa fix: phải 0 ô đổi so với `lan3` trước sửa (trừ ô do 9.3).
+
+**9.3. Sửa b5 (`khac_ngam`) theo H3.**
+- Chuỗi ngàm của Lensfun rơi vào `khac_ngam` (liệt kê bằng script từ 56 file XML, **không** đọc kết quả holdout) chia hai nhóm, chốt trước khi đo:
+  - **ngàm thật, nhóm không có mã:** `Contax/Yashica`, `Contax G`, `Hasselblad 500`, `Hasselblad H`, `Hasselblad X`, `Mamiya 645`, `Pentax 645AF2`, `Rollei 6x6`, `Samsung NX mini`, `Canon FL`, `DKL`, `Exakta`, `Kiev 88`, `M39`, `M39/1`, `Minolta MC`, `Minolta MD`, `Olympus OM`, `C` (C-mount);
+  - **không rõ:** `Generic`, `Pentak K` (lỗi gõ của Pentax K), `Sigma` (không rõ ngàm nào), `Minolta M` (ngàm của Minolta CLE, lắp được ống Leica M, nên không chắc là "khác"), `Tamron Adaptall` (ngàm đổi được), và các mã ống liền của máy compact / điện thoại (`olympusE10`, `iPhoneXS`, `iPhoneXStele`, `lgH815`, `lumia950`, `lumia1020`, `lumia1520`, `cltl29`, `dlil22`, `vogl29`, `waslx1a`). Chuỗi nào không có trong hai danh sách cũng tính là "không rõ".
+- Chấm ô có đáp án `khac_ngam` (chỉ ở `lan3`):
+  - quy tắc **không** gán ngàm cụ thể (`khong_ro`, `khong_co`, `nhieu`, ngàm chuyển `a>b`) → không chấm, `ngam_dung = dap_an_khac_ngam` (như cũ);
+  - quy tắc gán ngàm cụ thể, đáp án là **ngàm thật** → **SAI**: `ngam_dung = 0`, tính vào ô ngàm được gán; đếm riêng thêm ở `ngam_khac_ngam_sai`;
+  - quy tắc gán ngàm cụ thể, đáp án **không rõ** → không chấm, `ngam_dung = dap_an_khac_ngam_khong_ro`, đếm riêng.
+- Ống của nguồn có nhiều mục cùng chữ ký: chỉ là "ngàm thật" khi **mọi** chuỗi ngàm gốc của các mục đó đều thuộc nhóm ngàm thật.
+- Chiều tác động: **bất lợi** (thêm ô sai). Nửa fix: ô Pentax 645D (B00YI5667E) quy tắc để trống → vẫn không chấm.
+
+**9.4. Tập N (H1).**
+- N = sản phẩm ngoài 1.493 (`--half ngoai`) khớp được ở `lan3`. Kiểm: chạy `lan2 --half ngoai`, kỳ vọng 0 sản phẩm khớp (nếu khác 0 thì báo, không sửa).
+- Tách nguyên nhân: sản phẩm mà bộ lọc phụ kiện `lan2` loại (nhờ S2 / 9.2) và sản phẩm còn lại (vd nhờ chặn F4 / F2).
+- **Phần máy phim:** sản phẩm của N có chữ `film` trong phần đầu tiêu đề (`head_main(…, plus=False)`). Báo riêng loại / ngàm như mục 5.1, và số sản phẩm quy tắc gán `may_phim = True`. Nguồn ngoài không ghi máy nào là máy phim, nên đây chỉ là số đếm, **không phải độ chính xác nhận diện máy phim**.
+- Không báo khoảng tin cậy riêng cho N ngoài khoảng bootstrap cùng cách (mục 5.6). Ghi "không độc lập, chỉ tham khảo" ở mọi chỗ in số của N.
+
+**9.5. Phép đo (5), làm rõ.**
+- Quy tắc H3 (mục 9.3) áp cho **mọi** phương pháp: phương pháp không gán ngàm cụ thể → ô không vào mẫu số độ chính xác; gán ngàm cụ thể mà đáp án là ngàm thật ngoài bảng mã → sai; đáp án "không rõ" → bỏ.
+- Đơn vị = (nguồn, sản phẩm), tách Lensfun / Wikidata, chỉ xét ô có đáp án ngàm cụ thể (`ngam_dap_an` khác rỗng). Ô Wikidata chỉ có đáp án ở mức họ (thân Canon ghi nhiều ngàm) không vào (5).
+- B2: "đúng 1 ngàm rõ" = tập ngàm rõ của `mountlex.cm_mounts` có đúng 1 phần tử (các mảnh mơ hồ bỏ qua). `Canon EF` của B2 chỉ chấm ở mức họ; ở mức chặt coi là **không gán**.
+- Loại (chỉ quy tắc và B1): với hai lớp thân / ống, báo độ chính xác (đáp án đúng lớp / số gán lớp đó, trong các sản phẩm có đáp án loại) và độ phủ (gán đúng / số có đáp án là lớp đó). B1 không có trong `linked_products.csv` = không gán.
+
+**9.6. Bootstrap (làm rõ mục 5.6).** Mỗi chỉ số dùng một bộ sinh số mới với cùng seed 20261009 (không phụ thuộc thứ tự tính). Đơn vị đếm (ô hoặc sản phẩm) gộp theo cụm, lấy lại cụm có hoàn lại, tử số và mẫu số cộng theo cụm. Chỉ số có dưới 10 ô thì vẫn in khoảng nhưng ghi chú "ít mẫu".
+
+**9.7. Thứ tự chạy trên holdout (chạy một lần, sau khi script đã commit và thử trên nửa fix):**
+1. `lan3_prereg_check.py` → so với `run_lan3_prereg_check_20261008.log`, lệch thì dừng;
+2. `eval_external.py` ở 3 chế độ `--half holdout`; `lan3` và `lan2` với `--half ngoai`;
+3. script đo (3)–(6) một lần trên các file ở bước 2.
+- Nếu thấy lỗi script **sau khi** đã chạy holdout: dừng và báo Nam, không tự chạy lại.
+
+**9.8. Sau khi có số:** ghi số vào CHANGELOG / STATUS, rồi mới xem ca sai của holdout ở lần đo này, **chỉ để phân loại cho báo cáo** (không sửa quy tắc, không sửa bộ đánh giá). Bảng phân loại lưu CSV (cột người phân loại = Claude, tức người viết luật), đếm bằng script.
