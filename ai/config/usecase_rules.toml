@@ -119,13 +119,13 @@ ghi_chu = "Danh sách ống vlog gồm cả RF-S 18-45mm (quy đổi ~29mm). Cá
 
 [sources.canon_us_lens_guide]
 url = "https://www.usa.canon.com/lens-buying-guide"
-cach_luu = "Nam lưu bằng trình duyệt ngày 08/10/2026. Nam báo là bản trực tiếp qua VPN US, NHƯNG dòng 'saved from url' trong file là https://web.archive.org/web/20260904221559/https://www.usa.canon.com/lens-buying-guide (file có thanh Wayback Machine) -> chờ Nam xác nhận"
-ban_sao = "manual/canon_us_lens_guide_20261008.html"
+cach_luu = "Nam lưu bằng trình duyệt ngày 08/10/2026 (đã tắt VPN), bản Wayback https://web.archive.org/web/20260904221559/https://www.usa.canon.com/lens-buying-guide — đúng bản Claude đã đọc trong trình duyệt tích hợp. Trang hãng chặn truy cập từ Việt Nam"
+ban_sao = "manual/canon_us_lens_guide_wb20260904.html"
 sha256_html = "f40393a4ead024fea9d174b44d5c79da25d468b0d1a0e9b5684dcc75708f8060"
-ban_sao_txt = "manual/canon_us_lens_guide_20261008.txt"
+ban_sao_txt = "manual/canon_us_lens_guide_wb20260904.txt"
 sha256_txt = "4cf5d2fc232963ff4cfb38fe9295989a156ba64e888e987abb34b85748dbb4bb"
 dau_hieu_bai = "We break down the different camera lenses"
-ghi_chu = "Câu trích giống bản Wayback 20260904 Claude đọc trong trình duyệt tích hợp. Bản thô (id_) tải bằng curl (canon_us_lens_buying_guide_wb20260904.html) không có phần nội dung do JavaScript sinh."
+ghi_chu = "Bản thô (id_) tải bằng curl (canon_us_lens_buying_guide_wb20260904.html) không có phần nội dung do JavaScript sinh, nên không dùng."
 
 [sources.canon_us_wide_angle]
 url = "https://www.usa.canon.com/learning/training-articles/training-articles-list/visual-power-in-wide-angle-imagery"
@@ -235,7 +235,12 @@ trich = "super-telephoto (300mm-plus) range"
 [rules.chan_dung]
 ten = "chân dung"
 eq_overlap = [85, 135]               # phủ ít nhất một tiêu cự quy đổi trong [85, 135]: lo_eq <= 135 và hi_eq >= 85
-ap_tele_max = 2.8                    # khẩu độ ở đầu tele <= f/2.8
+                                     #   85 : theo nguồn (canon_eu_portrait)  |  135 : QUYẾT ĐỊNH NHÓM
+ap_tele_max = 2.8                    # khẩu độ ở đầu tele <= f/2.8  |  QUYẾT ĐỊNH NHÓM
+quyet_dinh_nhom = [
+  "Mốc trên 135mm (eq_overlap[1]): không có nguồn; canon_eu_portrait chỉ nói '85mm or longer', không giới hạn trên (QĐ 4-13).",
+  "Ngưỡng f/2.8 (ap_tele_max): nguồn chỉ nói định tính rằng khẩu độ lớn giúp xóa phông (QĐ 4-13).",
+]
 note = "Mốc dưới 85 theo nguồn (QĐ 4-12). Mốc trên 135 và ngưỡng f/2.8 là QUYẾT ĐỊNH NHÓM (QĐ 4-13): nguồn chỉ nói '85mm or longer' (không giới hạn trên) và chỉ nói định tính rằng khẩu độ lớn giúp xóa phông."
 [[rules.chan_dung.can_cu]]
 source = "canon_eu_portrait"

@@ -63,7 +63,7 @@ Mọi dữ liệu bên ngoài mà nhóm dùng. Dữ liệu **không đưa lên g
 | Nguồn (khóa TOML) | Cách lưu | Bản chính |
 |---|---|---|
 | `canon_eu_beginner`, `canon_eu_landscape`, `canon_eu_wildlife`, `canon_eu_portrait`, `canon_eu_vlogging`, `canon_eu_best_vlogging` | **Nam lưu bằng trình duyệt ngày 08/10/2026** (Ctrl+S, trang web hoàn chỉnh). Trang chặn curl (HTTP 403) | `manual/canon_eu_*.html` (file gốc tên theo tiêu đề trang vẫn giữ trong `manual/`) |
-| `canon_us_lens_guide` | Nam báo: "Nam lưu bản trực tiếp qua VPN US ngày 08/10/2026 (trang chặn truy cập từ Việt Nam)". **Nhưng** dòng "saved from url" trong file là bản Wayback `https://web.archive.org/web/20260904221559/https://www.usa.canon.com/lens-buying-guide` và trang có thanh Wayback Machine → **chờ Nam xác nhận** | `manual/canon_us_lens_guide_20261008.html` |
+| `canon_us_lens_guide` | **Nam lưu bằng trình duyệt ngày 08/10/2026** (đã tắt VPN) từ bản Wayback `https://web.archive.org/web/20260904221559/https://www.usa.canon.com/lens-buying-guide` — đúng bản Claude đã đọc. Trang hãng chặn truy cập từ Việt Nam; bản thô `id_` tải bằng curl thiếu nội dung do JavaScript sinh | `manual/canon_us_lens_guide_wb20260904.html` |
 | `canon_us_wildlife`, `canon_us_wide_angle` | curl bản Wayback thô (`id_`) ngày 08/10/2026; trang hãng chặn truy cập từ Việt Nam | `canon_us_wildlife_wb20260517.html`, `canon_us_wide_angle_wb20260306.html` |
 | `nikon_85_f18g`, `nikon_macro`, `nikon_105_f2d` (không dùng) | curl ngày 08/10/2026 | `nikon_*.html` |
 
