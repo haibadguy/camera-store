@@ -6,6 +6,94 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 08/10/2026 (tối, tiếp): sửa phần nguồn của nội dung 3 theo Red Team lần 1 (T5, T2, N1). Nhánh `nam/content4`
+
+Theo `docs/reviews/redteam_n3_lan1.md` (T5, T2, N1 và phụ lục B). **Chưa đo lại holdout.** Bản trước khi sửa sao lưu ở `ai/data/kg_e8b39e6/` (sha256 từng file trùng `ai/data/kg/` lúc đó; hai file CSV khác git chỉ ở ký tự xuống dòng CRLF do `core.autocrlf`).
+
+**Sửa gì**
+
+1. **T5: áp chuẩn nguồn QĐ 4-15 cho `ai/config/mount_rules.toml` (v0.4 → v0.5).**
+   - Mỗi nguồn có bản sao HTML + văn bản, sha256 của cả hai ghi trong TOML (16 nguồn). Chi tiết cách lưu ở `docs/DATA_SOURCES.md` mục 2.4.
+   - Mỗi luật có danh sách căn cứ `[[rule.can_cu]]` (nguồn + câu trích nguyên văn, liền một đoạn), trường `suy_rong` (chỗ luật áp rộng hơn nguồn) và `nhan_dinh_nhom` (khẳng định không có nguồn). Bỏ trường `source` một dòng.
+   - Script mới `ai/survey/content3/check_rule_sources.py`: kiểm sha256, kiểm bản sao có nội dung bài, kiểm từng câu trích; câu trích có "..." bị coi là THIẾU.
+   - **Phát hiện: 6 bản sao 07/10 không dùng được.** 4 file là trang lỗi "Access Denied" (Canon Europe: EF-EOS R, EF-EOS M; Sony: bài APS-C/FF, bài ống DT), `olympus_mmf.html` là trang chặn bot "Just a moment…", `sony_la_ea.html` gần rỗng. Nay thay bằng bản Wayback thô (`id_`) và bản Nam lưu tay (Olympus).
+   - **Sửa 2 câu trích không nguyên văn:**
+     - Nikon DX/FX: v0.4 viết "…DX crop mode … DX lenses and FX lenses can be used interchangeably" như một đoạn, nhưng câu "interchangeably" nằm ở mục khác ("Can you use an FX lens on a DX camera body?") và đứng **trước**. Nay tách thành 3 căn cứ riêng, mỗi căn cứ ghi nó thuộc mục nào.
+     - Ricoh K-1: trang ghi "DA★-, DA Limited- or DA-series", v0.4 ghi "DA-, …" (mất "★"). Đã sửa.
+     - Ngoài ra trích đủ các đoạn mà v0.4 thay bằng "…" (Canon EF-EOS M, Sony DT, Sigma), và sửa câu Nikon Z f theo đúng ký tự trên trang ("[DX (24×16)]").
+   - **Ghi đủ 6 chỗ suy rộng Red Team nêu** (tổng cộng nay ghi 11 chỗ): Zf → mọi thân Z FX; Sigma 17-50 → mọi ống APS-C hãng thứ ba ngàm EF; K-1 DA → ống APS-C hãng thứ ba ngàm K; danh sách thân **tương thích** EF-S dừng ở đời 2015; danh sách thân **không nhận** EF-S dừng ở 6D; LA-EA (câu nói về ống DT, áp cho mọi ống ngàm A). Thêm: FTZ II có ống không dùng được (non-AI); câu Olympus nằm trong đoạn nói về chống rung của E-P2; 3 ống DA phủ được FF; thân EF-S nhận ống EF là suy từ mốc gắn đỏ; Fuji M "a wide variety of M Mount lenses".
+   - **3 khẳng định không có nguồn → "nhận định nhóm, chưa có nguồn", bỏ khỏi lý do luật.** Tìm trang hãng ngày 08/10/2026 chỉ thấy bài diễn đàn Canon Community:
+     - "phần sau ống EF-S chạm gương" (`canon_efs_on_ef_body`): trang Canon chỉ nói ống EF-S có back focus ngắn hơn và "a mechanical configuration that makes it so that they cannot be mounted" lên thân không tương thích → dùng câu này làm căn cứ;
+     - "DSLR Canon FF không tự cắt khung" (`canon_ef_apsc_on_ef_ff_body`, QĐ 8): lý do còn lại là câu Sigma "Not for use … as vignetting will occur";
+     - "ống DX hãng thứ ba có thể phải chọn tay" (`nikon_dx_on_fx_f`): mức `crops_sensor` (M = 1) không phụ thuộc điểm này.
+   - **Bổ sung cụm Sigma về máy phim:** câu trích nay đủ "Not for use on digital cameras having image sensors larger than APS-C size **or on 35mm or APS film cameras**, as vignetting will occur." Dùng làm căn cứ hãng cho QĐ 16 (luật `film_body_unknown`) với ống APS-C. Phần lý do về lấy nét / khẩu độ trên máy phim vẫn là nhận định nhóm.
+   - Gộp `sony_dt` và `sony_la_ea` (cùng một URL) thành một nguồn `sony_dt`.
+2. **T2: khung ống Sony không còn đoán theo mã SEL / SAL** (`mount_detect.py`, hàm mới `sony_lens_khung`; bảng mã mới `ai/config/sony_lens_codes.toml`).
+   - Ví dụ: "Sony SEL85F18 85mm F/1.8" bị v0.4 xếp `apsc` (mẫu "SEL → APS-C"), nhưng đây là ống **FE** 85mm (full-frame); "Sony SAL16105 16-105mm" bị xếp `ff` (mẫu "SAL → FF"), nhưng đây là ống **DT** (APS-C).
+   - Quy tắc mới, áp cho ống ngàm `sony_e` / `sony_a` có tiêu đề mở đầu bằng "Sony":
+     1. chữ trong phần đầu tiêu đề: "FE" → `ff`; "DT", "E <tiêu cự>", "E PZ <tiêu cự>", "APS-C" → `apsc`. Căn cứ: trang Sony "Lens names start with FE" (full frame) / "Lens names start with E" (APS-C), và bài ống DT;
+     2. không có chữ nào → tra mã trong bảng mã. Mỗi mã có trang thông số trên sony.jp (bản sao + sha256), câu trích mục 対応撮像画面サイズ ("cỡ cảm biến tương ứng"), vd SEL85F18: "●35mmフルサイズ";
+     3. có mã mà mã không có trong bảng → `khong_ro`.
+   - Bỏ `selp?\d{2,4}(?!g?m)` khỏi `LENS_APSC` và `sal\d` khỏi `LENS_FF`.
+   - Bảng mã có **13 mã**: 12 mã của chẩn đoán T2 + **SEL30M35** (E 30mm Macro, 2 ống). Chẩn đoán T2 bỏ sót mã này vì regex cũ không bắt được "sel30m35"; `check_rule_sources.py` (mục 4) tìm ra khi kiểm mọi mã cần tra trong dữ liệu.
+3. **N1: thêm 2 luật ngàm chuyển chính hãng** (`requires_adapter`, M vẫn = 0):
+   - `pentax_k_on_q_adapter`: ống ngàm K trên thân PENTAX Q, nguồn thông cáo Ricoh 11/09/2012 ("a lens mount adapter that makes it possible to use PENTAX K-mount lenses on the PENTAX Q series"; chỉ lấy nét tay);
+   - `leica_m_on_fuji_x_adapter`: ống Leica M trên thân Fujifilm X. **Có thêm** vì tìm được trang Fujifilm (trang sản phẩm + bảng tương thích, mọi thân X liệt kê đều ✔). Ghi là suy rộng vì trang nói "a wide variety of M Mount lenses" và có danh sách ống tương thích riêng.
+4. `ai/survey/content4/html_to_text.py`: đọc bảng mã theo thẻ meta charset (trang sony.jp là Shift_JIS). Kiểm trên 12 bản sao của nội dung 4: bản cũ và bản mới cho văn bản giống hệt 12/12 (`run_c4_html_to_text_check_20261008.log`).
+5. `ai/survey/redteam_n3/compare_kg_runs.py`: thêm `--expect-khung`, `--expect-rules`, `--keep-m` và các bộ kỳ vọng có tên (`--preset rt1` cho lần sửa trước, `rt1b` cho lần này, mặc định). Đã kiểm `--preset rt1` (so `kg_d339dda` với `kg_e8b39e6`): mọi số liệu giống log `run_compare_kg_20261008_rt1.log`; chỉ khác các dòng tóm tắt mới và chữ ở mục 4 (`run_compare_kg_20261008_rt1_preset_check.log`).
+
+**Cách chạy và kiểm tra**
+- `check_rule_sources.py` → `run_check_rule_sources_20261008_rt1b_lan2.log`: 16 nguồn + 13 mã OK, mọi căn cứ OK, mã thoát 0. (Lần 1 `…_lan1.log` báo DỪNG vì thiếu SEL30M35 → thêm vào bảng.)
+- Chạy nháp vào `ai/data/kg_draft_rt1b/`, so với `kg_e8b39e6`: **DỪNG**, vì có 5 ống Sony đổi khung ngoài 12 ống của chẩn đoán T2 (xem bảng dưới). Nam xem và **duyệt nhận cả 17 ống** (cách 1).
+- Chạy thật vào `ai/data/kg/` (log `ai/data/kg/run03_mount_compat_20261008_rt1b_lan1.log`), chạy lần 2 vào `ai/data/kg_draft_rt1b_lan2_final/` (log `ai/data/survey/run03_mount_compat_20261008_rt1b_lan2.log`): sha256 cả 8 file trùng nhau và trùng hai lần chạy nháp (`run_sha256_kg_20261008_rt1b.log`). Các thư mục nháp giữ nguyên.
+- So sánh cuối: `run_compare_kg_20261008_rt1b.log` (`--preset rt1b`): **0 sản phẩm đổi ngoài dự kiến, 0 cặp đổi mức ngoài dự kiến, 0 ô M đổi**.
+
+**Ảnh hưởng: M** (`compare_kg_runs.py`, log `run_compare_kg_20261008_rt1b.log`; mức tính trên ống vào M)
+
+| Chỉ số | Trước (`kg_e8b39e6`) | Sau (`kg`) |
+|---|---:|---:|
+| Kích thước M | 537 × 1.033 | 537 × 1.033 |
+| Cặp M = 1 | 72.720 | **72.720** (file `.npz` giống hệt từng byte) |
+| … cờ "chưa rõ có cắt khung" | 1.892 | 1.686 |
+| Cặp "không biết" | 5.846 | 5.846 |
+| `compatible_with` / `crops_sensor` | 70.542 / 2.178 | 70.472 / 2.248 |
+| `requires_adapter` | 16.033 | 16.301 (+152 Pentax Q, +116 Fuji X + Leica M) |
+| `incompatible` | 460.122 | 459.854 |
+| Ống "không chắc": `requires_adapter` | 2.362 | 2.419 (+28 Pentax Q, +29 Fuji) |
+| Cặp đổi giữa `compatible_with` và `crops_sensor` | – | 106 |
+| Cặp đổi cờ `crop_unknown` | – | 206 |
+
+**17 ống Sony đổi khung** (loại, ngàm, cờ phim, "không chắc" giữ nguyên):
+
+| Nhóm | ASIN | Ống | Trước → sau | Căn cứ |
+|---|---|---|---|---|
+| Chẩn đoán T2: sai hẳn | B077VYV7PH | SEL85F18 (FE 85mm) | apsc → **ff** | bảng mã (sony.jp) |
+| | B000VUIXOE | SAL16105 (DT 16-105) | ff → **apsc** | bảng mã |
+| | B00836H3Z8 | SAL18135 (DT 18-135) | ff → **apsc** | bảng mã |
+| Chẩn đoán T2: mất thông tin | B000VUFDPG | SAL18250 "Alpha DT 18-250mm" | khong_ro → apsc | chữ DT |
+| | B00FYOF61K, B06X9CV5VK, B00ZY8CII0, B0CFX2LJCB, B00U29GN6O, B0199BF87K, B078GGJLCD, B0B49YVGCH | 8 ống có cả mã SEL lẫn chữ "FE" | khong_ro → ff | chữ FE |
+| **Ngoài chẩn đoán T2** (Nam duyệt) | B0054I54JU, B006GPZ28I | SEL30M35 (E 30mm Macro) | khong_ro → apsc | bảng mã (regex cũ không bắt được mã này nên T2 bỏ sót) |
+| | B005IHAI8O | "Sony Carl ZEISS Sonnar T E 24mm F1.8 ZA" | **ff → apsc** | chữ "E 24mm". v0.4 sai: mẫu chung "zeiss … sonnar" ép thành FF |
+| | B00EZK12TY | "Sony E PZ 18-105mm f/4 G OSS" | khong_ro → apsc | chữ "E PZ 18-105mm" (mẫu chung chỉ bắt "sony e <số>") |
+| | B000JE5CKA | "Sony 16-80mm … Carl Zeiss Vario-Sonnar T DT" | khong_ro → apsc | chữ DT (v0.4 mâu thuẫn giữa "dt" và "zeiss … sonnar") |
+
+- Vì sao 106 cặp (chẩn đoán T2 ước 30): 18 (SEL85F18 trên 18 thân E FF: `crops_sensor` → `compatible_with`) + 8 (2 ống DT trên 4 thân A FF: ngược lại) + 4 (SAL18250) = **30 như chẩn đoán**; thêm 54 (SEL30M35 ×2 và E PZ 18-105 trên 18 thân E FF: `compatible_with` + cờ → `crops_sensor`) + 18 (Zeiss E 24: `compatible_with` → `crops_sensor`) + 4 (DT 16-80) = 76.
+- Vì sao 206 cặp đổi cờ (chẩn đoán ước 144): 144 (8 ống FE × 18 thân E FF: bỏ cờ, vẫn `compatible_with`) + 54 + 8 (SAL18250 và DT 16-80 trên 4 thân A FF).
+- 485 cặp trên thân APS-C chỉ đổi tên luật (`same_mount_body_apsc_lens_unknown_khung` → `same_mount_lens_covers_body`), mức vẫn `compatible_with`.
+- 66 ống Sony khác chỉ đổi chữ `evidence` (vd `khung: dt` → `khung: sony chữ: dt`, `khung: sel1855` → `khung: sony mã: SEL1855`).
+
+**Đã kiểm chứng đúng**
+- Khung 12 ống của bảng T2 (phụ lục B, cột "khung thật") khớp trang thông số Sony: 7 mã trước đây "theo hiểu biết, chưa đối chiếu nguồn" (SAL70200G/70300G/70400G, SEL16F28, SEL18200, SEL1855, SELP1650) nay đã có trang Sony xác nhận.
+- Kiểm câu trích nội dung 4 (`count_usecase.py`, log `run_c4_usecase_count_20261008_rt1b.log`): mục 1–2 (bản sao + câu trích) **giống hệt** log cũ; cả 4 luật OK.
+
+**Ảnh hưởng tới phía sau, phải chạy lại hoặc sửa theo**
+- **Holdout chưa đo lại.** Khung ống không có trong đáp án ngoài (hạn chế 4), nên lần sửa này không đổi số holdout về loại / ngàm / khung thân; chưa chạy để xác nhận.
+- Số nhãn mục đích (nội dung 4) đổi vì `kg/` đổi (so với log cũ tính trên `kg` trước `e8b39e6`): 1.285 → 1.287 ống đọc được tiêu cự + khẩu độ; phong cảnh 556 → 559, thể thao/chim 285 → 287, chân dung 144, macro 86, không nhãn 311 → 309; ống không rõ khổ 366 → 354. `ai/data/survey/usecase_labels_draft.csv` bị ghi đè; bản trước sao lưu ở `usecase_labels_draft_e8b39e6.csv`. STATUS (nội dung 4, hạn chế 7) và `content4_design.md` còn số cũ.
+- Thấy thêm khi đọc bảng nhãn (chưa sửa, thuộc việc 2 của nội dung 4): "SEL85F18 85mm **F/1.8-22**" không được nhãn chân dung vì bước đọc khẩu độ lấy "1.8-22" thành khoảng khẩu độ (ap1 = 1,8, ap2 = 22; 22 thực ra là khẩu độ nhỏ nhất), nên `ap_tele` = 22 > 2,8 (đã xem trong `usecase_labels_draft.csv`). "SEL28F20 FE 28mm f/2-22" cũng bị đọc như vậy. Chưa đếm có bao nhiêu ống bị.
+- Câu trích của `usecase_rules.toml` vẫn dùng "..." ở 3 chỗ (Canon US lens guide, Canon EU landscape, Canon EU beginner); chuẩn mới của nội dung 3 không cho phép. Chưa sửa.
+
+---
+
 ## 08/10/2026 (tối): sửa lỗi logic nội dung 3 theo Red Team lần 1 (phần code). Nhánh `nam/content4`
 
 Theo `docs/reviews/redteam_n3_lan1.md` (bản phản biện và hai phụ lục chẩn đoán A, B). Lần này **chỉ sửa code**: chưa sửa nguồn, chưa sửa bảng luật Sony SEL/SAL (T2), chưa thêm ngàm chuyển (N1), **chưa đo lại holdout**.

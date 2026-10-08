@@ -50,15 +50,33 @@ Mọi dữ liệu bên ngoài mà nhóm dùng. Dữ liệu **không đưa lên g
 | Dùng để chấm | **Loại** và **ngàm** (thân và ống) |
 | Hạn chế | Không có khổ cảm biến. Thân Canon APS-C thường ghi cả "EF" và "EF-S" → quy về `canon_efs`. Một số ống nằm ở lớp "product model" → script nhận ra ống khi tên có tiêu cự và khẩu độ |
 
-### 2.4. Các trang nguồn của bảng luật `ai/config/mount_rules.toml`
-- 14 trang, chủ yếu là trang hãng: Canon, Nikon, Sony, Ricoh/Pentax, Sigma, Olympus. Danh sách URL và câu trích nằm trong `[sources.*]` của file TOML.
-- Bản sao văn bản đã đọc: `ai/data/external/rule_sources/`.
-- Tất cả được mở và đọc ngày 07/10/2026, bằng curl hoặc trình duyệt tích hợp.
-- Trang B&H (bán lẻ) bật kiểm tra chống bot nên **không đọc**. Ba nguồn bán lẻ đã được thay bằng trang hãng.
+### 2.4. Các trang nguồn của bảng luật `ai/config/mount_rules.toml` và bảng mã `ai/config/sony_lens_codes.toml`
+Từ 08/10/2026 (bảng luật v0.5, theo Red Team T5) áp **chuẩn QĐ nội dung 4 – 15**: mỗi trang có bản sao HTML + bản văn bản, sha256 của cả hai ghi trong TOML; mỗi luật có danh sách căn cứ (nguồn + câu trích nguyên văn, liền một đoạn); script `ai/survey/content3/check_rule_sources.py` kiểm sha256, kiểm bản sao có phần nội dung bài (không phải trang lỗi / trang chặn) và kiểm từng câu trích. Lần kiểm 08/10: 16 nguồn + 13 mã Sony đều OK, mọi căn cứ OK (log `ai/data/survey/run_check_rule_sources_20261008_rt1b_lan2.log`).
+
+- Thư mục (không lên git):
+  - `ai/data/external/rule_sources/qd415/`: bản chính (curl hoặc Wayback thô `id_`), văn bản `.txt` tạo bằng `ai/survey/content4/html_to_text.py`;
+  - `ai/data/external/rule_sources/qd415/sony_jp/`: trang thông số 13 ống Sony trên sony.jp (Shift_JIS);
+  - `ai/data/external/rule_sources_manual/`: bản Nam lưu bằng trình duyệt (Olympus);
+  - `ai/data/external/rule_sources/*.html|.txt`: bản đọc ngày 07/10 (giữ nguyên, không dùng nữa).
+- **Bản 07/10 có 6 file không dùng được**: 4 file là trang lỗi "Access Denied" của Canon Europe (`canon_ef_eos_r`, `canon_ef_eos_m`) và Sony (`sony_e_apsc`, `sony_dt`); `olympus_mmf.html` là trang chặn bot "Just a moment…"; `sony_la_ea.html` gần rỗng. Tức là câu trích của các nguồn này trong bản luật 07/10 không có bản sao hợp lệ làm bằng chứng (cách đọc hôm đó không còn ghi lại được).
+
+| Nguồn (khóa TOML) | Cách lưu | Bản chính (tính từ `ai/data/external/`) |
+|---|---|---|
+| `canon_efs`, `canon_rfs`, `nikon_dx_fx`, `nikon_z_area`, `nikon_ftz`, `nikon_ft1`, `pentax_k1_crop`, `sigma_dc` | curl ngày 07/10/2026 (chép nguyên file sang `qd415/`, thêm hậu tố ngày) | `rule_sources/qd415/*_20261007.html` |
+| `canon_ef_eos_r`, `canon_ef_eos_m` | curl bản Wayback thô `id_` (20260420101801, 20260521110121) ngày 08/10/2026; trang hãng trả 403 với curl | `rule_sources/qd415/canon_ef_eos_*_wb2026*.html` |
+| `sony_e_apsc`, `sony_dt` | curl bản Wayback thô `id_` (20231204224307, 20231002215307) ngày 08/10/2026; sony.ca / sony.com trả 403. Bản Wayback mới nhất có HTTP 200 là năm 2023. `sony_dt` dùng cho cả luật LA-EA (v0.4 tách thành `sony_la_ea` cùng URL, nay gộp) | `rule_sources/qd415/sony_*_wb2023*.html` |
+| `olympus_mmf` | **Nam lưu bằng trình duyệt ngày 08/10/2026**. File gốc Nam để ở `usecase_sources/manual/OLYMPUS _ News Release_ … Live Viewfinder.html` (không phải `rule_sources_manual/` như dự kiến); Claude chép sang, sha256 giống hệt. Bản curl 07/10 cùng URL (`rule_sources/qd415/olympus_mmf_curl_20261007.html`) giữ làm bản phụ | `rule_sources_manual/olympus_mmf.html` |
+| `pentax_adapter_q` (mới, Red Team N1) | curl ngày 08/10/2026 | `rule_sources/qd415/pentax_adapter_q_20261008.html` |
+| `fuji_m_adapter`, `fuji_m_adapter_compat` (mới, Red Team N1) | curl ngày 08/10/2026 | `rule_sources/qd415/fuji_m_adapter*_20261008.html` |
+| 13 mã ống Sony (`sony_lens_codes.toml`) | curl ngày 08/10/2026 trang `https://www.sony.jp/ichigan/products/<MÃ>/spec.html` (3 ống G ngàm A ở `/archive/`). Các trang Sony tiếng Anh (sony.com, .ca, .co.uk, .ie, sony-asia.com, .com.tw, electronics.sony.com) trả 403 | `rule_sources/qd415/sony_jp/<MÃ>_spec_20261008.html` |
+
+- Trang B&H (bán lẻ) bật kiểm tra chống bot nên **không đọc**. Ba nguồn bán lẻ đã được thay bằng trang hãng (07/10).
+- 3 khẳng định trước đây có trong ghi chú luật nhưng **không tìm được trang hãng** (tìm ngày 08/10/2026, chỉ thấy bài diễn đàn Canon Community): "phần sau ống EF-S chạm gương", "DSLR Canon full-frame không tự cắt khung", "ống DX hãng thứ ba phải chọn tay chế độ cắt". Nay ghi là "nhận định nhóm, chưa có nguồn" (trường `nhan_dinh_nhom`), không dùng làm căn cứ.
 
 ### 2.5. Các trang nguồn của luật mục đích sử dụng `ai/config/usecase_rules.toml` (nội dung 4, 08/10/2026)
 - 12 trang của Canon và Nikon. URL, câu trích, sha256 của bản HTML và bản văn bản nằm trong `[sources.*]` của file TOML. Script `ai/survey/content4/count_usecase.py` kiểm sha256, kiểm bản sao có phần nội dung bài, và kiểm từng câu trích (cả 4 luật đều OK).
 - Thư mục gốc: `ai/data/external/usecase_sources/` (không lên git). Bản văn bản `.txt` trích từ `.html` bằng `ai/survey/content4/html_to_text.py`.
+- 08/10/2026: `html_to_text.py` nay đọc bảng mã theo thẻ meta charset (cho trang sony.jp). Đã kiểm trên 12 bản sao của mục này: bản cũ và bản mới cho văn bản giống hệt 12/12 (log `ai/data/survey/run_c4_html_to_text_check_20261008.log`). **Phát hiện phụ (có từ trước):** 5 file `.txt` ở thư mục gốc (`canon_us_wide_angle`, `canon_us_wildlife`, `nikon_85_f18g`, `nikon_macro`, `nikon_105_f2d`) không tái tạo được bằng `html_to_text.py` (cả bản cũ lẫn mới), tức đã được tạo bằng cách khác. File trên đĩa vẫn khớp sha256 trong TOML và mọi câu trích vẫn OK.
 
 | Nguồn (khóa TOML) | Cách lưu | Bản chính |
 |---|---|---|
@@ -96,4 +114,5 @@ Khi gọi web, User-Agent chỉ ghi tên dự án chung chung, **không** kèm t
 
 ## 4. Script dùng các nguồn này
 - `ai/survey/content3/eval_external.py`: đo độ chính xác của quy tắc. Kết quả ở `ai/data/survey/eval_external_*.{csv,json}`, `run_eval_external.log`.
-- `ai/survey/content4/count_usecase.py`: kiểm bản sao và câu trích của luật mục đích sử dụng, đếm số ống mỗi nhãn. Log `ai/data/survey/run_c4_usecase_count.log`.
+- `ai/survey/content4/count_usecase.py`: kiểm bản sao và câu trích của luật mục đích sử dụng, đếm số ống mỗi nhãn. Log `ai/data/survey/run_c4_usecase_count.log` (lần chạy lại 08/10 tối: `run_c4_usecase_count_20261008_rt1b.log`).
+- `ai/survey/content3/check_rule_sources.py`: kiểm bản sao và câu trích của bảng luật ngàm và bảng mã ống Sony; kiểm mọi mã SEL/SAL cần tra trong dữ liệu đều có trong bảng. Log `ai/data/survey/run_check_rule_sources_*.log`.

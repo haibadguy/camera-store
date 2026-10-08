@@ -2,6 +2,7 @@
 # BẢNG LUẬT TƯƠNG THÍCH NGÀM (nội dung 3)
 # =============================================================================
 # Đọc bởi: ai/pipeline/03_mount_compat.py
+# Kiểm nguồn và câu trích: ai/survey/content3/check_rule_sources.py (theo chuẩn QĐ nội dung 4 – 15)
 #
 # Mỗi cặp (thân máy, ống kính) được xếp vào ĐÚNG 1 mức:
 #   compatible_with  : lắp trực tiếp, dùng đủ khung hình         -> M = 1
@@ -14,6 +15,7 @@
 # Thân và ống được mô tả bằng 2 thuộc tính (giống file chấm tay, docs/labeling_guide.md):
 #   mount : ngàm vật lý (canon_ef, canon_efs, nikon_f, sony_e, ...)
 #   khung : ff (full-frame) | apsc | khac (MFT, 4/3, Nikon 1, GFX, APS-H...) | khong_ro
+#   Khung ống Sony có mã SEL/SAL: xem ai/config/sony_lens_codes.toml (Red Team T2).
 #
 # CÁCH ÁP LUẬT
 #   1. Duyệt các [[rule]] theo thứ tự trong file; luật ĐẦU TIÊN khớp sẽ quyết định mức.
@@ -22,97 +24,201 @@
 #      "=" ở lens_mount nghĩa là "cùng ngàm với thân".
 #      Trường tùy chọn: body_film (chỉ khớp thân máy phim / máy số), when_regular_level (xem luật film_body_unknown).
 #   3. Không luật nào khớp -> incompatible (khác ngàm, không có ngàm chuyển chính hãng trong bảng).
+#   Các trường can_cu, suy_rong, nhan_dinh_nhom, note CHỈ để ghi nguồn / lý do; script 03 không đọc.
 #
-# MỨC KIỂM CHỨNG (trường kiem_chung)
-#   "da_doc_trang"   : đã mở trang chính thức của hãng ngày 07/10/2026, đọc và trích câu khớp với luật (xem [sources.*].trich)
+# CHUẨN NGUỒN (QĐ nội dung 4 – 15, áp cho nội dung 3 từ v0.5 theo Red Team T5)
+#   [sources.*]  : mỗi trang nguồn có bản sao lưu (đường dẫn tính từ meta.thu_muc_ban_sao, không đưa lên git):
+#     ban_sao / sha256_html      : bản HTML CHÍNH để kiểm câu trích
+#     ban_sao_txt / sha256_txt   : văn bản trích từ ban_sao bằng ai/survey/content4/html_to_text.py
+#     dau_hieu_bai               : một câu có trong phần nội dung bài (để chắc bản sao không phải trang lỗi / trang chặn)
+#     cach_luu                   : curl trực tiếp / bản Wayback thô (id_) / Nam lưu bằng trình duyệt; kèm ngày
+#   [[rule.can_cu]] : danh sách căn cứ của luật, mỗi căn cứ = 1 nguồn + 1 câu trích NGUYÊN VĂN, liền một đoạn
+#                     (không ghép các câu ở các mục khác nhau bằng "..."; câu ở chỗ khác thì tách thành căn cứ riêng).
+#   suy_rong       : chỗ luật áp RỘNG HƠN điều nguồn nói (Red Team T5 nêu 6 chỗ; ghi đủ ở từng luật).
+#   nhan_dinh_nhom : khẳng định trong lý do mà KHÔNG tìm được nguồn hãng (ghi rõ, không dùng làm căn cứ).
+#
+# MỨC KIỂM CHỨNG (trường kiem_chung của luật và của từng căn cứ)
+#   "da_doc_trang"   : câu trích có trong bản sao đã lưu (script kiểm OK). Luật da_doc_trang cần >= 1 căn cứ OK.
 #   "dinh_nghia"     : suy ra từ định nghĩa (cùng ngàm, vòng ảnh lớn hơn cảm biến)
-#   "quyet_dinh_nhom": quyết định của nhóm (Nam), kèm lý do
-# Bản sao văn bản các trang đã đọc: ai/data/external/rule_sources/ (không đưa lên git).
+#   "quyet_dinh_nhom": quyết định của nhóm (Nam), kèm lý do; căn cứ (nếu có) chỉ hỗ trợ một phần lý do
 # =============================================================================
 
 [meta]
-version = "0.4"
+version = "0.5"
 date = "2026-10-08"
 default_level = "incompatible"
 khung_order = ["ff", "apsc"]   # ff phủ được apsc; "khac" chỉ khớp với chính nó
+thu_muc_ban_sao = "ai/data/external/"
+lich_su = """v0.4 -> v0.5 (08/10/2026, Red Team nội dung 3 lần 1: T5, T2, N1): áp chuẩn nguồn QĐ 4-15 (bản sao + sha256 + script kiểm);
+sửa 2 câu trích không nguyên văn (Nikon DX/FX ghép 2 mục; Ricoh thiếu '★'); ghi 6 chỗ suy rộng; bỏ 3 khẳng định không nguồn khỏi lý do;
+thêm cụm Sigma về máy phim làm căn cứ cho QĐ 16; thêm luật Pentax Adapter Q và Fujifilm M Mount Adapter; khung ống Sony qua bảng mã.
+Bản 07/10 ở ai/data/external/rule_sources/*.html: 4 trang là trang lỗi 'Access Denied' (Canon Europe x2, Sony x2), 1 trang chặn bot
+(Olympus/OM System) và sony_la_ea rỗng -> nay thay bằng bản Wayback / bản Nam lưu tay."""
 
 # -----------------------------------------------------------------------------
-# NGUỒN — tất cả đã mở và đọc ngày 07/10/2026 (curl hoặc trình duyệt), trích nguyên văn câu then chốt
+# NGUỒN
 # -----------------------------------------------------------------------------
 [sources.canon_efs]
 url = "https://asia.canon/en/support/8202262300"
-kiem_chung = "da_doc_trang"
-trich = "The following models do not support EF-S lenses. EOS-1D X / EOS-1Ds Mark III / EOS-1D Mark IV / ... / EOS 5D Mark III / EOS 5D Mark II / EOS 5D / EOS 6D / EOS 10D / EOS D60 / EOS D30"
-ghi_chu = "Danh sách trên trang dừng ở 6D; các thân Canon FF ra sau (5D IV, 5DS, 6D II, 1D X II) không có trong danh sách, áp dụng theo cùng nguyên lý (thân không có ngàm EF-S) — suy rộng."
+cach_luu = "curl ngày 07/10/2026 (bản ai/data/external/rule_sources/canon_efs.html, chép sang qd415/ không sửa)"
+ban_sao = "rule_sources/qd415/canon_efs_20261007.html"
+sha256_html = "bfd95ef1f36515118e528b0e619c72efdf58ca13dafdfa5bda380d2dff7f2bf3"
+ban_sao_txt = "rule_sources/qd415/canon_efs_20261007.txt"
+sha256_txt = "1742fea27fb53a18260edc0f4db589ef5b38ca17ee20a85e9f4f3ff1c791c7aa"
+dau_hieu_bai = "What Is an EF-S Lens?"
+ghi_chu = "Trang ghi 'Last Updated: 23 Feb 2015'. Câu cuối trang viết 'ES-S lenses' (lỗi chính tả của trang), trích nguyên văn."
 
 [sources.canon_ef_eos_r]
 url = "https://www.canon-europe.com/lenses/eos-r-adapters/mount-adapter-ef-eos-r/"
-kiem_chung = "da_doc_trang"
-trich = "The standard Mount Adapter EF-EOS R allows EF-S and EF lenses to be used on EOS R cameras seamlessly."
+cach_luu = "curl bản Wayback thô (id_) 20260420101801 ngày 08/10/2026; trang hãng trả 403 'Access Denied' với curl (bản 07/10 là trang lỗi)"
+ban_sao = "rule_sources/qd415/canon_ef_eos_r_wb20260420.html"
+sha256_html = "df6616b440c7f202bd63f6f70a1628e09783115b567acce575f15ba488e1b603"
+ban_sao_txt = "rule_sources/qd415/canon_ef_eos_r_wb20260420.txt"
+sha256_txt = "a68232d246f3ab9ecd602296c0b92286208c7b725e2b871a0634aa7f6cc74fef"
+dau_hieu_bai = "Weighing approximately 110g"
+ban_phu = "https://web.archive.org/web/20260420101801/https://www.canon-europe.com/lenses/eos-r-adapters/mount-adapter-ef-eos-r/"
 
 [sources.canon_rfs]
 url = "https://snapshot.asia.canon/en/article/whats-the-difference-between-rf-s-and-rf-lenses"
-kiem_chung = "da_doc_trang"
-trich = "your EOS R series full-frame camera automatically switches to 1.6x crop mode when it detects that an RF-S lens is attached."
+cach_luu = "curl ngày 07/10/2026"
+ban_sao = "rule_sources/qd415/canon_rfs_20261007.html"
+sha256_html = "a3b9818013c0fe6c0fd1a2bc3de4bce630f008ffc6a9a13ea80780478b1840a6"
+ban_sao_txt = "rule_sources/qd415/canon_rfs_20261007.txt"
+sha256_txt = "47b9f844253160d58753183d8cfca3e95821ed9d4c9d353faf6bab5425d0b2a6"
+dau_hieu_bai = "What’s the Difference Between RF-S and RF Lenses?"
 
 [sources.canon_ef_eos_m]
 url = "https://www.canon-europe.com/lenses/mount-adapter-ef-eos-m-lens/"
-kiem_chung = "da_doc_trang"
-trich = "Attach any lens from Canon's huge range of EF and EF-S lenses to the EOS M ... using this small, lightweight EF-M mount adaptor."
+cach_luu = "curl bản Wayback thô (id_) 20260521110121 ngày 08/10/2026; trang hãng trả 403 'Access Denied' với curl (bản 07/10 là trang lỗi)"
+ban_sao = "rule_sources/qd415/canon_ef_eos_m_wb20260521.html"
+sha256_html = "6d1502cc405a97c3c31db5daf36687f6c429d6215935b8505d9462e87803c030"
+ban_sao_txt = "rule_sources/qd415/canon_ef_eos_m_wb20260521.txt"
+sha256_txt = "240cf3d0a7404a6ffdcc0d830e6e4f28085cfaec27cfe5645384fc5e6aa1a8fd"
+dau_hieu_bai = "Expand your EOS M system and explore your creativity."
+ban_phu = "https://web.archive.org/web/20260521110121/https://www.canon-europe.com/lenses/mount-adapter-ef-eos-m-lens/"
 
 [sources.nikon_dx_fx]
 url = "https://www.nikonusa.com/learn-and-explore/c/products-and-innovation/the-dx-and-fx-formats"
-kiem_chung = "da_doc_trang"
-trich = "On a full frame FX-format camera with a DX lens mounted, the camera will automatically engage its built-in DX crop mode ... DX lenses and FX lenses can be used interchangeably."
+cach_luu = "curl ngày 07/10/2026"
+ban_sao = "rule_sources/qd415/nikon_dx_fx_20261007.html"
+sha256_html = "5196c44829fb949f15936ff3bdc77ce09d1f31f10b6467674986fc5c7c9f0cc9"
+ban_sao_txt = "rule_sources/qd415/nikon_dx_fx_20261007.txt"
+sha256_txt = "ac741fcf9f980bab2e034f8230c8bff6480da3500932916f9f0bbe13075c87ee"
+dau_hieu_bai = "Can you use a DX lens on an FX camera body?"
+ghi_chu = "Bài viết về DSLR (ngàm F). Câu 'interchangeably' thuộc mục 'Can you use an FX lens on a DX camera body?'; câu 'DX crop mode' thuộc mục 'Can you use a DX lens on an FX camera body?' -> trích thành 2 căn cứ riêng (v0.4 ghép sai thành một đoạn)."
 
 [sources.nikon_z_area]
 url = "https://onlinemanual.nikonimglib.com/zf/en/image_area_quality_and_size_31.html"
-kiem_chung = "da_doc_trang"
-trich = "Image-area selection is fixed at [ DX (24x16) ] when a DX lens is attached. (hướng dẫn sử dụng Nikon Zf)"
+cach_luu = "curl ngày 07/10/2026"
+ban_sao = "rule_sources/qd415/nikon_z_area_20261007.html"
+sha256_html = "73aea5346ac5d95f8860153aa29b4ff0c851c1a25b285beebe19acdd45ee671e"
+ban_sao_txt = "rule_sources/qd415/nikon_z_area_20261007.txt"
+sha256_txt = "43d527cbb17d476cf4115ccfc45e95e0bce741e56ebaab18581a00fd047a0a0a"
+dau_hieu_bai = "Image Recording Options (Image Area, Quality, and Size)"
+ghi_chu = "Sách hướng dẫn của RIÊNG Nikon Z f."
 
 [sources.nikon_ftz]
 url = "https://imaging.nikon.com/imaging/lineup/accessory/camera/ftz_2/"
-kiem_chung = "da_doc_trang"
-trich = "The Mount Adapter FTZ II ensures continued use of the rich variety of NIKKOR F lenses seamlessly with the Nikon Z series cameras"
+cach_luu = "curl ngày 07/10/2026"
+ban_sao = "rule_sources/qd415/nikon_ftz_20261007.html"
+sha256_html = "ab12acb135666295e6aa851ed1fe5552aad756aca405944891e03263294a3850"
+ban_sao_txt = "rule_sources/qd415/nikon_ftz_20261007.txt"
+sha256_txt = "7ae4fd0f7f7523780020300a4ce97a3187033658217aa0ad5678b4344f5fc942"
+dau_hieu_bai = "The following lenses and accessories cannot be used with the Mount Adapter FTZ II."
 
 [sources.nikon_ft1]
 url = "https://www.nikon.com/company/news/2011/0921_acc_03/"
-kiem_chung = "da_doc_trang"
-trich = "The Mount Adapter FT1 is a mount adapter that enables the use of F-mount lenses with Nikon 1 system cameras."
-ghi_chu = "Thay URL bán lẻ (B&H) bằng thông cáo của Nikon; trang B&H bật kiểm tra chống bot nên không đọc."
+cach_luu = "curl ngày 07/10/2026 (bản ai/data/external/rule_sources/nikon_ft1_news.html)"
+ban_sao = "rule_sources/qd415/nikon_ft1_20261007.html"
+sha256_html = "bfaa015828b5c2a6c1b9cfaef5780df5de3336a1854280c318a2cd23930e193c"
+ban_sao_txt = "rule_sources/qd415/nikon_ft1_20261007.txt"
+sha256_txt = "0a35f25a59b8fbe2e3f31d324ef149ce2f1849478f50c763ba61bc35f7835473"
+dau_hieu_bai = "The Mount Adapter FT1 is a mount adapter that enables the use of F-mount lenses with Nikon 1 system cameras."
+ghi_chu = "Thông cáo Nikon 2011 (thay URL bán lẻ B&H; trang B&H bật kiểm tra chống bot)."
 
 [sources.sony_e_apsc]
 url = "https://www.sony.ca/en/electronics/support/articles/00268906"
-kiem_chung = "da_doc_trang"
-trich = "Using APS-C lenses with full frame cameras: The shooting size can be set on the camera. The default setting is Auto. ... Auto: Recording sizes are automatically determined by lens and camera settings."
+cach_luu = "curl bản Wayback thô (id_) 20231204224307 ngày 08/10/2026; trang hãng (sony.ca, sony.com) trả 403 với curl (bản 07/10 là trang lỗi)"
+ban_sao = "rule_sources/qd415/sony_e_apsc_wb20231204.html"
+sha256_html = "88430377edee72328f90298ace52372472b88d9b668aff3f80ca78ec83f6cd9c"
+ban_sao_txt = "rule_sources/qd415/sony_e_apsc_wb20231204.txt"
+sha256_txt = "ec68046dee7aab86aec5d0f3ab405679238d1088480f824aced88fe57f1250e7"
+dau_hieu_bai = "Are APS-C and full frame cameras and lenses interchangeable? (α E-mount)"
+ban_phu = "https://web.archive.org/web/20231204224307/https://www.sony.ca/en/electronics/support/articles/00268906"
+ghi_chu = "Bản Wayback mới nhất có HTTP 200 khi tra CDX ngày 08/10/2026 là 2023. Trang ghi quy ước tên ống: full frame bắt đầu bằng FE, APS-C bắt đầu bằng E (căn cứ cho khung ống Sony, Red Team T2)."
 
 [sources.sony_dt]
 url = "https://www.sony.ca/en/electronics/support/articles/00029993"
-kiem_chung = "da_doc_trang"
-trich = "When a DT lens is attached to a full-frame digital camera ... The camera will only use part of the image sensor that is equivalent in size to an APS-C sensor. The image size is automatically set to that of the APS-C size setting."
-
-[sources.sony_la_ea]
-url = "https://www.sony.ca/en/electronics/support/articles/00029993"
-kiem_chung = "da_doc_trang"
-trich = "Note: When mounting a DT lens on an E-mount camera, a LA-EA series lens mount adapter is required."
-ghi_chu = "Thay URL bán lẻ (B&H) bằng trang hỗ trợ Sony. Câu trích nói về ống DT (ngàm A); suy rộng cho mọi ống ngàm A trên thân E (dòng LA-EA là ngàm chuyển A->E)."
+cach_luu = "curl bản Wayback thô (id_) 20231002215307 ngày 08/10/2026; trang hãng trả 403 với curl (bản 07/10 là trang lỗi)"
+ban_sao = "rule_sources/qd415/sony_dt_wb20231002.html"
+sha256_html = "3e728df503de9d821c82950f7ba9d56be7ca48a53fd3a637319898de9f580403"
+ban_sao_txt = "rule_sources/qd415/sony_dt_wb20231002.txt"
+sha256_txt = "27c76d0b7712d6ad20655139e40ec3fe858e8e586462e1dc8b3e728a024cf718"
+dau_hieu_bai = "Can a DT lens be used on a full-frame digital camera?"
+ban_phu = "https://web.archive.org/web/20231002215307/https://www.sony.ca/en/electronics/support/articles/00029993"
+ghi_chu = "Dùng cho 2 luật: ống DT trên thân A full-frame, và ống ngàm A trên thân E qua LA-EA (v0.4 tách thành 2 nguồn sony_dt / sony_la_ea cùng URL; nay gộp)."
 
 [sources.olympus_mmf]
 url = "https://www.olympus-global.com/en/news/2009b/nr091112ep2e.html"
-kiem_chung = "da_doc_trang"
-trich = "The system works with all Micro Four Thirds System lenses, and - via an optional MMF-1 Four Thirds Mount Adapter - all Four Thirds System lenses."
-ghi_chu = "Thay URL bán lẻ (B&H) bằng thông cáo của Olympus (giới thiệu PEN E-P2). Trang MMF-3 của OM System không mở được (trình duyệt chặn, curl không kết nối)."
+cach_luu = """Nam lưu bằng trình duyệt ngày 08/10/2026 (dòng 'saved from url' trong file ghi đúng URL trên). File gốc Nam lưu ở
+ai/data/external/usecase_sources/manual/OLYMPUS _ News Release_ OLYMPUS PEN E-P2 Micro Four Thirds interchangeable lens system camera with detachable Live Viewfinder.html
+(không phải rule_sources_manual/ như dự kiến); Claude chép sang rule_sources_manual/olympus_mmf.html, sha256 giống hệt."""
+ban_sao = "rule_sources_manual/olympus_mmf.html"
+sha256_html = "6dfad08cd67cde69b60e5146a0740f3dcff192eb257f22f4066d4cb6c626c28a"
+ban_sao_txt = "rule_sources_manual/olympus_mmf.txt"
+sha256_txt = "968c8790dd0a179e06c25ce2c4332d602ee9a12c926ab1357ecde855d5adeb9d"
+dau_hieu_bai = "via an optional MMF-1 Four Thirds Mount Adapter"
+ban_sao_phu = "rule_sources/qd415/olympus_mmf_curl_20261007.html"   # curl 07/10 cùng URL, cũng có câu trích; chỉ để đối chiếu
+ghi_chu = "Thông cáo giới thiệu PEN E-P2 (thay URL bán lẻ B&H). Trang MMF-3 của OM System chặn bot (bản 07/10 rule_sources/olympus_mmf.html là trang 'Just a moment...')."
 
 [sources.pentax_k1_crop]
 url = "https://www.ricoh-imaging.co.jp/english/products/k-1/feature/04.html"
-kiem_chung = "da_doc_trang"
-trich = "When a DA-, DA Limited- or DA-series lens is mounted on the K-1, its Crop mode automatically switches an image area to the APS-C size"
+cach_luu = "curl ngày 07/10/2026"
+ban_sao = "rule_sources/qd415/pentax_k1_crop_20261007.html"
+sha256_html = "f1d15ea83a7dfa7a9559507561190015d78c89b44186926a757a0cbaec362a57"
+ban_sao_txt = "rule_sources/qd415/pentax_k1_crop_20261007.txt"
+sha256_txt = "7b49a67883fbbacac56a9f20e350ec584e97eb36d1cab319888b0f789e26a592"
+dau_hieu_bai = "Automatic switching of an image area with attachment of a lens"
 
 [sources.sigma_dc]
 url = "https://www.sigma-global.com/en/lenses/17_50_28"
-kiem_chung = "da_doc_trang"
-trich = "Available mounts: SIGMA SA-mount, Canon EF mount, Nikon F mount, ... DC lenses have an image circle that covers APS-C size image sensors. Not for use on digital cameras having image sensors larger than APS-C size ... as vignetting will occur."
-ghi_chu = "Xác nhận luôn: ống DC bản Canon dùng ngàm EF (không phải EF-S) — điểm 'chưa đối chiếu' của QĐ 8 đã có nguồn."
+cach_luu = "curl ngày 07/10/2026"
+ban_sao = "rule_sources/qd415/sigma_dc_20261007.html"
+sha256_html = "0b08cae8e627093b2025c04a43151e433162d9ad7e49ef6bc1eb40140fbeef91"
+ban_sao_txt = "rule_sources/qd415/sigma_dc_20261007.txt"
+sha256_txt = "868e075a26bb9666f370706846c91884454ba751edf03b42ecf7515a60397f50"
+dau_hieu_bai = "17-50mm F2.8 EX DC OS HSM"
+ghi_chu = "Trang của MỘT ống (17-50mm F2.8 EX DC OS HSM, trang ghi DISCONTINUED). Xác nhận ống DC bản Canon dùng ngàm EF (không phải EF-S)."
+
+[sources.pentax_adapter_q]
+url = "https://www.ricoh-imaging.co.jp/english/news/2012/20120911_5.html"
+cach_luu = "curl ngày 08/10/2026"
+ban_sao = "rule_sources/qd415/pentax_adapter_q_20261008.html"
+sha256_html = "bf7f841f44c77c4c20ea234351a0d1eb91a7bdbf73d499289d21f0ae9c2f75c2"
+ban_sao_txt = "rule_sources/qd415/pentax_adapter_q_20261008.txt"
+sha256_txt = "b9cef6585a8f35a519dbc3bc1dcb6e02f3206d5620b42ed7ef237773d713a748"
+dau_hieu_bai = "Adapter Q for K-mount Lenses Specifications"
+ghi_chu = "Thông cáo Ricoh 11/09/2012 (Red Team N1)."
+
+[sources.fuji_m_adapter]
+url = "https://www.fujifilm-x.com/global/products/accessories/m-mount-adapter/"
+cach_luu = "curl ngày 08/10/2026"
+ban_sao = "rule_sources/qd415/fuji_m_adapter_20261008.html"
+sha256_html = "be3963fde211a2f74d8590fb2f0f0ecad46ef422b465d4e78bc3df449db60286"
+ban_sao_txt = "rule_sources/qd415/fuji_m_adapter_20261008.txt"
+sha256_txt = "932dddeb8f4dc20e2c23c513c7f205ba7fd9cb56e734d6ea0ddf035e1d732fbb"
+dau_hieu_bai = "A mount adapter that allows the use of a wide variety of M Mount lenses on the X Mount camera body."
+ghi_chu = "Trang sản phẩm của Fujifilm (Red Team N1: trước chỉ có bài TechRadar)."
+
+[sources.fuji_m_adapter_compat]
+url = "https://www.fujifilm-x.com/en-us/support/compatibility/accessories/m-mount-adapter/"
+cach_luu = "curl ngày 08/10/2026"
+ban_sao = "rule_sources/qd415/fuji_m_adapter_compat_20261008.html"
+sha256_html = "7da1d80d0d0eaaa5262633ab1c6f01f99d0a2fb51b52938aa89c88c53b28247b"
+ban_sao_txt = "rule_sources/qd415/fuji_m_adapter_compat_20261008.txt"
+sha256_txt = "f983a26218ca5e7d720e0a6a15eae45a0ac2717df9895eaa94365759941d09c2"
+dau_hieu_bai = "M MOUNT ADAPTER Compatibility Chart"
+ghi_chu = "Bảng tương thích: mọi thân X-mount liệt kê trên trang (X-H, X-Pro, X-T, X-S, X-E, X-M, X-A) đều ✔. Có mục riêng 'List of compatible M Mount lenses' (không phải mọi ống M)."
 
 # =============================================================================
 # LUẬT RIÊNG (đặt trước luật chung)
@@ -134,9 +240,16 @@ lens_mount = "*"
 lens_khung = "*"
 when_regular_level = ["compatible_with", "crops_sensor", "requires_adapter"]
 level = "unknown"
-source = ""
 kiem_chung = "quyet_dinh_nhom"
-note = "QĐ 16 (Nam, 08/10/2026; sửa cùng ngày theo Red Team T4): cặp (thân máy phim, ống) mà luật thường cho lắp được (M = 1) hoặc cần ngàm chuyển chính hãng thì xếp 'không biết' -> loại khỏi M và CVR, vẫn giữ trong đồ thị. Lý do: máy phim không có chế độ cắt khung (ống APS-C/DX bị tối góc); nhiều ống đời mới không lấy nét (motor trong ống, giao tiếp điện tử) hoặc không chỉnh được khẩu độ (ống G/E không có vòng khẩu) trên máy phim; không có nguồn hãng cho từng cặp nên không xếp chắc chắn. Cặp mà luật thường cho 'không lắp được' (khác ngàm, hoặc ống EF-S trên thân EF) thì giữ 'không lắp được': máy phim hay máy số đều không lắp được, nên không có lý do gì để bỏ ràng buộc chắc chắn này. Bản đầu (áp cho mọi cặp) làm 14.123 cặp khác ngàm thành 'không biết' (Red Team T4, log ai/data/survey/run_redteam_n3_t4.log)."
+note = "QĐ 16 (Nam, 08/10/2026; sửa cùng ngày theo Red Team T4): cặp (thân máy phim, ống) mà luật thường cho lắp được (M = 1) hoặc cần ngàm chuyển chính hãng thì xếp 'không biết' -> loại khỏi M và CVR, vẫn giữ trong đồ thị. Cặp mà luật thường cho 'không lắp được' (khác ngàm, hoặc ống EF-S trên thân EF) thì giữ 'không lắp được': máy phim hay máy số đều không lắp được. Bản đầu (áp cho mọi cặp) làm 14.123 cặp khác ngàm thành 'không biết' (Red Team T4, log ai/data/survey/run_redteam_n3_t4.log)."
+nhan_dinh_nhom = [
+  "Nhiều ống đời mới không lấy nét (motor trong ống, giao tiếp điện tử) hoặc không chỉnh được khẩu độ (ống không có vòng khẩu) trên máy phim: chưa lưu nguồn hãng cho từng cặp; đây là lý do để xếp 'không biết' thay vì 'lắp được'.",
+]
+[[rule.can_cu]]
+source = "sigma_dc"
+kiem_chung = "da_doc_trang"
+trich = "Not for use on digital cameras having image sensors larger than APS-C size or on 35mm or APS film cameras, as vignetting will occur."
+ghi_chu = "Căn cứ hãng cho ống APS-C trên máy phim 35mm: Sigma ghi rõ không dùng trên máy phim 35mm / APS vì tối góc (v0.4 trích cắt mất cụm 'or on 35mm or APS film cameras'). Chỉ là căn cứ cho ống APS-C (Sigma DC), không cho ống FF."
 
 # ---------------- Canon EF / EF-S (DSLR) ----------------
 [[rule]]
@@ -146,9 +259,27 @@ body_khung = "*"
 lens_mount = "canon_efs"
 lens_khung = "*"
 level = "incompatible"
+kiem_chung = "da_doc_trang"
+note = "Ống EF-S không lắp được thân chỉ có ngàm EF (FF 5D/6D/1D X, APS-H 1D Mk I-IV, APS-C đời đầu 10D/D30/D60): ống EF-S có cấu tạo cơ khí để không gắn được lên thân không tương thích."
+suy_rong = [
+  "Danh sách thân không nhận EF-S trên trang Canon (cập nhật 23/02/2015) dừng ở EOS-1D X / 5D Mark III / 6D. Các thân Canon ngàm EF ra sau (5D Mark IV, 5DS / 5DS R, 6D Mark II, 1D X Mark II / III) được áp cùng luật theo nguyên lý 'thân không có ngàm EF-S' — suy rộng, trang không liệt kê.",
+]
+nhan_dinh_nhom = [
+  "v0.4 ghi lý do 'phần sau ống chạm gương': trang Canon KHÔNG nói vậy (chỉ nói ống EF-S có back focus ngắn hơn và có cấu tạo cơ khí để không gắn được). Tìm 08/10/2026 chỉ thấy bài diễn đàn Canon Community, không có trang hãng -> đã bỏ khỏi lý do.",
+]
+[[rule.can_cu]]
 source = "canon_efs"
 kiem_chung = "da_doc_trang"
-note = "Ống EF-S không lắp được thân chỉ có ngàm EF (FF 5D/6D/1D X, APS-H 1D Mk I-IV, APS-C đời đầu 10D/D30/D60): phần sau ống chạm gương."
+trich = "The following models do not support EF-S lenses."
+[[rule.can_cu]]
+source = "canon_efs"
+kiem_chung = "da_doc_trang"
+trich = "EOS 5D Mark III / EOS 5D Mark II / EOS 5D / EOS 6D /EOS 10D / EOS D60 / EOS D30"
+ghi_chu = "Phần cuối danh sách thân không nhận EF-S (đầu danh sách: EOS-1D X / EOS-1Ds Mark III / ... / EOS-1D)."
+[[rule.can_cu]]
+source = "canon_efs"
+kiem_chung = "da_doc_trang"
+trich = "EF-S lenses have a mechanical configuration that makes it so that they cannot be mounted on cameras that are not compatible with ES-S lenses."
 
 [[rule]]
 id = "canon_ef_apsc_on_ef_ff_body"
@@ -157,9 +288,27 @@ body_khung = ["ff", "khac"]
 lens_mount = "canon_ef"
 lens_khung = ["apsc", "khong_ro"]
 level = "unknown"
-source = "sigma_dc"
 kiem_chung = "quyet_dinh_nhom"
-note = "QĐ 8 (07/10): ống APS-C hãng thứ ba ngàm EF (Sigma DC, Tamron Di II...) trên thân Canon FF/APS-H lắp vật lý được nhưng tối góc, DSLR Canon FF không tự cắt khung; Sigma ghi 'not for use' trên cảm biến lớn hơn APS-C. khong_ro cũng xếp unknown vì không biết vòng ảnh."
+note = "QĐ 8 (07/10): ống APS-C hãng thứ ba ngàm EF (Sigma DC, Tamron Di II...) trên thân Canon FF/APS-H lắp vật lý được nhưng tối góc; Sigma ghi 'not for use' trên cảm biến lớn hơn APS-C. khong_ro cũng xếp unknown vì không biết vòng ảnh."
+suy_rong = [
+  "Trang Sigma chỉ nói về MỘT ống (17-50mm F2.8 EX DC OS HSM). Áp cho mọi ống APS-C hãng thứ ba ngàm EF (Sigma DC khác, Tamron Di II, Tokina DX...) là suy rộng.",
+]
+nhan_dinh_nhom = [
+  "v0.4 ghi 'DSLR Canon FF không tự cắt khung': không tìm được trang hãng nói điều này (tìm 08/10/2026 chỉ thấy bài diễn đàn) -> đã bỏ khỏi lý do. Lý do còn lại là nguồn Sigma ('not for use', tối góc).",
+]
+[[rule.can_cu]]
+source = "sigma_dc"
+kiem_chung = "da_doc_trang"
+trich = "DC lenses have an image circle that covers APS-C size image sensors."
+[[rule.can_cu]]
+source = "sigma_dc"
+kiem_chung = "da_doc_trang"
+trich = "Not for use on digital cameras having image sensors larger than APS-C size or on 35mm or APS film cameras, as vignetting will occur."
+[[rule.can_cu]]
+source = "sigma_dc"
+kiem_chung = "da_doc_trang"
+trich = "SIGMA SA-mount,Canon EF mount,Nikon F mount,Pentax mount,Sony A-mount"
+ghi_chu = "Ống DC bản Canon dùng ngàm EF (không phải EF-S) — điểm 'chưa đối chiếu' của QĐ 8."
 
 [[rule]]
 id = "canon_ef_efs_on_efs_body"
@@ -168,9 +317,25 @@ body_khung = "*"
 lens_mount = ["canon_ef", "canon_efs"]
 lens_khung = "*"
 level = "compatible_with"
-source = "canon_efs"
 kiem_chung = "da_doc_trang"
 note = "Thân Canon APS-C có ngàm EF-S nhận cả ống EF và EF-S."
+suy_rong = [
+  "Danh sách thân TƯƠNG THÍCH EF-S trên trang Canon (cập nhật 23/02/2015) dừng ở đời 2015 (7D Mark II, 70D, Rebel T5i/T5, M3...). Các thân Canon APS-C ngàm EF-S ra sau (80D, 90D, 77D, Rebel T6i/T7i/T7/SL2/SL3...) được áp cùng luật — suy rộng, trang không liệt kê.",
+  "Câu trích không nói trực tiếp 'thân EF-S nhận ống EF'; điều này suy từ việc ống EF có mốc gắn riêng (chấm đỏ) trên cùng thân — xem căn cứ thứ 3.",
+]
+[[rule.can_cu]]
+source = "canon_efs"
+kiem_chung = "da_doc_trang"
+trich = "The following cameras are compatible with EF-S lenses:"
+[[rule.can_cu]]
+source = "canon_efs"
+kiem_chung = "da_doc_trang"
+trich = "EOS 7D Mark II / EOS 7D / EOS 70D / EOS 60D / EOS 60Da / EOS 50D / EOS 40D / EOS 30D / EOS 20D / EOS 20Da"
+ghi_chu = "Phần đầu danh sách thân tương thích EF-S."
+[[rule.can_cu]]
+source = "canon_efs"
+kiem_chung = "da_doc_trang"
+trich = "When attaching EF-S lenses to the camera body, align them with the white, square mount index. EF lenses should be aligned with the red, round mount index."
 
 # ---------------- Canon RF / RF-S ----------------
 [[rule]]
@@ -180,9 +345,12 @@ body_khung = "ff"
 lens_mount = "canon_rf"
 lens_khung = "apsc"
 level = "crops_sensor"
-source = "canon_rfs"
 kiem_chung = "da_doc_trang"
 note = "Thân RF full-frame tự chuyển sang cắt 1.6x khi gắn ống RF-S."
+[[rule.can_cu]]
+source = "canon_rfs"
+kiem_chung = "da_doc_trang"
+trich = "your EOS R series full-frame camera automatically switches to 1.6x crop mode when it detects that an RF-S lens is attached."
 
 [[rule]]
 id = "canon_ef_efs_on_rf_adapter"
@@ -191,9 +359,12 @@ body_khung = "*"
 lens_mount = ["canon_ef", "canon_efs"]
 lens_khung = "*"
 level = "requires_adapter"
+kiem_chung = "da_doc_trang"
+note = "Mount Adapter EF-EOS R cho phép dùng ống EF và EF-S trên thân EOS R."
+[[rule.can_cu]]
 source = "canon_ef_eos_r"
 kiem_chung = "da_doc_trang"
-note = "Mount Adapter EF-EOS R cho phép dùng ống EF và EF-S trên thân EOS R (ống EF-S: máy tự cắt khung)."
+trich = "The standard Mount Adapter EF-EOS R allows EF-S and EF lenses to be used on EOS R cameras seamlessly."
 
 # ---------------- Canon EF-M ----------------
 [[rule]]
@@ -203,9 +374,17 @@ body_khung = "*"
 lens_mount = ["canon_ef", "canon_efs"]
 lens_khung = "*"
 level = "requires_adapter"
-source = "canon_ef_eos_m"
 kiem_chung = "da_doc_trang"
 note = "Mount Adapter EF-EOS M cho phép dùng ống EF và EF-S trên thân EOS M."
+[[rule.can_cu]]
+source = "canon_ef_eos_m"
+kiem_chung = "da_doc_trang"
+trich = "Attach any lens from Canon’s huge range of EF and EF-S lenses to the EOS M - including specialist lenses like Macro and Fish Eye - using this small, lightweight EF-M mount adaptor."
+ghi_chu = "v0.4 trích bản đọc 07/10 với '...' thay cụm '- including specialist lenses like Macro and Fish Eye -'; nay trích đủ."
+[[rule.can_cu]]
+source = "canon_efs"
+kiem_chung = "da_doc_trang"
+trich = "* EF-S lenses can be used when the Mount Adapter EF-EOS M is attached."
 
 # ---------------- Nikon ----------------
 [[rule]]
@@ -215,9 +394,26 @@ body_khung = "ff"
 lens_mount = "nikon_f"
 lens_khung = "apsc"
 level = "crops_sensor"
+kiem_chung = "da_doc_trang"
+note = "Ống DX trên thân FX: máy tự dùng chế độ cắt DX."
+nhan_dinh_nhom = [
+  "v0.4 ghi 'ống DX hãng thứ ba có thể phải chọn tay chế độ cắt': trang Nikon không nói về ống hãng thứ ba; tìm 08/10/2026 không thấy trang hãng nào nói -> đã bỏ khỏi lý do. Mức crops_sensor (M = 1) không phụ thuộc điểm này.",
+]
+[[rule.can_cu]]
 source = "nikon_dx_fx"
 kiem_chung = "da_doc_trang"
-note = "Ống DX trên thân FX: máy dùng chế độ cắt DX (tự động với ống DX của Nikon; ống DX hãng thứ ba có thể phải chọn tay)."
+trich = "On a full frame FX-format camera with a DX lens mounted, the camera will automatically engage its built-in DX crop mode, thus recording an image only from the center section of the sensor."
+ghi_chu = "Mục 'Can you use a DX lens on an FX camera body?'."
+[[rule.can_cu]]
+source = "nikon_dx_fx"
+kiem_chung = "da_doc_trang"
+trich = "However, to avoid vignetting, the DX crop mode is automatically selected by the camera when a DX lens is attached."
+ghi_chu = "Cùng mục với căn cứ trên."
+[[rule.can_cu]]
+source = "nikon_dx_fx"
+kiem_chung = "da_doc_trang"
+trich = "Yes. DX lenses and FX lenses can be used interchangeably."
+ghi_chu = "Mục KHÁC ('Can you use an FX lens on a DX camera body?'), đứng TRƯỚC mục trên; v0.4 ghép câu này sau câu DX crop bằng '...' như một đoạn liền — sai thứ tự (Red Team T5)."
 
 [[rule]]
 id = "nikon_dx_on_fx_z"
@@ -226,9 +422,16 @@ body_khung = "ff"
 lens_mount = "nikon_z"
 lens_khung = "apsc"
 level = "crops_sensor"
-source = "nikon_z_area"
 kiem_chung = "da_doc_trang"
 note = "Ống Z DX trên thân Z FX: tự chọn vùng ảnh DX."
+suy_rong = [
+  "Nguồn là sách hướng dẫn của RIÊNG Nikon Z f. Áp cho mọi thân Z FX (Z5, Z6, Z7, Z8, Z9...) là suy rộng.",
+]
+[[rule.can_cu]]
+source = "nikon_z_area"
+kiem_chung = "da_doc_trang"
+trich = "Image-area selection is fixed at [DX (24×16)] when a DX lens is attached."
+ghi_chu = "v0.4 trích có dấu cách '[ DX (24x16) ]' và chữ 'x' thường thay '×'; nay theo đúng bản sao."
 
 [[rule]]
 id = "nikon_f_on_z_adapter"
@@ -237,9 +440,20 @@ body_khung = "*"
 lens_mount = "nikon_f"
 lens_khung = "*"
 level = "requires_adapter"
-source = "nikon_ftz"
 kiem_chung = "da_doc_trang"
 note = "Mount Adapter FTZ / FTZ II: ống ngàm F trên thân Z."
+suy_rong = [
+  "Trang liệt kê các ống KHÔNG dùng được với FTZ II (vd ống non-AI). Luật áp requires_adapter cho MỌI ống ngàm F — suy rộng nhỏ.",
+]
+[[rule.can_cu]]
+source = "nikon_ftz"
+kiem_chung = "da_doc_trang"
+trich = "The Mount Adapter FTZ II ensures continued use of the rich variety of NIKKOR F lenses seamlessly with the Nikon Z series cameras, in a more compact, lightweight form."
+[[rule.can_cu]]
+source = "nikon_ftz"
+kiem_chung = "da_doc_trang"
+trich = "The following lenses and accessories cannot be used with the Mount Adapter FTZ II."
+ghi_chu = "Giới hạn của luật (xem suy_rong)."
 
 [[rule]]
 id = "nikon_f_on_1_adapter"
@@ -248,9 +462,12 @@ body_khung = "*"
 lens_mount = "nikon_f"
 lens_khung = "*"
 level = "requires_adapter"
-source = "nikon_ft1"
 kiem_chung = "da_doc_trang"
 note = "Mount Adapter FT1: ống ngàm F trên thân Nikon 1 (thông cáo Nikon 2011)."
+[[rule.can_cu]]
+source = "nikon_ft1"
+kiem_chung = "da_doc_trang"
+trich = "The Mount Adapter FT1 is a mount adapter that enables the use of F-mount lenses with Nikon 1 system cameras."
 
 # ---------------- Sony ----------------
 [[rule]]
@@ -260,9 +477,17 @@ body_khung = "ff"
 lens_mount = "sony_e"
 lens_khung = "apsc"
 level = "crops_sensor"
-source = "sony_e_apsc"
 kiem_chung = "da_doc_trang"
 note = "Ống E APS-C trên thân FE: chế độ chụp APS-C/Super 35mm (Auto tự chọn theo ống)."
+[[rule.can_cu]]
+source = "sony_e_apsc"
+kiem_chung = "da_doc_trang"
+trich = "The shooting size can be set on the camera. The default setting is Auto."
+ghi_chu = "Ngay dưới tiêu đề mục 'Using APS-C lenses with full frame cameras'."
+[[rule.can_cu]]
+source = "sony_e_apsc"
+kiem_chung = "da_doc_trang"
+trich = "Auto: Recording sizes are automatically determined by lens and camera settings."
 
 [[rule]]
 id = "sony_dt_on_a_ff"
@@ -271,9 +496,17 @@ body_khung = "ff"
 lens_mount = "sony_a"
 lens_khung = "apsc"
 level = "crops_sensor"
-source = "sony_dt"
 kiem_chung = "da_doc_trang"
 note = "Ống DT trên thân A full-frame (a99, a900, a850): máy dùng vùng cảm biến cỡ APS-C. Với a900/a850 Sony lưu ý có tối góc trong kính ngắm."
+[[rule.can_cu]]
+source = "sony_dt"
+kiem_chung = "da_doc_trang"
+trich = "When a DT lens is attached to a full-frame digital camera, the entire surface of the image sensor cannot be used."
+[[rule.can_cu]]
+source = "sony_dt"
+kiem_chung = "da_doc_trang"
+trich = "The camera will only use part of the image sensor that is equivalent in size to an APS-C sensor. The image size is automatically set to that of the APS-C size setting."
+ghi_chu = "Câu liền ngay sau căn cứ trên (v0.4 nối hai câu bằng '...')."
 
 [[rule]]
 id = "sony_a_on_e_adapter"
@@ -282,9 +515,15 @@ body_khung = "*"
 lens_mount = "sony_a"
 lens_khung = "*"
 level = "requires_adapter"
-source = "sony_la_ea"
 kiem_chung = "da_doc_trang"
-note = "Ngàm chuyển dòng LA-EA của Sony: ống ngàm A trên thân E (trang hỗ trợ Sony nói rõ cho ống DT; suy rộng cho mọi ống ngàm A)."
+note = "Ngàm chuyển dòng LA-EA của Sony: ống ngàm A trên thân E."
+suy_rong = [
+  "Câu trích nói về ống DT (ngàm A, APS-C). Áp cho MỌI ống ngàm A (cả ống FF) trên thân E là suy rộng (dòng LA-EA là ngàm chuyển A -> E).",
+]
+[[rule.can_cu]]
+source = "sony_dt"
+kiem_chung = "da_doc_trang"
+trich = "Note: When mounting a DT lens on an E-mount camera, a LA-EA series lens mount adapter is required."
 
 # ---------------- Olympus / Panasonic ----------------
 [[rule]]
@@ -294,9 +533,15 @@ body_khung = "*"
 lens_mount = "four_thirds"
 lens_khung = "*"
 level = "requires_adapter"
-source = "olympus_mmf"
 kiem_chung = "da_doc_trang"
 note = "Olympus MMF-1/2/3: ống Four Thirds trên thân Micro Four Thirds (thông cáo Olympus)."
+suy_rong = [
+  "Câu trích nằm trong đoạn nói về hệ thống chống rung của PEN E-P2 ('The system works with...'), nêu MMF-1 cho phép dùng mọi ống Four Thirds. Áp cho mọi thân Micro Four Thirds (cả Panasonic) là suy rộng.",
+]
+[[rule.can_cu]]
+source = "olympus_mmf"
+kiem_chung = "da_doc_trang"
+trich = "The system works with all Micro Four Thirds System lenses, and - via an optional MMF-1 Four Thirds Mount Adapter - all Four Thirds System lenses."
 
 # ---------------- Pentax ----------------
 [[rule]]
@@ -306,9 +551,63 @@ body_khung = "ff"
 lens_mount = "pentax_k"
 lens_khung = "apsc"
 level = "crops_sensor"
-source = "pentax_k1_crop"
 kiem_chung = "da_doc_trang"
 note = "Ống DA trên K-1: chế độ Crop tự chuyển sang khổ APS-C."
+suy_rong = [
+  "Trang Ricoh nói về ống Pentax DA★ / DA Limited / DA. Áp cho ống APS-C hãng thứ ba ngàm K (Sigma DC, Tamron Di II...) là suy rộng.",
+  "Trang ghi 3 ống DA (DA★200mm, DA★300mm, DA 560mm) phủ được khung full-frame; luật vẫn xếp các ống này crops_sensor nếu khung ống là apsc.",
+]
+[[rule.can_cu]]
+source = "pentax_k1_crop"
+kiem_chung = "da_doc_trang"
+trich = "When a DA★-, DA Limited- or DA-series lens is mounted on the K-1, its Crop mode automatically switches an image area to the APS-C size covering the middle section of the image field"
+ghi_chu = "v0.4 trích 'DA-, DA Limited- or DA-series' (thiếu '★' của dòng DA★) — không nguyên văn (Red Team T5)."
+[[rule.can_cu]]
+source = "pentax_k1_crop"
+kiem_chung = "da_doc_trang"
+trich = "The following DA-series lenses cover the 35mm full-frame image area."
+ghi_chu = "Giới hạn của luật (xem suy_rong)."
+
+[[rule]]
+id = "pentax_k_on_q_adapter"
+body_mount = "pentax_q"
+body_khung = "*"
+lens_mount = "pentax_k"
+lens_khung = "*"
+level = "requires_adapter"
+kiem_chung = "da_doc_trang"
+note = "Adapter Q for K-mount Lenses: ống ngàm K trên thân PENTAX Q (thêm 08/10/2026, Red Team N1). Chỉ lấy nét tay."
+[[rule.can_cu]]
+source = "pentax_adapter_q"
+kiem_chung = "da_doc_trang"
+trich = "a lens mount adapter that makes it possible to use PENTAX K-mount lenses on the PENTAX Q series."
+[[rule.can_cu]]
+source = "pentax_adapter_q"
+kiem_chung = "da_doc_trang"
+trich = "** Only manual focusing is available with K-mount lenses."
+
+# ---------------- Fujifilm ----------------
+[[rule]]
+id = "leica_m_on_fuji_x_adapter"
+body_mount = "fuji_x"
+body_khung = "*"
+lens_mount = "leica_m"
+lens_khung = "*"
+level = "requires_adapter"
+kiem_chung = "da_doc_trang"
+note = "FUJIFILM M MOUNT ADAPTER: ống ngàm Leica M trên thân Fujifilm X (thêm 08/10/2026, Red Team N1)."
+suy_rong = [
+  "Trang Fujifilm nói 'a wide variety of M Mount lenses' và có danh sách riêng các ống M tương thích; áp cho MỌI ống ngàm M là suy rộng.",
+]
+[[rule.can_cu]]
+source = "fuji_m_adapter"
+kiem_chung = "da_doc_trang"
+trich = "A mount adapter that allows the use of a wide variety of M Mount lenses on the X Mount camera body."
+[[rule.can_cu]]
+source = "fuji_m_adapter_compat"
+kiem_chung = "da_doc_trang"
+trich = "List of compatible M Mount lenses"
+ghi_chu = "Bảng tương thích thân: mọi thân X liệt kê đều ✔ (xem ghi_chu của nguồn). Có danh sách ống M tương thích riêng (xem suy_rong)."
 
 # =============================================================================
 # LUẬT CHUNG (áp sau luật riêng)
@@ -320,7 +619,6 @@ body_khung = "*"
 lens_mount = "="
 lens_khung = "covers_body"    # vòng ảnh ống >= khổ cảm biến thân (ff >= apsc; khac chỉ khớp khac)
 level = "compatible_with"
-source = ""
 kiem_chung = "dinh_nghia"
 note = "Cùng ngàm và vòng ảnh của ống phủ hết cảm biến -> lắp trực tiếp, đủ khung (vd ống EF trên Rebel, ống FE trên a6000)."
 
@@ -331,7 +629,6 @@ body_khung = "apsc"
 lens_mount = "="
 lens_khung = "khong_ro"
 level = "compatible_with"
-source = ""
 kiem_chung = "dinh_nghia"
 note = "Thân APS-C: ống cùng ngàm, dù FF hay APS-C, đều phủ hết cảm biến."
 
@@ -343,9 +640,32 @@ lens_mount = "="
 lens_khung = "khong_ro"
 level = "compatible_with"
 crop_unknown = true
-source = "nikon_dx_fx, nikon_z_area, sony_e_apsc, sony_dt, canon_rfs, pentax_k1_crop"
 kiem_chung = "quyet_dinh_nhom"
-note = "QĐ 11 (07/10): thân FF có chế độ cắt khung chính hãng + ống cùng ngàm không rõ khung -> dù ống FF (compatible_with) hay APS-C (crops_sensor) đều lắp trực tiếp, nên M = 1. Ghi mức compatible_with kèm cờ crop_unknown = true ('chưa rõ có cắt khung'). Không áp cho Canon EF (QĐ 8)."
+note = "QĐ 11 (07/10): thân FF có chế độ cắt khung chính hãng + ống cùng ngàm không rõ khung -> dù ống FF (compatible_with) hay APS-C (crops_sensor) đều lắp trực tiếp, nên M = 1. Ghi mức compatible_with kèm cờ crop_unknown = true ('chưa rõ có cắt khung'). Không áp cho Canon EF (QĐ 8). Căn cứ: các nguồn của 6 luật crops_sensor ở trên (nikon_dx_fx, nikon_z_area, sony_e_apsc, sony_dt, canon_rfs, pentax_k1_crop) — mang theo các suy rộng của các luật đó."
+[[rule.can_cu]]
+source = "nikon_dx_fx"
+kiem_chung = "da_doc_trang"
+trich = "However, to avoid vignetting, the DX crop mode is automatically selected by the camera when a DX lens is attached."
+[[rule.can_cu]]
+source = "nikon_z_area"
+kiem_chung = "da_doc_trang"
+trich = "Image-area selection is fixed at [DX (24×16)] when a DX lens is attached."
+[[rule.can_cu]]
+source = "sony_e_apsc"
+kiem_chung = "da_doc_trang"
+trich = "Auto: Recording sizes are automatically determined by lens and camera settings."
+[[rule.can_cu]]
+source = "sony_dt"
+kiem_chung = "da_doc_trang"
+trich = "The image size is automatically set to that of the APS-C size setting."
+[[rule.can_cu]]
+source = "canon_rfs"
+kiem_chung = "da_doc_trang"
+trich = "your EOS R series full-frame camera automatically switches to 1.6x crop mode when it detects that an RF-S lens is attached."
+[[rule.can_cu]]
+source = "pentax_k1_crop"
+kiem_chung = "da_doc_trang"
+trich = "When a DA★-, DA Limited- or DA-series lens is mounted on the K-1, its Crop mode automatically switches an image area to the APS-C size covering the middle section of the image field"
 
 [[rule]]
 id = "same_mount_other"
@@ -354,6 +674,5 @@ body_khung = "*"
 lens_mount = "="
 lens_khung = "*"
 level = "unknown"
-source = ""
 kiem_chung = "quyet_dinh_nhom"
 note = "Cùng ngàm nhưng không có luật riêng (vd ống APS-C trên thân FF ở ngàm chưa có nguồn như L-mount; hoặc không biết khung thân) -> không chắc."

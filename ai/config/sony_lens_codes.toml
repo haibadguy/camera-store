@@ -1,0 +1,170 @@
+# =============================================================================
+# BẢNG MÃ ỐNG SONY (SEL / SELP / SAL) -> KHUNG (nội dung 3, Red Team T2)
+# =============================================================================
+# Đọc bởi: ai/pipeline/mount_detect.py (hàm lens_khung, nhánh ống Sony)
+# Kiểm nguồn và câu trích: ai/survey/content3/check_rule_sources.py
+#
+# VÌ SAO CÓ BẢNG NÀY
+#   Mã SEL / SAL KHÔNG cho biết khổ: SEL85F18 là FE 85mm (full-frame), SEL35F18 là E 35mm (APS-C);
+#   SAL85F28 là ống full-frame, SAL16105 là ống DT (APS-C). v0.4 đoán khổ theo mã (SEL -> APS-C, SAL -> FF) nên sai 3 ống
+#   và làm 9 ống mất thông tin khung (log ai/data/survey/run_redteam_n3_t2.log).
+#
+# CÁCH DÙNG (ống có tiêu đề mở đầu bằng "Sony", ngàm sony_e / sony_a)
+#   1. Ưu tiên chữ trong phần đầu tiêu đề: "FE" -> ff; "DT", "E <tiêu cự>", "APS-C" -> apsc
+#      (căn cứ: sony_e_apsc 'Lens names start with FE / E', sony_dt; xem mount_rules.toml).
+#   2. Tiêu đề không có các chữ đó -> tra mã trong bảng dưới.
+#   3. Có mã mà mã không có trong bảng -> khung "khong_ro" (không đoán).
+#
+# PHẠM VI: chỉ các mã có trong dữ liệu (27.940 sản phẩm sau k-core) mà tiêu đề không có chữ FE / DT / E / APS-C
+#   (13 mã, 16 ống; đếm bằng ai/survey/content3/check_rule_sources.py, mục 4). Mã có trong dữ liệu nhưng tiêu đề đã có chữ
+#   (vd SEL24240 "FE 24-240mm") không cần bảng.
+#
+# NGUỒN: trang thông số (spec.html) của từng ống trên sony.jp, mục 対応撮像画面サイズ ("cỡ cảm biến tương ứng"):
+#   "35mmフルサイズ" = full-frame 35mm; "APS-Cサイズ" / "APS-Cフォーマット専用" = cỡ APS-C / chỉ dành cho APS-C.
+#   Các trang Sony bản tiếng Anh (sony.com, sony.ca, sony.co.uk, sony.ie, sony-asia.com, sony.com.tw, electronics.sony.com)
+#   trả 403 với curl ngày 08/10/2026; sony.jp cho tải. Trang mã hóa Shift_JIS; html_to_text.py đọc theo thẻ meta charset.
+#   Bản sao ở ai/data/external/rule_sources/qd415/sony_jp/ (không lên git), curl ngày 08/10/2026.
+#   3 ống G ngàm A (SAL70200G / SAL70300G / SAL70400G) nằm ở mục lưu trữ (/archive/) của sony.jp: trang chỉ ghi tên ống,
+#   không ghi mã (型名); mã chỉ có trong URL.
+# =============================================================================
+
+[meta]
+version = "0.1"
+date = "2026-10-08"
+thu_muc_ban_sao = "ai/data/external/"
+dau_hieu_bai = "対応撮像画面サイズ"
+
+[codes.SAL85F28]
+khung = "ff"
+ten = "85mm F2.8 SAM"
+url = "https://www.sony.jp/ichigan/products/SAL85F28/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SAL85F28_spec_20261008.html"
+sha256_html = "36164c77dc4fba81153be1076ba08b82e245431a21e59f8cb23383572ae491f9"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SAL85F28_spec_20261008.txt"
+sha256_txt = "61431522813b7e4d6a023c404c415a5b3ab89a3bc06b88515da65efce93112e3"
+trich = "型名 SAL85F28 レンズマウント ソニー Aマウント 対応撮像画面サイズ 35mmフルサイズ"
+
+[codes.SAL16105]
+khung = "apsc"
+ten = "DT 16-105mm F3.5-5.6"
+url = "https://www.sony.jp/ichigan/products/SAL16105/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SAL16105_spec_20261008.html"
+sha256_html = "8edf25166967839a877d8adc521da31fa37cfa2c19c84221f5712d7e8cf65654"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SAL16105_spec_20261008.txt"
+sha256_txt = "a1a9cca36a00646d7fbe19275de031a8b196ade3ffc826391598865a4cc02918"
+trich = "名称 DT 16-105mm F3.5-5.6 対応撮像画面サイズ APS-Cサイズ"
+
+[codes.SAL18135]
+khung = "apsc"
+ten = "DT 18-135mm F3.5-5.6 SAM"
+url = "https://www.sony.jp/ichigan/products/SAL18135/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SAL18135_spec_20261008.html"
+sha256_html = "659da496ea260f85804ec3415d9e8e0cfa0c1220efe5ccbb7cc2906cda7e67a6"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SAL18135_spec_20261008.txt"
+sha256_txt = "e17d05602fd6a87e1b04078ca5945893e7c3b7a81c1091829e29c1d9fa783130"
+trich = "型名 SAL18135 レンズマウント ソニー Aマウント 対応撮像画面サイズ ●APS-Cフォーマット専用"
+
+[codes.SAL70200G]
+khung = "ff"
+ten = "70-200mm F2.8 G"
+url = "https://www.sony.jp/ichigan/products/archive/SAL70200G/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SAL70200G_spec_20261008.html"
+sha256_html = "f8af09b94ab6b41ba344c5d409eed674e250e5aafb85928a404a2b7906b3fcc2"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SAL70200G_spec_20261008.txt"
+sha256_txt = "c44bbc1b0a6995dc6836998d017e364e7fb4f3d81c95d8276d57c1ae8222effd"
+trich = "名称 70-200mm F2.8 G 対応撮像画面サイズ 35mmフルサイズ"
+ghi_chu = "Trang lưu trữ: mã chỉ có trong URL."
+
+[codes.SAL70300G]
+khung = "ff"
+ten = "70-300mm F4.5-5.6 G SSM"
+url = "https://www.sony.jp/ichigan/products/archive/SAL70300G/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SAL70300G_spec_20261008.html"
+sha256_html = "02eecfe088cd3cc217cf023734feb6a183c3b20a2e5c34098fe9fb5e474ced56"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SAL70300G_spec_20261008.txt"
+sha256_txt = "d340a84e77838cc1acbf9ca157cc575b80505bd9b9e82bc6dcd2166a6ba9cf32"
+trich = "名称 70-300mm F4.5-5.6 G SSM 対応撮像画面サイズ 35mmフルサイズ"
+ghi_chu = "Trang lưu trữ: mã chỉ có trong URL."
+
+[codes.SAL70400G]
+khung = "ff"
+ten = "70-400mm F4-5.6 G SSM"
+url = "https://www.sony.jp/ichigan/products/archive/SAL70400G/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SAL70400G_spec_20261008.html"
+sha256_html = "cfc4c437589210378d4468503063e8df3bf30ca76dc9127b227619e855d79ec9"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SAL70400G_spec_20261008.txt"
+sha256_txt = "dccb33fd90b8d9c42185f02b269cd6b47a8c531f943955d12f8ec491228f767a"
+trich = "名称 70-400mm F4-5.6 G SSM 対応撮像画面サイズ 35mmフルサイズ"
+ghi_chu = "Trang lưu trữ: mã chỉ có trong URL."
+
+[codes.SEL16F28]
+khung = "apsc"
+ten = "E 16mm F2.8"
+url = "https://www.sony.jp/ichigan/products/SEL16F28/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SEL16F28_spec_20261008.html"
+sha256_html = "f46848fb6c0d058193c8a90d7bea12ab8042a00b6ed04c1be1ce6c9199bb925b"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SEL16F28_spec_20261008.txt"
+sha256_txt = "5fb61d76bea27017edb6bd84b6505657c7d3ffcd6df54a54720202ae71a5b2cd"
+trich = "型名 SEL16F28 レンズマウント ソニー Eマウント 対応撮像画面サイズ APS-Cサイズ"
+
+[codes.SEL18200]
+khung = "apsc"
+ten = "E 18-200mm F3.5-6.3 OSS"
+url = "https://www.sony.jp/ichigan/products/SEL18200/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SEL18200_spec_20261008.html"
+sha256_html = "161f3cd0aed07966e16e06515e46dd69eb650cf74935f66b89c18ceefa588239"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SEL18200_spec_20261008.txt"
+sha256_txt = "878d262b9a393cc515aafc55176691d6a202587e76ab8ab9f607078123bfef3f"
+trich = "型名 SEL18200 レンズマウント ソニー Eマウント 対応撮像画面サイズ APS-Cサイズ"
+
+[codes.SEL1855]
+khung = "apsc"
+ten = "E 18-55mm F3.5-5.6 OSS"
+url = "https://www.sony.jp/ichigan/products/SEL1855/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SEL1855_spec_20261008.html"
+sha256_html = "34db343a475eccc30b8377d498e4b86e839d5a2e9a589d4257e5829bd7a4fee8"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SEL1855_spec_20261008.txt"
+sha256_txt = "db1be8a4ac393d9e064f72028b73284b78db1dd5be5acf33c081971114077a68"
+trich = "型名 SEL1855 レンズマウント ソニー Eマウント 対応撮像画面サイズ APS-Cサイズ"
+
+[codes.SEL35F18]
+khung = "apsc"
+ten = "E 35mm F1.8 OSS"
+url = "https://www.sony.jp/ichigan/products/SEL35F18/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SEL35F18_spec_20261008.html"
+sha256_html = "bf69c5ccfbcccc2363a852f95f32a23df959f5dea105648c5aff339f7efb5fa3"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SEL35F18_spec_20261008.txt"
+sha256_txt = "46cf97ef8d1f11787fe9f80c34dd48b81388a084b1cb75ab0778f436e1b5af56"
+trich = "型名 SEL35F18 レンズマウント ソニー Eマウント 対応撮像画面サイズ ●APS-Cフォーマット専用"
+
+[codes.SEL85F18]
+khung = "ff"
+ten = "FE 85mm F1.8"
+url = "https://www.sony.jp/ichigan/products/SEL85F18/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SEL85F18_spec_20261008.html"
+sha256_html = "05fd400f4e0daa0f27aee3fbe4ddec99f69c1531b53060c97fb9cbf19be598e4"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SEL85F18_spec_20261008.txt"
+sha256_txt = "5236e837091afb71a7e8b6397e0096741cb32346bd5f1f4b25236a61c31298e0"
+trich = "型名 SEL85F18 レンズマウント ソニー Eマウント 対応撮像画面サイズ ●35mmフルサイズ"
+ghi_chu = "v0.4 xếp ống này apsc (mã SEL) — sai (Red Team T2)."
+
+[codes.SEL30M35]
+khung = "apsc"
+ten = "E 30mm F3.5 Macro"
+url = "https://www.sony.jp/ichigan/products/SEL30M35/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SEL30M35_spec_20261008.html"
+sha256_html = "35e9e0e736b5a5a9f7d6ad767d9a6c7e1c429a2268f0bad6d7a8c2cb6e3f2926"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SEL30M35_spec_20261008.txt"
+sha256_txt = "dd20e044c53db487aa37ddb10c1311a496aa76cec77e136b0cd19150925ba4ec"
+trich = "型名 SEL30M35 レンズマウント ソニー Eマウント 対応撮像画面サイズ APS-Cフォーマット専用"
+ghi_chu = "Không nằm trong 29 ống của chẩn đoán T2: regex cũ \\bselp?\\d{2,4}(?!g?m) không bắt được 'sel30m35', nên v0.4 để khong_ro. Tìm thấy khi chạy check_rule_sources.py mục 4."
+
+[codes.SELP1650]
+khung = "apsc"
+ten = "E PZ 16-50mm F3.5-5.6 OSS"
+url = "https://www.sony.jp/ichigan/products/SELP1650/spec.html"
+ban_sao = "rule_sources/qd415/sony_jp/SELP1650_spec_20261008.html"
+sha256_html = "6fdad23ee0c89b996eb5b2ef226518616945d38fa26996b62fa11921cda4b313"
+ban_sao_txt = "rule_sources/qd415/sony_jp/SELP1650_spec_20261008.txt"
+sha256_txt = "9d8f1206214ab56a7a21712a1b350583c73d0bf0b8bb32273dd5b849910dd1c1"
+trich = "型名 SELP1650 レンズマウント ソニー Eマウント 対応撮像画面サイズ ●APS-Cフォーマット専用"

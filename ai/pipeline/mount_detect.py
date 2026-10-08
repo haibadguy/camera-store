@@ -6,7 +6,9 @@ Quy ước mã ngàm và khung: giống docs/labeling_guide.md.
 NGUYÊN TẮC: chỉ gán ngàm khi văn bản NÓI RÕ (tên ngàm, tiền tố dòng ống, dòng máy, hoặc hãng + DSLR).
 details["Compatible Mountings"] KHÔNG dùng ở đây (QĐ 1) — chỉ lưu để phân tích.
 """
+import os
 import re
+import tomllib
 
 # -----------------------------------------------------------------------------
 # 1. Loại sản phẩm
@@ -324,20 +326,56 @@ def body_series(title):
 # -----------------------------------------------------------------------------
 MOUNT_FIXED_KHUNG = {"canon_efs": "apsc", "canon_efm": "apsc", "fuji_x": "apsc", "samsung_nx": "apsc",
                      "mft": "khac", "four_thirds": "khac", "nikon_1": "khac", "pentax_q": "khac", "fuji_g": "khac"}
+# Mã SEL / SAL của Sony KHÔNG cho biết khổ (Red Team T2): đã bỏ khỏi hai regex dưới, xem nhánh Sony trong lens_khung.
 LENS_APSC = re.compile(r"\bef-?s\b|\brf-s(?=\d|\b)|\bdx\b|\bdt\b|\bdc\b|\bdi[\s-]?ii\b(?!i)|\bdi\s?iii-a\b|\bpentax[\s-]+(?:smc\s+)?da\b"
-                       r"|\bhd\s+da\b|\bda\s?\*|\bda\s+\d|\baps-?c\b|\bsony\s+e\s+\d|\bselp?\d{2,4}(?!g?m)|\bcrop\b")
+                       r"|\bhd\s+da\b|\bda\s?\*|\bda\s+\d|\baps-?c\b|\bsony\s+e\s+\d|\bcrop\b")
 LENS_FF = re.compile(r"\bfe\b|\bfx\b(?!-)|\bdg\b|\bdi\b(?![\s-]?ii)|\bdi\s?iii\b(?!-a)|\bfull[\s-]?frame\b|\bd\s?fa\b"
                      r"|\bfa\b|\bcanon\s+ef\s?\d|^canon\b.*\bef\s?\d|\brf\s?\d|\bnikkor\s+z\b(?!.*\bdx\b)"
-                     r"|\baf-[sp]\b(?!.*\bdx\b)|\bsal\d|\b35mm\s+film\b"
+                     r"|\baf-[sp]\b(?!.*\bdx\b)|\b35mm\s+film\b"
                      # ống Nikon AF / AF-D đời trước AF-S đều là FX; dòng Zeiss Otus/Milvus/Classic cho DSLR là FF
                      r"|\bnikon\s+af\b(?!.*\bdx\b)|\baf(?:-d)?\s+(?:zoom-)?(?:micro-)?nikkor\b(?!.*\bdx\b)"
                      r"|\bzeiss\b.*\b(?:otus|milvus|distagon|planar|makro-planar|sonnar)\b")
+
+
+# --- Ống Sony (Red Team T2, 08/10/2026) ---
+# Áp cho ống ngàm sony_e / sony_a có tiêu đề mở đầu bằng "Sony". Thứ tự:
+#   1. chữ trong phần đầu tiêu đề: "FE" -> ff; "DT", "E <tiêu cự>", "APS-C" -> apsc (trang Sony: tên ống FF bắt đầu bằng FE,
+#      ống APS-C bắt đầu bằng E; ống DT là ống cho cảm biến APS-C — nguồn sony_e_apsc, sony_dt trong mount_rules.toml);
+#   2. không có chữ nào -> tra mã SEL/SELP/SAL trong ai/config/sony_lens_codes.toml (mỗi mã có trang thông số Sony);
+#   3. có mã mà mã không có trong bảng -> khong_ro (không đoán khổ theo mã).
+# Không có chữ, không có mã -> dùng luật khung chung bên dưới.
+SONY_CODES_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config", "sony_lens_codes.toml")
+SONY_CODES = {c: v["khung"] for c, v in tomllib.load(open(SONY_CODES_FILE, "rb"))["codes"].items()}
+SONY_BRAND = re.compile(r"^\s*sony\b")
+SONY_WORDS = [("ff", re.compile(r"\bfe\b(?!-)|\bfe\s?\d")),
+              ("apsc", re.compile(r"\bdt\b|\b(?:sony\s+)?e\s+(?:pz\s+)?\d{1,3}(?:-\d{1,3})?\s?mm|\baps-?c\b"))]
+SONY_CODE = re.compile(r"\b(?:selp?|sal)\d[0-9a-z]*\b")
+
+
+def sony_lens_khung(t):
+    """t = head(tiêu đề viết thường). Trả (khung, evidence) hoặc None nếu không có chữ hay mã nào."""
+    hits = [(k, m.group(0)) for k, rx in SONY_WORDS for m in [rx.search(t)] if m]
+    if hits:
+        ks = {k for k, _ in hits}
+        ev = " / ".join(w for _, w in hits)
+        return (ks.pop(), f"sony chữ: {ev}") if len(ks) == 1 else ("khong_ro", f"sony mâu thuẫn: {ev}")
+    codes = sorted({m.group(0).upper() for m in SONY_CODE.finditer(t)})
+    if codes:
+        ks = {SONY_CODES.get(c) for c in codes}
+        if None in ks:
+            return "khong_ro", f"sony mã chưa có nguồn: {'/'.join(c for c in codes if c not in SONY_CODES)}"
+        return (ks.pop(), f"sony mã: {'/'.join(codes)}") if len(ks) == 1 else ("khong_ro", f"sony mã mâu thuẫn: {'/'.join(codes)}")
+    return None
 
 
 def lens_khung(title, mount):
     if mount in MOUNT_FIXED_KHUNG:
         return MOUNT_FIXED_KHUNG[mount], "theo ngàm"
     t = head(title.lower())
+    if mount in ("sony_e", "sony_a") and SONY_BRAND.search(t):
+        s = sony_lens_khung(t)
+        if s:
+            return s
     a, f = LENS_APSC.search(t), LENS_FF.search(t)
     if mount == "canon_rf" and re.search(r"\brf-s", t):
         return "apsc", "rf-s"
