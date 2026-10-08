@@ -11,7 +11,12 @@ Bản đầu (v0) chép nguyên từ ai/survey/content3/eval_external.py (head_f
 """
 import re
 
-READER_VERSION = "v0"
+READER_VERSION = "v1"
+# v1 (08/10/2026, sửa theo nửa fix và 2 lỗi đã biết; kế hoạch mục 7 bước A, mục 9):
+#   S1 lỗi đã biết "F/1.8-22": dải "a1-a2" có a2 >= 11 là dải từ mở lớn nhất tới khép nhỏ nhất, không phải zoom
+#      khẩu độ thay đổi -> bỏ a2. Cả dải >= 11 ("f/22-32") -> bỏ cả lần khớp đó, tìm khẩu độ kế tiếp.
+#   S2 lỗi đã biết "Tokina 12mm - 24mm": tiêu cự zoom ghi "mm" ở cả hai đầu.
+#   S3 ca fix B07PZB3YKH: khẩu độ nằm ngay sau "with" ("14-140mm ... Lens with F3.5-5.6 II").
 
 
 def head_for(t):
@@ -24,12 +29,31 @@ def head_main(t):
     return re.split(r"\s(?:with|w/|\+|&|plus|bundle|kit)\s|\s\+", head_for(t), maxsplit=1)[0]
 
 
-FOCAL = re.compile(r"(\d{1,4}(?:\.\d)?)\s?(?:-\s?(\d{1,4}(?:\.\d)?))?\s?mm")
+# S2: "(?:mm\s?)?" cho phép "12mm - 24mm" (v0 chỉ đọc được 12). "50mm f/1.8" vẫn chỉ đọc 50 (không có "mm" thứ hai).
+FOCAL = re.compile(r"(\d{1,4}(?:\.\d)?)\s?(?:mm\s?)?(?:-\s?(\d{1,4}(?:\.\d)?))?\s?mm")
 APER = re.compile(r"(?:f\s?/?\s?|1\s?:\s?)(\d{1,2}(?:\.\d{1,2})?)(?:\s?-\s?(\d{1,2}(?:\.\d{1,2})?))?", re.I)
+# S1: ngưỡng 11. Trong 1.581 tên ống của Lensfun, khẩu độ đầu tele lớn nhất của zoom là f/9 (Canon RF 200-800mm F6.3-9);
+# khẩu độ khép nhỏ nhất của ống thường là f/16, f/22, f/32. Ống một tiêu cự f/11 (vd RF 800mm F11) không có dải nên giữ.
+MIN_APERTURE_FROM = 11.0
+# S3: khẩu độ đứng ngay sau "with" / "w/" (head_main cắt ở đó).
+WITH_APER = re.compile(r"\s(?:with|w/)\s+(?=(?:f\s?/?\s?|1\s?:\s?)\d)")
 
 
 def _f(x):
     return None if x is None else float(x)
+
+
+def _aperture(t, start):
+    """Lần khớp khẩu độ đầu tiên hợp lệ: ưu tiên sau tiêu cự (từ vị trí start), không có thì ở bất kỳ đâu."""
+    for s in (t[start:], t):
+        for am in APER.finditer(s):
+            a1, a2 = _f(am.group(1)), _f(am.group(2))
+            if a2 is not None and a2 >= MIN_APERTURE_FROM:
+                if a1 >= MIN_APERTURE_FROM:          # "f/22-32": cả dải là khẩu độ khép -> tìm tiếp
+                    continue
+                a2 = None                            # "F/1.8-22" -> f/1.8
+            return a1, a2
+    return None
 
 
 def read_text(text):
@@ -39,15 +63,23 @@ def read_text(text):
     fm = FOCAL.search(t)
     if not fm:
         return None
-    am = APER.search(t[fm.end():]) or APER.search(t)
-    if not am:
+    ap = _aperture(t, fm.end())
+    if not ap:
         return None
-    return _f(fm.group(1)), _f(fm.group(2)), _f(am.group(1)), _f(am.group(2))
+    return _f(fm.group(1)), _f(fm.group(2)), ap[0], ap[1]
 
 
 def read_title(title):
-    """Đọc từ tiêu đề Amazon (phần chủ thể)."""
-    return read_text(head_main(title))
+    """Đọc từ tiêu đề Amazon (phần chủ thể). S3: phần chủ thể có tiêu cự mà không có khẩu độ, và ngay sau chỗ cắt
+    là "with <khẩu độ>" -> đọc thêm khẩu độ đó."""
+    h = head_main(title)
+    r = read_text(h)
+    if r is None and FOCAL.search(h):
+        rest = head_for(title)[len(h):]
+        m = WITH_APER.match(rest)
+        if m:
+            r = read_text(h + " " + rest[m.end():])
+    return r
 
 
 # ---------------------------------------------------------------- khoảng của nút (QĐ 4-1, content4_design mục 3.2)

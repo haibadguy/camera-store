@@ -144,4 +144,44 @@ Kết quả khớp (log `run_c4_fa_match_20261008.log`):
 
 ## 9. Sửa đổi kế hoạch
 
-(chưa có)
+Ghi ngày 08/10/2026, **sau bước A, trước khi chạy holdout** (chưa chạy `fa_eval.py` trên holdout).
+
+**9.1. Kết quả bước A (nửa fix, bộ đọc trước khi sửa).** 90 ô lệch, phân loại ở `ai/survey/content4/n4_fa_fix_errors.csv`, đếm bằng `fa_errors.py` (log `ai/data/survey/n4_fa/run_fa_errors_fix_v0_20261008_lan2.log`):
+
+| Phép đo / nguồn | Số ô | Lệch | `dap_an_sai` | `doc_sai` | `khong_ro` |
+|---|---:|---:|---:|---:|---:|
+| Khẩu độ / Lensfun | 237 | 14 | 10 (khớp nhầm ống khác) | 2 | 2 (tiêu đề không ghi khẩu độ) |
+| Tiêu cự / Lensfun | 167 | 26 | 26 (khớp nhầm) | 0 | 0 |
+| Tiêu cự / Wikidata | 179 | 50 | 45 (khớp nhầm) + 5 (P2151 chỉ có 1 giá trị cho zoom) | 0 | 0 |
+
+- **Gần như mọi ca lệch là do đáp án**, chủ yếu khớp nhầm. Nguồn không có đúng ống trong tiêu đề, nên ống duy nhất còn lại sau khi khớp lại là một ống khác cùng hãng, cùng khẩu độ, cùng token chữ, chỉ khác tiêu cự. Ví dụ: "Canon EF 24-105mm f/4L IS USM" khớp với "Canon EF 16-35mm F4L IS USM" của Wikidata, vì hai tên chỉ khác nhau ở chính thuộc tính đang đo.
+- Đây là giới hạn của cách khớp không dùng thuộc tính cần đo (mục 8.4). Hệ quả: **T1, T2, K1, K2 thô là cận dưới** của độ chính xác bộ đọc, phần lớn phần thiếu là sai của bước khớp. Không sửa bước khớp (ngoài phạm vi, mục 7.A.4).
+
+**9.2. Số phụ, đăng ký thêm.** Sau khi phân loại các ô lệch của holdout (mục 7.B.3), báo thêm:
+- **tỉ lệ ô không sai do bộ đọc** = 1 − (`doc_sai` + `ca_hai`) / số ô, theo từng phép đo và nguồn;
+- khoảng tin cậy bootstrap theo cụm, cùng cách với số chính;
+- ô `khong_ro` tính là "không sai do bộ đọc" và đếm riêng.
+
+Số này dựa trên phân loại của người sửa bộ đọc (Claude), nên chỉ là **số phụ**; số chính vẫn là T1, T2, K1, K2 thô. Đã cài trong `fa_errors.py` trước khi chạy holdout. Trên nửa fix (bộ đọc trước khi sửa): khẩu độ 235/237 = 99,2% [97,8–100], tiêu cự Lensfun 167/167, Wikidata 179/179.
+
+**9.3. Cột `chi_tiet` của bảng phân loại** gồm:
+- `khop_nham_ong_khac`;
+- `nguon_thieu_gia_tri`;
+- `tieu_de_go_loi`;
+- `tieu_de_cat_som`;
+- `tieu_de_khong_co_khau_do`.
+
+Ô mà tiêu đề không ghi thông số cần đo xếp `khong_ro`: bộ đọc không có gì để đọc, đáp án vẫn đúng.
+
+**9.4. Các sửa của bộ đọc (`lens_specs.py` v1)**:
+
+| # | Sửa | Căn cứ | Thấy thêm ở đâu |
+|---|---|---|---|
+| S1 | Dải "a1-a2" có a2 ≥ 11 là dải từ khẩu độ mở lớn nhất tới khép nhỏ nhất → bỏ a2. Cả dải ≥ 11 (vd "f/22-32") → bỏ lần khớp đó, đọc khẩu độ kế tiếp | Lỗi đã biết "F/1.8-22" (mục 6.2). Ngưỡng 11: trong 1.581 tên ống Lensfun, khẩu độ đầu tele lớn nhất của zoom là f/9 (Canon RF 200-800mm F6.3-9) | Khi chọn ngưỡng, đã in phân bố a2 và các tiêu đề có a2 ≥ 9 của mọi ống **không thuộc holdout** (script nháp, không lưu). Thấy thêm "Sigma 60-600mm f/22-32 … F4.5-6.3" (2 ống không khớp được nguồn nào, không thuộc fix lẫn holdout), nên S1 có thêm vế "cả dải ≥ 11" |
+| S2 | Tiêu cự "12mm - 24mm" | Lỗi đã biết (mục 6.1) | Không ống nào của tập đo có dạng này: không đổi số đo |
+| S3 | Phần chủ thể có tiêu cự mà không có khẩu độ, ngay sau chỗ cắt là "with / w/ <khẩu độ>" → đọc khẩu độ đó | Ca fix B07PZB3YKH | |
+| — | **Không sửa** "1.2.8" (lỗi gõ đơn lẻ, B00NLBGD1A). **Không đọc một phần** (có tiêu cự, không có khẩu độ → vẫn trả về rỗng như v0), vì tiêu cự đọc một mình không đo được: phép đo tiêu cự cần khẩu độ trong tiêu đề để khớp | | |
+
+- Kiểm bằng ví dụ dựng tay: `ai/survey/content4/test_lens_specs.py`, 38/38 đúng (log `ai/data/survey/n4_fa/run_test_lens_specs_v1_20261008.log`).
+- So `cu` với `moi` trên 1.339 ống (`fa_reader_diff.py`, log `run_fa_reader_diff_v1_20261008.log`): **13 ống đổi kết quả đọc**: 11 ngoài tập đo, 1 ở nửa fix (B07PZB3YKH), **1 ở holdout**. Ống holdout này chỉ được đếm, không in. Theo mục 6.3, có thể là B01IPC1EOU (Irix 15mm f/2.4-22).
+- Nửa fix sau khi sửa (log `run_fa_eval_fix_v1_20261008.log`): K1 223 → 224/237, K2 225 → 226/237. T1, T2 không đổi. Không ô nào từ đúng thành sai.
