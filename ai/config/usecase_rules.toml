@@ -8,7 +8,7 @@
 #
 # PHẠM VI
 #   - Chỉ gắn cho ống kính (item_type = "ong") đọc được cả tiêu cự lẫn khẩu độ từ tiêu đề
-#     (eval_external.lens_sig(head_main(title)); độ chính xác của bước đọc này đo ở việc 2).
+#     (ai/pipeline/lens_specs.read_title, bản v1; độ chính xác đo ở việc 2: docs/reviews/n4_focal_aperture_plan.md).
 #   - Thân máy không có nhãn mục đích.
 #   - Nhãn gắn theo KHỔ MÀ ỐNG ĐƯỢC THIẾT KẾ CHO, không theo thân của người dùng (QĐ 4-4).
 #   - 4 nhãn: chan_dung, phong_canh, the_thao_chim, macro. Nhãn vlog ĐÃ BỎ (QĐ 4-11).
@@ -32,8 +32,9 @@
 # =============================================================================
 
 [meta]
-version = "0.2"
+version = "0.3"
 date = "2026-10-08"
+# v0.3: 3 câu trích có "..." thay bằng đoạn nguyên văn liền (chuẩn nội dung 3: không ghép đoạn); đọc tiêu đề bằng lens_specs v1
 
 # -----------------------------------------------------------------------------
 # HỆ SỐ CROP THEO KHỔ ỐNG (định nghĩa: đường chéo full-frame / đường chéo cảm biến)
@@ -196,7 +197,7 @@ trich = "Wide-angle lenses – those up to around 35mm – will include more of 
 [[rules.phong_canh.can_cu]]
 source = "canon_us_lens_guide"
 kiem_chung = "da_doc_trang"
-trich = "Wide-Angle 8-35mm ... Often used for interiors, landscapes"
+trich = "Wide-Angle 8-35mm Wide-angle lenses see a broad, wide field of view, and make it easy to get large subjects or areas into an image. Often used for interiors, landscapes"
 [[rules.phong_canh.can_cu]]
 source = "canon_eu_wildlife"
 kiem_chung = "da_doc_trang"
@@ -208,7 +209,7 @@ trich = "a wide-angle lens was considered a lens with a focal length of about 35
 [[rules.phong_canh.can_cu]]
 source = "canon_eu_landscape"
 kiem_chung = "da_doc_trang"
-trich = "For classic expansive landscape images ... you'll need a wide-angle lens"
+trich = "For classic expansive landscape images that capture a broad sweep of the vista, big dramatic skies and reflections in lakes, you'll need a wide-angle lens"
 
 [rules.the_thao_chim]
 ten = "thể thao / chim"
@@ -217,7 +218,7 @@ note = "canon_eu_beginner nói 'above 300mm' (> 300), hai trang kia nói 'at lea
 [[rules.the_thao_chim.can_cu]]
 source = "canon_eu_beginner"
 kiem_chung = "da_doc_trang"
-trich = "Lenses above 300mm ... are typically used in genres such as wildlife and sports/action photography"
+trich = 'Lenses above 300mm are sometimes called "super-telephoto" and are typically used in genres such as wildlife and sports/action photography'
 [[rules.the_thao_chim.can_cu]]
 source = "canon_us_wildlife"
 kiem_chung = "da_doc_trang"

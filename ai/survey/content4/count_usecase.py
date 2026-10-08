@@ -3,9 +3,11 @@
 Làm 4 việc:
   1. Kiểm bản sao của từng nguồn (ai/data/external/usecase_sources/): sha256 khớp TOML, có phần nội dung bài
      (câu dau_hieu_bai, không phải trang lỗi / chỉ có hộp cookie).
-  2. Kiểm từng câu trích của mỗi luật có trong bản sao văn bản. Luật đang dùng mà không còn căn cứ
-     "da_doc_trang" nào OK thì DỪNG (mã thoát 2), không đếm.
-  3. Gắn nhãn cho từng ống (chỉ ống đọc được tiêu cự + khẩu độ từ tiêu đề), đếm số ống mỗi nhãn, kèm các số đối chiếu.
+  2. Kiểm từng câu trích của mỗi luật có trong bản sao văn bản. Câu trích có "..." bị coi là THIẾU (chuẩn nội dung 3,
+     như check_rule_sources.py: không ghép đoạn). Luật đang dùng mà không còn căn cứ "da_doc_trang" nào OK thì DỪNG
+     (mã thoát 2), không đếm.
+  3. Gắn nhãn cho từng ống (chỉ ống đọc được tiêu cự + khẩu độ từ tiêu đề, bằng ai/pipeline/lens_specs.read_title),
+     đếm số ống mỗi nhãn, kèm các số đối chiếu.
   4. In 5 ống ví dụ mỗi nhãn (seed cố định), ghi bảng nhãn ra ai/data/survey/usecase_labels_draft.csv.
 
 Tiêu cự quy đổi 35mm chỉ dùng ở đây (QĐ 4-1). Khổ không rõ: tính với mọi hệ số trong crop.khong_ro, giữ nhãn chung.
@@ -13,9 +15,9 @@ Chạy: ai\\.venv\\Scripts\\python.exe ai/survey/content4/count_usecase.py
 """
 import collections, csv, hashlib, html, random, re, sys, tomllib
 
-sys.path.insert(0, "ai/survey/content3")
+sys.path.insert(0, "ai/pipeline")
 sys.stdout.reconfigure(encoding="utf-8")
-import eval_external as ev  # noqa: E402
+import lens_specs as ls  # noqa: E402
 
 CFG = tomllib.load(open("ai/config/usecase_rules.toml", "rb"))
 SRC_DIR = "ai/data/external/usecase_sources/"
@@ -65,9 +67,10 @@ def check_quotes(texts):
         for c in r.get("can_cu", []):
             if c["source"] not in texts:
                 st = "THIẾU (bản sao lỗi)"
+            elif "..." in c["trich"] or "…" in c["trich"]:
+                st = "THIẾU (có '...')"
             else:
-                frags = [f.strip(" .,") for f in norm(c["trich"]).split("...") if f.strip(" .,")]
-                st = "OK" if all(f in texts[c["source"]] for f in frags) else "THIẾU"
+                st = "OK" if norm(c["trich"]).strip(" .,") in texts[c["source"]] else "THIẾU"
             if st == "OK" and c["kiem_chung"] == "da_doc_trang":
                 n_ok += 1
             print(f"    {st:5s} [{c['kiem_chung']}] {c['source']}: {c['trich'][:80]}")
@@ -126,14 +129,14 @@ def main():
     attrs = [a for a in csv.DictReader(open("ai/data/kg/item_attributes.csv", encoding="utf-8")) if a["item_type"] == "ong"]
     rows, no_sig_macro = [], []
     for a in attrs:
-        h = ev.head_main(a["title"])
+        h = ls.head_main(a["title"])
         mw = bool(macro_re.search(h))
-        s = ev.lens_sig(h)
+        s = ls.read_title(a["title"])
         if not s:
             if mw:
                 no_sig_macro.append(a)
             continue
-        f1, f2, ap1, ap2 = [float(x) if x else None for x in s]
+        f1, f2, ap1, ap2 = s
         cs = crops(a)
         lab, res = label(f1, f2, ap1, ap2, cs, mw)
         lab_no135, _ = label(f1, f2, ap1, ap2, cs, mw, portrait_hi=float("inf"))
@@ -142,7 +145,7 @@ def main():
                          lo_eq="/".join(f"{f1 * c:g}" for c in cs), hi_eq="/".join(f"{(f2 or f1) * c:g}" for c in cs),
                          macro_word=mw, union=frozenset.union(*res), labels=lab, labels_no135=lab_no135, title=a["title"]))
 
-    print(f"\n=== 3. Đếm ===\nống: {len(attrs)}; đọc được tiêu cự + khẩu độ: {len(rows)}")
+    print(f"\n=== 3. Đếm ===\nbộ đọc: lens_specs {ls.READER_VERSION}\nống: {len(attrs)}; đọc được tiêu cự + khẩu độ: {len(rows)}")
     cnt = collections.Counter(l for r in rows for l in r["labels"])
     for l in LABELS:
         print(f"  {l:15s} {cnt[l]:5d}")
