@@ -506,7 +506,10 @@ def main():
                   f"ngàm cụ thể); tính SAI {st['ngam_khac_ngam_sai']} (đã cộng vào số gán ở trên); không chấm "
                   f"{st['ngam_dap_an_khac_ngam_khong_ro']} (đáp án không rõ)")
     summary["_chay"] = dict(bo_danh_gia=MODE, half=args.half, ours=args.ours, n_san_pham=len(ours))
-    cols = list(rows[0].keys())
+    # tập không khớp được sản phẩm nào (vd lan2 --half ngoai): vẫn ghi file chỉ có dòng tiêu đề cột
+    cols = list(rows[0].keys()) if rows else ["nguon", "loai_khop", "parent_asin", "title", "ten_nguon", "loai_quy_tac",
+                                              "ngam_quy_tac", "khung_quy_tac", "loai_dap_an", "ngam_dap_an", "khung_dap_an",
+                                              "loai_dung", "ngam_dung", "khung_dung", "cum_nguon", "ngam_khac_that"]
     with open(out_csv, "w", encoding="utf-8-sig", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols); w.writeheader(); w.writerows(rows)
     json.dump(summary, open(out_json, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
