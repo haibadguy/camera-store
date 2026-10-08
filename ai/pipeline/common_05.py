@@ -147,8 +147,11 @@ def judge_lens(lens, bodies, ctx):
     """Phán một ống trong top-K của người dùng có các thân `bodies` (QĐ 4-9).
     Trả về True = vi phạm, False = không vi phạm, None = không chấm được.
 
-    Ví dụ (QĐ 4-9): thân D3500 (Nikon F) + máy phim FM, ống Canon EF; nếu (D3500, EF) có M = 0 và (FM, EF) là
-    "không biết" thì không thân nào M = 1, có một cặp "không biết" -> None.
+    Ví dụ (QĐ 4-9, sửa 08/10 khuya):
+      Rebel T6s (Canon EF-S) + máy phim FM-10 (Nikon F), ống Nikon DX: (T6s, DX) M = 0, (FM-10, DX) "không biết"
+        -> không thân nào M = 1, có một cặp "không biết" -> None (không chấm được);
+      D3200 (Nikon F) + FM-10, ống Canon EF: (D3200, EF) và (FM-10, EF) đều M = 0, không "không biết"
+        (thân phim + ống khác ngàm là "không lắp được", QĐ 3-16 sửa theo T4) -> True (vi phạm).
     Thân không nằm trong M (không xác định được ngàm) không có giá trị M với ống nào: không phải M = 1, cũng không
     phải M = 0 -> không phán "vi phạm" được qua thân đó."""
     if lens not in ctx.lenses_in_m or not bodies:

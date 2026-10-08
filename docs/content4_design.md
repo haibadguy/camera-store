@@ -1,6 +1,6 @@
 # Nội dung 4 — Đề xuất thiết kế đồ thị tri thức G = (V, E, R)
 
-Ngày 08/10/2026, nhánh `nam/content4`. **Đã viết code và dựng đồ thị (08/10 khuya):** `ai/pipeline/04_build_knowledge_graph.py`, `usecase_labels.py`, `lens_specs.py`; số thật ở `ai/data/kg/kg_stats.json`, kiểm tra ở `ai/data/kg/kg_validation_log_20261008_lan1.txt` (xem mục 5, 6, 7 và CHANGELOG 08/10 khuya, tiếp 2). Nam đã chốt 8 câu [HỎI] ngày 08/10/2026 (xem **mục 9**). Khi mục 9 khác với các mục 1–8 thì **tin mục 9**.
+Ngày 08/10/2026, nhánh `nam/content4`. **Đã viết code và dựng đồ thị (08/10 khuya):** `ai/pipeline/04_build_knowledge_graph.py`, `usecase_labels.py`, `lens_specs.py`; số thật ở `ai/data/kg/kg_stats.json`, kiểm tra ở `ai/data/kg/kg_validation_log_20261008_khongchac_lan1.txt` (xem mục 5, 6, 7 và CHANGELOG 08/10 khuya, tiếp 2 và tiếp 3). Nam đã chốt 8 câu [HỎI] ngày 08/10/2026 (xem **mục 9**). Khi mục 9 khác với các mục 1–8 thì **tin mục 9**.
 
 **Cập nhật số 08/10/2026 khuya.** Các số ở mục 2, 3, 4, 5, 6 đã tính lại trên `ai/data/kg/` hiện tại, tức nội dung 3 sau khi sửa theo Red Team (`ea6abb0`) và bộ đọc `lens_specs` v1. Số cũ để trong ngoặc khi cần đối chiếu.
 
@@ -154,14 +154,14 @@ Xem [HỎI 3].
 Số cạnh thân–ống lấy từ `ai/data/kg/mount_compat_stats.json`; cạnh `has_spec → mount / sensor_format` tính tay từ `run_c4_survey_counts_20261008_n4fa.log`.
 
 **Số thật sau khi dựng (08/10 khuya, `kg_stats.json`): trùng mọi số trong bảng.** Tổng 558.475 cạnh xuôi. Chi tiết khi cài đặt:
-- `has_spec → mount` có 2 thuộc tính cạnh (QĐ 4-10): `src_phu_kien` (1 = nguồn là phụ kiện) và `phia` (0 không phải ngàm chuyển, 1 phía ống, 2 phía thân). Ngàm chuyển "A>B": A phía ống, B phía thân.
+- `has_spec → mount` có 3 thuộc tính cạnh: `src_phu_kien` (1 = nguồn là phụ kiện) và `phia` (0 không phải ngàm chuyển, 1 phía ống, 2 phía thân) theo QĐ 4-10; `ngam_khong_chac` (1 = cạnh của ống "không chắc" QĐ 3-4; 134 cạnh; Nam chốt 08/10 khuya, để mô hình không coi đường thân → ngàm ← ống "không chắc" là "lắp được"). Ngàm chuyển "A>B": A phía ống, B phía thân.
 - `compatible_with` có thêm thuộc tính `crop_unknown` (cờ QĐ 3-11; 1.686 cạnh).
-- Khung "khac" → khổ theo ngàm: mft / four_thirds → four_thirds; nikon_1 → one_inch; fuji_g → medium; pentax_q → small; canon_ef (EOS-1D) và leica_m (M8) → aps_h. Theo khổ: ff 575, apsc 681, four_thirds 212, one_inch 17, aps_h 6, small 4, medium 3.
-- **Cạnh ngược:** `ToUndirected()` mặc định không tạo `rev_*` cho quan hệ item → item mà gộp cạnh ngược vào chính quan hệ đó. Code dùng `ToUndirected(merge=False)` để mọi quan hệ đều có `rev_*` (18 loại cạnh).
+- Khung "khac" → khổ theo ngàm (**Nam đã duyệt 08/10 khuya**; chưa đo, STATUS hạn chế nội dung 4, điểm 14): mft / four_thirds → four_thirds; nikon_1 → one_inch; fuji_g → medium; pentax_q → small; canon_ef (EOS-1D) và leica_m (M8) → aps_h. Theo khổ: ff 575, apsc 681, four_thirds 212, one_inch 17, aps_h 6, small 4, medium 3.
+- **Cạnh ngược:** `ToUndirected()` mặc định không tạo `rev_*` cho quan hệ item → item mà gộp cạnh ngược vào chính quan hệ đó. Code dùng `ToUndirected(merge=False)` để mọi quan hệ đều có `rev_*` (18 loại cạnh). **Nam đã duyệt 08/10 khuya.**
 
 - Các cặp mức "không biết" (5.846 cặp, gồm 2.819 cặp có thân máy phim theo QĐ 16 đã sửa; cũ: 19.932 / 17.612) **không có cạnh**.
 - Cặp của 134 ống "không chắc" (QĐ 4; cũ 130): không nối cạnh tương thích (QĐ 4-5).
-- `ToUndirected()` thêm cạnh ngược `rev_*` để thông tin truyền được cả hai chiều khi huấn luyện GNN. Bảng số chỉ đếm cạnh xuôi.
+- `ToUndirected(merge=False)` thêm cạnh ngược `rev_*` để thông tin truyền được cả hai chiều khi huấn luyện GNN. Bảng số chỉ đếm cạnh xuôi.
 - `suitable_for` không có trong danh sách quan hệ cô nêu. Cần thêm quan hệ này vì cô có nêu thực thể "mục đích sử dụng", mà thực thể đó cần một quan hệ để nối vào đồ thị.
 - **Đầu ra:**
   - `ai/data/kg/kg_hetero.pt` (PyG `HeteroData`);
@@ -186,7 +186,7 @@ Số cạnh thân–ống lấy từ `ai/data/kg/mount_compat_stats.json`; cạn
 
 **B. Đọc bằng mắt:** in 10 cạnh ngẫu nhiên (seed cố định) của mỗi quan hệ, kèm tiêu đề sản phẩm.
 
-**Kết quả A, B (08/10 khuya):** cả 8 kiểm tra A ĐẠT (log `ai/data/kg/kg_validation_log_20261008_lan1.txt`; kiểm tra 8: 13/13 file trùng sha256, `kg_sha256_lan1_vs_lan2_20261008.txt`). Mục B in trong cùng log.
+**Kết quả A, B (08/10 khuya):** cả 8 kiểm tra A ĐẠT. Bản hiện tại (có cờ `ngam_khong_chac`): log `ai/data/kg/kg_validation_log_20261008_khongchac_lan1.txt`, kiểm tra 8: 13/13 file trùng sha256 (`kg_sha256_khongchac_lan1_vs_lan2_20261008.txt`). Bản trước khi thêm cờ: `kg_validation_log_20261008_lan1.txt`, `kg_sha256_lan1_vs_lan2_20261008.txt`. Mục B in trong cùng log (thêm 10 cạnh có cờ `ngam_khong_chac`).
 
 **C. Độ chính xác tiêu cự / khẩu độ, đo bằng nguồn ngoài như nội dung 3:**
 - **Nguồn đáp án:**
@@ -231,7 +231,12 @@ Số cạnh thân–ống lấy từ `ai/data/kg/mount_compat_stats.json`; cạn
 
   Như vậy cặp `requires_adapter` vẫn bị tính là vi phạm (theo QĐ 2, M = 0). Người dùng chỉ có thân máy phim thì không bị tính.
   - Bản hiện tại tính mọi ống không nằm trong tập hợp lệ là vi phạm. Tức là cả ống "không chắc" và ống mức "không biết" đều bị tính, trái với QĐ 4, 8, 16.
-- **Đã cài 08/10 khuya theo QĐ 4-9** (`judge_lens`, `full_catalog_cvr`; kiểm thử dựng tay `ai/survey/content4/test_cvr.py`, 20/20 đúng). Thân nằm ngoài M không có giá trị M nên không bao giờ cho phán "vi phạm". `build_train_bodies` lấy mọi thân trong train. **Lưu ý:** ví dụ (D3500 + FM, ống Canon EF → không chấm được) của QĐ 4-9 viết khi QĐ 3-16 còn xếp mọi cặp thân phim là "không biết". Sau Red Team T4, cặp thân phim + ống khác ngàm là "không lắp được", nên trên dữ liệu thật ống EF đó bị tính **vi phạm** (STATUS mục 6).
+- **Đã cài 08/10 khuya theo QĐ 4-9** (`judge_lens`, `full_catalog_cvr`; kiểm thử `ai/survey/content4/test_cvr.py`, 26/26 đúng: 22 ca dựng tay + 4 ca dữ liệu thật). Thân nằm ngoài M không có giá trị M nên không bao giờ cho phán "vi phạm". `build_train_bodies` lấy mọi thân trong train.
+- **Ví dụ của QĐ 4-9 (sửa 08/10 khuya, Nam chốt):**
+  - Rebel T6s (Canon EF-S) + máy phim FM-10 (Nikon F), ống Nikon DX → **không chấm được**: (T6s, DX) chắc chắn không lắp được, (FM-10, DX) "không biết", không thân nào M = 1.
+  - D3200 (Nikon F) + FM-10, ống Canon EF → **vi phạm**: cả hai cặp chắc chắn không lắp được (thân phim + ống khác ngàm giữ "không lắp được", QĐ 3-16 sửa theo Red Team T4).
+  - Ví dụ cũ (D3500 + FM, ống Canon EF → không chấm được) viết khi QĐ 3-16 còn xếp mọi cặp thân phim là "không biết"; không còn đúng.
+- **Bộ lọc Popularity MountAware (nội dung 5, Nam chốt 08/10 khuya):** chỉ loại ống "chắc chắn vi phạm" theo QĐ 4-9; ống không chấm được giữ lại. Chưa sửa code 05.
 - **`05c_rgcn_train.py` sẽ không chạy được** với sơ đồ mới: code này ghi cứng nút `mount` và `usecase` trong `forward`. Việc này thuộc nội dung 5 và 7 (phải cài R-GCN thật, lỗi 1), không sửa ở đây.
 
 ## 8. Các câu [HỎI]
@@ -267,7 +272,7 @@ Số cạnh thân–ống lấy từ `ai/data/kg/mount_compat_stats.json`; cạn
 
 | # | Quyết định |
 |---|---|
-| 9 (sửa) | Ống "chấm được" trong CVR: xét các thân người dùng có trong train. Chấm được khi ống nằm trong M, không "không chắc", và phán chắc được: (a) có ít nhất một thân với M = 1 → không vi phạm; (b) mọi thân đều M = 0 và không cặp nào "không biết" → vi phạm. Còn lại (không thân nào M = 1, có ít nhất một cặp "không biết") → không chấm được. Người dùng không có thân nào trong train thì bỏ |
+| 9 (sửa) | Ống "chấm được" trong CVR: xét các thân người dùng có trong train. Chấm được khi ống nằm trong M, không "không chắc", và phán chắc được: (a) có ít nhất một thân với M = 1 → không vi phạm; (b) mọi thân đều M = 0 và không cặp nào "không biết" → vi phạm. Còn lại (không thân nào M = 1, có ít nhất một cặp "không biết") → không chấm được. Người dùng không có thân nào trong train thì bỏ. Ví dụ (sửa 08/10 khuya): Rebel T6s + FM-10, ống Nikon DX → không chấm được; D3200 + FM-10, ống Canon EF → vi phạm |
 | 11 | Bỏ nhãn vlog |
 | 12 | Mốc dưới chân dung giữ 85 theo nguồn |
 | 13 | Giữ mốc trên 135 và ngưỡng f/2.8 của chân dung, ghi là quyết định nhóm |

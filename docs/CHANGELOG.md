@@ -6,6 +6,41 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 08/10/2026 (khuya, tiếp 3): cờ `ngam_khong_chac` trong đồ thị; sửa ví dụ QĐ 4-9. Nhánh `nam/content4`
+
+Nam chốt các câu treo của mục trước.
+
+**Sửa gì**
+1. **`04_build_knowledge_graph.py`:** cạnh `has_spec → mount` có thêm thuộc tính `ngam_khong_chac` (int8; 1 = cạnh của ống "không chắc" theo QĐ 3-4). Cột mới cùng tên trong `kg_edges_has_spec_mount.csv`, số đếm `has_spec_mount_ngam_khong_chac` trong `kg_stats.json`.
+   - Kiểm tra 6A (5) có thêm một điều kiện: 134 cạnh có cờ, đúng bằng 134 ống "không chắc", mỗi ống 1 cạnh, mọi cạnh khác cờ 0.
+   - Mục 6B in thêm 10 cạnh có cờ.
+2. **Ví dụ QĐ 4-9:** sửa trong `test_cvr.py`, docstring `common_05.judge_lens`, STATUS, `content4_design`. Logic CVR không đổi.
+   - Rebel T6s + FM-10, ống Nikon DX → không chấm được.
+   - D3200 + FM-10, ống Canon EF → vi phạm.
+
+**Vì sao**
+- Cờ: không có cờ thì mô hình có thể suy "lắp được" qua đường thân → ngàm ← ống "không chắc", trái QĐ 4-5.
+- Ví dụ cũ (D3500 + FM, Canon EF → không chấm được) viết khi QĐ 3-16 còn xếp mọi cặp có thân phim là "không biết". Sau Red Team T4, cặp (FM-10, Canon EF) là "không lắp được".
+
+**Ảnh hưởng** (sao lưu bản trước ở `ai/data/kg_c8eb613/`, chạy lại với `--overwrite`)
+- Số nút, số cạnh: **không đổi** (95.646 nút; 558.475 cạnh xuôi).
+- So sha256 với bản trước: chỉ 3 file đổi (`kg_hetero.pt`, `kg_stats.json`, `kg_edges_has_spec_mount.csv`); 9 file còn lại giống hệt.
+- Log mới khác log cũ đúng 3 chỗ: dòng đếm cờ, kiểm tra 5 mới, 10 dòng ví dụ cạnh có cờ.
+- Kiểm tra 6A (1)–(7) ĐẠT cả (log `ai/data/kg/kg_validation_log_20261008_khongchac_lan1.txt`).
+- Kiểm tra 8: chạy 2 lần (lần 2 vào thư mục tạm ngoài repo), 13/13 file trùng sha256 (`ai/data/kg/kg_sha256_khongchac_lan1_vs_lan2_20261008.txt`).
+- `test_cvr.py` 26/26 ĐẠT (log `ai/data/survey/run_c4_test_cvr_20261008_vidumoi.log`). Cả hai ví dụ mới cũng đúng trên dữ liệu thật:
+  - (T6s, AF-S DX 35mm) không có M = 1, không "không biết" → chắc chắn không lắp;
+  - (FM-10, DX 35mm) "không biết";
+  - (D3200, EF 50mm STM) và (FM-10, EF 50mm STM): không có M = 1, không "không biết".
+
+**Phía sau phải sửa theo**
+- Nội dung 5: bộ lọc Popularity MountAware chỉ được loại ống "chắc chắn vi phạm" (`judge_lens` trả True), giữ ống không chấm được (Nam chốt). **Chưa sửa** `05a_popularity.py`.
+- Mô hình ở nội dung 7 phải đọc thuộc tính `ngam_khong_chac` (và `src_phu_kien`, `phia`) của cạnh `has_spec → mount`.
+
+**Dọn dẹp:** đã xóa `ai/data/kg_draft_c4/`, `kg_draft_c4_lan2/`, `kg_draft_rt1b/`, `kg_draft_rt1b_lan2/`, `kg_draft_rt1b_lan2_final/` (theo yêu cầu của Nam).
+
+---
+
 ## 08/10/2026 (khuya, tiếp 2): nội dung 4, việc 3–4 — viết lại `04_build_knowledge_graph.py`, sửa `common_05.py` (CVR theo QĐ 4-9). Nhánh `nam/content4`
 
 Theo `docs/content4_design.md` mục 2, 5, 6, 7, 9. **Không sửa** `05a/05b/05c` và `05_evaluate.py` (nội dung 5).
@@ -64,7 +99,7 @@ Số mới khớp các số dự kiến trong `content4_design` mục 3.2, 5 (t�
 5. 1.704 thân + ống có 1 ngàm: đúng 1 cạnh, trùng cột `mount`; 954 phụ kiện: 1 cạnh có cờ; 155 ngàm chuyển: 2 cạnh (phía ống, phía thân); tổng 2.968 = 1.704 + 954 + 2 × 155.
 6. 18 thân máy phim: 0 cạnh thân–ống.
 7. `torch.load` đọc lại khớp từng tensor; đồ thị đồng nhất 95.646 nút, 1.116.950 cạnh, 18 quan hệ; 1 lớp `RGCNConv` chạy trên GTX 1660 Ti, ra (95.646, 16), hữu hạn.
-8. Chạy 2 lần (lần 2 vào `ai/data/kg_draft_c4_lan2/`): **13/13 file trùng sha256**, kể cả nội dung log (`ai/data/kg/kg_sha256_lan1_vs_lan2_20261008.txt`).
+8. Chạy 2 lần (lần 2 vào `ai/data/kg_draft_c4_lan2/`, nay đã xóa): **13/13 file trùng sha256**, kể cả nội dung log (`ai/data/kg/kg_sha256_lan1_vs_lan2_20261008.txt`).
 
 **Đã kiểm chứng thêm**
 - Nhãn mục đích của pipeline trùng từng ống với bảng của `count_usecase.py` (1.080 cạnh, 980 ống, 0 ống lệch; log `ai/data/survey/run_c4_suitable_for_vs_survey_20261008.log`).
@@ -306,8 +341,8 @@ Theo `docs/reviews/redteam_n3_lan1.md` (T5, T2, N1 và phụ lục B). **Chưa �
 
 **Cách chạy và kiểm tra**
 - `check_rule_sources.py` → `run_check_rule_sources_20261008_rt1b_lan2.log`: 16 nguồn + 13 mã OK, mọi căn cứ OK, mã thoát 0. (Lần 1 `…_lan1.log` báo DỪNG vì thiếu SEL30M35 → thêm vào bảng.)
-- Chạy nháp vào `ai/data/kg_draft_rt1b/`, so với `kg_e8b39e6`: **DỪNG**, vì có 5 ống Sony đổi khung ngoài 12 ống của chẩn đoán T2 (xem bảng dưới). Nam xem và **duyệt nhận cả 17 ống** (cách 1).
-- Chạy thật vào `ai/data/kg/` (log `ai/data/kg/run03_mount_compat_20261008_rt1b_lan1.log`), chạy lần 2 vào `ai/data/kg_draft_rt1b_lan2_final/` (log `ai/data/survey/run03_mount_compat_20261008_rt1b_lan2.log`): sha256 cả 8 file trùng nhau và trùng hai lần chạy nháp (`run_sha256_kg_20261008_rt1b.log`). Các thư mục nháp giữ nguyên.
+- Chạy nháp vào `ai/data/kg_draft_rt1b/` *(đã xóa)*, so với `kg_e8b39e6`: **DỪNG**, vì có 5 ống Sony đổi khung ngoài 12 ống của chẩn đoán T2 (xem bảng dưới). Nam xem và **duyệt nhận cả 17 ống** (cách 1).
+- Chạy thật vào `ai/data/kg/` (log `ai/data/kg/run03_mount_compat_20261008_rt1b_lan1.log`), chạy lần 2 vào `ai/data/kg_draft_rt1b_lan2_final/` (log `ai/data/survey/run03_mount_compat_20261008_rt1b_lan2.log`): sha256 cả 8 file trùng nhau và trùng hai lần chạy nháp (`run_sha256_kg_20261008_rt1b.log`). Các thư mục nháp giữ nguyên *(đã xóa 08/10 khuya theo yêu cầu của Nam; log sha256 vẫn còn)*.
 - So sánh cuối: `run_compare_kg_20261008_rt1b.log` (`--preset rt1b`): **0 sản phẩm đổi ngoài dự kiến, 0 cặp đổi mức ngoài dự kiến, 0 ô M đổi**.
 
 **Ảnh hưởng: M** (`compare_kg_runs.py`, log `run_compare_kg_20261008_rt1b.log`; mức tính trên ống vào M)

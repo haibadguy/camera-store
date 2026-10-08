@@ -1,0 +1,20 @@
+Kiểm tra 8 (content4_design mục 6A), sau khi thêm cờ ngam_khong_chac: chạy 04_build_knowledge_graph.py 2 lần, so sha256
+lần 1: --run-label 20261008_khongchac_lan1 --out-dir ai/data/kg --overwrite (bản trước sao lưu ở ai/data/kg_c8eb613/)
+lần 2: --run-label 20261008_khongchac_lan2 --out-dir <scratchpad ngoài repo>/kg_lan2
+cột 'so với c8eb613': file có đổi so với bản trước khi thêm cờ không
+
+TRÙNG abf149b5a75b18926cf4c39f826e6d71e3e34f17b2943e891ef50203c69fce4b kg_hetero.pt | so với c8eb613: ĐỔI
+TRÙNG 8fb1b4cbc05ce66f54ee3238aa827ea8e5eed76989df56d7909d903505fbb9d4 kg_node_index.json | so với c8eb613: không đổi
+TRÙNG 6c5454677bbd80381603b0dd555774e8b1ecf89e0f71f0a4978bc113736ea465 kg_stats.json | so với c8eb613: ĐỔI
+TRÙNG b7554f71489c1f3896111e48943e551ef4f8eb0fb6910d2170fd12ad508ed301 kg_edges_interacted_with.csv | so với c8eb613: không đổi
+TRÙNG 77c8d5c86d824a028bef6838759499702952f537d891ae204610cac607c9bb60 kg_edges_compatible_with.csv | so với c8eb613: không đổi
+TRÙNG a2a052a5210f9e7f547da6db46ec91111dbf6138aa2989bafdc75240201c688e kg_edges_crops_sensor.csv | so với c8eb613: không đổi
+TRÙNG 177447cd04689586eb099767bf5924782cec4c7a62306e6075024a4013364a94 kg_edges_requires_adapter.csv | so với c8eb613: không đổi
+TRÙNG b58f7696c0adf08d74eda8c81bc97e8b8f2af1cb9760ea409b61b0880d85f07e kg_edges_has_spec_mount.csv | so với c8eb613: ĐỔI
+TRÙNG 408052fa49f8e1192096b9002c50a59b811c0a940767f3ef6eb71108fe10e878 kg_edges_has_spec_sensor_format.csv | so với c8eb613: không đổi
+TRÙNG 6ea97d4c492efd9800ed360f956337891d5e2edd4f07611fed0d019116caeab3 kg_edges_has_spec_focal_range.csv | so với c8eb613: không đổi
+TRÙNG f548b013236f1865e6b3eb717d52cc313ac7c6705532b61d2b8eb7b879de0c63 kg_edges_has_spec_aperture_class.csv | so với c8eb613: không đổi
+TRÙNG 927795fc26b9ef1cec9014605661dd4668d8fe1d69e4d279664023e6e3b85c44 kg_edges_suitable_for.csv | so với c8eb613: không đổi
+TRÙNG 639a9577436af00b8566f8bd3bd724cb6ae8cf87dd293da131af0cc2b53f45bb kg_validation_log (nội dung log lần 1 vs lần 2)
+
+=> 13/13 file trùng sha256

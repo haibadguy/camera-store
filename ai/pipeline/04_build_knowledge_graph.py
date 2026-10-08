@@ -18,7 +18,8 @@ Cạnh (chiều xuôi; ToUndirected(merge=False) thêm rev_* cho mọi quan hệ
   item  -requires_adapter-> item            thân -> ống, mức requires_adapter (ngàm chuyển chính hãng)
   item  -has_spec->         mount           thân / ống / phụ kiện có 1 ngàm; ngàm chuyển "A>B": 2 cạnh (QĐ 4-10)
                                             thuộc tính cạnh: src_phu_kien (1 = nguồn là phụ kiện),
-                                            phia (0 = không phải ngàm chuyển, 1 = phía ống, 2 = phía thân)
+                                            phia (0 = không phải ngàm chuyển, 1 = phía ống, 2 = phía thân),
+                                            ngam_khong_chac (1 = cạnh của ống "không chắc" QĐ 3-4)
   item  -has_spec->         sensor_format   thân / ống có 1 ngàm và khung ff / apsc / khac
   item  -has_spec->         focal_range     ống đọc được tiêu cự + khẩu độ (lens_specs.read_title), tiêu cự thật (QĐ 4-1)
   item  -has_spec->         aperture_class  như trên, theo số f nhỏ nhất
@@ -239,8 +240,12 @@ def main():
             hs_mount.append((i, lens_side, 1, 1))
             hs_mount.append((i, body_side, 1, 2))
     hs_mount.sort(key=lambda e: (e[0], mount_id[e[1]]))
+    # Cờ "ngàm không chắc" (Nam chốt 08/10 khuya): cạnh của ống "không chắc" (QĐ 3-4), để mô hình không coi đường
+    # thân -> ngàm <- ống này là "lắp được"
+    unc_lens = {i for i, a in enumerate(A) if a["uncertain"] == "True"}
     log(f"\n[has_spec -> mount] {len(mount_names)} nút ngàm; {len(hs_mount):,} cạnh: "
-        f"{dict(Counter((itype[i], PHIA[p]) for i, _, _, p in hs_mount))}")
+        f"{dict(Counter((itype[i], PHIA[p]) for i, _, _, p in hs_mount))}; "
+        f"có cờ ngam_khong_chac: {sum(1 for e in hs_mount if e[0] in unc_lens)}")
 
     # ═══ BƯỚC 6: has_spec -> sensor_format ═══════════════════════════════════
     hs_sensor = []                                    # (iid, sensor_format)
@@ -307,6 +312,7 @@ def main():
     st.edge_index = ei([(i, mount_id[m]) for i, m, _, _ in hs_mount])
     st.src_phu_kien = torch.tensor([s for _, _, s, _ in hs_mount], dtype=torch.int8)
     st.phia = torch.tensor([p for _, _, _, p in hs_mount], dtype=torch.int8)
+    st.ngam_khong_chac = torch.tensor([int(i in unc_lens) for i, _, _, _ in hs_mount], dtype=torch.int8)
     data["item", "has_spec", "sensor_format"].edge_index = ei([(i, sid["sensor_format"][s]) for i, s in hs_sensor])
     data["item", "has_spec", "focal_range"].edge_index = ei([(i, sid["focal_range"][b]) for i, b in hs_focal])
     data["item", "has_spec", "aperture_class"].edge_index = ei([(i, sid["aperture_class"][b]) for i, b in hs_aper])
@@ -366,7 +372,6 @@ def main():
     allc = E["compatible_with"] | E["crops_sensor"] | E["requires_adapter"]
     chk(3, not (allc & U_pairs), f"không cặp nào thuộc unknown_mask (giao = {len(allc & U_pairs)}, "
         f"unknown_mask {len(U_pairs):,} cặp)")
-    unc_lens = {i for i, a in enumerate(A) if a["uncertain"] == "True"}
     chk(3, not any(l in unc_lens for _, l in allc),
         f"không cạnh nào tới ống 'không chắc' (QĐ 4-5; {len(unc_lens)} ống)")
 
@@ -420,6 +425,11 @@ def main():
         f"src_phu_kien = 1; sản phẩm khác 0 cạnh (sai {len(bad5)})")
     for x in bad5[:5]:
         log(f"      sai: {x}")
+    flag_e = {i for i, _, _, _ in hs_mount if i in unc_lens}
+    n_flag = sum(1 for i, _, _, _ in hs_mount if i in unc_lens)
+    chk(5, flag_e == unc_lens and n_flag == len(unc_lens) and all(itype[i] == "ong" for i in unc_lens)
+        and int(st.ngam_khong_chac.sum()) == n_flag,
+        f"cờ ngam_khong_chac: {n_flag} cạnh = {len(unc_lens)} ống 'không chắc' (mỗi ống 1 cạnh), các cạnh khác cờ 0")
     chk(5, len(hs_mount) == n_tl + n_acc + 2 * n_ad, f"tổng cạnh has_spec -> mount {len(hs_mount):,} = "
         f"{n_tl:,} + {n_acc:,} + 2 x {n_ad:,}")
 
@@ -445,8 +455,10 @@ def main():
                           "crop_unknown"],
                          [[b, asin[b], A[b]["mount"], l, asin[l], A[l]["mount"], rid, cu] for b, l, rid, cu in compat[rel]])
     edge_csv["has_spec_mount"] = ("kg_edges_has_spec_mount.csv",
-                                  ["iid", "parent_asin", "item_type", "mount", "src_phu_kien", "phia", "title"],
-                                  [[i, asin[i], itype[i], m, s, PHIA[p], titles[i]] for i, m, s, p in hs_mount])
+                                  ["iid", "parent_asin", "item_type", "mount", "src_phu_kien", "phia", "ngam_khong_chac",
+                                   "title"],
+                                  [[i, asin[i], itype[i], m, s, PHIA[p], int(i in unc_lens), titles[i]]
+                                   for i, m, s, p in hs_mount])
     edge_csv["has_spec_sensor_format"] = ("kg_edges_has_spec_sensor_format.csv",
                                           ["iid", "parent_asin", "item_type", "mount", "khung", "sensor_format", "title"],
                                           [[i, asin[i], itype[i], A[i]["mount"], A[i]["khung"], s, titles[i]]
@@ -501,6 +513,7 @@ def main():
         "suitable_for_theo_nhan": {l: sum(1 for _, x in suit if x == l) for l in uc_names},
         "ong": {"tong": n_lens, "doc_duoc_tieu_cu_khau_do": n_read, "khong_chac_QD4": len(unc_lens),
                 "doc_duoc_ma_khong_nhan_muc_dich": n_no_label},
+        "has_spec_mount_ngam_khong_chac": n_flag,
         "compatible_with_crop_unknown": int(sum(c for _, _, _, c in compat["compatible_with"])),
         "M_nnz": int(M.nnz), "unknown_nnz": int(U.nnz), "than_may_phim": len(film),
         "phien_ban": {"lens_specs": ls.READER_VERSION, "usecase_rules": ucr.version,
@@ -544,7 +557,8 @@ def main():
         "interacted_with": [f"user {u} -> {T(i)}" for u, i in ui],
         **{rel: [f"{T(b, 55)} ({A[b]['mount']}/{A[b]['khung']}) -> {T(l, 55)} ({A[l]['mount']}/{A[l]['khung']}) "
                  f"| {rid}{' | crop_unknown' if cu else ''}" for b, l, rid, cu in compat[rel]] for rel in COMPAT_RELS},
-        "has_spec_mount": [f"{T(i)} -> {m} | src_phu_kien={s} | {PHIA[p]}" for i, m, s, p in hs_mount],
+        "has_spec_mount": [f"{T(i)} -> {m} | src_phu_kien={s} | {PHIA[p]}{' | ngam_khong_chac' if i in unc_lens else ''}"
+                           for i, m, s, p in hs_mount],
         "has_spec_sensor_format": [f"{T(i)} -> {s} (khung {A[i]['khung']}, ngàm {A[i]['mount']})" for i, s in hs_sensor],
         "has_spec_focal_range": [f"{T(i)} -> {b} (đọc {g(specs[i][0])}{'-' + g(specs[i][1]) if specs[i][1] else ''}mm)"
                                  for i, b in hs_focal],
@@ -556,6 +570,10 @@ def main():
         log(f"-- {rel} ({len(rows):,})")
         for r in random.Random(SEED).sample(rows, min(10, len(rows))):
             log(f"   {r}")
+    flagged = [r for r in samples["has_spec_mount"] if r.endswith("ngam_khong_chac")]
+    log(f"-- has_spec_mount, chỉ cạnh có cờ ngam_khong_chac ({len(flagged):,})")
+    for r in random.Random(SEED).sample(flagged, min(10, len(flagged))):
+        log(f"   {r}")
 
     open(out_log, "w", encoding="utf-8").write("\n".join(log_lines) + "\n")
     print(f"\nLog: {out_log}")
