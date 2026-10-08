@@ -56,7 +56,7 @@ Cả 733 sản phẩm đều khớp được. Ngàm Lensfun: 4 ô quy tắc đ�
 Tỉ lệ và khoảng (H733): `lan2` xem bảng trên; `lan3` loại Lensfun 99,6% [99,1–100], Wikidata 99,0% [97,8–100], theo sản phẩm 99,2% [98,3–99,8]; `truoc_0710` loại Wikidata 93,3% [88,6–97,1], ngàm Wikidata 90,6% [82,6–97,6], theo sản phẩm 95,3% [92,2–97,8]. H747, `lan2`: loại Lensfun 99,1% [98,3–99,8], ngàm Lensfun 97,3% [93,3–99,7], loại Wikidata 97,1% [94,9–99,0], theo sản phẩm 97,9% [96,6–98,9].
 
 Đọc bảng:
-- **lần đo 2 → lan2** (đổi quy tắc, cùng bộ đánh giá): mỗi chỉ số tăng đúng 1 ô đúng, khớp với việc sửa B00L2PN5L8 (ống EF-S 55-250 trước bị xếp thân, sửa ở `e8b39e6` theo đúng ca sai holdout này; kiểm từng dòng ở mục phân loại dưới). Phần chênh này **không** độc lập.
+- **lần đo 2 → lan2** (đổi quy tắc, cùng bộ đánh giá): mỗi chỉ số tăng đúng 1 ô đúng. Kiểm từng dòng (`n3_lan3/run_holdout_errors_lan3do_20261008.log`): chỉ B00L2PN5L8 đổi ô chấm (ống EF-S 55-250 trước bị xếp thân, sửa ở `e8b39e6` theo đúng ca sai holdout này); ngoài ra B00ZY8CII0 đổi khung ống `khong_ro` → `ff` (sửa T2), cột không được chấm. Phần chênh này **không** độc lập.
 - **lan2 → lan3** (đổi bộ đánh giá): 7 sản phẩm không còn được chấm; số ô **đúng** không đổi ở mọi chỉ số, chỉ bớt ô sai (loại: Lensfun bớt 3 ô sai, Wikidata bớt 6). Đúng như kế hoạch dự báo: các sửa N4 chỉ loại bớt các ca sai holdout đã xem. Sửa S2 và 9.2 không đổi gì trên holdout.
 - **truoc_0710**: Wikidata giảm rõ (ngàm 100% → 90,6%), Lensfun ngàm tăng nhưng chấm ít ô hơn (334 thay vì 394). Bản này dựng lại, không có log gốc để đối chiếu.
 
@@ -103,9 +103,25 @@ Chỉ 20 + 10 ô thuộc `hang_slr` (trên 298 sản phẩm dùng đường này
 | Tương tác k-core chạm sản phẩm đó | 14.258/622.997 = 2,29% | vào M: 50.503/595.515 = 8,48%; có ngàm: 57.767 = 9,70% |
 | Tương tác train | 11.013/482.149 = 2,28% | vào M: 40.181/460.193 = 8,73% |
 
+**Phân loại ca sai của holdout, lần đo 3** (xem **sau** khi đã ghi số ở trên và commit `bca5f91`; chỉ để báo cáo, không sửa quy tắc hay bộ đánh giá)
+- Bảng: `ai/survey/content3/n3_lan3_holdout_errors.csv` (26 ô, mỗi ô có lý do). **Người phân loại: Claude, cũng là người viết luật, nên không độc lập.** Đếm bằng `n3_lan3_errors.py --dem` (log `n3_lan3/run_holdout_errors_dem_20261008.log`); script kiểm bảng phủ đúng mọi ô sai.
+- Bộ đánh giá `lan2`, H747: 26 ô sai trên 25 sản phẩm, **cả 26 đều thuộc H733** (14 mẫu dev không có ô sai nào), nên số dưới đây đúng cho cả H733 và H747.
+
+| Ô sai | Đáp án sai | Quy tắc sai | Cả hai sai |
+|---|---:|---:|---:|
+| Loại, Lensfun (5) | 4 | 1 (Dimage A200: máy ống liền ra thân) | 0 |
+| Loại, Wikidata (9) | 8 | 0 | 1 (Tokina 12-28 F4: đáp án "thân Nikon F4", quy tắc "phụ kiện", đúng là ống) |
+| Ngàm, Lensfun (11) | 11 (7 ô Canon EF 75-300 III bị Lensfun ghi EF-S; Zeiss ZE khớp vào mục Contax/Yashica; M.Zuiko ↔ Zuiko Digital; Samyang AF 85 RF; Sony FE 35 GM ↔ 35mm G ngàm A) | 0 | 0 |
+| Khung thân, openMVG (1) | 0 | 1 (Lumix DMC-S1: máy compact bị luật Lumix S bắt thành thân L-mount) | 0 |
+
+- Cách nói đúng (thay câu "quy tắc chỉ sai ở 4 sản phẩm", Red Team T7): **trong 13 sản phẩm lệch về loại, đọc thủ công thấy 2 sản phẩm do quy tắc** (1 trong 2 ca đáp án cũng sai); thêm 1 sản phẩm sai loại chỉ lộ ra ở cột khung (DMC-S1). Mới đọc các ca **lệch** với đáp án; ca quy tắc và đáp án cùng sai giống nhau thì không thấy được.
+- Phép đo (4): 3 phần tử M lệch vai trò, đọc ra 1 do quy tắc (Dimage A200 nằm trong hàng của M), 2 do đáp án (ống Nikon 70-210 bị khớp thành thân F4; bộ OM-1 + ống bị Wikidata khớp thành ống). DMC-S1 cũng là phần tử sai của M nhưng (4) không thấy vì openMVG không có đáp án loại.
+- Bộ đánh giá `lan3` bỏ 10 dòng so với `lan2` (9 dòng có ô sai loại, 1 dòng openMVG không có ô chấm), trong đó có Tokina 12-28 (ca **cả hai sai**): sửa N4 (chặn "F4") làm mất luôn một ca quy tắc sai thật khỏi phép đo.
+
 **Đã kiểm chứng / chỗ trước đây ghi sai**
 - Các khoảng Wilson ở mục 08/10 (chia đôi, sửa loại) **không có script nào sinh ra** và giả định mẫu độc lập (Red Team T6): không dùng trong báo cáo; thay bằng khoảng bootstrap ở trên.
-- Câu "quy tắc chỉ sai ở 4 sản phẩm" (mục "QĐ 16 …", 08/10) trộn mẫu số và do người viết luật tự phân loại (Red Team T7): không dùng nữa; xem phân loại ca sai lần 3 ở dưới.
+- Câu "quy tắc chỉ sai ở 4 sản phẩm" (mục "QĐ 16 …", 08/10) trộn mẫu số và do người viết luật tự phân loại (Red Team T7): không dùng nữa; thay bằng phân loại lần 3 ở trên.
+- Số không còn log (Red Team phụ lục A), ghi "không còn log, không dùng trong báo cáo" ngay tại chỗ trong các mục cũ dưới đây: M sau lần sửa loại thứ nhất (538 × 1.037, 1.167 / 1.037 ống, 75.690, 2.186, 2.960); phân nhóm 84 ca sai nửa fix (68 / 16; 47 / 15 / 3 / 2 / 1); đổi loại ngoài holdout (138 / 32 / 7 / 2 / 1); dev 50 (49/50, 46/50, 43/50; 35/36, 32/36, 30/36); 53 và 36 cặp trước sửa; 801 máy compact; khoảng Wilson.
 - "Lần đo hai giống hệt lần một từng ô": hai file có cùng sha256 (`run_sha256_holdout_lan1_vs_lan2_20261008.log`), nhưng bản sao "lần 1" được ghi cùng phút (01:39) với file lần 2, nên không loại trừ được việc sao chép sau lần 2. Bằng chứng còn lại là **số tổng** của hai log (`run_typefix_report.log`, `run_typefix_report_lan2.log`) trùng nhau.
 
 **Phía sau phải làm**
@@ -315,7 +331,7 @@ Làm theo thứ tự Nam giao: (1) máy phim, (2) sửa 2 lỗi ngàm, (3) chố
      | B078S8GL8Y | Sigma 150-600mm (for Canon EOS) & MC-11 … | `sony_e` | `khong_ro` |
 3. `eval_split_report.py` thêm cờ `--holdout-errors`. Cờ này được thêm **sau** lần đo holdout thứ hai, chỉ để phân loại ca sai cho báo cáo.
 
-**Ảnh hưởng: M** (`ai/data/kg/mount_compat_log.txt`)
+**Ảnh hưởng: M** (`ai/data/kg/mount_compat_log.txt`, nay bản sao ở `ai/data/kg_d339dda/mount_compat_log.txt`). Cột "Sau sửa loại (lần 1)": **không còn log, không dùng trong báo cáo** (log bị lần chạy QĐ 16 ghi đè).
 
 | Chỉ số | Sau sửa loại (lần 1) | Sau QĐ 16 + sửa ngàm |
 |---|---:|---:|
@@ -328,7 +344,7 @@ Làm theo thứ tự Nam giao: (1) máy phim, (2) sửa 2 lỗi ngàm, (3) chố
 | Cặp "không biết" | 2.960 | **19.932** (trong đó 17.612 = 17 thân phim × 1.036 ống, luật `film_body_unknown`) |
 
 **Ảnh hưởng: độ chính xác.** Lần đo holdout thứ hai, log `ai/data/survey/run_typefix_report_lan2.log`.
-- Kết quả **giống hệt lần một** ở cả hai nửa. File `eval_external_matches.csv` của hai lần giống nhau từng ô (bản lần một lưu ở `ai/data/survey/before_typefix/eval_external_matches_lan1.csv`).
+- Kết quả **giống hệt lần một** ở cả hai nửa. File `eval_external_matches.csv` của hai lần giống nhau từng ô (bản lần một lưu ở `ai/data/survey/before_typefix/eval_external_matches_lan1.csv`). *(Kiểm lại 08/10 khuya: hai file cùng sha256, nhưng bản lần một được ghi cùng phút 01:39 với file lần hai nên không chứng minh được "trùng từng ô"; số tổng của hai log trùng nhau.)*
 - Lý do: thay đổi lần này không chạm vào loại; 5 ống đổi ngàm và 17 thân phim không làm đổi ô chấm nào.
 - Holdout: loại 565/571 = 98,9% (Lensfun), 305/315 = 96,8% (Wikidata), theo sản phẩm 598/612 = 97,7%. Ngàm Lensfun 391/402 = 97,3%, Wikidata 266/266. Khung thân 204/204 (Lensfun), 132/133 (openMVG).
 
@@ -356,7 +372,7 @@ Làm theo thứ tự Nam giao: (1) máy phim, (2) sửa 2 lỗi ngàm, (3) chố
 *Khung thân: 1 ô sai, quy tắc sai.*
 - B005HTHX22 "Panasonic Lumix DMC-S1 … Digital Camera" là máy compact. Luật dòng máy Lumix S (L-mount) bắt "S1" nên quy tắc ra thân `l_mount`, ff. Đây thực chất là lỗi **loại**, nhưng openMVG không có đáp án loại nên chỉ lộ ra ở cột khung.
 
-**Tóm lại:** trên holdout, sau khi đọc từng ca sai, quy tắc sai ở **4 sản phẩm**: 3 sai loại (Dimage A200, EF-S 55-250, Tokina 12-28) + 1 lộ ra ở cột khung (DMC-S1). Mọi ca sai ngàm còn lại là do đáp án.
+**Tóm lại** *(câu này nói quá, trộn mẫu số; không dùng trong báo cáo — Red Team T7; thay bằng phân loại lần đo 3, mục 08/10 khuya)*: trên holdout, sau khi đọc từng ca sai, quy tắc sai ở **4 sản phẩm**: 3 sai loại (Dimage A200, EF-S 55-250, Tokina 12-28) + 1 lộ ra ở cột khung (DMC-S1). Mọi ca sai ngàm còn lại là do đáp án.
 - Mới đọc các ca **lệch** với đáp án. Các ca quy tắc và đáp án cùng sai giống nhau thì không phát hiện được.
 
 **Lỗi quy tắc đã biết, KHÔNG sửa** (theo yêu cầu của Nam, để giữ số holdout)
@@ -373,7 +389,7 @@ Làm theo thứ tự Nam giao: (1) máy phim, (2) sửa 2 lỗi ngàm, (3) chố
 - Chốt quy tắc xong mới chạy lại pipeline vào `ai/data/kg/` và chấm holdout **một lần**.
 - Bước khớp tên của phía đánh giá **không sửa**. `eval_external.py` chỉ thêm tham số `--ours / --out-csv / --out-json` để chạy vào thư mục nháp.
 
-**Ca sai loại của nửa fix trước khi sửa: 84 sản phẩm**, chia 2 nhóm:
+**Ca sai loại của nửa fix trước khi sửa: 84 sản phẩm** (có log `run_fix_errors_before.log`), chia 2 nhóm. Phân nhóm do Claude đọc tay; các số 68 / 16 / 47 / 15 / 3 / 2 / 1 dưới đây *(không còn log, không dùng trong báo cáo)*:
 - **68 ca quy tắc sai thật**, do quy tắc tin danh mục Amazon:
   - 47 ống bán kèm combo bị xếp phụ kiện. Amazon xếp chúng vào "Accessory Kits", "Accessory Bundles", "Filter Sets", thậm chí "Tablets" hay "Microscope Accessories". Ví dụ: "Canon EF 50mm f/1.8 STM Lens with 3pc Filter Kit…", "Fujinon XF33mmF1.4 R LM WR" (danh mục Tablets).
   - 15 thân thành "khác": 11 thân bị xếp "Point & Shoot" (Olympus E-P1, Lumix G3, Sony a6000…), 1 thân trong "Instant Cameras" (Nikon D5500), 3 máy phim SLR (Canon EOS Rebel 2000, Nikon F100, Canon AE-1 Program).
@@ -410,15 +426,15 @@ Làm theo thứ tự Nam giao: (1) máy phim, (2) sửa 2 lỗi ngàm, (3) chố
 3. Ngàm, khung, bảng luật tương thích (`mount_rules.toml`) và `03_mount_compat.py`: **không đổi**.
 
 **Kiểm tra phụ trước khi chốt** (không dùng holdout)
-- Đổi loại trên các sản phẩm **ngoài holdout** (so `item_attributes.csv` trước/sau, script nháp): phụ kiện → ống 138, khác → thân 32, phụ kiện → thân 7, ống → thân 2, thân → khác 1 (X-S1). Claude đọc hết từng tiêu đề.
+- Đổi loại trên các sản phẩm **ngoài holdout** (so `item_attributes.csv` trước/sau, script nháp): phụ kiện → ống 138, khác → thân 32, phụ kiện → thân 7, ống → thân 2, thân → khác 1 (X-S1). *(không còn log, không dùng trong báo cáo)* Claude đọc hết từng tiêu đề.
   - 2 lượt sửa đầu còn sai: 10 ống Samsung NX, "Canon Digital Rebel Kit with Case…", "Nikon D3000-D5000 DSLR Starter Kit", "Water Resistant Kit CVR-XT2", phần mềm "V-Log L Upgrade", vòng chân máy, đế tháo nhanh, áo trùm ống, ống ngắm phụ (guidescope), teleconverter 1.4X. Đã chặn hết bằng các luật ở mục 2 và danh sách từ phụ kiện.
   - Bản chốt: Claude xem lại hết, không thấy ca đổi sai.
-- Mẫu dev 50 (`label_dev_50_claude.csv`), chỉ tính 36 mẫu **không** thuộc holdout (14 mẫu dev nằm trong holdout): trước = sau = loại 35/36, ngàm 32/36, khung 30/36.
+- Mẫu dev 50 (`label_dev_50_claude.csv`), chỉ tính 36 mẫu **không** thuộc holdout (14 mẫu dev nằm trong holdout): trước = sau = loại 35/36, ngàm 32/36, khung 30/36. *(không còn log, không dùng trong báo cáo)*
 
 **Ảnh hưởng: độ chính xác so với nguồn ngoài**
 - Script: `eval_external.py` rồi `eval_split_report.py --holdout`. Log: `ai/data/survey/run_typefix_report.log`.
 - Bản "trước": `ai/data/survey/before_typefix/eval_external_matches.csv`. Đã chạy lại từ mã commit `68ffa56`: mọi cột đúng/sai giống hệt. Chỉ cột tên hiển thị `ten_nguon` khác ở 24 dòng, do thứ tự `set` của Python; từ nay chạy với `PYTHONHASHSEED=0`.
-- Khoảng tin cậy 95% (Wilson) ghi trong ngoặc.
+- Khoảng tin cậy 95% (Wilson) ghi trong ngoặc. *(Không có script nào sinh ra các khoảng này và chúng giả định mẫu độc lập (Red Team T6): không dùng trong báo cáo; thay bằng bootstrap theo cụm ở lần đo 3.)*
 
 | Chỉ số | Fix trước | Fix sau | **Holdout trước** | **Holdout sau** |
 |---|---:|---:|---:|---:|
@@ -443,15 +459,17 @@ Bảng nhầm loại của holdout sau sửa (đáp án → quy tắc): thân �
 | Máy ống liền / khác (`khac`) | 1.802 | 1.758 |
 | Phụ kiện | 24.507 | 24.301 |
 | Thân có 1 ngàm (hàng của M) | 482 | **538** |
-| Ống có 1 ngàm / "không chắc" QĐ 4 / vào M | 999 / 113 / 886 | **1.167 / 130 / 1.037** |
-| Kích thước M | 482 × 886 | **538 × 1.037** |
-| Cặp M = 1 | 56.276 | **75.690** |
-| … trong đó cờ "chưa rõ có cắt khung" (QĐ 11) | 1.638 | 2.186 |
-| Cặp "không biết" | 1.836 | 2.960 |
+| Ống có 1 ngàm / "không chắc" QĐ 4 / vào M | 999 / 113 / 886 | **1.167 / 130 / 1.037** (không còn log) |
+| Kích thước M | 482 × 886 | **538 × 1.037** (không còn log) |
+| Cặp M = 1 | 56.276 | **75.690** (không còn log) |
+| … trong đó cờ "chưa rõ có cắt khung" (QĐ 11) | 1.638 | 2.186 (không còn log) |
+| Cặp "không biết" | 1.836 | 2.960 (không còn log) |
+
+Cột "Sau" của 5 dòng cuối: **không còn log, không dùng trong báo cáo** (`kg/mount_compat_log.txt` bị lần chạy QĐ 16 ghi đè).
 
 **Còn chưa chắc / phải làm theo**
 - **Máy phim trong M (cần Nam quyết).** Sau sửa có 17 thân máy phim (Nikon F 7, Canon EF 8, Canon FD 2); trước chỉ có 2.
-  - Bảng luật đang coi chúng là thân FF. Nên ống DX trên thân Nikon phim bị xếp `crops_sensor` (M = 1): **462 cặp**, trước sửa 53. Luật QĐ 11 còn cho thêm **294 cặp** M = 1 có cờ, trước sửa 36.
+  - Bảng luật đang coi chúng là thân FF. Nên ống DX trên thân Nikon phim bị xếp `crops_sensor` (M = 1): **462 cặp**, trước sửa 53. Luật QĐ 11 còn cho thêm **294 cặp** M = 1 có cờ, trước sửa 36. *(462 và 294 có log `run_redteam_n3_t4.log`; 53 và 36: không còn log, không dùng trong báo cáo.)*
   - Nhưng máy phim **không có chế độ cắt khung**: ống DX sẽ tối góc. Thân cơ như FM-10 còn không chỉnh được khẩu độ với ống G (không có vòng khẩu).
   - Canon EF phim + EF-S → `incompatible`: đúng.
 - Hai ống mới được nhận loại có ngàm chưa chuẩn (lỗi bước gán ngàm, không thuộc lần sửa này):
@@ -552,7 +570,7 @@ Các ca sai, Claude đã đọc từng ca:
   - "Sigma 30mm DC DN for Sony E-mount" → đọc chữ "E-mount" → ngàm `sony_e`; chữ "DC" → khung `apsc`. Cách cũ bỏ sót ống này vì nó không có trong bảng 139 model.
   - "Nikon D3200" → luật dòng máy → `nikon_f`, `apsc`.
   - Cặp (D750, ống DX) → mức `crops_sensor`, M = 1.
-- Loại sản phẩm lấy từ danh mục, có lọc thêm bằng tiêu đề. Bản cũ coi 801 máy compact là "thân máy"; bản mới xếp chúng vào `khac`.
+- Loại sản phẩm lấy từ danh mục, có lọc thêm bằng tiêu đề. Bản cũ coi 801 máy compact là "thân máy" *(không còn log, không dùng trong báo cáo)*; bản mới xếp chúng vào `khac`.
 - Ma trận M có 5 mức (QĐ 2, 8): `compatible_with`, `crops_sensor` (M = 1); `requires_adapter`, `incompatible`, `unknown` (M = 0). Cặp `unknown` lưu ở ma trận riêng `unknown_mask.npz`.
 - 113 ống hãng thứ ba có nhiều asin con được đánh dấu "không chắc" (QĐ 4): không vào M, vẫn có trong `item_attributes.csv` và `compat_pairs.csv`.
 
@@ -575,7 +593,7 @@ Các ca sai, Claude đã đọc từng ca:
 | User có thân trong M ở train và item test là ống trong M | (chưa tính) | 951. Ống test so với thân đã có: 661 `compatible_with`, 9 `crops_sensor`, 10 `requires_adapter`, 23 `unknown`, 248 `incompatible` (`ai/survey/content3/scenario_kgnew.py`) |
 
 **Đã kiểm chứng / chưa**
-- Kiểm trên 50 mẫu dev do Claude tự chấm (`check_dev.py`): loại đúng 49/50, ngàm 46/50, khung 43/50. Mọi giá trị quy tắc **đã gán** đều khớp nhãn; các chỗ lệch là quy tắc để "không rõ" (vd chỉ ghi "for Canon"). **Đây không phải số đánh giá chính thức**, vì người chấm và người viết quy tắc là một.
+- Kiểm trên 50 mẫu dev do Claude tự chấm (`check_dev.py`): loại đúng 49/50, ngàm 46/50, khung 43/50 *(không còn log, không dùng trong báo cáo)*. Mọi giá trị quy tắc **đã gán** đều khớp nhãn; các chỗ lệch là quy tắc để "không rõ" (vd chỉ ghi "for Canon"). **Đây không phải số đánh giá chính thức**, vì người chấm và người viết quy tắc là một.
 - Chưa đối chiếu với nguồn thông số bên ngoài (chờ Nam duyệt tải về, QĐ 10).
 
 **Phải làm theo**
