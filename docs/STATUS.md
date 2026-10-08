@@ -1,6 +1,6 @@
 # TRẠNG THÁI ĐỒ ÁN — Camera Recommender
 
-Cập nhật lần cuối: 08/10/2026 khuya (nội dung 4: thêm cờ `ngam_khong_chac`, dựng lại đồ thị, 6A ĐẠT; sửa ví dụ QĐ 4-9; trước đó: dựng đồ thị mới, sửa `common_05.py` theo QĐ 4-9; nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
+Cập nhật lần cuối: 09/10/2026 (nội dung 5: kế hoạch đánh giá đăng ký trước `docs/reviews/n5_eval_plan.md`, chưa chạy mô hình; trước đó 08/10 khuya, nội dung 4: thêm cờ `ngam_khong_chac`, dựng lại đồ thị, 6A ĐẠT; sửa ví dụ QĐ 4-9; trước đó: dựng đồ thị mới, sửa `common_05.py` theo QĐ 4-9; nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
 
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
@@ -65,7 +65,7 @@ Việc 1 (luật mục đích) xong 08/10: `ai/config/usecase_rules.toml` **v0.3
 - khẩu độ đúng số f: 223/228 = 97,8% [95,8–99,5];
 - **khẩu độ đúng khoảng nút:** 223/228 = 97,8% [95,8–99,5];
 - 77 ô lệch đọc tay (Claude): **0 do bộ đọc**, 75 do đáp án (66 khớp nhầm, 9 Wikidata thiếu giá trị), 2 tiêu đề không ghi khẩu độ. Số thô là cận dưới (hạn chế nội dung 4, điểm 9–12) |
-| 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`/`item_map.json` (07/10, nhánh `nam/content3`). **08/10 khuya:** `common_05.py` đọc đầu ra mới, CVR theo QĐ 4-9 (kiểm thử dựng tay `ai/survey/content4/test_cvr.py` đúng cả); **chưa chạy lại script 05 nào**; `05c_rgcn_train.py` không chạy được với đồ thị mới (thuộc lỗi 1). **Việc phải làm khi sửa script 05:** bộ lọc Popularity MountAware (`05a_popularity.py`) chỉ được loại ống **"chắc chắn vi phạm"** theo QĐ 4-9 (`common_05.judge_lens` trả True); ống "không chấm được" (trả None) thì **giữ lại** (Nam chốt 08/10 khuya). Hiện code 05a loại mọi ống không thuộc tập M = 1 của người dùng: **chưa sửa** |
+| 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`/`item_map.json` (07/10, nhánh `nam/content3`). **08/10 khuya:** `common_05.py` đọc đầu ra mới, CVR theo QĐ 4-9 (kiểm thử dựng tay `ai/survey/content4/test_cvr.py` đúng cả); **chưa chạy lại script 05 nào**; `05c_rgcn_train.py` không chạy được với đồ thị mới (thuộc lỗi 1). **Việc phải làm khi sửa script 05:** bộ lọc Popularity MountAware (`05a_popularity.py`) chỉ được loại ống **"chắc chắn vi phạm"** theo QĐ 4-9 (`common_05.judge_lens` trả True); ống "không chấm được" (trả None) thì **giữ lại** (Nam chốt 08/10 khuya). Hiện code 05a loại mọi ống không thuộc tập M = 1 của người dùng: **chưa sửa**. **09/10:** kế hoạch đánh giá đăng ký trước `docs/reviews/n5_eval_plan.md` (17 lỗi L1–L17 kèm file/hàm; full ranking, CVR, kịch bản, 4 baseline, siêu tham số có nguồn, bootstrap; 6 câu [HỎI] chờ Nam). Khảo sát (chỉ đếm, log `ai/data/survey/n5/run_survey_n5_sets_20261009_lan1.log`): bộ lọc MountAware cũ loại mất item test của 3.856 người (3.268 người không có thân), bộ lọc mới 282; kịch bản ống cho người có thân trên test 1.060 người (lắp được 762, không lắp được 282, không phán được 16). Đo tài nguyên (không huấn luyện, `run_probe_gpu_20261009_lan1.log`): đỉnh GPU ≤ 1,6 GB. **Chưa sửa code 05, chưa huấn luyện** |
 | 6 | Module ràng buộc cứng và mềm | Chưa bắt đầu | |
 | 7 | Mô hình gợi ý theo bộ (GNN có quan hệ) | Chưa bắt đầu | |
 | 8 | Giải thích (path-based) | Chưa bắt đầu | |
@@ -263,6 +263,7 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 - [x] Nội dung 4: cách đánh dấu cạnh `has_spec → mount` của phụ kiện / ngàm chuyển → **đã chốt 08/10** (QĐ 4-10)
 - [x] Nội dung 4, việc 1: duyệt luật mục đích → **đã chốt 08/10** (QĐ 4-11 .. 4-15)
 - [x] Nội dung 4: nguồn gốc file trang Canon USA lens guide → **đã xác nhận 08/10**: bản Wayback 20260904 do Nam lưu bằng trình duyệt (đã tắt VPN), đúng bản Claude đã đọc; đổi tên thành `manual/canon_us_lens_guide_wb20260904.html`
+- [ ] Nội dung 5: 6 câu [HỎI] của kế hoạch đánh giá (`docs/reviews/n5_eval_plan.md` mục 12): bỏ item val khỏi ứng viên test; ứng viên của kịch bản; loss R-GCN; 18 hay 28 quan hệ; ngân sách GPU; chỉ số chọn mô hình + 5 so sánh đăng ký trước
 - [x] Có bỏ bản ghi lặp trước k-core không? → **Có**, mỗi cặp (user, item) giữ 1 dòng sớm nhất (07/10, xem nhật ký)
 
 ## 7. Nhật ký quyết định
@@ -348,3 +349,4 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 | 08/10/2026 | **Thêm cờ `ngam_khong_chac`** cho cạnh `has_spec → mount` của 134 ống "không chắc"; dựng lại đồ thị (`--overwrite`, sao lưu bản trước ở `ai/data/kg_c8eb613/`) | Nam chốt, để mô hình không coi đường thân → ngàm ← ống "không chắc" là "lắp được". 6A ĐẠT cả (thêm một kiểm tra ở mục 5: 134 cạnh có cờ = 134 ống); chạy 2 lần 13/13 file trùng sha256. So với bản trước chỉ đổi `kg_hetero.pt`, `kg_stats.json`, `kg_edges_has_spec_mount.csv` |
 | 08/10/2026 | Bộ lọc Popularity MountAware (nội dung 5) chỉ loại ống "chắc chắn vi phạm" theo QĐ 4-9, giữ ống không chấm được | Nam chốt. Ghi ở mục 3 (việc nội dung 5); chưa sửa code 05 |
 | 08/10/2026 | Xóa thư mục nháp `ai/data/kg_draft_c4/`, `kg_draft_c4_lan2/`, `kg_draft_rt1b/`, `kg_draft_rt1b_lan2/`, `kg_draft_rt1b_lan2_final/` (ngoài git); giữ `kg_d339dda/`, `kg_e8b39e6/` | Nam yêu cầu. Bằng chứng sha256 của các lần chạy vẫn còn trong log (`kg_sha256_*.txt`, `run_sha256_kg_20261008_rt1b.log`) |
+| 09/10/2026 | **Nội dung 5: viết kế hoạch đánh giá đăng ký trước** `docs/reviews/n5_eval_plan.md`, chưa sửa code 05, chưa huấn luyện. Thêm `ai/survey/content5/survey_n5_sets.py` (đếm tập người dùng, ảnh hưởng bộ lọc) và `probe_gpu.py` (đo bộ nhớ / thời gian bằng trọng số ngẫu nhiên, không cập nhật trọng số) | Nam yêu cầu lập kế hoạch trước khi chạy. Siêu tham số mặc định lấy từ bài LightGCN (arXiv 2002.02126v4 §3.3, §4.1.2, §4.5) và R-GCN (arXiv 1703.06103v4 §2, §5.2), đọc bản HTML trên arXiv ngày 09/10 |
