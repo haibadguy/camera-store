@@ -94,6 +94,14 @@ def lensfun_mount(m):
     return "khac_ngam"
 
 
+# Chuỗi ngàm Lensfun rơi vào khac_ngam mà là NGÀM THẬT nhóm không có mã (kế hoạch lần 3, mục 9.3, chốt trước khi đo).
+# Chuỗi khac_ngam còn lại (Generic, lỗi gõ 'Pentak K', 'Sigma', 'Minolta M', 'Tamron Adaptall', mã ống liền của
+# compact / điện thoại...) là "không rõ". Chỉ dùng ở lan3.
+KHAC_NGAM_THAT = {"Contax/Yashica", "Contax G", "Hasselblad 500", "Hasselblad H", "Hasselblad X", "Mamiya 645",
+                  "Pentax 645AF2", "Rollei 6x6", "Samsung NX mini", "Canon FL", "DKL", "Exakta", "Kiev 88", "M39",
+                  "M39/1", "Minolta MC", "Minolta MD", "Olympus OM", "C"}
+
+
 def wikidata_mount(label):
     l = (label or "").lower()
     table = [("canon ef-s", "canon_efs"), ("canon ef-m", "canon_efm"), ("canon ef lens", "canon_ef"), ("canon rf", "canon_rf"),
@@ -162,7 +170,8 @@ def load_lensfun():
             truth = dict(type="khac" if fixed else "than",
                          mount=None if fixed else lensfun_mount(c.findtext("mount")),
                          khung=None if fixed else crop_to_khung(c.findtext("cropfactor")),
-                         name=c.findtext("model"), id=f"lensfun:{fn}:cam{ci}")
+                         name=c.findtext("model"), id=f"lensfun:{fn}:cam{ci}",
+                         khac_that=(c.findtext("mount") or "") in KHAC_NGAM_THAT)
             for m in c.findall("model"):
                 for k in body_keys(m.text or "", maker):
                     cams.append((maker, k, truth))
@@ -170,13 +179,15 @@ def load_lensfun():
             mounts = {lensfun_mount(x.text) for x in l.findall("mount")}
             if fn.startswith(("compact", "actioncams")) or not mounts:
                 continue
+            # chuỗi ngàm gốc rơi vào khac_ngam (để phân biệt ngàm thật / không rõ ở lan3, mục 9.3)
+            raw_khac = {x.text or "" for x in l.findall("mount") if lensfun_mount(x.text) == "khac_ngam"}
             models = [x.text or "" for x in l.findall("model")]
             maker = maker_of(l.findtext("maker")) or maker_of(models[0])
             for m in models:
                 sig = lens_sig(m)
                 if sig and maker:
                     lenses.append(((maker,) + sig, dict(mounts=mounts, crop=l.findtext("cropfactor"), name=m,
-                                                        id=f"lensfun:{fn}:lens{li}")))
+                                                        id=f"lensfun:{fn}:lens{li}", raw_khac=raw_khac)))
     return cams, lenses
 
 
@@ -266,10 +277,12 @@ ACC_EVAL = re.compile(r"\b(?:case|cover|bag|pouch|protector|strap|grip|cage|batt
 #      đúng từ cũ (số ít, có \b), nên tập tiêu đề bị loại chỉ có thể THU HẸP: sản phẩm từng qua bộ lọc vẫn qua.
 #      Vd "Nikon F100 35mm Film Camera", "Sony FE 50mm F1.8 E-Mount", "Nikon D3500 3.0\" LCD" không còn bị loại.
 #  N4: "guide" -> "guides?"; thêm "eye cup(s)", "jacket(s)".
+#  H1 (kế hoạch lần 3, mục 9.2): "manual" đứng trước "focus" không còn là từ phụ kiện ("Pentax K1000 Manual Focus
+#      SLR Film Camera"); "Instruction Manual", "User Manual" vẫn bị loại. Vẫn chỉ thu hẹp tập bị loại.
 ACC_EVAL_LAN3_WORDS = (r"case|cover|bag|pouch|protector|strap|grip|cage|battery|batteries|charger|memory|tripod|"
                        r"monopod|adapter|teleconverter|converter|cloth|decal|skin|sticker|hood|cap|filter|remote|cable|"
                        r"eyecup|eye[\s-]cups?|jackets?|bracket|plate|shield|guard|holster|harness|rig|"
-                       r"microphone|mic|replacement|parts?|manual|book|guides?|dvd")
+                       r"microphone|mic|replacement|parts?|manual(?![\s-]*focus)|book|guides?|dvd")
 ACC_EVAL_LAN3_PHRASES = [
     # film
     r"(?:protector|protective|protection|screen|lcd|display|guard|tempered|glass|hydrogel|anti-?glare|matte|clear)\s+film",
@@ -370,9 +383,11 @@ def match_lens(title, lidx):
     if not entries:
         return None
     mounts = set().union(*[e["mounts"] for e in entries])
+    raw_khac = set().union(*[e.get("raw_khac", set()) for e in entries])
     # Khung của ống KHÔNG chấm: hệ số crop của Lensfun là của máy dùng để hiệu chỉnh, không phải vòng ảnh.
     return dict(type="ong", mount=next(iter(mounts)) if len(mounts) == 1 else None, mounts=mounts, khung=None,
-                name=entries[0]["name"], n=len(entries), id=min(e["id"] for e in entries))
+                name=entries[0]["name"], n=len(entries), id=min(e["id"] for e in entries),
+                khac_that=bool(raw_khac) and raw_khac <= KHAC_NGAM_THAT)
 
 
 def ctoks(s):
@@ -434,7 +449,10 @@ def main():
             r = dict(nguon=sname, loai_khop=kind, parent_asin=o["parent_asin"], title=title[:150], ten_nguon=truth["name"],
                      loai_quy_tac=o["item_type"], ngam_quy_tac=o["mount"], khung_quy_tac=o["khung"],
                      loai_dap_an=truth["type"] or "", ngam_dap_an=truth["mount"] or "", khung_dap_an=truth["khung"] or "",
-                     loai_dung="", ngam_dung="", khung_dung="", cum_nguon=cum)
+                     loai_dung="", ngam_dung="", khung_dung="", cum_nguon=cum,
+                     # cột thông tin (mọi chế độ, không dùng để chấm ở đây): đáp án khac_ngam là ngàm thật (1) hay
+                     # không rõ (0), để phép đo (5) áp quy tắc H3 cho mọi phương pháp (kế hoạch lần 3, mục 9.5)
+                     ngam_khac_that=(int(bool(truth.get("khac_that"))) if truth["mount"] == "khac_ngam" else ""))
             if truth["type"]:
                 ok = o["item_type"] == truth["type"]
                 r["loai_dung"] = int(ok); st["loai_n"] += 1; st["loai_dung"] += ok
@@ -445,8 +463,15 @@ def main():
                 rows.append(r); continue
             single = o["mount"] not in ("khong_ro", "khong_co", "nhieu", "") and ">" not in o["mount"]
             if MODE == "lan3" and truth["mount"] == "khac_ngam":
-                # Red Team N4: ngàm của nguồn ngoài bảng mã của nhóm -> không chấm (bản cũ tính là sai)
-                r["ngam_dung"] = "dap_an_khac_ngam"; st["ngam_dap_an_khac_ngam"] += 1
+                # Red Team N4 + H3 (kế hoạch lần 3, mục 9.3): ngàm của nguồn ngoài bảng mã của nhóm.
+                #  quy tắc không gán ngàm cụ thể -> không chấm;
+                #  quy tắc gán ngàm cụ thể + đáp án là ngàm thật -> SAI; đáp án không rõ -> không chấm.
+                if not single:
+                    r["ngam_dung"] = "dap_an_khac_ngam"; st["ngam_dap_an_khac_ngam"] += 1
+                elif truth.get("khac_that"):
+                    r["ngam_dung"] = 0; st["ngam_n"] += 1; st["ngam_gan"] += 1; st["ngam_khac_ngam_sai"] += 1
+                else:
+                    r["ngam_dung"] = "dap_an_khac_ngam_khong_ro"; st["ngam_dap_an_khac_ngam_khong_ro"] += 1
             elif truth["mount"]:
                 st["ngam_n"] += 1
                 if single:
@@ -476,8 +501,10 @@ def main():
               f"quy tắc để trống {st['ngam_bo_trong']}" + (f"; so ở mức họ ngàm (EF/EF-S): đúng {pct(st['ngam_ho_dung'], st['ngam_ho_n'])}" if st['ngam_ho_n'] else ""))
         print(f"  khung: đáp án có {st['khung_n']}; quy tắc gán {st['khung_gan']}, đúng {pct(st['khung_dung'], st['khung_gan'])}; "
               f"quy tắc để trống {st['khung_bo_trong']}")
-        if st["ngam_dap_an_khac_ngam"]:
-            print(f"  ngàm: không chấm {st['ngam_dap_an_khac_ngam']} sản phẩm có đáp án ngoài bảng mã (khac_ngam)")
+        if st["ngam_dap_an_khac_ngam"] or st["ngam_khac_ngam_sai"] or st["ngam_dap_an_khac_ngam_khong_ro"]:
+            print(f"  ngàm, đáp án ngoài bảng mã (khac_ngam): không chấm {st['ngam_dap_an_khac_ngam']} (quy tắc không gán "
+                  f"ngàm cụ thể); tính SAI {st['ngam_khac_ngam_sai']} (đã cộng vào số gán ở trên); không chấm "
+                  f"{st['ngam_dap_an_khac_ngam_khong_ro']} (đáp án không rõ)")
     summary["_chay"] = dict(bo_danh_gia=MODE, half=args.half, ours=args.ours, n_san_pham=len(ours))
     cols = list(rows[0].keys())
     with open(out_csv, "w", encoding="utf-8-sig", newline="") as f:

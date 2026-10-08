@@ -31,8 +31,13 @@ ACC_CASES = [
     ("Fujifilm X-T4 Mirrorless Camera Dual Card Slot", True, False),
     ("Sony Alpha 7S III Low Light Full Frame Camera", True, False),
     ("Sony A7 III Touch Screen Mirrorless Camera", True, False),
-    # hạn chế đã biết, KHÔNG sửa (ngoài danh sách Red Team): "manual" vẫn loại "Manual Focus" -> K1000 vẫn bị loại
-    ("Pentax K1000 Manual Focus SLR Film Camera", True, True),
+    # H1 (kế hoạch lần 3, mục 9.2): "Manual Focus" không còn làm tiêu đề bị loại ở lan3
+    ("Pentax K1000 Manual Focus SLR Film Camera", True, False),
+    ("Rokinon 14mm F2.8 Manual-Focus Lens for Nikon", True, False),
+    # "manual" không đứng trước "focus" vẫn bị loại
+    ("Canon EOS 5D Mark II Instruction Manual", True, True),
+    ("Nikon D90 User Manual Book", True, True),
+    ("Nikon F3 Manual Focus Screen Instruction Manual", True, True),
     # S2: vẫn bị loại ở cả hai bản (cụm phụ kiện cụ thể)
     ("Nikon D3500 Screen Protector Film", True, True),
     ("Neewer Ring Light for Nikon", True, True),
@@ -112,6 +117,16 @@ ev.MODE = "lan3"
 for order in ([A, B], [B, A]):
     m = ev.match_lens("Canon EF 50mm f/1.8 II Lens", {("canon",) + ev.lens_sig(A["name"]): order})
     check("cum_nguon = id nhỏ nhất", m["id"], "gia:a")
+
+# ---------------------------------------------------------------- 4. H3: chấm ô có đáp án khac_ngam (mục 9.3)
+check("khac_ngam: Minolta MD là ngàm thật", "Minolta MD" in ev.KHAC_NGAM_THAT, True)
+check("khac_ngam: Generic không phải ngàm thật", "Generic" in ev.KHAC_NGAM_THAT, False)
+check("khac_ngam: lỗi gõ Pentak K không phải ngàm thật", "Pentak K" in ev.KHAC_NGAM_THAT, False)
+MD = dict(mounts={"khac_ngam"}, crop=None, name="Minolta MD 50mm f/1.7", id="gia:md", raw_khac={"Minolta MD"})
+GEN = dict(mounts={"khac_ngam"}, crop=None, name="Minolta MD 50mm f/1.7", id="gia:gen", raw_khac={"Generic"})
+for order, want in (([MD], True), ([MD, GEN], False), ([GEN], False)):
+    m = ev.match_lens("Minolta MD 50mm f/1.7 Lens", {("sony",) + ev.lens_sig(MD["name"]): order})
+    check(f"khac_that của ống | {[e['raw_khac'] for e in order]}", m["khac_that"], want)
 
 print(f"\n{'TẤT CẢ ĐÚNG' if not fails else f'{fails} CA SAI'}")
 sys.exit(1 if fails else 0)
