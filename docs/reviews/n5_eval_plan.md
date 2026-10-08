@@ -2,7 +2,7 @@
 
 - Viết ngày 09/10/2026, nhánh `nam/content4`, **trước khi sửa code 05 và trước khi huấn luyện bất kỳ mô hình nào**.
 - Mốc thời gian: commit chứa file này. Mọi thay đổi kế hoạch trước khi chạy test ghi vào mục 13 ("Sửa đổi kế hoạch"), commit riêng. Sau khi chạy test thì không sửa kế hoạch nữa.
-- Các câu đánh dấu **[HỎI n]** là chỗ Nam phải chốt trước khi viết code (mục 12). Phần còn lại là đề xuất mặc định nếu Nam đồng ý.
+- 6 câu [HỎI] đã được Nam chốt ngày 09/10/2026 (mục 12); các mục liên quan đã sửa theo (mục 13).
 - Số liệu trong file này do 2 script khảo sát sinh ra (chỉ đếm và đo tài nguyên, **không huấn luyện**):
 
 | Script | Log |
@@ -16,7 +16,7 @@ Catalog nhỏ có 5 sản phẩm: **A** ống Canon EF, **B** ống Nikon F, **C
 
 Người dùng u1: train = {D}, val = E, test = A. Mô hình cho điểm: B 0,9; C 0,8; A 0,7; E 0,1 (D đã mua nên bị loại khỏi danh sách).
 
-**Xếp hạng toàn bộ (full ranking).** Bỏ sản phẩm đã có trong train (D) [và item val E nếu Nam chọn ở HỎI 1], xếp các sản phẩm còn lại theo điểm: B, C, A. Item test A đứng **hạng 3**.
+**Xếp hạng toàn bộ (full ranking).** Bỏ sản phẩm đã có trong train (D) và item val E (HỎI 1, Nam chốt 09/10), xếp các sản phẩm còn lại theo điểm: B, C, A. Item test A đứng **hạng 3**.
 
 | Chỉ số | K = 2 | K = 5 | Cách tính |
 |---|---|---|---|
@@ -42,7 +42,7 @@ So với commit `9d97f57` (nhánh `nam/content4`; `common_05.py` đã sửa CVR 
 |---|---|---|---|---|
 | L1 | `05c_rgcn_train.py`, lớp `RGCNVariant` (dòng 25, 51–106); `05_evaluate.py` `MODELS` | "R-GCN variant" thật ra là `HeteroConv` + `SAGEConv` cho từng quan hệ, không phải R-GCN (Schlichtkrull et al. 2018) | Đọc code; chính docstring của Hải ghi "không phải implementation Schlichtkrull" (lỗi 1, STATUS mục 4) | Viết lại bằng `RGCNConv` của PyG (mục 6.4), đổi tên trong mọi bảng |
 | L2 | `05c_rgcn_train.py`, `get_init_embeddings` (dòng 71–73, 87–94) | Không chạy được với đồ thị mới: `item_proj = Linear(3)` nhưng `item.x` nay 9 chiều; `mount_proj = Linear(8)` nhưng có 23 ngàm; `usecase_proj = Linear(7)` nhưng có 4 nhãn; thiếu 3 loại nút `sensor_format`, `focal_range`, `aperture_class` | Đọc code + in cấu trúc `kg_hetero.pt` (item.x [27.940, 9], mount.x [23, 23], usecase.x [4, 4]). **Chưa chạy** 05c (chạy thì sẽ huấn luyện nếu không lỗi) | Bỏ, thay bằng L1 |
-| L3 | `05c` (toàn bộ) | Bỏ qua thuộc tính cạnh (`ngam_khong_chac`, `phia`, `src_phu_kien`, `crop_unknown`). Nam thêm cờ `ngam_khong_chac` để mô hình **không** coi đường thân → ngàm ← ống "không chắc" là lắp được; mô hình hiện tại không thấy cờ này | Đọc code | Tách quan hệ theo cờ, **[HỎI 4]** |
+| L3 | `05c` (toàn bộ) | Bỏ qua thuộc tính cạnh (`ngam_khong_chac`, `phia`, `src_phu_kien`, `crop_unknown`). Nam thêm cờ `ngam_khong_chac` để mô hình **không** coi đường thân → ngàm ← ống "không chắc" là lắp được; mô hình hiện tại không thấy cờ này | Đọc code | Nam chốt 09/10 (HỎI 4): giữ 18 quan hệ, bỏ 134 cạnh có cờ `ngam_khong_chac` khỏi đầu vào R-GCN (mục 6.4) |
 | L4 | `common_05.sampled_eval`; `05a.run_popularity`, `05b.evaluate`, `05c.evaluate` | Kết quả chính là sampled 1+99, không phải full ranking (lỗi 4) | Đọc code. Âm mẫu của script 02: **86,95% là phụ kiện** (val; test 86,98%), nên chỉ cần xếp ống/thân lên trên phụ kiện là trúng dễ | Thêm `full_rank_eval` (mục 3); sampled chỉ là số phụ |
 | L5 | `05b` dòng 222, `05c` dòng 231 | Dừng sớm và chọn checkpoint theo **NDCG@10 sampled** trên val | Đọc code | Chọn theo NDCG@20 full ranking trên val (mục 7) |
 | L6 | `05a.run_popularity`, `score_fn_sampled` (dòng 50–59) và `score_fn_full` (dòng 73–80) | Bộ lọc MountAware: (a) người dùng **không có thân** có `valid_lenses` rỗng → **mọi ống** bị đặt −∞; (b) loại cả ống ngoài M (không ngàm, "không chắc") và ống có cặp "không biết". Trái quyết định của Nam 08/10 khuya (chỉ loại ống `judge_lens` = True) | **Đã kiểm** (`run_survey_n5_sets`, mục D): trong 4.618 người dùng có item test là ống, bộ lọc cũ loại mất item test của **3.856** người (3.268 người không có thân + 588 người có thân); bộ lọc mới chỉ loại **282**. Có thể đây là lý do Hit của MountAware thấp hơn Global trong bảng của Hải (dữ liệu cũ, chưa kiểm) | Bộ lọc mới: đặt −∞ đúng các ống `judge_lens(ống, thân, ctx) is True`; người không có thân không bị lọc |
@@ -78,7 +78,7 @@ So với commit `9d97f57` (nhánh `nam/content4`; `common_05.py` đã sửa CVR 
 
 ### 3.2. Tập ứng viên
 - **Ứng viên** của người dùng u = toàn bộ **27.940** sản phẩm, trừ các sản phẩm u đã có trong train.
-- **[HỎI 1]** Khi chấm **test**, có bỏ thêm item **val** của u khỏi ứng viên không? Đề xuất: **có**. Lý do: lúc gợi ý cho lần mua test, hệ thống đã biết u mua item val; gợi ý lại nó là vô ích, mà nó chiếm một chỗ trong top-K. Mô hình vẫn chỉ học trên train (không học lại trên train + val), để đồ thị và mọi mô hình dùng đúng một tập cạnh. Khi chấm **val**: chỉ bỏ train.
+- **Khi chấm test, bỏ thêm item val** của u khỏi ứng viên (**Nam chốt 09/10, HỎI 1**). Lý do: lúc gợi ý cho lần mua test, hệ thống đã biết u mua item val; gợi ý lại nó là vô ích, mà nó chiếm một chỗ trong top-K. Mô hình vẫn chỉ học trên train (không học lại trên train + val), để đồ thị và mọi mô hình dùng đúng một tập cạnh. Khi chấm **val**: chỉ bỏ train.
 - Popularity đếm lượt trên **train**.
 
 ### 3.3. Hạng và quy tắc hòa điểm
@@ -126,9 +126,9 @@ So với commit `9d97f57` (nhánh `nam/content4`; `common_05.py` đã sửa CVR 
 Thêm 290 người có thân và item test là ống **ngoài** M (không ngàm hoặc "không chắc"): ngoài kịch bản, chỉ báo số.
 
 ### 5.3. Cách đo
-- **[HỎI 2]** Tập ứng viên của kịch bản:
-  - (a) **chỉ ống** (1.339 sản phẩm có `item_type = ong`, trừ ống đã có trong train và item val) — đề xuất làm số chính của kịch bản, vì kịch bản là "khung gợi ý ống kính";
-  - (b) toàn bộ 27.940 sản phẩm như mục 3 (chỉ lọc người dùng) — số phụ.
+- Tập ứng viên của kịch bản (**Nam chốt 09/10, HỎI 2**):
+  - **số chính: chỉ ống** (1.339 sản phẩm có `item_type = ong`, trừ ống đã có trong train và item val), vì kịch bản là "khung gợi ý ống kính";
+  - **số phụ:** toàn bộ 27.940 sản phẩm như mục 3 (chỉ lọc người dùng).
 - Báo Recall@K, NDCG@K, K ∈ {5, 10, 20}, và CVR@K, **tách theo nhóm** lắp được / không lắp được, cho cả 4 mô hình.
 - Nhóm "không lắp được" chỉ có 282 người, nên khoảng tin cậy sẽ rộng; ghi rõ.
 - Dự kiến (chưa kiểm chứng): bộ lọc MountAware cho Hit = 0 ở **mọi** người nhóm "không lắp được" (vì item test bị lọc), và có thể tăng Hit ở nhóm "lắp được".
@@ -155,22 +155,24 @@ Thêm 290 người có thân và item test là ống **ngoài** M (không ngàm 
 
 **Cài đặt:**
 - `torch_geometric.nn.RGCNConv`, đồ thị nội dung 4 chuyển sang dạng đồng nhất: 95.646 nút, 1.116.950 cạnh (cả chiều `rev_`), **chỉ cạnh train** cho user–item; val / test không bao giờ vào đồ thị.
-- **[HỎI 4]** Số quan hệ:
-  - (a) 18 quan hệ như `kg_hetero.pt` (bỏ qua thuộc tính cạnh);
-  - (b) **đề xuất**: 28 quan hệ, tách theo cờ cạnh để mô hình thấy được cờ: `has_spec → mount` tách 5 loại (thân/ống chắc 1.570; ống "không chắc" 134; phụ kiện 954; ngàm chuyển phía ống 155; phía thân 155), `compatible_with` tách theo `crop_unknown` (68.786 / 1.686), cả hai chiều. Lý do: `RGCNConv` không đọc thuộc tính cạnh, nên nếu không tách thì cờ `ngam_khong_chac` mà Nam đã chốt sẽ vô tác dụng.
+- **Số quan hệ (Nam chốt 09/10, HỎI 4): 18 quan hệ** như `kg_hetero.pt`, và **bỏ 134 cạnh `has_spec → mount` có cờ `ngam_khong_chac` = 1** (cùng 134 cạnh `rev_has_spec` tương ứng) khỏi đồ thị đầu vào của R-GCN. Đồ thị đầu vào còn 1.116.950 − 268 = 1.116.682 cạnh.
+  - **Lý do:** `RGCNConv` không đọc thuộc tính cạnh. Nếu giữ 134 cạnh này mà không tách quan hệ, mô hình thấy đường thân Canon → nút `canon_ef` ← ống "không chắc" y như đường của một ống chắc chắn ngàm EF, tức coi ống "không chắc" là lắp được — đúng điều cờ `ngam_khong_chac` muốn tránh (QĐ 3-4, 4-5). Bỏ cạnh thì ống "không chắc" không có đường nào qua nút ngàm; ống vẫn giữ các cạnh khác (người mua, tiêu cự, khẩu độ, khổ, mục đích).
+  - Các thuộc tính cạnh khác (`src_phu_kien`, `phia`, `crop_unknown`) bị bỏ qua: cạnh phụ kiện / ngàm chuyển / "chưa rõ có cắt khung" được xử lý như cạnh thường cùng quan hệ. Ghi là hạn chế.
+  - Phương án không chọn: tách thành 28 quan hệ theo cờ cạnh (đã đo thời gian ở mục 9).
+  - `kg_hetero.pt` không sửa; script 05c bỏ cạnh khi nạp và in số cạnh bị bỏ (phải đúng 134 mỗi chiều).
 - Nút không có đặc trưng đầu vào: mỗi nút một embedding học được (bài §2.2: one-hot cho mỗi nút khi không có đặc trưng, qua một phép biến đổi tuyến tính — tương đương một bảng embedding). Không dùng `item.x` ở baseline này (để dành nội dung 7).
 - 2 lớp, d = 64, ReLU giữa hai lớp (không ở lớp cuối), `root_weight = True` (W_0), `aggr = "mean"` (c_{i,r} = |N_i^r|).
 - **Chấm điểm user–item:** DistMult (bài Eq. 6) cho đúng quan hệ `interacted_with`: f(u, i) = e_uᵀ diag(r) e_i, với r ∈ ℝ^64 học được. Đây là tích vô hướng có trọng số theo từng chiều.
-- **Hàm loss — [HỎI 3]:**
-  - (a) **đề xuất: BPR**, giống LightGCN: −ln σ(f(u, i) − f(u, j)), j là 1 âm mẫu đều trong các sản phẩm u chưa có trong train. Lý do: khác biệt giữa R-GCN và LightGCN khi đó chỉ đến từ bộ mã hóa và đồ thị, không đến từ hàm loss;
-  - (b) đúng bài gốc: cross-entropy nhị phân với ω = 1 âm mẫu cho mỗi cạnh dương (Eq. 7), âm mẫu tạo bằng cách thay item.
+- **Hàm loss: BPR (Nam chốt 09/10, HỎI 3)**, giống LightGCN: −ln σ(f(u, i) − f(u, j)), j là 1 âm mẫu đều trong các sản phẩm u chưa có trong train. Lý do: khác biệt giữa R-GCN và LightGCN khi đó chỉ đến từ bộ mã hóa và đồ thị, không đến từ hàm loss. Sai khác so với bài gốc: bài dùng cross-entropy nhị phân với ω = 1 âm mẫu cho mỗi cạnh dương (Eq. 7).
 - Mỗi bước: mã hóa toàn đồ thị một lần (như LightGCN lan truyền lại mỗi batch), lấy embedding của batch cặp BPR.
 
 **Chỗ lệch so với bài gốc (ghi trong báo cáo):**
 - d = 64 (bài: 200 hoặc 500) — để bằng LightGCN, như LightGCN cố định d = 64 cho mọi mô hình (§4.1.2);
 - chuẩn hóa c_{i,r} = |N_i^r| (công thức Eq. 2, ví dụ của chính bài); phần dự đoán liên kết của bài dùng c_i = Σ_r |N_i^r| (§5.2), `RGCNConv` không hỗ trợ trọng số cạnh nên không làm đúng được nếu không viết lớp riêng;
 - edge dropout: bài dùng 0,2 cho tự nối và 0,4 cho cạnh khác; PyG không có cạnh tự nối (W_0 là phần riêng), nên chỉ áp **0,4 cho cạnh** (`dropout_edge`), không dropout phần W_0;
-- mini-batch BPR thay cho full-batch (bài §5.2: full-batch) — xem mục 9 về thời gian.
+- mini-batch BPR thay cho full-batch (bài §5.2: full-batch) — xem mục 9 về thời gian;
+- loss BPR thay cho cross-entropy (HỎI 3);
+- tối đa 100 epoch (mục 7.1, HỎI 5).
 
 ## 7. Siêu tham số
 
@@ -186,13 +188,15 @@ Thêm 290 người có thân và item test là ống **ngoài** M (không ngàm 
 | | batch | 2048 | §4.1.2 (1024; 2048 cho Amazon-Book "for speed") |
 | | λ (L2 trên E⁽⁰⁾) | dò trên val trong {1e−5, 1e−4, 1e−3} | §4.1.2: dò {1e−6…1e−2}, "in most cases the optimal value is 1e−4"; §4.5: λ > 1e−3 làm kết quả giảm nhanh |
 | | dropout | không | §3.3 |
-| | số epoch tối đa | 1000 | §4.1.2 ("Typically, 1000 epochs are sufficient") |
+| | số epoch tối đa | **300** (Nam chốt 09/10, HỎI 5) | **Sai khác so với bài gốc**: §4.1.2 ghi "Typically, 1000 epochs are sufficient". Giảm vì ngân sách GPU |
 | R-GCN | lớp, phân rã | 2 lớp, phân rã cơ sở B = 2 | Schlichtkrull et al. 2018 §5.2 (FB15k/WN18: B = 2, 1 lớp; FB15k-237: 2 lớp, khối 5×5). Chọn 2 lớp để thông tin đi được user → item → thân/ngàm → ống |
 | | tối ưu, lr | Adam, dò {0,01; 0,001} | §5.2: Adam lr 0,01. Thêm 0,001 (lr của LightGCN) vì đổi sang mini-batch |
 | | L2 | 0,01 trên bộ giải mã (r) | §5.2 |
 | | edge dropout | 0,4 | §5.2 (xem chỗ lệch ở 6.4) |
-| | d, batch, epoch tối đa | 64, 2048, 1000 | theo LightGCN để so công bằng |
-| Chung | dừng sớm | chấm val mỗi 10 epoch; dừng khi 5 lần chấm liên tiếp (50 epoch) không tăng; giữ checkpoint tốt nhất | **Quyết định nhóm**: LightGCN nói theo NGCF mà không ghi patience; R-GCN không ghi số epoch |
+| | d, batch | 64, 2048 | theo LightGCN để so công bằng |
+| | số epoch tối đa | **100** (Nam chốt 09/10, HỎI 5) | Bài R-GCN không ghi số epoch cho dự đoán liên kết; **sai khác** so với mức ~1000 epoch của LightGCN. Giảm vì một epoch R-GCN chậm gấp ~2,2 lần LightGCN (mục 9) |
+| Chung | dừng sớm | chấm NDCG@20 val **mỗi 10 epoch (LightGCN) / mỗi 5 epoch (R-GCN)**; dừng khi **5 lần chấm liên tiếp** không tăng (LightGCN 50 epoch, R-GCN 25 epoch); giữ checkpoint tốt nhất (Nam chốt 09/10, HỎI 5) | **Quyết định nhóm**: LightGCN nói theo NGCF mà không ghi patience; R-GCN không ghi số epoch |
+| | chạm giới hạn epoch | lần chạy nào chạy hết 300 / 100 epoch mà chưa dừng sớm thì ghi **"chưa chắc hội tụ"** ở bảng kết quả và ở mục hạn chế (Nam chốt 09/10) | — |
 | | chỉ số chọn | NDCG@20, full ranking, trên val | Quyết định nhóm; @20 theo LightGCN (recall@20, ndcg@20, all-ranking) |
 
 ### 7.2. Quy trình
@@ -245,17 +249,15 @@ Thêm 290 người có thân và item test là ống **ngoài** M (không ngàm 
 - Phân rã cơ sở (đo với B = 4; kế hoạch dùng B = 2) so với không phân rã: thời gian và bộ nhớ gần như bằng nhau (tham số chủ yếu là 95.646 × 64 embedding nút).
 - **Vừa bộ nhớ:** đỉnh GPU cao nhất ~1,6 GB / 6 GB; RAM ~1,5 GB. Không cần giảm.
 - Chưa tính: lấy âm mẫu (sẽ viết bằng numpy), chấm val mỗi 10 epoch (~1 s).
-- **Thời gian xấu nhất** (chạy đủ 1000 epoch, batch 2048): LightGCN ≈ 3,5 giờ / lần; R-GCN 28 quan hệ ≈ 11 giờ / lần. Số lần chạy: mỗi mô hình 1 seed × số cấu hình dò + 2 seed thêm = LightGCN 5 lần, R-GCN 4 lần → xấu nhất ≈ 17,5 + 44 giờ. Dừng sớm thường cắt bớt nhiều, nhưng **chưa kiểm chứng** mô hình hội tụ sau bao nhiêu epoch.
-- **[HỎI 5]** Nếu Nam muốn giới hạn thời gian, các cách giảm (chọn trước khi chạy, không đổi giữa chừng):
-  - (a) batch 16384 cho cả hai mô hình (nhanh ~7–8 lần mỗi epoch, lệch khỏi bài gốc, có thể phải dò lr);
-  - (b) R-GCN tối đa 300 epoch;
-  - (c) dò cấu hình trên 1 seed như đã đề xuất (đã tính trong ước lượng), giữ nguyên.
-  - Đề xuất: giữ batch 2048 như bài gốc; lần chạy nào chạm 1000 epoch mà chưa dừng thì ghi "chưa hội tụ" trong bảng.
+- **Ngân sách đã chốt (Nam, 09/10, HỎI 5):** batch 2048; LightGCN tối đa 300 epoch, R-GCN (18 quan hệ) tối đa 100 epoch; dò trên val với 1 seed, cấu hình chốt chạy 3 seed.
+- **Thời gian xấu nhất** (mọi lần chạy hết giới hạn epoch, tính từ bảng trên): LightGCN 300 × 12,5 s ≈ 62 phút / lần; R-GCN 100 × 27,9 s ≈ 47 phút / lần (bỏ 268 cạnh không đổi đáng kể). Số lần chạy: LightGCN 3 cấu hình + 2 seed thêm = 5 lần ≈ 5,2 giờ; R-GCN 2 + 2 = 4 lần ≈ 3,1 giờ; **tổng ≈ 8,3 giờ**, chưa tính lấy âm mẫu và chấm val (~1 s mỗi lần chấm).
+- *(Ước lượng ban đầu với 1000 epoch: xấu nhất ≈ 17,5 + 44 giờ; đã thay bằng ngân sách trên.)*
+- **Chưa kiểm chứng** 300 / 100 epoch có đủ để hội tụ không; đây là lý do có nhãn "chưa chắc hội tụ" (mục 7.1).
 
 ## 10. Kiểm thử trước khi chạy (dựng tay, như `test_cvr.py`)
 - Hạng / Recall / NDCG / Hit trên ví dụ mục 1 (hạng 3 → NDCG@5 = 0,5).
 - Quy tắc hòa: 3 sản phẩm cùng điểm, hạng theo π.
-- Item train và item val (nếu HỎI 1 = có) không bao giờ vào top-K.
+- Item train và (khi chấm test) item val không bao giờ vào top-K.
 - Bộ lọc MountAware mới: người không có thân không bị lọc; ống `judge_lens` = None không bị lọc; CVR@K của MountAware = 0 trên dữ liệu thật.
 - Recall@K = Hit@K từng người.
 - Popularity chấm bằng full ranking cho kết quả giống hệt khi chạy 2 lần (sha256 file kết quả theo người).
@@ -265,17 +267,19 @@ Thêm 290 người có thân và item test là ống **ngoài** M (không ngàm 
 - Mọi kết quả ghi vào `results/n5/<nhãn lần chạy>/` (vd `results/n5/val_lightgcn_l2-1e-4_s1_20261010/`), log tên mới kèm ngày và nhãn. Không ghi đè; 5 file `results/*.json` của Hải giữ nguyên.
 - Mỗi lần chạy lưu: cấu hình, commit hash, sha256 đầu vào, đường học (loss, NDCG@20 val theo epoch), checkpoint tốt nhất, và **hạng của item test cho từng người dùng** (để bootstrap và kiểm lại không cần chạy lại mô hình).
 
-## 12. Các điểm cần Nam quyết
+## 12. Quyết định của Nam (09/10/2026)
 
-| # | Câu hỏi | Đề xuất |
-|---|---|---|
-| HỎI 1 | Khi chấm test, bỏ item val khỏi ứng viên? | Có |
-| HỎI 2 | Ứng viên của kịch bản "ống cho người có thân": chỉ ống, hay toàn bộ catalog? | Chỉ ống là số chính, toàn bộ là số phụ |
-| HỎI 3 | Loss của R-GCN: BPR (giống LightGCN) hay cross-entropy ω = 1 (bài gốc)? | BPR |
-| HỎI 4 | R-GCN dùng 18 quan hệ, hay tách theo cờ cạnh thành 28? | 28 |
-| HỎI 5 | Ngân sách thời gian GPU (xấu nhất ~60 giờ với batch 2048) | Giữ batch 2048, ghi "chưa hội tụ" nếu chạm 1000 epoch |
-| HỎI 6 | Đồng ý chỉ số chọn mô hình = NDCG@20 full ranking trên val, và 5 so sánh đăng ký trước ở mục 8? | Đồng ý |
+| # | Câu hỏi | Đề xuất của Claude | **Nam chốt 09/10/2026** |
+|---|---|---|---|
+| HỎI 1 | Khi chấm test, bỏ item val khỏi ứng viên? | Có | **Có** (mục 3.2) |
+| HỎI 2 | Ứng viên của kịch bản "ống cho người có thân": chỉ ống, hay toàn bộ catalog? | Chỉ ống là số chính, toàn bộ là số phụ | **Như đề xuất** (mục 5.3) |
+| HỎI 3 | Loss của R-GCN: BPR (giống LightGCN) hay cross-entropy ω = 1 (bài gốc)? | BPR | **BPR** (mục 6.4) |
+| HỎI 4 | R-GCN dùng 18 quan hệ, hay tách theo cờ cạnh thành 28? | 28 | **18 quan hệ; bỏ 134 cạnh `has_spec → mount` có cờ `ngam_khong_chac` (và 134 cạnh ngược) khỏi đồ thị đầu vào của R-GCN.** Lý do ở mục 6.4 |
+| HỎI 5 | Ngân sách thời gian GPU | Batch 2048, tối đa 1000 epoch | **LightGCN tối đa 300 epoch, R-GCN tối đa 100 epoch; dừng sớm theo NDCG@20 val, chấm mỗi 10 epoch (LightGCN) / 5 epoch (R-GCN), patience 5 lần chấm; dò trên val 1 seed, cấu hình chốt chạy 3 seed; chạm giới hạn epoch thì ghi "chưa chắc hội tụ" ở kết quả và hạn chế; ghi là sai khác so với bài gốc (~1000 epoch)** (mục 7.1, 9) |
+| HỎI 6 | Chỉ số chọn mô hình = NDCG@20 full ranking trên val, và 5 so sánh đăng ký trước ở mục 8? | Đồng ý | **Đồng ý** |
 
 ## 13. Sửa đổi kế hoạch
 
-(Chưa có.)
+| Ngày | Sửa | Lý do |
+|---|---|---|
+| 09/10/2026 | Ghi 6 quyết định của mục 12 vào các mục 3.2, 5.3, 6.4, 7.1, 9; R-GCN đổi từ đề xuất 28 quan hệ sang 18 quan hệ + bỏ 134 cạnh "không chắc"; giới hạn epoch 1000 → 300 (LightGCN) / 100 (R-GCN), R-GCN chấm val mỗi 5 epoch | Nam chốt, trước khi sửa code 05 và trước khi chạy bất kỳ mô hình nào |
