@@ -333,3 +333,107 @@ Script `evidence_logs.py`, log `run_redteam_n3_evidence.log`. Quét 29 file log 
   - 494 / 826 / 326;
   - Wilson.
 - Phát hiện thêm: `run_eval_external.log` đã bị ghi đè. Số 07/10 chỉ còn trong file JSON tóm tắt.
+
+---
+
+## Phụ lục B: chẩn đoán T1, T2, T3 (Claude Code, 08/10/2026, nhánh `nam/content4`)
+
+Chỉ chẩn đoán, **không sửa** code, luật hay dữ liệu. Chỉ đọc `ai/data/kg/item_attributes.csv`.
+"Chạy thử" = vá tạm `mount_detect` **trong bộ nhớ** rồi gọi lại `classify_item`; không ghi file nào (không đụng `ai/data/kg/`).
+Script ở `ai/survey/redteam_n3/` (`rt_common.py` dùng chung), log ở `ai/data/survey/run_redteam_n3_t1.log`, `_t2.log`, `_t3.log` (log không lên git).
+Kiểm lại trước khi chạy thử: chạy lại `classify_item` trên 27.940 sản phẩm, **0 sản phẩm lệch** `item_attributes.csv` (7 trường: loại, ngàm, khung, cờ phim, nguồn ngàm, evidence, uncertain).
+
+### T1. `body_series` đọc toàn tiêu đề; luật phim EOS có mẫu `.*35mm`
+
+Script `t1_film_body_series.py`, log `run_redteam_n3_t1.log`.
+
+**1) 17 thân `may_phim=True`: cả 17 đều đúng là máy phim, 0 ca nhận nhầm.**
+
+| Ngàm | Số | Thân (ASIN, evidence) |
+|---|---:|---|
+| canon_ef | 8 | Rebel 2000 ×3 (B00004TH9F, B00WUI65LI, B00WUIE240), Elan IIe (B00004TH9M), Rebel G (B00005OCWN), Rebel GII (B00018Y0T8), Rebel K2 (B0007WIMS8), EOS-1V (B00006I540) |
+| nikon_f | 7 | N70, F100, F5, FM-10, N80, N75, F6 |
+| canon_fd | 2 | AE-1 (B00GTX4RCO), AE-1 Program (B0100QJILA) |
+
+- Cả 17 đều có luật dòng máy nhãn `[phim]` khớp; 7 ca có thêm chữ "film" trong chủ thể. Không có ca nào cờ phim bật **chỉ** nhờ chữ "film" (ca "screen protector film" mà Red Team nêu: 0 ca).
+- 8 thân Canon EF: mẫu `\beos\b.*\b(?:film|35mm)\b` khớp ở 7 thân, nhưng cả 7 đều cũng có tên máy phim cụ thể (Rebel 2000/G/GII/K2, Elan) nên vẫn là máy phim nếu bỏ mẫu này.
+- Ghi chú: B00018Y0T8 (Rebel GII) nằm trong danh mục "Point & Shoot Film Cameras" nhưng là máy SLR; vẫn được nhận đúng nhờ tiêu đề.
+
+**2) Chạy thử trên mọi sản phẩm**
+
+| Chạy thử | Đổi loại | Đổi ngàm | Đổi khung | Đổi cờ phim | Chỉ đổi evidence | Thân vào M |
+|---|---:|---:|---:|---:|---:|---|
+| A: `body_series` trên `subject()` | **2** | 1 | 1 | 0 | 0 | 538 → 536 |
+| B: luật phim EOS bỏ `.*(film\|35mm)` | 0 | 0 | 0 | 0 | 9 | 538 → 538 |
+| A + B | 2 | 1 | 1 | 0 | 9 | 538 → 536 |
+
+- 2 ca đổi ở A, **cả hai đều là sửa đúng** (thân nhầm → ống):
+  - B00L2PN5L8 "Canon EF-S 55-250mm … for Canon EOS 7D…": `than/canon_efs` → `ong/canon_efs/apsc` (đúng ca Red Team đã nêu);
+  - B00GX6K1X6 "SainSonic 25mm F/1.4 C Mount CCTV Lens for Pentax Q": `than/pentax_q` → `ong/nhieu` (ra khỏi M).
+- B chỉ đổi chữ evidence, vd B00004TH9F `eos rebel 2000 35mm` → `rebel 2000`; B000BZIO0M (ống Tokina "for Canon EOS Digital and Film Cameras") `eos digital and film` → `canon eos digital`, ngàm vẫn `canon_ef`.
+- Ca giả định "Canon EOS Rebel T7 … + 35mm f/1.8" thành máy phim: **không có trong dữ liệu**.
+- Phát hiện thêm (chiều ngược lại, ngoài T1): danh mục "Film Cameras > SLR Cameras" có 16 sản phẩm, 14 là thân phim đã nhận; **Pentax K1000** (B001AO4JRK, "Manual Focus SLR Film Camera") bị xếp `khac` vì `ACC_BODY` có chữ "manual" → máy phim này bị sót khỏi tập thân. Ca còn lại (B000WPHUGK) là ốp máy, đúng là không phải thân.
+
+**Kết luận T1: Red Team đúng một phần.**
+- Đúng: `body_series` chạy trên toàn tiêu đề làm sai loại. Trong dữ liệu có **2 ca**, và cách sửa A sửa đúng cả 2, không làm hỏng ca nào.
+- Sai về ảnh hưởng: mẫu `.*35mm` hiện **không gây ca sai nào** (0/17 nhận nhầm; bỏ mẫu không đổi loại / ngàm / cờ phim của sản phẩm nào). Đây là rủi ro tiềm ẩn, không phải lỗi đang có.
+
+### T2. Mã SEL / SAL làm sai khung ống
+
+Script `t2_sony_sel_sal.py`, log `run_redteam_n3_t2.log`. Xét đúng phần `lens_khung` đọc (`head(tiêu đề)`, cắt ở "(", ",", "with"…).
+
+**1) Ống dính mẫu:** 29 ống (SEL 22, SAL 7), đều vào M (không ống nào "không chắc"); 28 ống có evidence ghi khung lấy từ sel/sal.
+Hai ví dụ của Red Team (SEL2470GM, SEL50F18F) **không có** trong phần đầu tiêu đề của ống nào.
+
+**2) So với khung thật.** Khung thật tra theo: chữ FE / DT / E / APS-C trong tiêu đề; hoặc trang thông số Sony (đã tìm ngày 08/10: SAL85F28, SAL16105, SAL18135, SEL85F18, SEL35F18); 7 ống còn lại (SAL70200G/70300G/70400G, SEL16F28 ×2, SEL18200, SEL1855, SELP1650 ×2) theo hiểu biết, **chưa đối chiếu nguồn**.
+
+| Mẫu | Đúng | Sai | Không rõ (mâu thuẫn, mất thông tin) |
+|---|---:|---:|---:|
+| SEL (→ apsc) | 13 | **1**: SEL85F18 (B077VYV7PH) là FE 85mm, đang `apsc` | 8: ống FE có cả "FE" và mã SEL → `khong_ro`, vd SEL24240 FE 24-240mm, SEL50F14Z FE 50mm |
+| SAL (→ ff) | 4 | **2**: SAL16105 (B000VUIXOE), SAL18135 (B00836H3Z8) là DT, đang `ff` | 1: SAL18250 "Alpha DT 18-250mm" (B000VUFDPG) → `khong_ro` |
+
+- Lưu ý: SAL85F28 (B0042GFYHW) **không phải** ống DT; trang Sony ghi "85MM F2.8 SAM", nên `ff` là đúng. (Lúc đầu Claude nhớ nhầm là DT, đã sửa sau khi tra.)
+- So với khung suy từ chữ FE / E / DT: 5 ống khớp, 9 ống nghi sai (8 FE + 1 DT, đều là ca "không rõ" ở trên), 15 ống tiêu đề không có chữ nào để suy.
+- **Số ống nghi sai khung: 3 sai hẳn + 9 bị kéo về "không rõ" = 12/29.**
+
+**3) Ảnh hưởng tới cặp (thân 1 ngàm × ống).** M không đổi ở mọi phương án (**0 ô M đổi**), đúng như Red Team nói.
+
+| Phương án | Ống đổi khung | `crops_sensor` ↔ `compatible_with` | Chỉ đổi cờ `crop_unknown` |
+|---|---:|---:|---:|
+| Sửa đúng (khung = khung thật ở trên) | 12 | **30** = 18 (SEL85F18 trên 18 thân E FF: `crops_sensor` → `compatible_with`) + 8 (2 ống DT trên 4 thân A FF: `compatible_with` → `crops_sensor`) + 4 (SAL18250: `compatible_with`+cờ → `crops_sensor`) | 144 (8 ống FE × 18 thân E FF: bỏ cờ) |
+| Theo hướng sửa của Red Team (bỏ hẳn sel/sal, không thêm gì) | 27 | 220 = 216 (`crops_sensor` → `compatible_with`+cờ) + 4 | 168 = 144 + 24 |
+
+- Bỏ hẳn sel/sal **làm hỏng nhiều hơn sửa**: 11 ống E APS-C đang đúng (vd SEL1855, SELP1650, SEL1670Z) và 4 ống SAL FF đang đúng (SAL85F28, SAL70200G/70300G/70400G) bị kéo về `khong_ro`; chỉ sửa được 2 ca (SEL85F18 về `khong_ro`, SAL18250 về `apsc`). Lý do: 8/13 ống SEL APS-C thật không có chữ "E <tiêu cự>" trong tiêu đề (vd "Sony SELP1650 16-50mm Power Zoom Lens"), `LENS_APSC` chỉ bắt "sony e <số>" nên cả "E 16-70mm" cũng không được nhận, và ống A FF không có tiền tố nào.
+
+**Kết luận T2: Red Team đúng một phần.**
+- Đúng: mã SEL / SAL không cho biết khổ; có 3 ống sai khung và 9 ống mất thông tin khung; M không đổi.
+- Sai / quá mức: 2 ví dụ nêu ra không có trong dữ liệu; 17/29 ống dính mẫu đang đúng; hướng sửa "bỏ SEL/SAL, chỉ dùng FE/E/DT" (với regex hiện tại) sẽ làm hỏng 15 ống đang đúng. Cách hợp lý hơn (đề xuất, chưa làm): chữ FE / DT / E / APS-C trong tiêu đề được ưu tiên hơn mã; mã chỉ dùng qua một bảng mã → khung tra từ trang Sony có lưu nguồn.
+
+### T3. "Hãng + SLR" gán nhầm ống máy phim cũ
+
+Script `t3_hang_slr_film.py`, log `run_redteam_n3_t3.log`.
+
+- Ống `mount_source=hang_slr`: **270** (khớp `mount_compat_log.txt`), đều 1 ngàm, 64 "không chắc". Theo ngàm: `nikon_f` 119, `canon_ef` 75, `pentax_k` 37, `sony_a` 26, `four_thirds` 13.
+- Có md / mc / rokkor / om / fd / film / manual trong tiêu đề: **3 ống, cả 3 chỉ có chữ "manual"** (md, mc, rokkor, om, fd, film: 0):
+  - B071JPFXBR Opteka 15mm f/4 Macro Manual Focus … for Canon EOS Digital SLR → `canon_ef`;
+  - B00KMFN8E8 Big Mike's 500mm/1000mm f/8 Manual Telephoto Lens for Nikon DSLR → `nikon_f`;
+  - B0B4PF3KZM Yongnuo YN50mm F1.8N … Auto Manual Focus AF MF for Nikon DSLR → `nikon_f`.
+  - Cả 3 là ống cho máy số ngàm EF / F, ngàm gán đúng.
+- Đọc thêm toàn bộ 26 ống `sony_a` và 13 ống `four_thirds` (hai luật Red Team nêu):
+  - `sony_a`: ống Sony α (DT, Carl Zeiss, SAL-…), Sigma / Tamron "for Minolta and Sony (Digital) SLR", "Minolta 50mm f1.7 AF". Đều là ống AF ngàm A, gán đúng.
+  - `four_thirds`: ống Olympus Zuiko (Digital) "for E Series / Olympus Digital SLR / 4/3 Cameras" và Bower 35mm "for Olympus 4/3". Đều là ngàm Four Thirds, gán đúng.
+- **Ống thực ra là ngàm máy phim cũ trong 270 ống `hang_slr`: 0.**
+- Trên toàn dữ liệu, ống ngàm cũ đi đường khác, không qua `hang_slr`: Canon FD 70-210mm và FD 135mm → `canon_fd` (từ tiêu đề); "Canon 50mm f/1.4 FD", "Canon Lens FD 28mm", "Minolta Rokkor-X 50mm" → `khong_ro` (không vào M). Ví dụ "Minolta MD … for Minolta SLR" và "Olympus OM Zuiko … SLR" của Red Team không có trong dữ liệu.
+- Phát hiện thêm (ngoài T3, chỉ ở phụ kiện, không vào M): MD và OM không có trong `MOUNT_PATTERNS`, nên ngàm chuyển "Minolta MD → Sony E" được ghi `sony_e` thay vì `?>sony_e`; B07LFQN8MX (OM → Micro 4/3) ra `mft>four_thirds`.
+
+**Kết luận T3: Red Team đúng về logic, sai về ảnh hưởng.** Regex `BRAND_SLR` đủ rộng để khớp ống máy phim, nhưng trong dữ liệu hiện tại **0/270** ca bị gán nhầm. Đây là rủi ro tiềm ẩn nếu dữ liệu đổi.
+
+### Tóm tắt phụ lục B
+
+| Mã | Số ca thật | Red Team |
+|---|---|---|
+| T1 | 0/17 thân phim nhận nhầm; 2 thân nhầm (là ống) do `body_series` đọc toàn tiêu đề, cả 2 sửa được bằng `subject()`; mẫu `.*35mm`: 0 ca | Đúng một phần |
+| T2 | 29 ống dính SEL/SAL: 3 sai khung, 9 "không rõ", 17 đúng; sửa đúng → 30 cặp đổi giữa `compatible_with` và `crops_sensor`, 0 ô M | Đúng một phần (hướng sửa đề xuất sẽ làm hỏng 15 ống) |
+| T3 | 0/270 ống `hang_slr` là ngàm phim cũ | Đúng logic, sai ảnh hưởng |
+
+**Còn chưa chắc:** khung thật của 7 ống trong T2 theo hiểu biết, chưa mở trang Sony; trang Sony được đọc qua kết quả tìm kiếm, chưa lưu bản sao hay sha256.
