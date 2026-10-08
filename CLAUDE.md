@@ -53,4 +53,5 @@ Tóm tắt (tại 07/10/2026 — chi tiết và bản mới nhất xem STATUS.md
 - Không cài thư viện ra ngoài `ai/.venv`.
 - Không sửa hay ghi đè dữ liệu gốc trong `ai/data/raw`.
 - Repo dùng chung với Hải: **không commit lên `main`**, chỉ làm trên nhánh riêng.
-- **Không gửi thông tin cá nhân của Nam hay của nhóm (email, họ tên, số điện thoại…) ra bên ngoài** trong bất kỳ yêu cầu web nào (header User-Agent, tham số URL, nội dung truy vấn, form…). User-Agent chỉ ghi tên dự án chung chung, ví dụ `camera-store-thesis/0.1 (research script)`.
+- **Không gửi thông tin cá nhân (email, họ tên, số điện thoại…) trong yêu cầu tới dịch vụ bên ngoài** (API, trang web): header User-Agent, tham số URL, nội dung truy vấn, form… User-Agent chỉ ghi tên dự án chung chung, ví dụ `camera-store-thesis/0.1 (research script)`.
+- Họ tên thành viên nhóm và GVHD trong tài liệu của repo là bình thường, được push lên repo của nhóm.
