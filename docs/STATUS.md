@@ -1,6 +1,6 @@
 # TRẠNG THÁI ĐỒ ÁN — Camera Recommender
 
-Cập nhật lần cuối: 08/10/2026 (nội dung 4: chốt CVR + cờ cạnh; việc 1 luật mục đích xong, QĐ 4-11..4-15; nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
+Cập nhật lần cuối: 08/10/2026 (nội dung 3: sửa code theo Red Team lần 1, QĐ 16 sửa, QĐ 3-17; nội dung 4: việc 1 luật mục đích xong; nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
 
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
@@ -31,12 +31,14 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 |---|---|---|---|
 | 1 | Pipeline tổng quát | Đã triển khai (tài liệu) | Cần cập nhật sau khi sửa nội dung 3 và 5 |
 | 2 | Thu thập, lọc k-core, chia train/val/test | **Đã kiểm thử** (07/10) | Nhánh `nam/fix-data`: đã gộp tương tác lặp, số mới 67.661 users / 27.940 items / 595.515 tương tác. Báo cáo 2 chưa cập nhật theo số mới. Xem mục 4 và `docs/CHANGELOG.md` |
-| 3 | Entity Linking, ma trận M | **Đã kiểm thử** (08/10, quy tắc đã chốt) | Thiết kế mới dựa trên khảo sát 07/10 (`docs/content3_survey.md`). **Bản cuối trong `ai/data/kg/`** (bản của Hải sao lưu ở `kg_v62abf54/`):
-- 538 thân × 1.036 ống;
-- 73.050 cặp M = 1, trong đó 1.892 có cờ "chưa rõ có cắt khung";
-- 19.932 cặp "không biết", trong đó 17.612 là cặp có thân máy phim (QĐ 16).
+| 3 | Entity Linking, ma trận M | **Đã kiểm thử** (08/10; đã sửa code theo Red Team lần 1, **chưa đo lại holdout**) | Thiết kế mới dựa trên khảo sát 07/10 (`docs/content3_survey.md`). **Bản cuối trong `ai/data/kg/`** (bản của Hải sao lưu ở `kg_v62abf54/`; bản trước khi sửa theo Red Team ở `kg_d339dda/`):
+- 537 thân × 1.033 ống;
+- 72.720 cặp M = 1, trong đó 1.892 có cờ "chưa rõ có cắt khung";
+- 5.846 cặp "không biết", trong đó 2.819 là cặp có thân máy phim (QĐ 16 đã sửa; 18 thân phim).
 
-**Số đo cuối trên nửa holdout** (747 sản phẩm; lần đo thứ hai, xem mục 4):
+Red Team lần 1: `docs/reviews/redteam_n3_lan1.md`. Đã sửa phần code: T1, T4, N2, N3, K1000 (CHANGELOG 08/10 tối). Chưa sửa: nguồn (T5), luật SEL/SAL (T2), ngàm chuyển (N1), các điểm về cách đo (S1–S3, T6, T7).
+
+**Số đo cuối trên nửa holdout** (747 sản phẩm; lần đo thứ hai, **trước** khi sửa theo Red Team; xem mục 4):
 - loại đúng **98,9%** (Lensfun) / **96,8%** (Wikidata); trước khi sửa lỗi phân loại là 87,9% / 83,5%;
 - ngàm đúng 97,3% (Lensfun, 402) / 100% (Wikidata, 266);
 - khung thân đúng 100% (Lensfun) / 99,2% (openMVG).
@@ -135,12 +137,12 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
      - Ngàm, 11 ô sai: cả 11 do đáp án sai. Gồm 7 ô Canon EF 75-300 III mà Lensfun ghi EF-S; Zeiss ZE; M.Zuiko bị khớp với Zuiko 4/3; Samyang AF 85 bản RF; Sony FE 35 GM bị khớp với ống ngàm A.
      - Khung, 1 ô sai, do quy tắc: Lumix DMC-S1 là máy compact nhưng bị luật Lumix S (L-mount) bắt nhầm.
      - Nếu bỏ các ca đáp án sai thì quy tắc sai ở **4/612** sản phẩm có đáp án loại, cộng DMC-S1. Lưu ý: chỉ đọc các ca **lệch** với đáp án; ca mà quy tắc và đáp án cùng sai giống nhau thì không thấy được.
-   - (f) **Lỗi quy tắc đã biết, không sửa** để giữ số holdout: 4 ca ở (e), và "Pentax K1000 Manual Focus SLR Film Camera" bị xếp "khác" (do từ "manual").
-7. **Không biết người dùng mua bản ngàm nào** khi một `parent_asin` gộp nhiều bản (130 ống "không chắc" sau khi sửa lỗi phân loại, trước là 113; QĐ 4). Chỉ biết những thân máy mà người dùng có viết đánh giá (QĐ 5).
+   - (f) **Lỗi quy tắc đã biết, không sửa** để giữ số holdout: 4 ca ở (e), và "Pentax K1000 Manual Focus SLR Film Camera" bị xếp "khác" (do từ "manual"). *(Cập nhật 08/10 tối: theo Red Team đã sửa ống EF-S 55-250 (B00L2PN5L8, ca sai của holdout) và K1000. Vì vậy nếu đo lại holdout thì số không còn độc lập với ca B00L2PN5L8; số chính thức vẫn là lần đo thứ hai.)*
+7. **Không biết người dùng mua bản ngàm nào** khi một `parent_asin` gộp nhiều bản (134 ống "không chắc" sau khi sửa theo Red Team; 130 sau khi sửa lỗi phân loại; trước nữa là 113; QĐ 4). Hãng thứ ba xác định bằng chữ đầu tiêu đề không thuộc danh sách chính hãng (QĐ 17), nên tiêu đề mở đầu bằng tên chính hãng nhưng thực ra là ống hãng thứ ba sẽ bị sót. Chỉ biết những thân máy mà người dùng có viết đánh giá (QĐ 5).
 8. **Nguồn của luật:** đọc trang hãng ngày 07/10/2026. Hai chỗ là suy rộng (danh sách thân Canon không nhận EF-S trên trang hãng dừng ở 6D; câu về LA-EA của Sony nói về ống DT).
-9. **Thân máy phim (QĐ 16).** Mọi cặp (thân máy phim, ống) đều xếp "không biết", kể cả cặp khác ngàm: loại khỏi M và CVR, vẫn giữ trong đồ thị.
+9. **Thân máy phim (QĐ 16, đã sửa 08/10 tối).** Cặp (thân máy phim, ống) mà luật thường cho lắp được (M = 1) hoặc cần ngàm chuyển thì xếp "không biết": loại khỏi M và CVR, vẫn giữ trong đồ thị. Cặp mà luật thường cho "không lắp được" (khác ngàm, ống EF-S trên thân EF) giữ "không lắp được".
    - Lý do: máy phim không có chế độ cắt khung; nhiều ống đời mới không lấy nét hoặc không chỉnh được khẩu độ trên máy phim.
-   - Hệ quả: 17 thân phim không có ràng buộc cứng nào.
+   - Hệ quả: 18 thân phim chỉ còn ràng buộc "không lắp được" với ống khác ngàm; với ống cùng ngàm thì không có ràng buộc chắc chắn.
    - Nhận biết máy phim dựa vào luật dòng máy có nhãn `[phim]` hoặc chữ "film" trong tiêu đề. Máy phim không khớp luật nào và không ghi "film" sẽ bị coi là máy số.
 
 ### Hạn chế cần nêu trong báo cáo (nội dung 4) — đã biết từ khâu thiết kế (08/10/2026)
@@ -191,7 +193,8 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 - [x] Nội dung 3: sửa lỗi phân loại thế nào để số đo vẫn độc lập → **chia đôi fix / holdout** (08/10); việc sửa để phiên sau
 - [x] Nội dung 3: đưa lên git các file `.npz`, `item_attributes.csv`, `compat_pairs.csv`; `git rm` các file cũ trong `ai/data/kg/` → **đã làm** (08/10)
 - [x] Nội dung 3: sửa lỗi phân loại trên nửa **fix**, rồi chấm holdout một lần → **đã làm** (08/10, QĐ 15)
-- [x] Nội dung 3: thân máy phim trong M → **mọi cặp xếp "không biết"** (QĐ 16, 08/10)
+- [x] Nội dung 3: thân máy phim trong M → **mọi cặp xếp "không biết"** (QĐ 16, 08/10) → **sửa 08/10 tối:** cặp luật thường cho "không lắp được" giữ "không lắp được" (Red Team T4)
+- [ ] Nội dung 3, Red Team lần 1, phần còn lại: sửa nguồn (T5), luật Sony SEL/SAL (T2), ngàm chuyển Pentax Adapter Q / Fuji M (N1); các điểm về cách đo (S1–S3, T6, T7); có đo lại holdout không và ghi thế nào. Để phiên sau
 - [x] Nội dung 3: xem ca sai của holdout để tách "đáp án sai" / "quy tắc sai" → **đã làm sau lần đo thứ hai, không sửa quy tắc** (mục 4, hạn chế 6e)
 - [ ] Nội dung 4–5: sửa `04_build_knowledge_graph.py` và `common_05.py` để đọc đầu ra nội dung 3 mới (hiện không chạy được). Thiết kế đã chốt 08/10, code để phiên sau
 - [x] Nội dung 4: 8 câu [HỎI] của đề xuất thiết kế → **đã chốt 08/10** (`docs/content4_design.md` mục 9, nhật ký)
@@ -259,3 +262,7 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 | 08/10/2026 | **QĐ nội dung 4 – 15:** mọi trang nguồn phải có bản sao lưu (ngày, sha256); câu trích lấy từ đúng bản đã lưu; mỗi luật cần ít nhất một câu trích OK (script kiểm) | Nam lưu 7 trang Canon bằng trình duyệt (`ai/data/external/usecase_sources/manual/`); Claude tạo thêm 6 bản Wayback Save Page Now làm bản phụ công khai. Chi tiết `docs/DATA_SOURCES.md` mục 2.5 |
 | 08/10/2026 | **Nội dung 4, việc 1 xong** (`usecase_rules.toml` v0.2, `count_usecase.py`, `html_to_text.py`). Cả 12 bản sao khớp sha256 và có nội dung bài; cả 4 luật có câu trích OK (phong cảnh 5, thể thao/chim 4, chân dung 3, macro 2). Trên 1.285 ống: phong cảnh 556, thể thao/chim 285, chân dung 144, macro 86, không nhãn nào 311. Chạy 2 lần, sha256 của CSV và log trùng nhau | Ống không rõ khổ (366 = 206 khung `khong_ro` + 160 không có ngàm) tính với hệ số 1,0 và 1,6, chỉ gắn nhãn khi cả hai cùng ra (đúng thiết kế): được gắn phong cảnh 108, thể thao/chim 77, chân dung 12, macro 21; bị bỏ vì lệch: 71 / 25 / 61 / 0. |
 | 08/10/2026 | Xác nhận nguồn trang Canon USA lens guide: bản Wayback 20260904 do Nam lưu bằng trình duyệt (đã tắt VPN), không phải bản trực tiếp; đổi tên file thành `canon_us_lens_guide_wb20260904.html`. TOML ghi rõ mốc trên 135 của chân dung là quyết định nhóm (cạnh ngưỡng f/2.8) | Nam xác nhận. sha256 của file không đổi khi đổi tên |
+| 08/10/2026 | **Sửa QĐ nội dung 3 – 16 (theo Red Team T4):** luật thân phim chỉ đổi thành "không biết" những cặp mà luật thường cho M = 1 hoặc `requires_adapter`; cặp luật thường cho `incompatible` giữ `incompatible`. Trường `when_regular_level` trong `mount_rules.toml` v0.4 | Nam chốt. Khác ngàm thì máy phim hay máy số đều không lắp được; bản đầu làm mất 14.123 ràng buộc chắc chắn (vd Nikon N70 + Canon EF 28-80mm) và làm người dùng có máy phim rơi khỏi CVR nhiều hơn mức cần. Sau sửa: "không biết" 19.932 → 5.846 (`run_compare_kg_20261008_rt1.log`) |
+| 08/10/2026 | **QĐ nội dung 3 – 17: hãng thứ ba = mọi hãng không thuộc danh sách chính hãng** (QĐ 4 áp cho ống của mọi hãng ngoài danh sách). Chính hãng xét theo phần đầu tiêu đề: Canon, Nikon (Nikkor, AF-S, AF-P), Sony, Fujifilm/Fuji/Fujinon, Olympus/OM System, Panasonic/Lumix, Leica, Pentax/Ricoh, Samsung, Minolta, Hasselblad. Sigma và Zeiss tính là hãng thứ ba (bán một ống cho nhiều ngàm). Danh sách ghi trong `mount_detect.py` (`FIRST_PARTY`) | Nam chốt, theo Red Team N2: danh sách hãng thứ ba liệt kê tay sót Brightin Star, AstrHori, SIRUI. Liệt kê chính hãng thì không sót hãng lạ. Kết quả: thêm 4 ống "không chắc" (130 → 134), không ống nào bớt |
+| 08/10/2026 | **Sửa code nội dung 3 theo Red Team lần 1** (chỉ phần code): T1 (`body_series` đọc chủ thể tiêu đề; luật phim EOS bỏ mẫu `.*35mm`), "manual" đứng một mình không làm thân thành phụ kiện (Pentax K1000), T4, N2, N3 (FinePix S Pro). Sao lưu `ai/data/kg/` → `kg_d339dda/`, chạy lại `03_mount_compat.py` vào `ai/data/kg/`. **Chưa đo lại holdout** | Nam yêu cầu. Đổi loại đúng 3 sản phẩm dự kiến (B00L2PN5L8, B00GX6K1X6, K1000), 4 ống mới "không chắc", 0 thay đổi ngoài dự kiến. M 538 × 1.036 → 537 × 1.033; M = 1 73.050 → 72.720; "không biết" 19.932 → 5.846. Chạy 2 lần, sha256 cả 8 file trùng. B00L2PN5L8 là ca sai đã thấy ở holdout, nên holdout không còn độc lập với ca này. Bảng đầy đủ ở CHANGELOG |
+| 08/10/2026 | Thêm vào `CLAUDE.md`: mỗi lần chạy ghi log tên mới (kèm ngày hoặc nhãn lần chạy), không ghi đè log cũ | Red Team phụ lục A thấy 2 log đã bị lần chạy sau ghi đè, mất bằng chứng cho số cũ |

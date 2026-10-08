@@ -6,6 +6,84 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 08/10/2026 (tối): sửa lỗi logic nội dung 3 theo Red Team lần 1 (phần code). Nhánh `nam/content4`
+
+Theo `docs/reviews/redteam_n3_lan1.md` (bản phản biện và hai phụ lục chẩn đoán A, B). Lần này **chỉ sửa code**: chưa sửa nguồn, chưa sửa bảng luật Sony SEL/SAL (T2), chưa thêm ngàm chuyển (N1), **chưa đo lại holdout**.
+
+> **Lưu ý về độ độc lập của holdout.** Một số sửa xuất phát từ ca sai **đã thấy ở holdout**: B00L2PN5L8 (ống EF-S 55-250 ra thân) là 1 trong 4 ca "quy tắc sai" của holdout (hạn chế 6e trong STATUS), và Red Team dùng chính ca này làm bằng chứng cho T1. Pentax K1000 được ghi là "lỗi đã biết, không sửa để giữ số holdout" (hạn chế 6f), K1000 thì không nằm trong tập chấm. Vì vậy nếu đo lại holdout sau lần sửa này, số đo **không còn độc lập** với các ca đó. Số holdout chính thức vẫn là lần đo thứ hai (trước lần sửa này).
+
+**Sửa gì**
+
+1. **T1: luật dòng máy chỉ đọc chủ thể tiêu đề** (`mount_detect.py`, hàm `body_series`).
+   - Ví dụ: "Canon EF-S 55-250mm … **for Canon EOS 7D, 60D, Rebel T3i**…" (B00L2PN5L8). Trước đây `body_series` đọc cả phần "for …", thấy "7D" nên tưởng đây là thân máy → xếp `than`. Nay chỉ đọc phần trước "for / with / + / &…" (hàm `subject()` có sẵn), nên ra `ong`.
+   - Luật phim EOS (`[phim] EOS`) **bỏ mẫu `eos … film|35mm`**, chỉ còn tên máy phim cụ thể (EOS-1V, Elan, Rebel G/GII/K2/Ti/2000/X). Mẫu cũ có thể bắt nhầm bộ kit kiểu "EOS Rebel T7 + 35mm f/1.8" thành máy phim. Trong dữ liệu hiện tại mẫu này không gây ca sai nào; bỏ đi chỉ đổi chữ `evidence` của 9 sản phẩm (vd `eos rebel 2000 35mm` → `rebel 2000`).
+2. **Pentax K1000 bị xếp `khac` vì chữ "manual"** (`ACC_BODY`).
+   - "Pentax K1000 **Manual** Focus SLR Film Camera" (B001AO4JRK): "manual" ở đây là "lấy nét tay", không phải sách hướng dẫn. Trước đây chữ "manual" đứng một mình đủ để coi chủ thể là phụ kiện.
+   - Nay chỉ các cụm chỉ sách hướng dẫn mới tính: "instruction / user / owner('s) / operating / operation / service / repair / reference manual(s)".
+3. **T4: sửa QĐ 16 — luật thân phim không còn áp cho cặp chắc chắn không lắp được.**
+   - Ví dụ: thân phim Nikon N70 (ngàm F) + ống Canon EF 28-80mm. Bản đầu của QĐ 16 xếp cặp này "không biết". Nhưng khác ngàm thì máy phim hay máy số đều không lắp được, nên nay giữ `incompatible`.
+   - Quy tắc mới: luật `film_body_unknown` chỉ đổi thành "không biết" những cặp mà **luật thường** (coi thân như máy số) cho M = 1 (`compatible_with`, `crops_sensor`) hoặc `requires_adapter`. Cặp luật thường cho `incompatible` giữ `incompatible`. Cặp luật thường cho `unknown` vẫn `unknown` (do luật thường đó).
+   - Cách cài: trường mới `when_regular_level` trong `mount_rules.toml` (v0.4), lớp `Rules` trong `03_mount_compat.py` tính mức theo luật thường rồi mới quyết định có áp luật phim không. Cập nhật lý do trong `note` của luật.
+4. **N2: hãng thứ ba = mọi hãng không thuộc danh sách chính hãng** (`mount_detect.py`, thay `THIRD_PARTY` bằng `FIRST_PARTY` + `is_third_party`).
+   - Ví dụ: Brightin Star 50mm F1.4 (B0BQ6WX3V5) có 9 asin con, nhưng tên hãng không có trong danh sách hãng thứ ba liệt kê tay, nên trước đây không bị đánh dấu "không chắc" (QĐ 4).
+   - Nay xét phần **đầu tiêu đề**: mở đầu bằng hãng chính hãng (Canon, Nikon/Nikkor/AF-S/AF-P, Sony, Fujifilm/Fuji/Fujinon, Olympus/OM System, Panasonic/Lumix, Leica, Pentax/HD Pentax/smc Pentax/Ricoh, Samsung, Minolta, Hasselblad) thì là chính hãng; còn lại (kể cả tiêu đề không mở đầu bằng tên hãng) là hãng thứ ba. **Sigma và Zeiss cố ý không tính là chính hãng** vì bán cùng một ống cho nhiều ngàm. Danh sách và lý do ghi trong code.
+   - Trước khi sửa đã kiểm: trong 204 ống 1 ngàm có > 1 asin con, không ống nào đang "không chắc" có chữ đầu thuộc danh sách chính hãng, nên sửa này chỉ có thể thêm ống "không chắc", không bớt.
+5. **N3: `COMPACT_LINE` không chặn FinePix S1–S5 Pro** (DSLR ngàm Nikon F). Chỉ bỏ chặn đúng mẫu "finepix s[1-5] pro"; các FinePix khác vẫn bị coi là máy ống liền. Hiện không đổi sản phẩm nào (2 thân S2 Pro, S5 Pro đã ra `than/nikon_f` nhờ nhánh danh mục).
+6. `CLAUDE.md`: thêm quy tắc log không ghi đè (mỗi lần chạy một tên log mới, kèm ngày hoặc nhãn lần chạy). Lý do: phụ lục A của Red Team thấy `run_eval_external.log` và `kg/mount_compat_log.txt` đã bị lần chạy sau ghi đè, mất bằng chứng cho số cũ.
+7. Script mới `ai/survey/redteam_n3/compare_kg_runs.py`: so hai thư mục đầu ra của script 03 (M, số cặp theo mức / luật, sản phẩm đổi thuộc tính, cặp đổi mức) và tự báo "DỪNG" nếu có thay đổi ngoài nhóm dự kiến.
+
+**Cách chạy và kiểm tra**
+- Sao lưu `ai/data/kg/` sang `ai/data/kg_d339dda/` (sha256 từng file trùng bản gốc; không lên git).
+- Chạy thử vào thư mục nháp, so với bản cũ: không có thay đổi ngoài nhóm dự kiến → mới chạy thật vào `ai/data/kg/` (log `ai/data/kg/run03_mount_compat_20261008_rt1_lan1.log`).
+- Chạy lần 2 vào thư mục nháp (log `ai/data/survey/run03_mount_compat_20261008_rt1_lan2.log`): sha256 của cả 8 file đầu ra trùng lần 1 (`ai/data/survey/run_sha256_kg_20261008_rt1.log`).
+- So sánh trước/sau: `ai/data/survey/run_compare_kg_20261008_rt1.log` — **0 sản phẩm đổi ngoài dự kiến, 0 cặp đổi mức ngoài dự kiến**.
+
+**Ảnh hưởng: M** (`compare_kg_runs.py`, log `run_compare_kg_20261008_rt1.log`)
+
+| Chỉ số | Trước (`kg_d339dda`) | Sau (`kg`) |
+|---|---:|---:|
+| Số sản phẩm theo loại thân / ống / khác / phụ kiện | 544 / 1.337 / 1.758 / 24.301 | 543 / 1.339 / 1.757 / 24.301 |
+| Thân 1 ngàm / trong đó máy phim | 538 / 17 | 537 / **18** (thêm K1000) |
+| Ống 1 ngàm / "không chắc" / vào M | 1.166 / 130 / 1.036 | 1.167 / **134** / 1.033 |
+| Kích thước M | 538 × 1.036 = 557.368 | 537 × 1.033 = 554.721 |
+| Cặp M = 1 | 73.050 | **72.720** |
+| … cờ "chưa rõ có cắt khung" | 1.892 | 1.892 |
+| Cặp "không biết" | 19.932 | **5.846** |
+| … trong đó luật `film_body_unknown` | 17.612 | 2.819 |
+| `compatible_with` / `crops_sensor` | 70.854 / 2.196 | 70.542 / 2.178 |
+| `requires_adapter` | 16.005 | 16.033 |
+| `incompatible` | 448.381 | 460.122 |
+
+Các mức ở bảng trên chỉ tính ống vào M; số của ống "không chắc" có trong log.
+
+**Sản phẩm đổi** (đúng các nhóm dự kiến):
+
+| ASIN | Tiêu đề (rút gọn) | Trước | Sau | Do sửa |
+|---|---|---|---|---|
+| B00L2PN5L8 | Canon EF-S 55-250mm … for Canon EOS 7D, 60D… | `than/canon_efs` | `ong/canon_efs/apsc` | T1 (ca sai của holdout) |
+| B00GX6K1X6 | SainSonic 25mm F/1.4 C Mount CCTV Lens for Pentax Q | `than/pentax_q` | `ong/nhieu` (ra khỏi M) | T1 |
+| B001AO4JRK | Pentax K1000 Manual Focus SLR Film Camera | `khac` | `than/pentax_k/ff`, máy phim | "manual" |
+| B0BQ6WX3V5 | Brightin Star 50mm F1.4 … for Canon EOS-M (9 asin con) | vào M | "không chắc" | N2 |
+| B0BP64H129 | Brightin Star 23mm F5.6 … for Nikon Z (7 asin con) | vào M | "không chắc" | N2 |
+| B09P4QQTRG | AstrHori 50mm F1.4 … Sony E-Mount (2 asin con) | vào M | "không chắc" | N2 |
+| B0857XT4GW | SIRUI 50mm F1.8 Anamorphic … E Mount (2 asin con) | vào M | "không chắc" | N2 |
+
+Ngoài ra 9 sản phẩm chỉ đổi chữ `evidence` (do bỏ mẫu phim EOS), loại / ngàm / khung / cờ phim giữ nguyên.
+
+**Giải thích số "không biết" 19.932 → 5.846** (ví dụ trước, cộng sau):
+- Ví dụ: Nikon N70 + Canon EF 28-80mm: trước "không biết", nay `incompatible`. Có **14.123** cặp như vậy (thân phim × ống khác ngàm, hoặc ống EF-S trên thân EF phim), đúng bằng số chẩn đoán T4. Trong đó 14.055 cặp vẫn thuộc M; 68 cặp là của 4 ống N2 (17 thân phim × 4), nay ra khỏi M.
+- 708 cặp cùng ngàm mà luật thường đã cho "không biết" (ống APS-C hãng thứ ba trên thân Canon FF phim, QĐ 8: 704; luật `same_mount_other`: 4) vẫn "không biết", chỉ đổi tên luật.
+- K1000 thêm **38** cặp "không biết" (máy phim × ống Pentax K).
+- 1 cặp "không biết" (`same_mount_other`) của ống Brightin Star 23mm ra khỏi M vì ống thành "không chắc".
+- 19.932 − 14.123 + 38 − 1 = **5.846**.
+
+**Ảnh hưởng tới phía sau, phải chạy lại hoặc sửa theo**
+- **Holdout chưa đo lại** (Nam dặn). Nếu đo lại, phải ghi B00L2PN5L8 là ca đã sửa theo holdout. FinePix S2 Pro, S5 Pro cũng nằm trong holdout nhưng không đổi.
+- Các số trong STATUS / CHANGELOG / `content4_design.md` tính trên M cũ (73.050, 19.932, 17 thân phim, 1.036 ống, `compatible_with` 70.854, `requires_adapter` 16.005…) đã cũ. Script khảo sát nội dung 4 (`count_usecase.py`, `survey_kg_counts.py`…) đọc `ai/data/kg/` nên cần chạy lại (log tên mới).
+- Script chẩn đoán `ai/survey/redteam_n3/n2_n3_thirdparty_finepix.py` dùng `THIRD_PARTY` (đã bỏ) nên không chạy được với code mới; các script T1–T4 so với `item_attributes.csv` cũ. Muốn chạy lại thì checkout commit `ed5280d`.
+
+---
+
 ## 08/10/2026 (tiếp): QĐ 16 thân máy phim; sửa 2 lỗi gán ngàm; đo holdout lần hai; phân loại ca sai của holdout. Nhánh `nam/content3`
 
 Làm theo thứ tự Nam giao: (1) máy phim, (2) sửa 2 lỗi ngàm, (3) chốt quy tắc và đo holdout lần hai, (4) mới xem ca sai của holdout, **không sửa quy tắc nữa**.

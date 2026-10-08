@@ -58,13 +58,17 @@ def subject(t):
 CAM_NOUN = re.compile(r"\bcameras?\b(?!\s+lens)|\bbody\b|\bdslr\b|\bd-slr\b|\bslr\b|\bmirrorless\b|\brangefinder\b|\bdslm\b|"
                       r"\binterchangeable\b|\bcompact\s+system\b|\d\s?mp\b|\bmegapixels?\b|\d\s?mm\b.*\bkit\b")
 # Chủ thể có các từ này thì KHÔNG phải thân máy (phụ kiện nhắc tên máy: pin, ốp, sách hướng dẫn, cốc mắt ngắm...)
+# "manual" đứng một mình KHÔNG tính (vd "Pentax K1000 Manual Focus SLR Film Camera" là thân máy); chỉ tính cụm
+# chỉ sách hướng dẫn như "instruction manual", "user manual" (sửa 08/10/2026, Red Team nội dung 3 lần 1).
 ACC_BODY = re.compile(r"\b(?:accessor(?:y|ies)|replacement|eyepiece|housing|armou?r|coupler|introduction|guide|book|dvd|"
-                      r"manual|training|monopod|shutter|release|dummy|plate|rig|light|microphone|mic|memory|card|lcd|"
+                      r"(?:instruction|user|users|user's|owner|owners|owner's|operating|operation|service|repair|"
+                      r"reference)\s+manuals?|training|monopod|shutter|release|dummy|plate|rig|light|microphone|mic|memory|card|lcd|"
                       r"glass|shield|guard|hot\s?shoe|leash|wrap|sleeve|holster|tether|stand|dock|controller|trigger|"
                       r"intervalometer|gps|receiver|transmitter|lens\s+mount|mount\s+adapter|starter\s+kit|software|"
                       r"upgrade|firmware)\b|monopod|tripod")
-# Dòng máy ống liền (compact) của các hãng: có tên hãng nhưng không có ngàm
-COMPACT_LINE = re.compile(r"\b(?:cyber-?shot|dsc-|powershot|coolpix|finepix|ixus|elph|easyshare|stylus|tough|pixpro|"
+# Dòng máy ống liền (compact) của các hãng: có tên hãng nhưng không có ngàm.
+# FinePix S1–S5 Pro là DSLR ngàm Nikon F, không phải compact -> không chặn (sửa N3, Red Team nội dung 3 lần 1)
+COMPACT_LINE = re.compile(r"\b(?:cyber-?shot|dsc-|powershot|coolpix|finepix(?!\s+s[1-5]\s?pro\b)|ixus|elph|easyshare|stylus|tough|pixpro|"
                           r"lumix\s+(?:dmc-|dc-)?(?:fz|zs|tz|lx|fx|fh|fs|sz|ts|xs|lf|zr)\d*)")
 # Chủ thể có tiêu cự + khẩu độ nhưng không phải ống máy ảnh
 LENS_NEG_TITLE = re.compile(r"\b(?:telescopes?|microscopes?|binoculars?|monoculars?|spotting|scope|projector|cctv|"
@@ -230,7 +234,8 @@ BODY_SERIES = [
     ("canon|eos", r"\beos[\s-]?m(?:\d{1,3})?(?:\s?mark\s?ii)?\b", "canon_efm", "apsc", "EOS M"),
     ("canon|eos", r"\b(?:eos[\s-]?)?(?:5ds\s?r?|5d|6d|1ds|1d\s?x|1d\s?c)(?:\s?(?:mark|mk)\s?(?:ii|iii|iv|2|3|4))?\b",
      "canon_ef", "ff", "DSLR full-frame"),
-    ("canon|eos", r"\beos[\s-]?1v\b|\beos\b.*\b(?:film|35mm)\b|\b(?:elan|rebel\s+(?:g(?:ii)?|k2|ti|2000|x))\b", "canon_ef", "ff",
+    # chỉ khớp TÊN máy phim cụ thể; đã bỏ mẫu "eos ... film|35mm" (dễ bắt nhầm "EOS Rebel T7 + 35mm f/1.8", Red Team T1)
+    ("canon|eos", r"\beos[\s-]?1v\b|\b(?:elan|rebel\s+(?:g(?:ii)?|k2|ti|2000|x))\b", "canon_ef", "ff",
      "[phim] EOS"),
     ("canon", r"\b(?:ae-1(?:\s+program)?|a-1|at-1|av-1|al-1|ftb|t50|t70|t90)\b|(?<![\d.])f-1\b(?!\.)", "canon_fd", "ff",
      "[phim] Canon FD"),
@@ -301,8 +306,10 @@ def body_series_match(s):
 
 
 def body_series(title):
-    """Trả về (ngàm, khung, chuỗi_khớp, ghi_chú) của luật dòng máy đầu tiên khớp, hoặc None."""
-    t = title.lower()
+    """Trả về (ngàm, khung, chuỗi_khớp, ghi_chú) của luật dòng máy đầu tiên khớp, hoặc None.
+    Chỉ đọc CHỦ THỂ của tiêu đề (subject): phần "for Canon EOS 7D...", "with ..." nói về máy KHÁC, không phải
+    sản phẩm này (sửa T1, Red Team nội dung 3 lần 1; vd ống "Canon EF-S 55-250mm ... for Canon EOS 7D" từng ra thân)."""
+    t = subject(title.lower())
     for brand, r, m, k, n in _SERIES:
         if not brand.search(t):
             continue
@@ -355,8 +362,21 @@ def body_khung_from_title(title):
 # -----------------------------------------------------------------------------
 # 5. Hãng thứ ba hay bán nhiều bản ngàm dưới 1 parent_asin (QĐ 4)
 # -----------------------------------------------------------------------------
-THIRD_PARTY = re.compile(r"\b(sigma|tamron|tokina|rokinon|samyang|bower|opteka|yongnuo|meike|7artisans|ttartisan|viltrox|"
-                         r"neewer|zeiss|voigtlander|lensbaby|vivitar|venus|laowa|irix|kenko|altura|jintu|lightdow)\b", re.I)
+# Hãng thứ ba = MỌI hãng KHÔNG thuộc danh sách chính hãng dưới đây (sửa N2, Red Team nội dung 3 lần 1: danh sách
+# hãng thứ ba liệt kê tay bị sót Brightin Star, AstrHori, SIRUI...). Hãng xác định bằng phần ĐẦU tiêu đề.
+# Chính hãng = hãng làm cả thân máy lẫn ống cho đúng ngàm của mình, nên mỗi ống chỉ có 1 ngàm:
+#   Canon; Nikon (kể cả tiêu đề mở đầu bằng dòng ống "AF-S/AF-P ...", "AF ... Nikkor", "Nikkor"); Sony;
+#   Fujifilm / Fuji / Fujinon; Olympus, OM System / OM Digital; Panasonic / Lumix; Leica; Pentax (cả "HD PENTAX",
+#   "smc PENTAX") / Ricoh; Samsung; Minolta / Konica Minolta; Hasselblad.
+# Sigma CỐ Ý không nằm trong danh sách: Sigma có làm thân (SA, L) nhưng bán cùng một ống cho nhiều ngàm.
+# Zeiss cũng vậy (ống cho nhiều ngàm). Tiêu đề không mở đầu bằng tên hãng (vd "500mm f/8 ...") -> coi là hãng thứ ba.
+FIRST_PARTY = re.compile(r"^\s*(?:canon|nikon|nikkor|af-[sp]\b|af(?:-d)?\s+(?:dx\s+)?(?:zoom-|micro-)?nikkor|sony|"
+                         r"fujifilm|fuji|fujinon|olympus|om\s+(?:system|digital)|panasonic|lumix|leica|pentax|hd\s+pentax|"
+                         r"smc\s+pentax|ricoh|samsung|minolta|konica\s+minolta|hasselblad)\b", re.I)
+
+
+def is_third_party(title):
+    return not FIRST_PARTY.search(title or "")
 
 
 FILM_TAG = "[phim]"     # ghi chú của luật dòng máy phim trong BODY_SERIES bắt đầu bằng nhãn này
@@ -465,7 +485,7 @@ def classify_item(title, cats, n_child_asin=0):
             out.update(mount="nhieu", mount_source=src, evidence="|".join(v[1] for v in tm.values()))
         else:
             out.update(mount="khong_ro")
-        if out["mount"] not in ("khong_ro", "nhieu") and THIRD_PARTY.search(title) and n_child_asin > 1:
+        if out["mount"] not in ("khong_ro", "nhieu") and is_third_party(title) and n_child_asin > 1:
             out.update(uncertain=True, uncertain_reason="hang_thu_ba_nhieu_bien_the")
     elif typ == "phu_kien":
         tm = {} if (NO_MOUNT_ACC.search(h) and not MOUNT_ACC.search(h)) else find_mounts(title)

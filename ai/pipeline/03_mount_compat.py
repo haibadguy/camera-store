@@ -10,7 +10,8 @@ Việc làm:
 
 Quyết định áp dụng (STATUS.md, 07/10/2026): QĐ 1 (không dùng Compatible Mountings), QĐ 2 (4 mức), QĐ 3 (M chỉ thân x ống),
 QĐ 4 (ống hãng thứ ba nhiều biến thể -> không chắc, loại khỏi M), QĐ 8 (cặp "không biết" lưu ma trận riêng),
-QĐ 16 (08/10: mọi cặp có thân máy phim -> "không biết"; luật có trường body_film trong mount_rules.toml).
+QĐ 16 (08/10, đã sửa theo Red Team T4: cặp có thân máy phim -> "không biết" chỉ khi luật thường cho M = 1 hoặc
+requires_adapter; cặp luật thường cho "không lắp được" giữ nguyên; trường body_film, when_regular_level trong mount_rules.toml).
 
 Chạy từ thư mục gốc repo:
   ai\\.venv\\Scripts\\python.exe ai/pipeline/03_mount_compat.py --out-dir ai/data/kg_new
@@ -155,7 +156,10 @@ class Rules:
                     continue
             elif not self._match(r["lens_khung"], lk):
                 continue
-            res = (r["level"], r["id"], bool(r.get("crop_unknown", False)))
+            # QĐ 16 (sửa 08/10): luật thân phim chỉ áp khi luật thường (coi thân như máy số) cho một trong các mức này
+            if "when_regular_level" in r and self.level(bm, bk, lm, lk, False)[0] not in r["when_regular_level"]:
+                continue
+            res =(r["level"], r["id"], bool(r.get("crop_unknown", False)))
             break
         self.cache[key] = res
         return res

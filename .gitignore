@@ -55,4 +55,5 @@ results/*.pt
 *.gz
 *.parquet
 ai/data/kg_v62abf54/
+ai/data/kg_d339dda/
 ai/data/external/

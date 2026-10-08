@@ -20,6 +20,7 @@
 #   2. Một luật khớp khi: body_mount, body_khung, lens_mount, lens_khung đều khớp.
 #      Giá trị "*" khớp mọi thứ. Danh sách ["a","b"] khớp nếu giá trị nằm trong danh sách.
 #      "=" ở lens_mount nghĩa là "cùng ngàm với thân".
+#      Trường tùy chọn: body_film (chỉ khớp thân máy phim / máy số), when_regular_level (xem luật film_body_unknown).
 #   3. Không luật nào khớp -> incompatible (khác ngàm, không có ngàm chuyển chính hãng trong bảng).
 #
 # MỨC KIỂM CHỨNG (trường kiem_chung)
@@ -30,7 +31,7 @@
 # =============================================================================
 
 [meta]
-version = "0.3"
+version = "0.4"
 date = "2026-10-08"
 default_level = "incompatible"
 khung_order = ["ff", "apsc"]   # ff phủ được apsc; "khac" chỉ khớp với chính nó
@@ -119,7 +120,11 @@ ghi_chu = "Xác nhận luôn: ống DC bản Canon dùng ngàm EF (không phải
 
 # ---------------- Thân máy phim (QĐ 16, đặt ĐẦU TIÊN) ----------------
 # body_film = true: chỉ khớp thân có cờ may_phim (mount_detect.py: luật dòng máy có nhãn "[phim]" hoặc tiêu đề ghi "film").
-# Luật không có trường body_film thì khớp mọi thân, nhưng thân máy phim luôn dừng ở luật này trước.
+# when_regular_level: luật chỉ áp khi "luật thường" (các luật còn lại, coi thân như máy số) cho một trong các mức này.
+#   Cặp mà luật thường cho incompatible (khác ngàm, vd thân Nikon F phim + ống Canon EF; ống EF-S trên thân EF phim)
+#   KHÔNG khớp luật này -> rơi xuống các luật dưới và giữ incompatible. Cặp luật thường cho unknown cũng giữ unknown
+#   (theo luật thường đó).
+# Luật không có trường body_film thì khớp mọi thân.
 [[rule]]
 id = "film_body_unknown"
 body_film = true
@@ -127,10 +132,11 @@ body_mount = "*"
 body_khung = "*"
 lens_mount = "*"
 lens_khung = "*"
+when_regular_level = ["compatible_with", "crops_sensor", "requires_adapter"]
 level = "unknown"
 source = ""
 kiem_chung = "quyet_dinh_nhom"
-note = "QĐ 16 (Nam, 08/10/2026): mọi cặp (thân máy phim, ống) xếp 'không biết' -> loại khỏi M và CVR, vẫn giữ trong đồ thị. Lý do: máy phim không có chế độ cắt khung (ống APS-C/DX bị tối góc); nhiều ống đời mới không lấy nét (motor trong ống, giao tiếp điện tử) hoặc không chỉnh được khẩu độ (ống G/E không có vòng khẩu) trên máy phim. Không có nguồn hãng cho từng cặp nên không xếp chắc chắn."
+note = "QĐ 16 (Nam, 08/10/2026; sửa cùng ngày theo Red Team T4): cặp (thân máy phim, ống) mà luật thường cho lắp được (M = 1) hoặc cần ngàm chuyển chính hãng thì xếp 'không biết' -> loại khỏi M và CVR, vẫn giữ trong đồ thị. Lý do: máy phim không có chế độ cắt khung (ống APS-C/DX bị tối góc); nhiều ống đời mới không lấy nét (motor trong ống, giao tiếp điện tử) hoặc không chỉnh được khẩu độ (ống G/E không có vòng khẩu) trên máy phim; không có nguồn hãng cho từng cặp nên không xếp chắc chắn. Cặp mà luật thường cho 'không lắp được' (khác ngàm, hoặc ống EF-S trên thân EF) thì giữ 'không lắp được': máy phim hay máy số đều không lắp được, nên không có lý do gì để bỏ ràng buộc chắc chắn này. Bản đầu (áp cho mọi cặp) làm 14.123 cặp khác ngàm thành 'không biết' (Red Team T4, log ai/data/survey/run_redteam_n3_t4.log)."
 
 # ---------------- Canon EF / EF-S (DSLR) ----------------
 [[rule]]

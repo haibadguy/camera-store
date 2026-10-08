@@ -32,6 +32,7 @@ Tóm tắt (tại 07/10/2026 — chi tiết và bản mới nhất xem STATUS.md
   - **Vì sao** (kèm bằng chứng, ví dụ cụ thể);
   - **Ảnh hưởng thế nào**: bảng số cũ → số mới, lấy từ output script đã chạy;
   - Ghi cả các điểm đã kiểm chứng là đúng, các chỗ báo cáo của Hải ghi sai, và những chỗ phía sau phải chạy lại hoặc sửa theo.
+- **Log không ghi đè:** mỗi lần chạy script, log ghi ra **file tên mới**, kèm ngày hoặc nhãn lần chạy (vd `run03_mount_compat_20261008_rt1_lan1.log`, `run_compare_kg_20261008_rt1.log`). Không ghi đè log cũ, kể cả khi chạy lại cùng script, để số liệu báo cáo luôn còn log gốc làm bằng chứng. File đầu ra mà script bắt buộc ghi đè (vd `mount_compat_log.txt` trong `ai/data/kg/`) thì sao lưu thư mục trước khi chạy.
 - **Cuối mỗi phiên:**
   1. Cập nhật `docs/STATUS.md`: bảng trạng thái (đúng thang Kế hoạch / Đã triển khai / Đã kiểm thử / Đã đánh giá, chỉ nâng mức khi có bằng chứng) và **nhật ký quyết định**.
   2. Tóm tắt ngắn cho Nam: **đã làm gì**, **kết quả** (kèm số liệu và nguồn), **còn chưa chắc gì**.
