@@ -31,20 +31,22 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 |---|---|---|---|
 | 1 | Pipeline tổng quát | Đã triển khai (tài liệu) | Cần cập nhật sau khi sửa nội dung 3 và 5 |
 | 2 | Thu thập, lọc k-core, chia train/val/test | **Đã kiểm thử** (07/10) | Nhánh `nam/fix-data`: đã gộp tương tác lặp, số mới 67.661 users / 27.940 items / 595.515 tương tác. Báo cáo 2 chưa cập nhật theo số mới. Xem mục 4 và `docs/CHANGELOG.md` |
-| 3 | Entity Linking, ma trận M | **Đã kiểm thử** (08/10; đã sửa code và nguồn theo Red Team lần 1, **chưa đo lại holdout**) | Thiết kế mới dựa trên khảo sát 07/10 (`docs/content3_survey.md`). **Bản cuối trong `ai/data/kg/`** (bản của Hải sao lưu ở `kg_v62abf54/`; bản trước khi sửa theo Red Team ở `kg_d339dda/`; bản trước khi sửa nguồn ở `kg_e8b39e6/`):
+| 3 | Entity Linking, ma trận M | **Đã kiểm thử** (08/10; đã sửa code và nguồn theo Red Team lần 1; **đã đo lần 3** theo kế hoạch đăng ký trước, holdout không sạch) | Thiết kế mới dựa trên khảo sát 07/10 (`docs/content3_survey.md`). **Bản cuối trong `ai/data/kg/`** (bản của Hải sao lưu ở `kg_v62abf54/`; bản trước khi sửa theo Red Team ở `kg_d339dda/`; bản trước khi sửa nguồn ở `kg_e8b39e6/`):
 - 537 thân × 1.033 ống;
 - 72.720 cặp M = 1, trong đó 1.686 có cờ "chưa rõ có cắt khung";
 - 5.846 cặp "không biết", trong đó 2.819 là cặp có thân máy phim (QĐ 16 đã sửa; 18 thân phim);
 - `requires_adapter` 16.301 (thêm Pentax Adapter Q, Fujifilm M Mount Adapter).
 
-Red Team lần 1: `docs/reviews/redteam_n3_lan1.md`. Đã sửa phần code: T1, T4, N2, N3, K1000. **Đã xử lý T5 (nguồn), T2 (khung ống Sony), N1 (ngàm chuyển)** (CHANGELOG 08/10 tối, tiếp): 16 nguồn có bản sao + sha256, mọi câu trích kiểm bằng `check_rule_sources.py`. Chưa sửa: các điểm về cách đo (S1–S3, T6, T7).
+Red Team lần 1: `docs/reviews/redteam_n3_lan1.md`. Đã sửa phần code: T1, T4, N2, N3, K1000. **Đã xử lý T5 (nguồn), T2 (khung ống Sony), N1 (ngàm chuyển)** (CHANGELOG 08/10 tối, tiếp): 16 nguồn có bản sao + sha256, mọi câu trích kiểm bằng `check_rule_sources.py`. Cách đo (S1–S3, T6, T7): xử lý ở lần đo 3 (kế hoạch `docs/reviews/n3_eval_lan3_plan.md`), phần chưa xử lý được ghi ở hạn chế mục 4.
 
-**Số đo cuối trên nửa holdout** (747 sản phẩm; lần đo thứ hai, **trước** khi sửa theo Red Team; xem mục 4):
-- loại đúng **98,9%** (Lensfun) / **96,8%** (Wikidata); trước khi sửa lỗi phân loại là 87,9% / 83,5%;
-- ngàm đúng 97,3% (Lensfun, 402) / 100% (Wikidata, 266);
-- khung thân đúng 100% (Lensfun) / 99,2% (openMVG).
+**Số chính: lần đo 3** (CHANGELOG 08/10 khuya; log `ai/data/survey/n3_lan3/run_measure_holdout_20261008.log`). Tập **H733** = holdout bỏ 14 mẫu dev; quy tắc `ea6abb0`; bộ đánh giá `lan2`; khoảng tin cậy 95% bootstrap theo cụm:
+- loại đúng **99,1%** [98,2–99,8] (Lensfun, 553/558) / **97,1%** [94,9–99,0] (Wikidata, 304/313); theo sản phẩm 97,8% [96,6–98,9] (585/598);
+- ngàm đúng **97,2%** [93,1–99,7] (Lensfun, 383/394) / **100%** (Wikidata, 266/266);
+- khung thân đúng 100% (Lensfun, 196/196) / 99,2% [97,4–100] (openMVG, 125/126);
+- phần tử của M có thật là thân / ống: 467/470 = 99,4% [98,5–100] (chỉ 29,9% phần tử của M có đáp án);
+- baseline trên cùng tập (Lensfun, ngàm, mức chặt): bản của Hải phủ 21,2%, đúng 75,3%; trường Compatible Mountings phủ 58,0%, đúng 94,8%; quy tắc phủ 98,8%, đúng 97,2%.
 
-Đọc từng ca sai của holdout: quy tắc chỉ sai ở 4 sản phẩm, còn lại là đáp án sai. Chi tiết ở CHANGELOG. Script 04/05 chưa đọc đầu ra mới |
+Không phải số độc lập (hạn chế 10 ở mục 4). Số phụ (cùng H733): bộ đánh giá `lan3` ("sau khi sửa lỗi bộ đánh giá tìm từ ca holdout đã xem") loại 99,6% / 99,0%; `truoc_0710` ("dựng lại theo mô tả, mã gốc không còn") loại 99,1% / 93,3%, ngàm Wikidata 90,6%. Số lần đo 2 (H747, quy tắc trước `e8b39e6`): loại 98,9% / 96,8%, ngàm 97,3% / 100%, giữ để đối chiếu. Script 04/05 chưa đọc đầu ra mới |
 | 4 | Đồ thị tri thức | Đã triển khai (bản cũ của Hải), **đang làm lại: mới có thiết kế** | Bản cũ: 99% sản phẩm không có cạnh tri thức; script 04 hiện không chạy được với đầu ra mới của nội dung 3. Thiết kế mới đã chốt 08/10 (`docs/content4_design.md`, mục 9), **chưa viết code pipeline**. Việc 1 (luật mục đích) xong 08/10: `ai/config/usecase_rules.toml` v0.2, 4 nhãn, mọi câu trích kiểm trên bản sao đã lưu. Chưa có số đo độ chính xác tiêu cự / khẩu độ |
 | 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`/`item_map.json` (07/10, nhánh `nam/content3`) |
 | 6 | Module ràng buộc cứng và mềm | Chưa bắt đầu | |

@@ -6,6 +6,115 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 08/10/2026 (khuya): lần đo thứ 3 của nội dung 3 (đăng ký trước). Nhánh `nam/content4`
+
+Theo kế hoạch `docs/reviews/n3_eval_lan3_plan.md` (commit `42da14b`; mục 8 đã chốt và mục 9 sửa đổi ở commit `fb30c65`, **trước khi đo**). Quy tắc không đổi (`ea6abb0`). Holdout **không sạch** (kế hoạch mục 2), nên đây là phép đo lại có điều chỉnh, không phải phép đo độc lập.
+
+**Sửa gì**
+1. `ai/survey/content3/eval_external.py` (chỉ chế độ `lan3`; `lan2` và `truoc_0710` không đổi):
+   - "manual" đứng trước "focus" không còn là từ phụ kiện (`manual(?![\s-]*focus)`, kế hoạch 9.2). Vd "Pentax K1000 Manual Focus SLR Film Camera" không còn bị loại; "Instruction Manual" vẫn bị loại;
+   - ô có đáp án `khac_ngam` chấm theo H3 (kế hoạch 9.3): quy tắc không gán ngàm cụ thể → không chấm; quy tắc gán ngàm cụ thể mà nguồn ghi một **ngàm thật** nhóm không có mã (danh sách `KHAC_NGAM_THAT`: Minolta MD, Olympus OM, Contax/Yashica, Mamiya 645…) → **sai**; nguồn ghi ngàm không rõ ("Generic", lỗi gõ "Pentak K"…) → không chấm;
+   - cột thông tin mới `ngam_khac_that` (mọi chế độ, không dùng để chấm) và ghi được file khi không khớp được sản phẩm nào.
+2. Script mới: `bootstrap_ci.py` (khoảng tin cậy bootstrap theo cụm, thay Wilson), `n3_lan3_measure.py` (phép đo (1)–(6) và tập N), `core_coverage.py` (tính lại "vấn đề cốt lõi" của STATUS).
+
+**Kiểm trước khi đo** (chỉ nửa fix và ví dụ dựng tay)
+- `test_eval_external.py`: 100/100 ca đúng (`run_test_eval_external_20261008_lan3do.log`). `bootstrap_ci.py` tự kiểm 6/6 (`n3_lan3/run_test_bootstrap_ci_20261008.log`).
+- Nửa fix, 3 chế độ, so với bản trước sửa: **giống hệt từng ô** (`n3_lan3/run_compare_fix_*_cu_vs_moi2_20261008.log`).
+- Script đo chạy thử trên nửa fix (`n3_lan3/run_measure_fix_thu_20261008.log`): F746 cho lại đúng số cũ của nửa fix (Lensfun 535/548, 352/357; Wikidata 283/295, 239/239; theo sản phẩm 582/598).
+- Mã băm đầu vào trước khi đo trùng log đăng ký trước (`n3_lan3/run_lan3_prereg_check_20261008_truoc_do.log`).
+
+**Chạy trên holdout: một lần.** Log và file trong `ai/data/survey/n3_lan3/`: `run_eval_holdout_{lan2,lan3,truoc_0710}_20261008.log`, `run_eval_ngoai_{lan3,lan2}_20261008.log`, `run_measure_holdout_20261008.log`; bảng mọi chỉ số `holdout_bang_so_20261008.csv`. Khoảng tin cậy 95%: bootstrap theo cụm `cum_nguon`, B = 10.000, seed 20261009. Không thấy lỗi script sau khi chạy; không chạy lại.
+
+**Số chính: H733 (holdout bỏ 14 mẫu dev), quy tắc `ea6abb0`, bộ đánh giá `lan2`**
+
+| Nguồn | Chỉ số | Đúng / chấm | Tỉ lệ [KTC 95%] |
+|---|---|---:|---|
+| Lensfun | loại | 553/558 | 99,1% [98,2–99,8] |
+| Lensfun | ngàm (đúng / gán) | 383/394 | 97,2% [93,1–99,7] |
+| Lensfun | khung thân | 196/196 | 100% [100–100] |
+| openMVG | khung thân | 125/126 | 99,2% [97,4–100] |
+| Wikidata | loại | 304/313 | 97,1% [94,9–99,0] |
+| Wikidata | ngàm | 266/266 | 100% [100–100] |
+| Gộp nguồn | loại đúng theo sản phẩm (đúng ở mọi nguồn có đáp án) | 585/598 | 97,8% [96,6–98,9] |
+
+Cả 733 sản phẩm đều khớp được. Ngàm Lensfun: 4 ô quy tắc để trống; 1 ô đáp án `khac_ngam` tính sai (ở `lan2` mọi ô `khac_ngam` bị tính sai khi quy tắc gán ngàm).
+
+**So các bộ đánh giá, cùng quy tắc `ea6abb0`, tập H733** (H747 trong ngoặc khi khác)
+
+| Chỉ số | lần đo 2 (quy tắc trước `e8b39e6`) | **lan2 (chính)** | lan3 ¹ | truoc_0710 ² |
+|---|---:|---:|---:|---:|
+| Sản phẩm khớp được | 733 (747) | 733 (747) | 726 (740) | 733 (747) |
+| Loại, Lensfun | 552/558 (565/571) | **553/558** (566/571) | 553/555 (566/568) | 572/577 (585/590) |
+| Ngàm, Lensfun | 382/393 (391/402) | **383/394** (392/403) | 383/394 (392/403) | 332/334 (341/343) |
+| Loại, Wikidata | 303/313 (305/315) | **304/313** (306/315) | 304/307 (306/309) | 335/359 (338/362) |
+| Ngàm, Wikidata | 265/265 (266/266) | **266/266** (267/267) | 266/266 (267/267) | 242/267 (244/269) |
+| Loại theo sản phẩm | 584/598 (598/612) | **585/598** (599/612) | 586/591 (600/605) | 570/598 (584/612) |
+| Khung thân Lensfun / openMVG | 196/196, 125/126 (204/204, 132/133) | như cột bên | như cột bên | như cột bên |
+
+¹ `lan3`: **sau khi sửa lỗi bộ đánh giá tìm từ ca holdout đã xem.** ² `truoc_0710`: **dựng lại theo mô tả, mã gốc không còn.**
+
+Tỉ lệ và khoảng (H733): `lan2` xem bảng trên; `lan3` loại Lensfun 99,6% [99,1–100], Wikidata 99,0% [97,8–100], theo sản phẩm 99,2% [98,3–99,8]; `truoc_0710` loại Wikidata 93,3% [88,6–97,1], ngàm Wikidata 90,6% [82,6–97,6], theo sản phẩm 95,3% [92,2–97,8]. H747, `lan2`: loại Lensfun 99,1% [98,3–99,8], ngàm Lensfun 97,3% [93,3–99,7], loại Wikidata 97,1% [94,9–99,0], theo sản phẩm 97,9% [96,6–98,9].
+
+Đọc bảng:
+- **lần đo 2 → lan2** (đổi quy tắc, cùng bộ đánh giá): mỗi chỉ số tăng đúng 1 ô đúng, khớp với việc sửa B00L2PN5L8 (ống EF-S 55-250 trước bị xếp thân, sửa ở `e8b39e6` theo đúng ca sai holdout này; kiểm từng dòng ở mục phân loại dưới). Phần chênh này **không** độc lập.
+- **lan2 → lan3** (đổi bộ đánh giá): 7 sản phẩm không còn được chấm; số ô **đúng** không đổi ở mọi chỉ số, chỉ bớt ô sai (loại: Lensfun bớt 3 ô sai, Wikidata bớt 6). Đúng như kế hoạch dự báo: các sửa N4 chỉ loại bớt các ca sai holdout đã xem. Sửa S2 và 9.2 không đổi gì trên holdout.
+- **truoc_0710**: Wikidata giảm rõ (ngàm 100% → 90,6%), Lensfun ngàm tăng nhưng chấm ít ô hơn (334 thay vì 394). Bản này dựng lại, không có log gốc để đối chiếu.
+
+**(3) Ngàm theo cách quy tắc suy ra ngàm (`mount_source`), `lan2`, H733**
+
+| `mount_source` | Lensfun đúng / gán | Wikidata đúng / gán |
+|---|---:|---:|
+| `dong_may` (luật dòng máy, chủ yếu thân) | 196/196 = 100% [100–100] | 146/146 = 100% [100–100] |
+| `tieu_de` (tên ngàm trong tiêu đề) | 166/176 = 94,3% [85,9–99,4] | 110/110 = 100% [100–100] |
+| `hang_slr` (hãng + DSLR) | 19/20 = 95,0% [85,0–100] | 10/10 = 100% [100–100] |
+| `dong_may_nhac_toi` | 2 / 2 (dưới 10 ô, chỉ đếm) | không có ô |
+| `vong_t` | không có ô | không có ô |
+
+Chỉ 20 + 10 ô thuộc `hang_slr` (trên 298 sản phẩm dùng đường này trong toàn dữ liệu) và 2 ô `dong_may_nhac_toi` (trên 83): **các đường suy luận yếu gần như chưa được đo** (Red Team S3).
+
+**(4) Phần tử của M có thật là thân / ống không** (`lan2`, H733)
+- M có 1.570 phần tử (537 thân + 1.033 ống). Thuộc H733: 472 (204 thân + 268 ống); có đáp án loại: 470 = **29,9% của M**, 99,6% của phần M thuộc H733.
+- Theo sản phẩm (đúng vai trò ở mọi nguồn có đáp án): hàng (thân) **200/202 = 99,0%** [97,4–100]; cột (ống) **267/268 = 99,6%** [98,8–100]; cả M **467/470 = 99,4%** [98,5–100].
+- Theo nguồn: Lensfun 438/439 = 99,8% [99,3–100]; Wikidata 287/289 = 99,3% [98,2–100].
+- 3 ô lệch: một phần tử cột (ống) đáp án là thân; một phần tử hàng đáp án là "khác"; một phần tử hàng đáp án là ống. Phân loại ở mục dưới.
+
+**(5) Baseline, cùng cách so ngàm (quy tắc H3 cho mọi phương pháp), `lan2`, H733, Lensfun** (Wikidata trong ngoặc)
+
+| Phương pháp | Độ phủ ngàm (gán / có đáp án) | Chính xác, mức chặt (EF ≠ EF-S) | Chính xác, mức họ |
+|---|---:|---:|---:|
+| Quy tắc (`ea6abb0`) | 395/400 = 98,8% (270/276 = 97,8%) | 384/395 = 97,2% [93,1–99,7] (270/270 = 100%) | 391/395 = 99,0% [97,9–99,8] (270/270) |
+| B1, bản của Hải | 85/400 = 21,2% [15,6–27,1] (65/276 = 23,6%) | 64/85 = 75,3% [58,2–91,4] (50/65 = 76,9%) | 82/85 = 96,5% [91,8–100] (64/65 = 98,5%) |
+| B2, Compatible Mountings | mức chặt 232/400 = 58,0%; mức họ 353/400 = 88,2% (169/276; 244/276) | 220/232 = 94,8% [91,9–97,4] (161/169 = 95,3%) | 338/353 = 95,8% [93,5–97,7] (234/244 = 95,9%) |
+
+- B1 mức chặt thấp vì bản của Hải không tách EF / EF-S (ống EF-S bị ghi "Canon EF"). B2 mức chặt: "Canon EF" của trường này gộp EF / EF-S nên coi là không gán.
+- Loại (Lensfun): quy tắc thân 196/197 chính xác, phủ 196/198; ống 284/284, 284/284. Bản của Hải thân 46/46 chính xác nhưng chỉ phủ **46/198 = 23,2%** [13,8–33,3]; ống 41/41, phủ **41/284 = 14,4%** [10,1–18,9].
+- Cả 733 sản phẩm H733 đều có trong `item_map.json` của dữ liệu cũ; 90 sản phẩm có trong `linked_products.csv` của Hải.
+
+**Tập N (H1): sản phẩm ngoài 1.493 khớp được ở `lan3`. Không độc lập, chỉ tham khảo.**
+- `lan2` ngoài 1.493: 0 sản phẩm khớp (đúng kỳ vọng). `lan3`: **65 sản phẩm**, cả 65 là do bộ lọc phụ kiện `lan2` từng loại (S2 / "Manual Focus").
+- Toàn N: loại Lensfun 43/54 = 79,6% [67,9–89,8], Wikidata 23/35 = 65,7% [48,6–80,6], theo sản phẩm 49/61 = 80,3% [69,4–89,7]; ngàm Lensfun 22/24, Wikidata 22/22. Bảng nhầm loại: thân → phụ kiện 12 (chưa xem từng ca).
+- **Phần máy phim** (chữ "film" ở phần đầu tiêu đề): 5 sản phẩm (Nikon N80, Nikon F6, Canon AE-1, 2 bộ Canon EOS Rebel 2000). Cả 5 quy tắc xếp thân, có cờ `may_phim`; Wikidata loại 5/5, ngàm 5/5. Lensfun và openMVG không có máy phim nào. Đây chỉ là số đếm, **không phải độ chính xác nhận diện máy phim** (nguồn ngoài không ghi máy nào là máy phim). Pentax K1000 không còn bị bộ lọc loại nhưng không khớp được nguồn nào.
+
+**Vấn đề cốt lõi, tính lại** (`core_coverage.py`, log `ai/data/survey/run_core_coverage_20261008.log`)
+
+| Chỉ số | Bản của Hải | Bản mới |
+|---|---:|---:|
+| Sản phẩm xác định được ngàm (thân / ống) | 257/28.867 = 0,89% | thân + ống có 1 ngàm 1.704/27.940 = 6,10%; vào M 1.570 = 5,62% |
+| Tương tác k-core chạm sản phẩm đó | 14.258/622.997 = 2,29% | vào M: 50.503/595.515 = 8,48%; có ngàm: 57.767 = 9,70% |
+| Tương tác train | 11.013/482.149 = 2,28% | vào M: 40.181/460.193 = 8,73% |
+
+**Đã kiểm chứng / chỗ trước đây ghi sai**
+- Các khoảng Wilson ở mục 08/10 (chia đôi, sửa loại) **không có script nào sinh ra** và giả định mẫu độc lập (Red Team T6): không dùng trong báo cáo; thay bằng khoảng bootstrap ở trên.
+- Câu "quy tắc chỉ sai ở 4 sản phẩm" (mục "QĐ 16 …", 08/10) trộn mẫu số và do người viết luật tự phân loại (Red Team T7): không dùng nữa; xem phân loại ca sai lần 3 ở dưới.
+- "Lần đo hai giống hệt lần một từng ô": hai file có cùng sha256 (`run_sha256_holdout_lan1_vs_lan2_20261008.log`), nhưng bản sao "lần 1" được ghi cùng phút (01:39) với file lần 2, nên không loại trừ được việc sao chép sau lần 2. Bằng chứng còn lại là **số tổng** của hai log (`run_typefix_report.log`, `run_typefix_report_lan2.log`) trùng nhau.
+
+**Phía sau phải làm**
+- Recall của loại ống và việc nhận diện máy phim **chưa đo được trên holdout** (cách khớp ống cần tiêu cự + khẩu độ trong tiêu đề; nguồn không ghi máy phim).
+- Đường suy ngàm `hang_slr`, `dong_may_nhac_toi`, `vong_t` gần như chưa có ô chấm.
+- Số độc lập thật cần một tập mới chưa ai xem (Red Team S1 (d)).
+
+---
+
 ## 08/10/2026 (tối, tiếp): sửa phần nguồn của nội dung 3 theo Red Team lần 1 (T5, T2, N1). Nhánh `nam/content4`
 
 Theo `docs/reviews/redteam_n3_lan1.md` (T5, T2, N1 và phụ lục B). **Chưa đo lại holdout.** Bản trước khi sửa sao lưu ở `ai/data/kg_e8b39e6/` (sha256 từng file trùng `ai/data/kg/` lúc đó; hai file CSV khác git chỉ ở ký tự xuống dòng CRLF do `core.autocrlf`).
