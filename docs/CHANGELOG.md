@@ -6,6 +6,135 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 09/10/2026: nội dung 5 — sửa code 05 theo kế hoạch đăng ký trước; chạy Popularity / MountAware trên val; chạy thử LightGCN, R-GCN. Nhánh `nam/content4`, code ở commit `f21ced4`
+
+Theo `docs/reviews/n5_eval_plan.md` (mục 2: lỗi L1–L17; QĐ 5-1 .. 5-6). **Không huấn luyện dài, không chấm test.**
+
+**Ví dụ trước.** Người dùng u có thân Canon EOS (EF-S) trong train, item val là một ống Nikon F.
+- Bản của Hải (05a): MountAware loại **mọi** ống ngoài tập M = 1 của u. Người **không có thân** cũng bị loại hết ống, vì tập đó rỗng.
+- Bản mới: chỉ loại ống mà `judge_lens` = True ("chắc chắn vi phạm", như ống Nikon F với thân Canon). Ống không phán được (ngoài M, "không chắc", có cặp "không biết") được giữ. Người không có thân không bị lọc gì.
+- Ở u, ống Nikon F bị loại nên Hit của u chắc chắn = 0. Đó là cái giá của ràng buộc cứng mà kịch bản "ống cho người đã có thân" muốn đo.
+
+**Sửa gì**
+1. **`ai/pipeline/eval_05.py` (mới)**: phần chấm chung (L4, L7, L8, L15 một phần, L17).
+   - Xếp hạng toàn bộ 27.940 sản phẩm. Bỏ item train; khi chấm test bỏ thêm item val (QĐ 5-1).
+   - Quy tắc hòa: hạng = 1 + #(điểm lớn hơn) + #(bằng điểm và π nhỏ hơn). π là hoán vị cố định, seed 20261009, dùng chung mọi mô hình. Top-K xếp theo (điểm giảm, π tăng) trên đúng tập ứng viên.
+   - Script tự kiểm cho **mọi** người dùng: "hạng ≤ K ⇔ item nằm trong top-K"; Recall@K (tính từ top-K) = Hit@K (tính từ hạng); top-K không chứa sản phẩm bị loại.
+   - CVR@K lấy từ top-K này, dùng `common_05.judge_lens` (QĐ 4-9).
+   - Kịch bản "ống cho người đã có thân" (mục 5): nhóm lắp được / không lắp được / không phán được. Số chính xếp hạng chỉ trong 1.339 ống; số phụ trên toàn catalog.
+   - Sampled 1+99 là số phụ, giữ quy tắc hòa của Hải ở dạng tất định: âm mẫu bằng điểm xếp trên.
+   - Bootstrap ghép cặp theo người dùng.
+   - Mỗi lần chấm lưu mảng hạng / top-20 từng người dùng (`.npy`, ghi sha256 vào `result.json`).
+2. **`05a_popularity.py` viết lại**:
+   - bộ lọc MountAware mới (L6), mặt nạ numpy thay vòng Python (L7);
+   - chỉ nhận `--split val`;
+   - ghi vào thư mục mới, đã có thì DỪNG (L14);
+   - DỪNG nếu CVR của MountAware khác 0.
+3. **`05b_lightgcn_train.py` viết lại** (L9, L10, L11, L5, L13):
+   - Xavier, Adam lr 0,001, batch 2048; λ là tham số dò;
+   - tối đa 300 epoch, chấm NDCG@20 full ranking trên val mỗi 10 epoch, dừng sau 5 lần chấm không tăng;
+   - hạng L2 viết theo code của tác giả (kuandeng/LightGCN `create_bpr_loss`; gusye1234/LightGCN-PyTorch `bpr_loss`, đọc ngày 09/10): λ · ½(‖e_u⁰‖² + ‖e_i⁰‖² + ‖e_j⁰‖²) / số cặp trong batch, chỉ embedding lớp 0.
+4. **`05c_rgcn_train.py` viết lại: R-GCN thật** (L1, L2, L3, L16), đúng mục 6.4:
+   - `RGCNConv` của PyG; 18 quan hệ; bỏ 134 + 134 cạnh có cờ `ngam_khong_chac` (script DỪNG nếu số cạnh bỏ khác 134);
+   - kiểm cạnh user–item của `kg_hetero.pt` trùng `train.txt`;
+   - mỗi nút một embedding; 2 lớp, d 64, B = 2, aggr mean, root_weight, ReLU chỉ giữa hai lớp, edge dropout 0,4;
+   - bộ giải mã DistMult; loss BPR + 0,01·‖r‖²; lr là tham số dò; tối đa 100 epoch, chấm val mỗi 5 epoch.
+5. **`train_05.py` (mới)**: vòng huấn luyện chung.
+   - Âm mẫu lấy bằng numpy (không vòng Python). Một bộ sinh số cho cả lần chạy (L11).
+   - Ở mỗi lần chấm val lưu `last.pt` (mô hình, Adam, trạng thái mọi bộ sinh số) → **chạy tiếp được** khi bị ngắt; xong thì ghi `result.json`, gõ lại lệnh sẽ bỏ qua.
+   - Mỗi lần gọi ghi log tên mới `train_<thời điểm>.log`.
+   - Hết giới hạn epoch mà chưa dừng sớm thì ghi `chua_chac_hoi_tu = true`.
+6. **`05_val_sweep.py` (mới)**: dò trên val, seed 1, gồm 5 lần chạy (LightGCN λ ∈ {1e-5, 1e-4, 1e-3}, R-GCN lr ∈ {0,01; 0,001}).
+   - Mỗi lần chạy là một tiến trình con, có log riêng. Chạy tiếp được.
+   - DỪNG nếu cây git bẩn hoặc không có GPU.
+   - Cuối cùng in bảng NDCG@20 val.
+7. `05_evaluate.py`: chỉ thêm ghi chú "bản cũ, đọc kết quả cũ". Bảng tổng hợp mới (bootstrap, S1–S5) chưa viết; sẽ viết cùng script chạy test.
+8. `.gitignore`: bỏ `results/n5/**/*.pt`, `*.npy`, `results/n5/smoke_*/`. 5 file `results/*.json` của Hải **không đụng tới**.
+9. Kiểm thử: `ai/survey/content5/test_eval_05.py`.
+
+**Vì sao:** kế hoạch mục 2.
+- R-GCN cũ không phải R-GCN và không chạy được với đồ thị mới.
+- Sampled 1+99 dễ trúng vì 87% âm mẫu là phụ kiện.
+- Bộ lọc MountAware cũ loại mất item test của 3.856 người (khảo sát 09/10).
+- Không có quy tắc hòa điểm (Popularity hòa rất nhiều).
+- Siêu tham số không có nguồn.
+- Kết quả ghi đè file cố định.
+
+**Kiểm thử**
+- `test_eval_05.py` **ĐẠT CẢ**: chạy trên commit `f21ced4`, log `ai/data/survey/n5/run_test_eval_05_20261009_lan2_f21ced4.log` (lần 1 trước commit: `run_test_eval_05_20261009_lan1.log`, cũng đạt cả). Gồm:
+  - ví dụ mục 1 (hạng 3, Hit@2 = 0, NDCG@3 = 0,5; chấm test bỏ cả D lẫn E);
+  - quy tắc hòa theo π;
+  - train / val không vào top-K; ống bị lọc −∞ vẫn xếp trước sản phẩm không phải ứng viên;
+  - Recall = Hit (cố ý làm sai thì báo lỗi);
+  - CVR từ top-K = `full_catalog_cvr` cũ trên ví dụ dựng tay;
+  - nhóm kịch bản; sampled hòa điểm; bootstrap hai mô hình giống hệt → hiệu (0, 0, 0).
+- **Bộ lọc MountAware trên dữ liệu thật:** mặt nạ = `judge_lens is True` ở mọi ô của 10.406 người có thân × 1.033 ống (0 ô lệch; 8.557.447 cặp chắc chắn vi phạm). Người không có thân: 0 ống bị lọc.
+- **CVR của MountAware = 0** ở K = 5, 10, 20, cả toàn catalog lẫn kịch bản chỉ ống (script tự kiểm).
+- **Tái lập Popularity:** chạy 3 lần (lan1 trước commit, lan2, lan3 trên `f21ced4`). 14/14 mảng từng người dùng của mỗi mô hình trùng sha256, số liệu trùng hết (`ai/data/survey/n5/run_sha256_popularity_val_20261009.log`).
+- **Chạy thử mỗi mô hình 3 epoch** trên dữ liệu thật, chấm val mỗi epoch (`results/n5/smoke_20261009/`, không lên git):
+  - dừng giả lập sau 2 epoch rồi gõ lại lệnh → chạy tiếp từ epoch 3 đúng; gõ lại lần nữa → bỏ qua;
+  - `05_val_sweep.py --smoke` (1 epoch mỗi lần chạy, `results/n5/smoke_val_sweep_20261009/`): chạy đủ 5 lần chạy, gõ lại thì bỏ qua cả 5.
+  - Lần chạy thử đầu phát hiện lỗi chạy tiếp (trạng thái bộ sinh số CPU bị nạp lên GPU), đã sửa trước commit.
+
+**Ảnh hưởng: số mới trên val** (log `results/n5/val_popularity_20261009_lan2/run_20261009_010620.log`, `result.json`; 67.661 người dùng; chỉ bỏ item train)
+
+| Full ranking, val | Recall@5 | Recall@10 | Recall@20 | NDCG@10 | NDCG@20 |
+|---|---:|---:|---:|---:|---:|
+| Popularity | 0,0136 | 0,0228 | 0,0380 | 0,0114 | 0,0152 |
+| Popularity-MountAware | 0,0136 | 0,0229 | 0,0382 | 0,0114 | 0,0153 |
+
+- Hit@K = Recall@K (đã kiểm từng người).
+- Item val hòa điểm với ít nhất một ứng viên: 61.465 người (Popularity) / 61.460 người (MountAware). Vì thế quy tắc hòa π ảnh hưởng thật tới số của Popularity.
+- Top-10 trung bình: Popularity 0,99 ống + 9,01 phụ kiện; MountAware 0,89 ống + 9,11 phụ kiện. Top-10 chung của mọi người gần như chỉ có **một** ống, nên CVR@10 của Popularity gần như là phán trên đúng ống đó.
+
+| CVR (val, người có thân trong train: 10.406) | @5 | @10 | @20 |
+|---|---:|---:|---:|
+| Popularity: CVR (vi phạm / ống chấm được; số người được tính) | 0,5625 (9/16; 16) | 0,6759 (6.789/10.045; 10.032) | 0,7003 (14.070/20.092; 10.346) |
+| Popularity-MountAware | 0 (0/7; 7) | 0 (0/3.268; 3.268) | 0 (0/6.028; 5.922) |
+
+| Kịch bản (val), chỉ ống | số người | Pop Recall@10 | MA Recall@10 | Pop CVR@10 | MA CVR@10 |
+|---|---:|---:|---:|---:|---:|
+| lắp được | 904 | 0,1471 | 0,2179 | 0,6967 | 0 |
+| không lắp được (có cặp `requires_adapter`: 18) | 236 | 0,0551 | **0** | 0,7789 | 0 |
+| không phán được | 12 | 0,4167 | 0,4167 | 0,7750 | 0 |
+
+- Đúng như kế hoạch dự kiến: MountAware cho Recall = 0 ở **mọi** người nhóm "không lắp được" (236/236 item val bị lọc), và tăng Recall ở nhóm "lắp được".
+- Sampled 1+99 (số phụ), Popularity / MountAware: Hit@10 0,4605 / 0,4603; NDCG@10 0,2845 / 0,2847.
+- **Đặt cạnh số cũ của Hải (không so trực tiếp được).** Số cũ là sampled trên **test**, dữ liệu trước khi gộp lặp, M cũ, bộ lọc cũ, CVR cũ chia cho K:
+  - Popularity Hit@10 0,4188 / MountAware 0,4112; CVR@10 0,0577 / 0.
+  - Ở số cũ, MountAware thấp hơn Global; ở số mới (val), hai bên gần bằng nhau. Điều này khớp với việc bộ lọc cũ loại nhầm item cần đoán (L6), nhưng chưa tách được bao nhiêu là do bộ lọc, bao nhiêu do dữ liệu / M đổi.
+
+**Thời gian thật mỗi epoch** (GTX 1660 Ti, batch 2048, các lần chạy thử ở trên)
+
+| | Huấn luyện / epoch | Một lần chấm val (full ranking) | Đỉnh GPU (khảo sát 09/10) |
+|---|---:|---:|---:|
+| LightGCN | 12,5–14,0 s | 3,4–3,6 s | 367 MiB |
+| R-GCN (18 quan hệ, bỏ 268 cạnh) | 27,4–28,9 s | 3,5–3,6 s | 1.090 MiB |
+
+Lấy âm mẫu + xáo: 0,03–0,04 s / epoch. Chấm đầy đủ cuối mỗi lần chạy (full, CVR, kịch bản, sampled): khoảng 15 s.
+
+**Phát hiện, chưa chắc**
+1. **R-GCN không tất định trên GPU.** Cùng cấu hình lr 0,01, seed 1:
+   - lần chạy thử đầu: epoch 1 loss 0,37824, NDCG@20 val 0,01229;
+   - lần chạy qua `05_val_sweep --smoke`: loss 0,37846, NDCG@20 val 0,01360.
+
+   LightGCN hai lần cho cùng số (loss 0,57152, NDCG@20 0,01601). Kế hoạch mục 7.3 đã ghi đây là hạn chế. Mức lệch thật sau khi hội tụ chưa biết.
+2. **Bài LightGCN ghi Xavier, nhưng code của tác giả khởi tạo normal** (std 0,01 ở bản TF; std 0,1 ở bản PyTorch; dòng Xavier bị comment). Giữ Xavier theo kế hoạch đã chốt (L10). Ghi là sai khác so với code gốc.
+3. **Chi tiết cài R-GCN kế hoạch chưa ghi, nay là quyết định cài đặt (chưa có nguồn):**
+   - vector r của DistMult khởi tạo glorot, giống mọi tham số của `RGCNConv` (`reset_parameters` dùng glorot);
+   - L2 = 0,01·‖r‖², tính mỗi bước, không chia batch;
+   - không có L2 trên embedding nút;
+   - `RGCNConv` có bias (mặc định của PyG);
+   - edge dropout lấy mẫu lại mỗi bước, cạnh xuôi và cạnh ngược bị bỏ độc lập với nhau.
+
+   Đã ghi vào kế hoạch mục 13.
+4. Kết quả lần chạy thử (smoke) **không dùng để chọn mô hình**: chỉ 1–3 epoch.
+
+**Phía sau phải làm**
+- Nam chạy `05_val_sweep.py` qua đêm, rồi chốt `ai/config/n5_final.toml` (kế hoạch 7.2 bước 3) và commit.
+- Seed 2, 3 cho cấu hình chốt.
+- Viết script chạy test một lần (kế hoạch 7.2 bước 5): 4 mô hình × mọi seed, bootstrap, S1–S5, bảng tổng hợp thay `05_evaluate.py`.
+
 ## 08/10/2026 (khuya, tiếp 3): cờ `ngam_khong_chac` trong đồ thị; sửa ví dụ QĐ 4-9. Nhánh `nam/content4`
 
 Nam chốt các câu treo của mục trước.
