@@ -1,6 +1,6 @@
 # TRẠNG THÁI ĐỒ ÁN — Camera Recommender
 
-Cập nhật lần cuối: 08/10/2026 khuya (nội dung 3: lần đo 3 theo kế hoạch đăng ký trước, số chính mới H733 + `lan2`, phân loại ca sai, hạn chế 10–16; trước đó: sửa code và nguồn theo Red Team lần 1; nội dung 4: việc 1 luật mục đích xong; nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
+Cập nhật lần cuối: 08/10/2026 khuya (nội dung 4, việc 2: đo bước đọc tiêu cự / khẩu độ theo kế hoạch đăng ký trước, bộ đọc `lens_specs` v1, luật mục đích v0.3; trước đó: nội dung 3 lần đo 3, số chính H733 + `lan2`; nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
 
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
@@ -48,10 +48,16 @@ Red Team lần 1: `docs/reviews/redteam_n3_lan1.md`. Đã sửa phần code: T1,
 - đọc ca sai (Claude, cũng là người viết luật; bảng `ai/survey/content3/n3_lan3_holdout_errors.csv`): trong 13 sản phẩm lệch về loại, 2 do quy tắc (1 ca đáp án cũng sai); thêm 1 sản phẩm sai loại lộ ra ở cột khung (DMC-S1); 11 ô ngàm sai đều do đáp án.
 
 Không phải số độc lập (hạn chế 10 ở mục 4). Số phụ (cùng H733): bộ đánh giá `lan3` ("sau khi sửa lỗi bộ đánh giá tìm từ ca holdout đã xem") loại 99,6% / 99,0%; `truoc_0710` ("dựng lại theo mô tả, mã gốc không còn") loại 99,1% / 93,3%, ngàm Wikidata 90,6%. Số lần đo 2 (H747, quy tắc trước `e8b39e6`): loại 98,9% / 96,8%, ngàm 97,3% / 100%, giữ để đối chiếu. Script 04/05 chưa đọc đầu ra mới |
-| 4 | Đồ thị tri thức | Đã triển khai (bản cũ của Hải), **đang làm lại: mới có thiết kế** | Bản cũ: 99% sản phẩm không có cạnh tri thức; script 04 hiện không chạy được với đầu ra mới của nội dung 3. Thiết kế mới đã chốt 08/10 (`docs/content4_design.md`, mục 9), **chưa viết code pipeline**. Việc 1 (luật mục đích) xong 08/10: `ai/config/usecase_rules.toml` v0.2, 4 nhãn, mọi câu trích kiểm trên bản sao đã lưu. **Việc 2: đã đo holdout (08/10 khuya)**, kế hoạch `docs/reviews/n4_focal_aperture_plan.md`, log `ai/data/survey/n4_fa/run_fa_eval_holdout_20261008.log`. Bộ đọc `ai/pipeline/lens_specs.py` v1:
-- tiêu cự đúng khoảng nút: Lensfun 165/202 = 81,7% [71,7–91,2], Wikidata 116/140 = 82,9% [75,4–89,9];
-- khẩu độ đúng khoảng nút: 223/228 = 97,8% [95,8–99,5];
-- số tiêu cự thô là cận dưới, phần lớn ca lệch là do khớp nhầm (chi tiết ở CHANGELOG) |
+| 4 | Đồ thị tri thức | Đã triển khai (bản cũ của Hải), **đang làm lại: có thiết kế, có bộ đọc tiêu cự / khẩu độ đã đo** | Bản cũ: 99% sản phẩm không có cạnh tri thức; script 04 hiện không chạy được với đầu ra mới của nội dung 3. Thiết kế mới đã chốt 08/10 (`docs/content4_design.md`, mục 9; số đã cập nhật 08/10 khuya), **chưa viết code dựng đồ thị**.
+
+Việc 1 (luật mục đích) xong 08/10: `ai/config/usecase_rules.toml` **v0.3** (08/10 khuya: bỏ 3 câu trích có "..."), 4 nhãn, mọi câu trích kiểm OK. Đếm với bộ đọc v1: phong cảnh 560, thể thao/chim 287, chân dung 147, macro 86, không nhãn 308 trên 1.288 ống (log `run_c4_usecase_count_20261008_n4fa.log`).
+
+**Việc 2 (đo tiêu cự / khẩu độ) xong 08/10 khuya.** Kế hoạch đăng ký trước `docs/reviews/n4_focal_aperture_plan.md`, log `ai/data/survey/n4_fa/run_fa_eval_holdout_20261008.log`. Bộ đọc `ai/pipeline/lens_specs.py` v1, holdout 325 ống, khoảng tin cậy 95% bootstrap theo cụm:
+- tiêu cự đúng mm: Lensfun 162/202 = 80,2% [70,4–89,7], Wikidata 108/140 = 77,1% [68,5–85,2];
+- **tiêu cự đúng khoảng nút:** Lensfun 165/202 = 81,7% [71,7–91,2], Wikidata 116/140 = 82,9% [75,4–89,9];
+- khẩu độ đúng số f: 223/228 = 97,8% [95,8–99,5];
+- **khẩu độ đúng khoảng nút:** 223/228 = 97,8% [95,8–99,5];
+- 77 ô lệch đọc tay (Claude): **0 do bộ đọc**, 75 do đáp án (66 khớp nhầm, 9 Wikidata thiếu giá trị), 2 tiêu đề không ghi khẩu độ. Số thô là cận dưới (hạn chế nội dung 4, điểm 9–12) |
 | 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`/`item_map.json` (07/10, nhánh `nam/content3`) |
 | 6 | Module ràng buộc cứng và mềm | Chưa bắt đầu | |
 | 7 | Mô hình gợi ý theo bộ (GNN có quan hệ) | Chưa bắt đầu | |
@@ -177,8 +183,21 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 4. **Khổ của ống chưa đo bằng nguồn độc lập** (kế thừa hạn chế 4 của nội dung 3), mà luật mục đích lại dùng khổ ống để quy đổi tiêu cự.
 5. **Luật mục đích có ngưỡng là quyết định nhóm:** mốc trên 135mm và ngưỡng f/2.8 của chân dung (nguồn chỉ nói định tính về khẩu độ, không có mốc trên; bỏ mốc 135 thì thêm nhãn 51 ống). Mốc dưới 85mm theo nguồn làm 43 ống f ≤ 2.8 có `hi_eq` từ 75 đến dưới 85 (vd Fuji XF56mm, 84mm quy đổi) không được nhãn chân dung. **Macro** theo nguồn là độ phóng đại ≥ 0,5x, nhưng tiêu đề Amazon không có độ phóng đại nên dùng dấu hiệu thay thế (ống một tiêu cự có chữ Macro / Makro / Micro-Nikkor). Sai đã biết, *theo mô tả Amazon, chưa kiểm bằng trang hãng*: Sigma 24mm f/1.8 và 28mm f/1.8 "Macro" chỉ khoảng 1:2,7 nhưng được gắn nhãn; Sigma 70-300mm DG Macro, Tamron 70-300mm Di LD Macro đạt 1:2 nhưng bị bỏ sót vì là zoom.
 6. **Bỏ nhãn vlog (QĐ 4-11):** ở mức ống, nguồn chỉ yêu cầu góc rộng nên trùng phong cảnh; các tiêu chí vlog còn lại (màn xoay, cổng mic, lấy nét theo mặt, chống rung trong thân) là của thân máy, mà Amazon không có trường đáng tin để gắn cho thân.
-7. **Ống không rõ khổ (366 ống)** chỉ được nhãn khi tính với cả hệ số 1,0 và 1,6 đều ra nhãn đó, nên bị thiếu nhãn: phong cảnh 71, thể thao/chim 25, chân dung 61 ống bị bỏ vì hai cách tính lệch nhau. *(Chạy lại 08/10 tối trên `kg` mới, sau khi sửa code và khung ống Sony của nội dung 3: 354 ống không rõ khổ; bị bỏ 66 / 21 / 60. Log `run_c4_usecase_count_20261008_rt1b.log`.)*
+7. **Ống không rõ khổ (366 ống)** chỉ được nhãn khi tính với cả hệ số 1,0 và 1,6 đều ra nhãn đó, nên bị thiếu nhãn: phong cảnh 71, thể thao/chim 25, chân dung 61 ống bị bỏ vì hai cách tính lệch nhau. *(Chạy lại 08/10 tối trên `kg` mới, sau khi sửa code và khung ống Sony của nội dung 3: 354 ống không rõ khổ; bị bỏ 66 / 21 / 60. Log `run_c4_usecase_count_20261008_rt1b.log`. Chạy lại 08/10 khuya với luật v0.3 + bộ đọc v1: 354; bị bỏ 66 / 21 / 61, log `run_c4_usecase_count_20261008_n4fa.log`.)*
 8. **Bản sao nguồn:** trang Canon Europe chặn curl, Canon USA chặn truy cập từ Việt Nam; bản chính do Nam lưu bằng trình duyệt hoặc là bản Wayback. Trang chân dung có hai phiên bản ("around 85mm or longer" ngày 08/10/2026, "over 85mm" ngày 25/02/2024).
+9. **Số tiêu cự / khẩu độ là cận dưới, phần thiếu chủ yếu do bước khớp** (việc 2, kế hoạch `docs/reviews/n4_focal_aperture_plan.md`).
+   - Để tránh vòng lặp, bước khớp không dùng tiêu cự khi chấm tiêu cự. Khi nguồn không có đúng ống trong tiêu đề, bước khớp nối sang ống khác cùng hãng, cùng khẩu độ, cùng token chữ, chỉ khác tiêu cự. Ví dụ 10 listing Sigma 150-600mm Contemporary khớp với Sigma 100-400mm Contemporary của Lensfun.
+   - Đọc tay ca lệch: nửa fix 86/90 ô do đáp án; holdout 75/77 do đáp án, 0 do bộ đọc.
+   - Số "ô không sai do bộ đọc" (228/228, 202/202, 140/140) dựa trên phân loại của chính người sửa bộ đọc (Claude), không có người chấm thứ hai, nên chỉ là số phụ.
+   - Muốn có số sát hơn thì phải khớp bằng thông tin khác (mã sản phẩm như "SEL85F18", mã Canon "2309C002"…): chưa làm.
+10. **Chỉ chấm được 657 / 1.339 ống (49,1%)**: các ống khớp được tên với Lensfun / Wikidata, thường là ống phổ biến, tên rõ. 111 ống không có tên hãng trong phần chủ thể tiêu đề, nên không bao giờ vào tập đo. Ống mà regex cũ đọc sai chính thuộc tính dùng làm khóa khớp cũng không vào được (vd "F/1.8-22" khi chấm tiêu cự). Lensfun đọc đáp án từ tên ống bằng cùng họ regex với bộ đọc, nên lỗi regex xảy ra ở cả hai phía sẽ không bị thấy.
+11. **Holdout không hoàn toàn sạch:**
+    - khảo sát ngày 08/10 (`survey_kg_counts.py`) đã xem ca lệch trên toàn tập, với cách khớp lỏng hơn;
+    - khi viết kế hoạch, lệnh tìm dạng lỗi đã biết in 2 tiêu đề holdout (B01IPC1EOU, B071LTFPDQ);
+    - sửa S1 (lỗi đã biết "F/1.8-22") đổi đúng 1 ô holdout (B01IPC1EOU, K1 và K4).
+    
+    Ngoài ô này, mọi số tiêu cự và K2 của bộ đọc cũ và mới trên holdout giống hệt nhau.
+12. **Tiêu đề không ghi khẩu độ thì ống không có cạnh tiêu cự lẫn khẩu độ** (bộ đọc trả về rỗng, giữ như bản cũ). 51 / 1.339 ống không đọc được. Lý do giữ: tiêu cự đọc một mình không đo được, vì phép đo tiêu cự cần khẩu độ trong tiêu đề để khớp. "1.2.8" (lỗi gõ của "1:2.8") và ống cine ghi T-stop cũng không đọc.
 
 ### Chia đôi tập đánh giá (08/10/2026) — để sửa lỗi phân loại mà số đo vẫn độc lập
 - 1.493 sản phẩm khớp được chia thành **fix 746 / holdout 747**, phân tầng theo loại của đáp án:
@@ -224,7 +243,9 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 - [x] Nội dung 3, lần đo 3, H1–H3 → **đã chốt 08/10** (nhật ký; kế hoạch mục 8)
 - [ ] Nội dung 3: có lập tập kiểm tra mới chưa ai xem (khoảng 100 thân / ống **trong M**, Hải hoặc Quyền chấm mù; Red Team S1 (d)) để có số độc lập thật không
 - [x] Nội dung 3: xem ca sai của holdout để tách "đáp án sai" / "quy tắc sai" → **đã làm sau lần đo thứ hai, không sửa quy tắc** (mục 4, hạn chế 6e)
-- [ ] Nội dung 4–5: sửa `04_build_knowledge_graph.py` và `common_05.py` để đọc đầu ra nội dung 3 mới (hiện không chạy được). Thiết kế đã chốt 08/10, code để phiên sau
+- [ ] Nội dung 4–5: sửa `04_build_knowledge_graph.py` và `common_05.py` để đọc đầu ra nội dung 3 mới (hiện không chạy được). Thiết kế đã chốt 08/10, code để phiên sau. Script 04 phải đọc tiêu cự / khẩu độ bằng `ai/pipeline/lens_specs.read_title` (v1)
+- [ ] Nội dung 4, việc 2: có cần số tiêu cự sát hơn không? Muốn vậy phải khớp lại bằng mã sản phẩm (SEL85F18, 2309C002…), tức sửa bước khớp chứ không phải bộ đọc, và cần holdout mới (hạn chế nội dung 4, điểm 9)
+- [ ] Nội dung 4: ống có tiêu cự mà tiêu đề không ghi khẩu độ (vd "NIKKOR Z 24-200mm VR") có nên vẫn có cạnh tiêu cự không (hiện: không; hạn chế 12)
 - [x] Nội dung 4: 8 câu [HỎI] của đề xuất thiết kế → **đã chốt 08/10** (`docs/content4_design.md` mục 9, nhật ký)
 - [x] Nội dung 4: mẫu số của CVR mới → **đã chốt 08/10** (QĐ 4-9, xem nhật ký)
 - [x] Nội dung 4: cách đánh dấu cạnh `has_spec → mount` của phụ kiện / ngàm chuyển → **đã chốt 08/10** (QĐ 4-10)
@@ -302,3 +323,9 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 | 08/10/2026 | Xem ca sai holdout của lần đo 3 **chỉ để phân loại**, không sửa quy tắc hay bộ đánh giá. Bảng `ai/survey/content3/n3_lan3_holdout_errors.csv` (người phân loại: Claude), đếm bằng `n3_lan3_errors.py --dem`: 26 ô sai / 25 sản phẩm, đều thuộc H733; trong 13 sản phẩm lệch về loại, 2 do quy tắc; 11 ô ngàm sai đều do đáp án; 1 ô khung do quy tắc | Kế hoạch mục 9.8. Thay câu "quy tắc chỉ sai ở 4 sản phẩm" (T7) |
 | 08/10/2026 | STATUS / CHANGELOG: số không còn log ghi "không còn log, không dùng trong báo cáo"; tính lại "vấn đề cốt lõi" bằng `core_coverage.py` (cũ 257/28.867 = 0,89% → mới: phần tử M 1.570/27.940 = 5,62%, chạm 8,48% tương tác k-core); sửa mâu thuẫn hạn chế 6(b)/6(e); bỏ phần chấm tay 200 mẫu đã cũ; thêm hạn chế 10–16 | Nam yêu cầu, theo Red Team phụ lục A và mục 4 |
 | 08/10/2026 | Nội dung 3 giữ mức **Đã kiểm thử** (chưa lên "Đã đánh giá") | Đã có số lần 3 và đã qua Red Team, nhưng số không độc lập (hạn chế 10) và Nam chưa tự trình bày lại được |
+| 08/10/2026 | Thêm `ai/data/kg_*/` vào `.gitignore` (commit `4a24afa`) | Nam yêu cầu: các thư mục sao lưu / nháp của `ai/data/kg/` (`kg_e8b39e6/`, `kg_draft_*/`…) không lên git |
+| 08/10/2026 | **Nội dung 4, việc 2: đăng ký trước phép đo tiêu cự / khẩu độ** (`docs/reviews/n4_focal_aperture_plan.md`, commit `c14300e`). Bộ đọc tách thành `ai/pipeline/lens_specs.py` (v0 chép nguyên `eval_external`, kiểm 0 ống khác); đáp án khớp không dùng thuộc tính cần đo, token chữ trùng hai chiều (`fa_match.py`); tải Wikidata P2151 (`focal_length_20261008.json`, 821 item). Chia fix / holdout **theo nhóm** ống có chung mục nguồn, một lần chia cho cả hai phép đo (seed 20261010): 332 / 325 ống | Nam yêu cầu, theo khuôn N3.7. Tách bộ đọc để không đổi bộ đánh giá nội dung 3. Chia theo nhóm để các listing của cùng một ống không nằm ở cả hai nửa. 657/1.339 ống có đáp án; holdout: tiêu cự 270 ống, khẩu độ 228 ống (trên mức dừng 50). Ghi trung thực: khảo sát 08/10 đã xem ca lệch toàn tập; lệnh tìm lỗi đã biết in 2 tiêu đề holdout |
+| 08/10/2026 | **Bộ đọc v1** (commit `e47e941`): S1 "F/1.8-22" (a2 ≥ 11 là khẩu độ khép; ngưỡng theo Lensfun: zoom có đầu tele lớn nhất f/9); S2 "12mm - 24mm"; S3 khẩu độ sau "with" (ca fix B07PZB3YKH). Không sửa "1.2.8" (lỗi gõ đơn lẻ), không đọc một phần | Chỉ theo nửa fix và 2 lỗi đã biết. Nửa fix: 90 ô lệch, 86 do đáp án, 2 do bộ đọc, 2 tiêu đề không ghi khẩu độ (`n4_fa_fix_errors.csv`). 13/1.339 ống đổi kết quả đọc (1 ở holdout). Ví dụ dựng tay 38/38 đúng |
+| 08/10/2026 | **Chạy holdout một lần** (log `n4_fa/run_fa_eval_holdout_20261008.log`; số commit `c9a369f` trước khi đọc ca lệch): tiêu cự đúng khoảng nút 81,7% (Lensfun) / 82,9% (Wikidata), khẩu độ đúng khoảng nút 97,8%. Rồi đọc 77 ô lệch chỉ để phân loại (`n4_fa_holdout_errors.csv`, commit `282c7e3`): 0 do bộ đọc | Theo kế hoạch mục 7.B. Không thấy lỗi script, không chạy lại. Số tiêu cự là cận dưới vì gần như mọi ca lệch là khớp nhầm (hạn chế nội dung 4, điểm 9) |
+| 08/10/2026 | `usecase_rules.toml` v0.3: 3 câu trích có "..." thay bằng đoạn nguyên văn liền; `count_usecase.py` coi "..." là THIẾU và dùng bộ đọc v1. Nhãn: phong cảnh 559 → 560, chân dung 144 → 147 (SEL85F18, 2 × SEL90M28G), thể thao/chim 287, macro 86 | Nam yêu cầu, chuẩn nội dung 3. Chạy 2 lần trùng sha256 |
+| 08/10/2026 | Nội dung 4 giữ mức **Đã triển khai** (bản cũ của Hải); phần làm lại mới có thiết kế, bộ đọc và số đo của bộ đọc | Chưa dựng đồ thị mới, chưa chạy kiểm tra toàn vẹn (`content4_design` mục 6A) |

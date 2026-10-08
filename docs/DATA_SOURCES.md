@@ -50,6 +50,16 @@ Mọi dữ liệu bên ngoài mà nhóm dùng. Dữ liệu **không đưa lên g
 | Dùng để chấm | **Loại** và **ngàm** (thân và ống) |
 | Hạn chế | Không có khổ cảm biến. Thân Canon APS-C thường ghi cả "EF" và "EF-S" → quy về `canon_efs`. Một số ống nằm ở lớp "product model" → script nhận ra ống khi tên có tiêu cự và khẩu độ |
 
+**Bổ sung 08/10/2026 (nội dung 4, việc 2): tiêu cự P2151**
+
+| | |
+|---|---|
+| Truy vấn | `ai/data/external/wikidata/query_focal_length.rq` (ghi bởi `ai/survey/content4/fetch_wikidata_focal.py`): item thuộc cùng các lớp như trên, có **P2151 (focal length)**; lấy từng giá trị, đơn vị, hạng, nhãn và bí danh tiếng Anh, hãng |
+| Thời điểm | `2026-10-08T15:11:09Z` (`focal_length_20261008.meta.txt`) |
+| File | `ai/data/external/wikidata/focal_length_20261008.json` (1.223 dòng, 821 item; mọi giá trị đơn vị milimét, hạng thường), sha256 `42feaf8db5518881a75a259ab9e3573941c6860950bd0913ac33535564763fc1` |
+| Dùng để chấm | **Tiêu cự** đọc từ tiêu đề ống (kế hoạch `docs/reviews/n4_focal_aperture_plan.md`). 1 giá trị = ống một tiêu cự, 2 giá trị = zoom |
+| Hạn chế | Có zoom chỉ ghi 1 giá trị (vd Nikon AF 24-85mm chỉ ghi 24): 5 ô ở nửa fix, 9 ô ở holdout. Không có khẩu độ đáng kể (P6790 rất hiếm) |
+
 ### 2.4. Các trang nguồn của bảng luật `ai/config/mount_rules.toml` và bảng mã `ai/config/sony_lens_codes.toml`
 Từ 08/10/2026 (bảng luật v0.5, theo Red Team T5) áp **chuẩn QĐ nội dung 4 – 15**: mỗi trang có bản sao HTML + bản văn bản, sha256 của cả hai ghi trong TOML; mỗi luật có danh sách căn cứ (nguồn + câu trích nguyên văn, liền một đoạn); script `ai/survey/content3/check_rule_sources.py` kiểm sha256, kiểm bản sao có phần nội dung bài (không phải trang lỗi / trang chặn) và kiểm từng câu trích. Lần kiểm 08/10: 16 nguồn + 13 mã Sony đều OK, mọi căn cứ OK (log `ai/data/survey/run_check_rule_sources_20261008_rt1b_lan2.log`).
 
@@ -108,11 +118,13 @@ SHA2=07da7acbf97348405cf859ce76a00ac642ba1fc5
 # https://raw.githubusercontent.com/openMVG/CameraSensorSizeDatabase/$SHA2/sensor_database.csv
 
 # Wikidata: chạy lại query_mount_models.rq ở https://query.wikidata.org/sparql (kết quả có thể khác vì Wikidata luôn được sửa)
+# Wikidata P2151: ai\.venv\Scripts\python.exe ai/survey/content4/fetch_wikidata_focal.py (ghi file mới theo ngày, không ghi đè)
 ```
 
 Khi gọi web, User-Agent chỉ ghi tên dự án chung chung, **không** kèm thông tin cá nhân (quy tắc trong `CLAUDE.md`).
 
 ## 4. Script dùng các nguồn này
 - `ai/survey/content3/eval_external.py`: đo độ chính xác của quy tắc. Kết quả ở `ai/data/survey/eval_external_*.{csv,json}`, `run_eval_external.log`.
-- `ai/survey/content4/count_usecase.py`: kiểm bản sao và câu trích của luật mục đích sử dụng, đếm số ống mỗi nhãn. Log `ai/data/survey/run_c4_usecase_count.log` (lần chạy lại 08/10 tối: `run_c4_usecase_count_20261008_rt1b.log`).
+- `ai/survey/content4/count_usecase.py`: kiểm bản sao và câu trích của luật mục đích sử dụng, đếm số ống mỗi nhãn. Log `ai/data/survey/run_c4_usecase_count.log` (lần chạy lại 08/10 tối: `run_c4_usecase_count_20261008_rt1b.log`; 08/10 khuya, luật v0.3 + bộ đọc v1: `run_c4_usecase_count_20261008_n4fa.log`).
+- `ai/survey/content4/fa_match.py`, `fa_eval.py`: đo bước đọc tiêu cự / khẩu độ bằng Lensfun và Wikidata P2151. Log trong `ai/data/survey/n4_fa/`.
 - `ai/survey/content3/check_rule_sources.py`: kiểm bản sao và câu trích của bảng luật ngàm và bảng mã ống Sony; kiểm mọi mã SEL/SAL cần tra trong dữ liệu đều có trong bảng. Log `ai/data/survey/run_check_rule_sources_*.log`.

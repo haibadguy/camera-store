@@ -35,6 +35,39 @@ Theo kế hoạch `docs/reviews/n4_focal_aperture_plan.md` (commit `c14300e`; s�
 - Bộ đọc cũ trên cùng holdout: mọi số tiêu cự **giống hệt**. Khẩu độ: K1 222/228 = 97,4%, K2 223/228, K3 223/228, K4 222/228. Tức là sửa S1–S3 chỉ đổi 1 ô (K1, K4 tăng 1).
 - **Đọc số cho đúng:** trên nửa fix, 86/90 ô lệch là do đáp án (khớp nhầm sang ống khác mà nguồn có, hoặc Wikidata chỉ ghi 1 giá trị P2151 cho zoom), chỉ 2 ô do bộ đọc (kế hoạch 9.1). Vì vậy số tiêu cự thô là **cận dưới**, phần thiếu chủ yếu do bước khớp, không phải do bộ đọc. Holdout: 72 ống có đáp án tiêu cự từ cả hai nguồn, **chỉ 53 ống hai đáp án trùng** (nửa fix: 72/75), dấu hiệu nhiều ca khớp nhầm.
 
+**Phân loại ca lệch của holdout** (sau khi đã commit số ở trên, commit `c9a369f`; chỉ để báo cáo, không sửa bộ đọc).
+- Bảng: `ai/survey/content4/n4_fa_holdout_errors.csv`, người phân loại Claude. Đếm: `fa_errors.py`, log `ai/data/survey/n4_fa/run_fa_errors_holdout_20261008.log`.
+
+| Phép đo / nguồn | Ô | Lệch | Khớp nhầm ống khác | Nguồn thiếu giá trị | Tiêu đề không ghi khẩu độ | **Do bộ đọc** |
+|---|---:|---:|---:|---:|---:|---:|
+| Khẩu độ / Lensfun | 228 | 5 | 3 | 0 | 2 | **0** |
+| Tiêu cự / Lensfun | 202 | 40 | 40 | 0 | 0 | **0** |
+| Tiêu cự / Wikidata | 140 | 32 | 23 | 9 | 0 | **0** |
+
+- Số phụ (kế hoạch 9.2): ô không sai do bộ đọc 228/228, 202/202, 140/140. Bootstrap cho khoảng [100–100] vì không có ô sai nào. Khoảng này **không** có nghĩa là bộ đọc chắc chắn đúng 100%.
+- Một ca nhắc riêng: B07GRSTN82 là ống cine "Meike 25mm T2.2". Tiêu đề ghi T-stop, không ghi số f, nên bộ đọc trả rỗng (đúng). Bước khớp lại nối nó với Meike 25mm f/1.8, là một ống khác.
+- Ví dụ khớp nhầm điển hình: 10 listing "Sigma 150-600mm Contemporary" khớp với "Sigma 100-400mm Contemporary" của Lensfun (cùng khẩu độ F5-6.3, cùng token chữ), vì Lensfun không có ống 150-600 Contemporary.
+- Chỉ đọc ca **lệch**. Ca mà bộ đọc và đáp án cùng sai giống nhau thì không thấy được (Lensfun và bộ đọc dùng cùng họ regex, kế hoạch 8.2).
+
+**Kèm theo: luật mục đích** (`ai/config/usecase_rules.toml` v0.2 → v0.3, `count_usecase.py`)
+- 3 câu trích có "..." thay bằng đoạn nguyên văn liền, theo chuẩn nội dung 3 (không ghép đoạn): Canon US lens guide (phong cảnh), Canon EU landscape (phong cảnh), Canon EU beginner (thể thao / chim). Cả 3 kiểm OK trên bản sao đã lưu.
+- `count_usecase.py`: câu trích có "..." nay bị coi là THIẾU; đọc tiêu đề bằng `lens_specs` v1.
+- Đếm lại. Log `ai/data/survey/run_c4_usecase_count_20261008_n4fa.log`; chạy 2 lần, CSV và log trùng sha256. Bảng nhãn cũ sao lưu ở `usecase_labels_draft_20261008_rt1b.csv`, so bằng `compare_usecase_labels.py` (log `run_c4_usecase_compare_rt1b_vs_n4fa_20261008.log`).
+
+| Nhãn | Trước (`_rt1b`, /1.287) | Sau (/1.288) |
+|---|---:|---:|
+| Phong cảnh | 559 | **560** |
+| Thể thao / chim | 287 | 287 |
+| Chân dung | 144 | **147** |
+| Macro | 86 | 86 |
+| Không nhãn nào | 309 | 308 |
+
+- 13 ống đổi kết quả đọc, 4 ống đổi nhãn:
+  - SEL85F18 thêm chân dung (lỗi "F/1.8-22");
+  - 2 listing SEL90M28G 90mm f/2.8 Macro thêm chân dung;
+  - Lumix G Vario 14-140mm thêm phong cảnh (trước không đọc được vì khẩu độ nằm sau "with").
+- **Phải làm theo:** khi dựng đồ thị (việc 3), script 04 dùng `lens_specs.read_title`, không dùng `eval_external.lens_sig`.
+
 ## 08/10/2026 (khuya): lần đo thứ 3 của nội dung 3 (đăng ký trước). Nhánh `nam/content4`
 
 Theo kế hoạch `docs/reviews/n3_eval_lan3_plan.md` (commit `42da14b`; mục 8 đã chốt và mục 9 sửa đổi ở commit `fb30c65`, **trước khi đo**). Quy tắc không đổi (`ea6abb0`). Holdout **không sạch** (kế hoạch mục 2), nên đây là phép đo lại có điều chỉnh, không phải phép đo độc lập.
