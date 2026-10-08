@@ -56,6 +56,11 @@ ai/data/kg/user_item_train_edges.csv
 ai/data/kg/kg_edges_interacted_with.csv
 ai/checkpoints/
 results/*.pt
+# nội dung 5 mới: giữ result.json / config.json; bỏ checkpoint, mảng từng người dùng (lớn) và các lần chạy thử
+results/n5/**/*.pt
+results/n5/**/*.pt.tmp
+results/n5/**/*.npy
+results/n5/smoke_*/
 *.gz
 *.parquet
 ai/data/kg_v62abf54/

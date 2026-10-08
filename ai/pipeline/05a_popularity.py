@@ -1,159 +1,112 @@
 """
-05a_popularity.py -- Popularity baseline (Global + MountAware).
+05a_popularity.py -- Popularity (Global) và Popularity-MountAware, theo docs/reviews/n5_eval_plan.md mục 6.1, 6.2.
 
-Chay tu thu muc goc camera-store:
-  python ai/pipeline/05a_popularity.py
+Viết lại 09/10/2026 (lỗi L4, L6, L7, L8, L14 của kế hoạch mục 2).
 
-Output:
-  results/popularity_global.json
-  results/popularity_mountaware.json
+Ví dụ: điểm của sản phẩm = số người dùng có nó trong train. Người dùng có thân Canon EOS (EF-S) trong train:
+MountAware đặt −∞ cho ống mà common_05.judge_lens = True ("chắc chắn vi phạm", vd ống Nikon F); ống không phán
+được (ngoài M, "không chắc", có cặp "không biết") và mọi sản phẩm không phải ống giữ nguyên. Người không có thân:
+không lọc gì (Nam chốt 08/10 khuya). Bản của Hải loại MỌI ống ngoài tập M = 1 của người dùng, kể cả người không có thân.
+
+Phép kiểm theo kế hoạch: CVR@K của MountAware phải bằng 0 (script DỪNG nếu khác 0).
+
+Chạy (từ thư mục camera-store):
+  ai\\.venv\\Scripts\\python.exe ai/pipeline/05a_popularity.py --split val --out results/n5/<nhãn mới>
+Chỉ nhận --split val: test được chấm một lần bằng script chạy test (kế hoạch mục 7.2 bước 5), chưa viết.
 """
 
+import argparse
 import json
 import sys
 from pathlib import Path
 
 import numpy as np
+import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import common_05 as C  # noqa: E402
+import eval_05 as E    # noqa: E402
 
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
 
 
-def build_pop_scores(train_dict):
-    """Dem tan suat xuat hien cua moi item trong train -> np.array [N_ITEMS]."""
+def build_pop_scores(train):
+    """Số người dùng có sản phẩm trong train (train đã gộp lặp nên = số cặp)."""
     counts = np.zeros(C.N_ITEMS, dtype=np.float64)
-    for items in train_dict.values():
+    for items in train.values():
         for iid in items:
-            if 0 <= iid < C.N_ITEMS:
-                counts[iid] += 1.0
+            counts[iid] += 1.0
     return counts
 
 
-def run_popularity(mode: str, pop_scores, pos_dict, neg_dict,
-                   cvr_users, train_dict, body_to_lenses, item_type):
-    """
-    mode: 'global' hoac 'mount_aware'.
-    Global:      rank candidates theo pop_scores, khong filter ngan.
-    MountAware:  lens khong trong valid_lenses_u nhan score = -inf khi sampled eval.
-                 CVR tinh full-catalog (giong Global -- chi ranking khac nhau).
-    """
-    rng = np.random.default_rng(C.SEED)
+def global_scorer(pop):
+    p = torch.as_tensor(pop, dtype=torch.float32, device=E.DEVICE)
+    return lambda uids: p.unsqueeze(0).expand(len(uids), -1).clone()
 
-    # -- Sampled eval (Hit / NDCG) -----------------------------------------
-    def score_fn_sampled(uid, pos_iid, neg_iids):
-        candidates = [pos_iid] + list(neg_iids)
-        scores = pop_scores[candidates].copy()
 
-        if mode == "mount_aware":
-            # Lay valid lenses cua user nay
-            linked_bodies = cvr_users.get(uid, set())
-            valid_lenses = set()
-            for b in linked_bodies:
-                valid_lenses |= body_to_lenses.get(b, set())
-            # Chi filter lens; body/accessory giu nguyen
-            for idx, iid in enumerate(candidates):
-                if item_type[iid] == 1 and iid not in valid_lenses:
-                    scores[idx] = -np.inf
+def mountaware_scorer(pop, lens_cols, viol_mask):
+    """viol_mask[u, j] = True: ống lens_cols[j] chắc chắn vi phạm với thân của u -> −∞."""
+    p = torch.as_tensor(pop, dtype=torch.float32, device=E.DEVICE)
+    cols = torch.as_tensor(lens_cols, device=E.DEVICE)
+    mask = torch.as_tensor(viol_mask, device=E.DEVICE)
 
-        return scores
-
-    hit_ndcg = C.sampled_eval(
-        score_fn=score_fn_sampled,
-        pos_dict=pos_dict,
-        neg_dict=neg_dict,
-        rng=rng,
-    )
-
-    # -- Full-catalog CVR --------------------------------------------------
-    def score_fn_full(uid):
-        scores = pop_scores.copy()
-        if mode == "mount_aware":
-            linked_bodies = cvr_users.get(uid, set())
-            valid_lenses = set()
-            for b in linked_bodies:
-                valid_lenses |= body_to_lenses.get(b, set())
-            for iid in range(C.N_ITEMS):
-                if item_type[iid] == 1 and iid not in valid_lenses:
-                    scores[iid] = -np.inf
-        return scores
-
-    cvr = C.full_catalog_cvr(
-        score_fn=score_fn_full,
-        cvr_users=cvr_users,
-        train_dict=train_dict,
-        body_to_lenses=body_to_lenses,
-        item_type=item_type,
-    )
-
-    return {**hit_ndcg, **cvr}
+    def f(uids):
+        S = p.unsqueeze(0).expand(len(uids), -1).clone()
+        sub = S[:, cols]
+        sub[mask[uids]] = -float("inf")
+        S[:, cols] = sub
+        return S
+    return f
 
 
 def main():
-    print("=" * 60)
-    print("MUC 5a: POPULARITY BASELINE")
-    print("=" * 60)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--split", choices=["val"], required=True)
+    ap.add_argument("--out", required=True, help="thư mục kết quả mới (đã có thì DỪNG)")
+    a = ap.parse_args()
+    out = Path(a.out)
+    assert not out.exists(), f"thư mục đã có, không ghi đè: {out}"
+    out.mkdir(parents=True)
+    log = E.Log(out / f"run_{E.now_tag()}.log")
+    git = E.git_state()
+    log(f"05a Popularity | split {a.split} | git {git} | thiết bị {E.DEVICE}")
 
-    print("\nLoading data...")
-    train_dict   = C.load_train()
-    test_pos     = C.load_pos("test")
-    test_neg     = C.load_negatives("test")
-    item_type    = C.load_item_type()
-    body_to_lenses = C.load_body_to_lenses()
-    cvr_users    = C.build_train_bodies(train_dict, body_to_lenses, item_type)
+    ev = E.EvalContext(a.split)
+    pop = build_pop_scores(ev.train)
+    log(f"người dùng {len(ev.split.users):,} | cặp train {int(pop.sum()):,} | sản phẩm có lượt > 0 "
+        f"{int((pop > 0).sum()):,} | số giá trị điểm khác nhau {len(np.unique(pop)):,} | người có thân "
+        f"{len(ev.bodies):,}")
+    log(f"kịch bản ({a.split}): " + ", ".join(f"{g} {int((ev.scn_lab == g).sum()):,}"
+                                           for g in ("lap_duoc", "khong_lap_duoc", "khong_phan_duoc"))
+        + f" | không lắp được có cặp requires_adapter {int(ev.scn_adp.sum()):,}")
 
-    print(f"  train users:       {len(train_dict):,}")
-    print(f"  test users:        {len(test_pos):,}")
-    print(f"  CVR users (body):  {len(cvr_users):,}")
+    lens_cols, viol = E.certain_violation_mask(ev.bodies, ev.ctx)
+    n_users_filtered = int(viol.any(1).sum())
+    in_m = np.isin(ev.split.pos, lens_cols)
+    n_pos_filtered = int(viol[ev.split.users[in_m], np.searchsorted(lens_cols, ev.split.pos[in_m])].sum())
+    log(f"MountAware: {n_users_filtered:,} người dùng có ít nhất 1 ống bị lọc; tổng (người, ống) bị lọc "
+        f"{int(viol.sum()):,}; người có item {a.split} bị lọc {n_pos_filtered:,}")
 
-    print("\nBuilding popularity scores...")
-    pop_scores = build_pop_scores(train_dict)
-    top5 = np.argsort(-pop_scores)[:5]
-    print(f"  Top-5 items by frequency: {top5.tolist()}")
-    print(f"  Max freq: {int(pop_scores.max())} | Items with freq>0: {int((pop_scores>0).sum())}")
+    results = {"split": a.split, "git": git, "inputs_sha256": E.inputs_sha256(), "tie_seed": E.TIE_SEED,
+               "n_users_filtered_mountaware": n_users_filtered, "models": {}}
+    for name, scorer in (("Popularity", global_scorer(pop)),
+                         ("Popularity-MountAware", mountaware_scorer(pop, lens_cols, viol))):
+        log(f"\n=== {name} ===")
+        pref = "pop_" if name == "Popularity" else "popma_"
+        res = E.evaluate(scorer, ev, log=log, save_dir=out, prefix=pref)
+        results["models"][name] = res
+        if name == "Popularity-MountAware":
+            bad = {k: res["cvr"][f"cvr_n_violations@{k}"] for k in E.K_LIST}
+            bad_l = {f"{g}@{k}": v["lens_only_cvr"][f"cvr@{k}"]
+                     for g, v in res["scenario"].items() if v["n_users"] for k in E.K_LIST}
+            log(f"kiểm: số vi phạm của MountAware (toàn catalog) = {bad}; CVR kịch bản chỉ ống = {bad_l}")
+            assert all(v == 0 for v in bad.values()), "CVR của MountAware khác 0 -> lỗi code"
+            assert all(v == 0 or np.isnan(v) for v in bad_l.values()), "CVR kịch bản của MountAware khác 0"
 
-    # -- Global -----------------------------------------------------------
-    print("\nRunning Popularity-Global...")
-    global_results = run_popularity(
-        mode="global",
-        pop_scores=pop_scores,
-        pos_dict=test_pos,
-        neg_dict=test_neg,
-        cvr_users=cvr_users,
-        train_dict=train_dict,
-        body_to_lenses=body_to_lenses,
-        item_type=item_type,
-    )
-    C.print_results("Popularity-Global", global_results)
-
-    out_global = C.RESULTS_DIR / "popularity_global.json"
-    with open(out_global, "w") as f:
-        json.dump({"model": "Popularity-Global", "results": global_results}, f, indent=2)
-    print(f"\nSaved: {out_global}")
-
-    # -- MountAware -------------------------------------------------------
-    print("\nRunning Popularity-MountAware...")
-    ma_results = run_popularity(
-        mode="mount_aware",
-        pop_scores=pop_scores,
-        pos_dict=test_pos,
-        neg_dict=test_neg,
-        cvr_users=cvr_users,
-        train_dict=train_dict,
-        body_to_lenses=body_to_lenses,
-        item_type=item_type,
-    )
-    C.print_results("Popularity-MountAware", ma_results)
-
-    out_ma = C.RESULTS_DIR / "popularity_mountaware.json"
-    with open(out_ma, "w") as f:
-        json.dump({"model": "Popularity-MountAware", "results": ma_results}, f, indent=2)
-    print(f"Saved: {out_ma}")
-
-    print("\n=== HOAN TAT 05a ===")
-    print("CVR duoc tinh tren", len(cvr_users), "users co body linked trong train.")
+    (out / "result.json").write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
+    log(f"\n-> {out / 'result.json'}")
+    log.close()
 
 
 if __name__ == "__main__":
