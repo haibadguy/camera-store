@@ -56,6 +56,28 @@ Mọi dữ liệu bên ngoài mà nhóm dùng. Dữ liệu **không đưa lên g
 - Tất cả được mở và đọc ngày 07/10/2026, bằng curl hoặc trình duyệt tích hợp.
 - Trang B&H (bán lẻ) bật kiểm tra chống bot nên **không đọc**. Ba nguồn bán lẻ đã được thay bằng trang hãng.
 
+### 2.5. Các trang nguồn của luật mục đích sử dụng `ai/config/usecase_rules.toml` (nội dung 4, 08/10/2026)
+- 12 trang của Canon và Nikon. URL, câu trích, sha256 của bản HTML và bản văn bản nằm trong `[sources.*]` của file TOML. Script `ai/survey/content4/count_usecase.py` kiểm sha256, kiểm bản sao có phần nội dung bài, và kiểm từng câu trích (cả 4 luật đều OK).
+- Thư mục gốc: `ai/data/external/usecase_sources/` (không lên git). Bản văn bản `.txt` trích từ `.html` bằng `ai/survey/content4/html_to_text.py`.
+
+| Nguồn (khóa TOML) | Cách lưu | Bản chính |
+|---|---|---|
+| `canon_eu_beginner`, `canon_eu_landscape`, `canon_eu_wildlife`, `canon_eu_portrait`, `canon_eu_vlogging`, `canon_eu_best_vlogging` | **Nam lưu bằng trình duyệt ngày 08/10/2026** (Ctrl+S, trang web hoàn chỉnh). Trang chặn curl (HTTP 403) | `manual/canon_eu_*.html` (file gốc tên theo tiêu đề trang vẫn giữ trong `manual/`) |
+| `canon_us_lens_guide` | Nam báo: "Nam lưu bản trực tiếp qua VPN US ngày 08/10/2026 (trang chặn truy cập từ Việt Nam)". **Nhưng** dòng "saved from url" trong file là bản Wayback `https://web.archive.org/web/20260904221559/https://www.usa.canon.com/lens-buying-guide` và trang có thanh Wayback Machine → **chờ Nam xác nhận** | `manual/canon_us_lens_guide_20261008.html` |
+| `canon_us_wildlife`, `canon_us_wide_angle` | curl bản Wayback thô (`id_`) ngày 08/10/2026; trang hãng chặn truy cập từ Việt Nam | `canon_us_wildlife_wb20260517.html`, `canon_us_wide_angle_wb20260306.html` |
+| `nikon_85_f18g`, `nikon_macro`, `nikon_105_f2d` (không dùng) | curl ngày 08/10/2026 | `nikon_*.html` |
+
+- **Bản phụ công khai (Wayback, chỉ để đối chiếu, không dùng kiểm câu trích):** Claude gửi Save Page Now ngày 08/10/2026 cho 6 trang Canon Europe; tải bản thô về `wayback_20261008/` (sha256 ở `wayback_20261008/sha256.tsv`), cả 6 đều có phần nội dung bài:
+  - beginner's guide: https://web.archive.org/web/20261008062749/https://www.canon-europe.com/get-inspired/tips-and-techniques/beginners-guide-lenses/
+  - landscape: https://web.archive.org/web/20261008062826/https://www.canon-europe.com/get-inspired/tips-and-techniques/landscape-photography-lenses/
+  - wildlife: https://web.archive.org/web/20261008062907/https://www.canon-europe.com/get-inspired/tips-and-techniques/best-wildlife-lenses/
+  - portrait: https://web.archive.org/web/20261008063012/https://www.canon-europe.com/get-inspired/tips-and-techniques/portrait-lenses-tips-tricks/
+  - vlogging tips: https://web.archive.org/web/20261008063138/https://www.canon-europe.com/get-inspired/tips-and-techniques/how-to-start-vlogging/
+  - best vlogging kit: https://web.archive.org/web/20261008063223/https://www.canon-europe.com/get-inspired/tips-and-techniques/best-vlogging-cameras/
+  - Bản chụp thứ 7 (Canon USA lens guide) bị dừng giữa chừng → bỏ qua.
+- **Khác biệt phiên bản:** trang chân dung bản lưu 08/10/2026 ghi "around 85mm or longer"; bản Wayback 25/02/2024 (`canon_eu_portrait_wb20240225.html`) ghi "a focal length over 85mm". Trích theo bản 08/10/2026.
+- **Nguồn bỏ:** trang Nikon 105mm f/2D (không có chữ "portrait"). Các bản Wayback cũ hơn tải trước đó (`*_wb202604*.html`, `*_wb20260511.html`, `canon_us_lens_buying_guide_wb20260904.html` — bản thô thiếu nội dung do JavaScript sinh) không dùng.
+
 ## 3. Cách tải lại
 
 ```bash
@@ -74,3 +96,4 @@ Khi gọi web, User-Agent chỉ ghi tên dự án chung chung, **không** kèm t
 
 ## 4. Script dùng các nguồn này
 - `ai/survey/content3/eval_external.py`: đo độ chính xác của quy tắc. Kết quả ở `ai/data/survey/eval_external_*.{csv,json}`, `run_eval_external.log`.
+- `ai/survey/content4/count_usecase.py`: kiểm bản sao và câu trích của luật mục đích sử dụng, đếm số ống mỗi nhãn. Log `ai/data/survey/run_c4_usecase_count.log`.

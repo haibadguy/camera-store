@@ -39,7 +39,7 @@ Lưu ý rút ra từ chính ví dụ này: ống EF 50mm là ống full-frame, t
 | `sensor_format` (khổ cảm biến) | 7: ff, apsc, aps_h, four_thirds, one_inch, medium, small | cột `khung` + ngàm (vd mft → four_thirds, nikon_1 → one_inch, fuji_g → medium) | Thân: 100% / 99,2%. **Ống: chưa đo** (hạn chế 4 của nội dung 3) |
 | `focal_range` (tiêu cự) | 6 khoảng (mục 3) | tiêu đề ống | **Chưa**, đo ở việc 2 (mục 5) |
 | `aperture_class` (khẩu độ tối đa) | 5 khoảng (mục 3) | tiêu đề ống | **Chưa**, đo ở việc 2 (mục 5) |
-| `usecase` (mục đích sử dụng) | 4: chân dung, phong cảnh, thể thao/chim, vlog | luật nhóm đặt (mục 4) | Không đo được: đây là quy tắc, không phải sự thật |
+| `usecase` (mục đích sử dụng) | 4: chân dung, phong cảnh, thể thao/chim, macro (vlog đã bỏ, QĐ 4-11) | luật nhóm đặt (mục 4, `ai/config/usecase_rules.toml`) | Không đo được: đây là quy tắc, không phải sự thật |
 | ~~dải ISO~~ | 0 | **không có nguồn đáng tin**, xem mục 3.3 | — |
 
 Tổng khoảng 95.650 nút. Mỗi `item` có thêm vector đặc trưng: one-hot loại (4 chiều) và các số đọc được (tiêu cự min/max, khẩu độ ở hai đầu), để trống thì ghi 0 kèm cờ "không có".
@@ -76,6 +76,20 @@ Lấy nguyên từ nội dung 3, không thêm quy tắc mới.
 ## 4. Mục đích sử dụng (quy tắc nhóm đặt ra)
 
 **Ghi rõ trong báo cáo: đây là quy tắc do nhóm tự đặt, dựa trên khuyến nghị của tài liệu nhiếp ảnh, không phải nhãn thật.** Luật chỉ áp cho ống kính, dựa trên tiêu cự quy đổi (`lo`–`hi`) và khẩu độ.
+
+> **Cập nhật 08/10/2026 (việc 1 đã làm, tin phần này hơn bảng nháp bên dưới).** Luật chốt nằm ở `ai/config/usecase_rules.toml` (v0.2), đếm bằng `ai/survey/content4/count_usecase.py` (log `ai/data/survey/run_c4_usecase_count.log`). Mỗi câu trích được script kiểm trên bản sao đã lưu (OK cả 4 luật).
+>
+> | Nhãn | Luật chốt | Căn cứ đọc toàn văn (bản sao đã lưu) | Số ống (/1.285) |
+> |---|---|---|---:|
+> | Phong cảnh | `lo_eq` ≤ 35 | Canon EU beginner's guide, Canon EU wildlife, Canon USA lens guide, Canon USA wide-angle, Canon EU landscape | 556 |
+> | Thể thao / chim | `hi_eq` ≥ 300 | Canon EU beginner's guide, Canon USA wildlife, Canon EU wildlife | 285 |
+> | Chân dung | phủ một tiêu cự quy đổi trong [85, 135] **và** khẩu độ đầu tele ≤ f/2.8 | Canon EU portrait ("around 85mm or longer"), Nikon 85mm f/1.8G. Mốc trên 135 và ngưỡng f/2.8: **quyết định nhóm** | 144 |
+> | Macro | ống một tiêu cự có chữ Macro / Makro / Micro-Nikkor | Canon EU beginner's guide (≥ 0,5x), Nikon "Macro Lenses" (1:2 hoặc 1:1). Dấu hiệu thay thế bằng tiêu đề: **quyết định nhóm** | 86 |
+> | ~~Vlog~~ | **bỏ** (QĐ 4-11) | Canon EU vlogging tips, Canon EU best vlogging kit: ở mức ống chỉ yêu cầu góc rộng → trùng phong cảnh | — |
+>
+> Không nhãn nào: 311. **Hai nguồn trong bảng nháp dưới đây không dùng được:** trang Nikon 105mm f/2D không có chữ "portrait"; trang Canon USA "Visual power in wide-angle imagery" không có câu "quay selfie cầm tay cần 24mm" (câu đó lấy từ tóm tắt kết quả tìm kiếm, không có trong trang).
+
+Bảng nháp ban đầu (giữ làm dấu vết):
 
 | Nhãn | Luật nháp | Căn cứ (ứng viên, **chưa đọc toàn văn**; sẽ mở từng trang, trích câu và lưu bản sao như nội dung 3) |
 |---|---|---|
@@ -200,12 +214,25 @@ Xem [HỎI 3].
 | 3 | **5 nhãn mục đích:** chân dung, phong cảnh, thể thao/chim, vlog, **macro**. **Vlog phải định nghĩa lại cho khác phong cảnh, dựa trên nguồn; không có căn cứ thì bỏ nhãn vlog.** Luật macro cũng phải có nguồn | Thêm macro; luật vlog nháp (`lo` ≤ 24mm) bị bỏ |
 | 4 | Nhãn mục đích gắn theo **khổ mà ống được thiết kế cho**. Chấp nhận, ghi hạn chế (ví dụ ống FF 50mm trên thân APS-C) | Như đề xuất |
 | 5 | **130 ống "không chắc" ngàm (QĐ 4):** giữ nút và các cạnh `has_spec`, **không** nối `compatible_with` / `crops_sensor` / `requires_adapter` | Như đề xuất |
-| 6 | **CVR mới:** loại cặp "không biết" và ống "không chắc" khỏi **cả tử số lẫn mẫu số** | Đề xuất cũ giữ mẫu số = K. **Còn phải xác nhận ở phiên sau** (không tự đoán): mẫu số chính xác là gì (số ống "chấm được" trong top-K? có tính phụ kiện không?), và người dùng có top-K không chứa ống nào chấm được thì bỏ khỏi trung bình hay tính CVR = 0 |
-| 7 | **Phụ kiện có ngàm (954) và ngàm chuyển (155):** nối `has_spec → mount`, **có đánh dấu** | Như đề xuất, thêm đánh dấu. Cách hiểu của Claude, cần Nam xác nhận khi viết code: cờ trên cạnh cho biết đầu nguồn là phụ kiện; với ngàm chuyển, cờ cho biết ngàm phía ống hay ngàm phía thân |
+| 6 | **CVR mới:** loại cặp "không biết" và ống "không chắc" khỏi **cả tử số lẫn mẫu số** | Đề xuất cũ giữ mẫu số = K. **Đã chốt 08/10 (QĐ 4-9):** mẫu số = số ống "chấm được" trong top-K, không tính phụ kiện; gộp kiểu micro (tổng vi phạm / tổng ống chấm được); người dùng có top-K không chứa ống nào chấm được thì bỏ khỏi phép tính (không tính 0); báo kèm số người dùng được tính |
+| 7 | **Phụ kiện có ngàm (954) và ngàm chuyển (155):** nối `has_spec → mount`, **có đánh dấu** | Như đề xuất, thêm đánh dấu. **Đã chốt 08/10 (QĐ 4-10):** cạnh từ phụ kiện có cờ "nguồn là phụ kiện"; ngàm chuyển có hai cạnh `has_spec`, một tới ngàm phía ống, một tới ngàm phía thân, mỗi cạnh ghi rõ phía |
 | 8 | Tên quan hệ **`suitable_for`** | Như đề xuất |
 
+**Quyết định thêm của Nam (08/10/2026, sau khi duyệt việc 1):**
+
+| # | Quyết định |
+|---|---|
+| 9 (sửa) | Ống "chấm được" trong CVR: xét các thân người dùng có trong train. Chấm được khi ống nằm trong M, không "không chắc", và phán chắc được: (a) có ít nhất một thân với M = 1 → không vi phạm; (b) mọi thân đều M = 0 và không cặp nào "không biết" → vi phạm. Còn lại (không thân nào M = 1, có ít nhất một cặp "không biết") → không chấm được. Người dùng không có thân nào trong train thì bỏ |
+| 11 | Bỏ nhãn vlog |
+| 12 | Mốc dưới chân dung giữ 85 theo nguồn |
+| 13 | Giữ mốc trên 135 và ngưỡng f/2.8 của chân dung, ghi là quyết định nhóm |
+| 14 | Macro = ống một tiêu cự có chữ Macro / Makro / Micro-Nikkor; chấp nhận sai đã biết |
+| 15 | Mọi nguồn phải có bản sao lưu (kèm ngày, sha256); câu trích lấy từ đúng bản đã lưu; mỗi luật cần ít nhất một câu trích OK |
+
+**2 nguồn cũ ở mục 4 không dùng được:** trang Nikon 105mm f/2D (không có chữ "portrait") và trang Canon USA "Visual power in wide-angle imagery" (không có câu "selfie cầm tay cần 24mm").
+
 **Việc phiên sau** (theo thứ tự):
-1. **Đọc toàn văn các trang nguồn cho luật mục đích** (mục 4). Trích câu, lưu bản sao, ghi vào file cấu hình luật như đã làm với `mount_rules.toml`. Tìm căn cứ cho vlog (khác phong cảnh) và macro; không có căn cứ cho vlog thì bỏ nhãn vlog.
+1. ~~**Đọc toàn văn các trang nguồn cho luật mục đích** (mục 4).~~ **Đã làm 08/10/2026**, xem bảng cập nhật ở mục 4. Trích câu, lưu bản sao, ghi vào file cấu hình luật như đã làm với `mount_rules.toml`. Tìm căn cứ cho vlog (khác phong cảnh) và macro; không có căn cứ cho vlog thì bỏ nhãn vlog.
 2. **Đo độ chính xác tiêu cự / khẩu độ** bằng Lensfun (và Wikidata P2151 cho tiêu cự):
    - khớp không dùng chính thuộc tính cần đo;
    - siết bước khớp;

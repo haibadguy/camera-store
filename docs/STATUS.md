@@ -1,6 +1,6 @@
 # TRẠNG THÁI ĐỒ ÁN — Camera Recommender
 
-Cập nhật lần cuối: 08/10/2026 (nội dung 4: đề xuất thiết kế đồ thị, Nam chốt 8 câu, chưa viết code, nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
+Cập nhật lần cuối: 08/10/2026 (nội dung 4: chốt CVR + cờ cạnh; việc 1 luật mục đích xong, QĐ 4-11..4-15; nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
 
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
@@ -42,7 +42,7 @@ Mỗi nội dung chỉ được ghi một mức khi có bằng chứng tương �
 - khung thân đúng 100% (Lensfun) / 99,2% (openMVG).
 
 Đọc từng ca sai của holdout: quy tắc chỉ sai ở 4 sản phẩm, còn lại là đáp án sai. Chi tiết ở CHANGELOG. Script 04/05 chưa đọc đầu ra mới |
-| 4 | Đồ thị tri thức | Đã triển khai (bản cũ của Hải), **đang làm lại: mới có thiết kế** | Bản cũ: 99% sản phẩm không có cạnh tri thức; script 04 hiện không chạy được với đầu ra mới của nội dung 3. Thiết kế mới đã chốt 08/10 (`docs/content4_design.md`, mục 9), **chưa viết code**. Chưa có số đo độ chính xác tiêu cự / khẩu độ |
+| 4 | Đồ thị tri thức | Đã triển khai (bản cũ của Hải), **đang làm lại: mới có thiết kế** | Bản cũ: 99% sản phẩm không có cạnh tri thức; script 04 hiện không chạy được với đầu ra mới của nội dung 3. Thiết kế mới đã chốt 08/10 (`docs/content4_design.md`, mục 9), **chưa viết code pipeline**. Việc 1 (luật mục đích) xong 08/10: `ai/config/usecase_rules.toml` v0.2, 4 nhãn, mọi câu trích kiểm trên bản sao đã lưu. Chưa có số đo độ chính xác tiêu cự / khẩu độ |
 | 5 | Baselines và đo lường | Đã triển khai, **có lỗi phải sửa** | Xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`/`item_map.json` (07/10, nhánh `nam/content3`) |
 | 6 | Module ràng buộc cứng và mềm | Chưa bắt đầu | |
 | 7 | Mô hình gợi ý theo bộ (GNN có quan hệ) | Chưa bắt đầu | |
@@ -148,6 +148,10 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 2. **Nhãn mục đích gắn theo khổ ống được thiết kế, không theo thân người dùng.** Ví dụ ống FF 50mm không có nhãn "chân dung", dù trên thân APS-C thì góc nhìn tương đương 80mm.
 3. **Nhãn mục đích là quy tắc nhóm tự đặt** (theo tài liệu hãng), không phải nhãn thật, nên không đo độ chính xác được.
 4. **Khổ của ống chưa đo bằng nguồn độc lập** (kế thừa hạn chế 4 của nội dung 3), mà luật mục đích lại dùng khổ ống để quy đổi tiêu cự.
+5. **Luật mục đích có ngưỡng là quyết định nhóm:** mốc trên 135mm và ngưỡng f/2.8 của chân dung (nguồn chỉ nói định tính về khẩu độ, không có mốc trên; bỏ mốc 135 thì thêm nhãn 51 ống). Mốc dưới 85mm theo nguồn làm 43 ống f ≤ 2.8 có `hi_eq` từ 75 đến dưới 85 (vd Fuji XF56mm, 84mm quy đổi) không được nhãn chân dung. **Macro** theo nguồn là độ phóng đại ≥ 0,5x, nhưng tiêu đề Amazon không có độ phóng đại nên dùng dấu hiệu thay thế (ống một tiêu cự có chữ Macro / Makro / Micro-Nikkor). Sai đã biết, *theo mô tả Amazon, chưa kiểm bằng trang hãng*: Sigma 24mm f/1.8 và 28mm f/1.8 "Macro" chỉ khoảng 1:2,7 nhưng được gắn nhãn; Sigma 70-300mm DG Macro, Tamron 70-300mm Di LD Macro đạt 1:2 nhưng bị bỏ sót vì là zoom.
+6. **Bỏ nhãn vlog (QĐ 4-11):** ở mức ống, nguồn chỉ yêu cầu góc rộng nên trùng phong cảnh; các tiêu chí vlog còn lại (màn xoay, cổng mic, lấy nét theo mặt, chống rung trong thân) là của thân máy, mà Amazon không có trường đáng tin để gắn cho thân.
+7. **Ống không rõ khổ (366 ống)** chỉ được nhãn khi tính với cả hệ số 1,0 và 1,6 đều ra nhãn đó, nên bị thiếu nhãn: phong cảnh 71, thể thao/chim 25, chân dung 61 ống bị bỏ vì hai cách tính lệch nhau.
+8. **Bản sao nguồn:** trang Canon Europe chặn curl, Canon USA chặn truy cập từ Việt Nam; bản chính do Nam lưu bằng trình duyệt hoặc là bản Wayback. Trang chân dung có hai phiên bản ("around 85mm or longer" ngày 08/10/2026, "over 85mm" ngày 25/02/2024).
 
 ### Chia đôi tập đánh giá (08/10/2026) — để sửa lỗi phân loại mà số đo vẫn độc lập
 - 1.493 sản phẩm khớp được chia thành **fix 746 / holdout 747**, phân tầng theo loại của đáp án:
@@ -191,8 +195,10 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 - [x] Nội dung 3: xem ca sai của holdout để tách "đáp án sai" / "quy tắc sai" → **đã làm sau lần đo thứ hai, không sửa quy tắc** (mục 4, hạn chế 6e)
 - [ ] Nội dung 4–5: sửa `04_build_knowledge_graph.py` và `common_05.py` để đọc đầu ra nội dung 3 mới (hiện không chạy được). Thiết kế đã chốt 08/10, code để phiên sau
 - [x] Nội dung 4: 8 câu [HỎI] của đề xuất thiết kế → **đã chốt 08/10** (`docs/content4_design.md` mục 9, nhật ký)
-- [ ] Nội dung 4: mẫu số chính xác của CVR mới (số ống "chấm được" trong top-K? có tính phụ kiện không?) và người dùng không có ống nào chấm được trong top-K thì bỏ hay tính 0
-- [ ] Nội dung 4: xác nhận cách "đánh dấu" cạnh `has_spec → mount` của phụ kiện / ngàm chuyển (Claude hiểu: cờ "đầu nguồn là phụ kiện"; với ngàm chuyển, cờ "phía ống / phía thân")
+- [x] Nội dung 4: mẫu số của CVR mới → **đã chốt 08/10** (QĐ 4-9, xem nhật ký)
+- [x] Nội dung 4: cách đánh dấu cạnh `has_spec → mount` của phụ kiện / ngàm chuyển → **đã chốt 08/10** (QĐ 4-10)
+- [x] Nội dung 4, việc 1: duyệt luật mục đích → **đã chốt 08/10** (QĐ 4-11 .. 4-15)
+- [ ] Nội dung 4: xác nhận nguồn gốc file `manual/canon_us_lens_guide_20261008.html` ("saved from" là Wayback 20260904, không phải bản trực tiếp qua VPN)
 - [x] Có bỏ bản ghi lặp trước k-core không? → **Có**, mỗi cặp (user, item) giữ 1 dòng sớm nhất (07/10, xem nhật ký)
 
 ## 7. Nhật ký quyết định
@@ -243,3 +249,12 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 | 08/10/2026 | **QĐ nội dung 4 – 6:** CVR mới: loại cặp "không biết" và ống "không chắc" khỏi cả tử số lẫn mẫu số | Bản hiện tại của `common_05.py` tính cả hai loại này là vi phạm, trái QĐ 3–4, 3–8, 3–16. Mẫu số chính xác còn chờ xác nhận (mục 6) |
 | 08/10/2026 | **QĐ nội dung 4 – 7:** phụ kiện có ngàm (954) và ngàm chuyển (155) nối `has_spec → mount`, có đánh dấu | Để gợi ý được hood, teleconverter, ngàm chuyển đúng ngàm. Cách đánh dấu cụ thể chờ xác nhận (mục 6) |
 | 08/10/2026 | **QĐ nội dung 4 – 8:** quan hệ nối ống với mục đích sử dụng tên là `suitable_for` | Cô có nêu thực thể "mục đích sử dụng" nhưng không nêu quan hệ nào nối tới nó |
+| 08/10/2026 | **QĐ nội dung 4 – 9 (CVR, đã sửa định nghĩa "chấm được"):** mẫu số = số ống "chấm được" trong top-K, không tính phụ kiện. Xét các thân người dùng có trong train. Ống **chấm được** khi nằm trong M, không thuộc nhóm "không chắc", và phán chắc được một trong hai: (a) có ít nhất một thân mà cặp (thân, ống) có M = 1 → không vi phạm; (b) mọi thân đều có M = 0 và không cặp nào thuộc "không biết" → vi phạm. Còn lại (không thân nào M = 1, có ít nhất một cặp "không biết") → không chấm được, loại khỏi cả tử số lẫn mẫu số. **Ví dụ:** người dùng có thân D3500 (Nikon F) và máy phim FM, ống Canon EF trong top-K: cặp (D3500, EF) M = 0, cặp (FM, EF) "không biết" (QĐ 16), không thân nào M = 1 → ống này không chấm được. Gộp kiểu **micro**: tổng vi phạm / tổng ống chấm được trên mọi người dùng. Người dùng có top-K không chứa ống nào chấm được, hoặc không có thân nào trong train, thì **bỏ khỏi phép tính** (không tính CVR = 0). Báo kèm số người dùng được tính | Nam chốt, trả lời câu treo của QĐ 4-6; sửa định nghĩa "chấm được" sau khi duyệt việc 1 |
+| 08/10/2026 | **QĐ nội dung 4 – 10 (đánh dấu cạnh):** cạnh `has_spec → mount` xuất phát từ phụ kiện có cờ "nguồn là phụ kiện". Ngàm chuyển có **hai** cạnh `has_spec`, một tới ngàm phía ống, một tới ngàm phía thân; mỗi cạnh ghi rõ phía | Nam chốt, trả lời câu treo của QĐ 4-7 |
+| 08/10/2026 | **Nội dung 4, việc 1 (bản nháp, chưa commit):** đọc toàn văn nguồn cho luật mục đích, viết `ai/config/usecase_rules.toml` và `ai/survey/content4/count_usecase.py` (log `ai/data/survey/run_c4_usecase_count.log`, bảng `ai/data/survey/usecase_labels_draft.csv`). Trên 1.285 ống đọc được tiêu cự + khẩu độ: phong cảnh 556, thể thao/chim 285, chân dung 144, macro 86, không nhãn nào 311. **Đề xuất bỏ vlog** (306 ống theo luật tham khảo `lo_eq` ≤ 24, cả 306 đều là phong cảnh) | Nguồn: 10 trang Canon/Nikon (Canon Europe đọc bằng trình duyệt vì curl bị 403; Canon USA chặn cả trình duyệt nên đọc bản Wayback). Phát hiện: 2 nguồn ghi ở `content4_design.md` mục 4 **không nói điều luật cần** (trang Nikon 105mm f/2D không có chữ "portrait"; trang Canon USA wide-angle không có câu "selfie cần 24mm"). Mốc chân dung đổi 70 → 85 theo trang Canon. Mốc trên 135 và ngưỡng f/2.8 của chân dung, việc dùng "ống một tiêu cự + chữ Macro" thay cho độ phóng đại ≥ 0,5x là **quyết định nhóm**, chờ Nam duyệt |
+| 08/10/2026 | **QĐ nội dung 4 – 11:** bỏ nhãn vlog | Ở mức ống, nguồn (Canon EU vlogging tips, best vlogging kit) chỉ yêu cầu góc rộng nên trùng phong cảnh (306/306 ống vlog theo luật tham khảo là ống phong cảnh); các tiêu chí vlog còn lại là của thân máy |
+| 08/10/2026 | **QĐ nội dung 4 – 12:** mốc dưới chân dung giữ 85mm (quy đổi) theo nguồn | Canon EU portrait: "around 85mm or longer". Ghi hạn chế: 43 ống f ≤ 2.8 có `hi_eq` từ 75 đến dưới 85 (vd Fuji XF56) không được nhãn |
+| 08/10/2026 | **QĐ nội dung 4 – 13:** giữ mốc trên 135mm và ngưỡng f/2.8 của chân dung, ghi là quyết định nhóm | Nguồn chỉ nói định tính về khẩu độ và không có mốc trên. Đối chiếu (không đổi luật): bỏ mốc 135 thì thêm nhãn 51 ống, không ống nào mất nhãn |
+| 08/10/2026 | **QĐ nội dung 4 – 14:** macro = ống một tiêu cự có chữ Macro / Makro / Micro-Nikkor trong phần chủ thể tiêu đề | Nguồn định nghĩa macro là ≥ 0,5x, tiêu đề Amazon không có độ phóng đại. Chấp nhận sai đã biết (hạn chế 5) |
+| 08/10/2026 | **QĐ nội dung 4 – 15:** mọi trang nguồn phải có bản sao lưu (ngày, sha256); câu trích lấy từ đúng bản đã lưu; mỗi luật cần ít nhất một câu trích OK (script kiểm) | Nam lưu 7 trang Canon bằng trình duyệt (`ai/data/external/usecase_sources/manual/`); Claude tạo thêm 6 bản Wayback Save Page Now làm bản phụ công khai. Chi tiết `docs/DATA_SOURCES.md` mục 2.5 |
+| 08/10/2026 | **Nội dung 4, việc 1 xong** (`usecase_rules.toml` v0.2, `count_usecase.py`, `html_to_text.py`). Cả 12 bản sao khớp sha256 và có nội dung bài; cả 4 luật có câu trích OK (phong cảnh 5, thể thao/chim 4, chân dung 3, macro 2). Trên 1.285 ống: phong cảnh 556, thể thao/chim 285, chân dung 144, macro 86, không nhãn nào 311. Chạy 2 lần, sha256 của CSV và log trùng nhau | Ống không rõ khổ (366 = 206 khung `khong_ro` + 160 không có ngàm) tính với hệ số 1,0 và 1,6, chỉ gắn nhãn khi cả hai cùng ra (đúng thiết kế): được gắn phong cảnh 108, thể thao/chim 77, chân dung 12, macro 21; bị bỏ vì lệch: 71 / 25 / 61 / 0. **Chờ Nam xác nhận:** file `canon_us_lens_guide_20261008.html` có dòng "saved from" là bản Wayback 20260904, không phải bản trực tiếp qua VPN như Nam báo |
