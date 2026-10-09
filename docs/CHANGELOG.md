@@ -6,6 +6,102 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 09/10/2026 (tiếp): nội dung 5 — chốt cấu hình `n5_final.toml`, chạy test một lần. Nhánh `nam/content4`; script ở commit `476f730`, kết quả ở commit `2aa2fd7`
+
+Theo `docs/reviews/n5_eval_plan.md` mục 7.2 bước 3–6 và mục 8. Không sửa code cũ của Hải; thêm 2 file mới thay vai trò bảng tổng hợp của `05_evaluate.py` (lỗi L12, L15 còn lại).
+
+**Ví dụ trước (so sánh S5, nhóm "không lắp được").** Người dùng u có thân Nikon D3200, item test là ống Canon EF.
+- Popularity xếp ống theo số lượt mua; ống Canon EF của u có thể vào top-10 ống → Hit@10 = 1.
+- MountAware đặt ống đó −∞ (chắc chắn vi phạm) → Hit@10 = 0 với **mọi** người trong nhóm này.
+- Bootstrap: lấy lại 282 người của nhóm có hoàn lại 2.000 lần; mỗi lần tính Recall@10 của hai mô hình trên **cùng** mẫu rồi lấy hiệu. Khoảng 95% của hiệu không chứa 0 thì coi là khác 0.
+
+**Sửa gì**
+1. **`ai/config/n5_final.toml` (mới)**: cấu hình chốt (LightGCN λ = 1e-3, R-GCN lr = 0,001, chọn theo NDCG@20 val seed 1) và đường dẫn + sha256 của 6 checkpoint `best.pt` (3 seed × 2 mô hình).
+2. **`ai/pipeline/05_test_final.py` (mới)**: chấm Popularity, MountAware, LightGCN × 3 seed, R-GCN × 3 seed bằng `eval_05.evaluate` (full ranking bỏ train + val; Recall / NDCG / Hit @5/10/20; CVR@K theo QĐ 4-9; kịch bản chỉ ống là số chính, toàn catalog là số phụ; sampled 1+99 số phụ), rồi tổng hợp trung bình ± độ lệch chuẩn qua 3 seed và bootstrap ghép cặp cho S1–S5.
+   - Trước khi chấm, script DỪNG nếu: cây git chưa sạch, toml / script 05 chưa commit (với `--split test`); sha256 `best.pt` khác toml; `config.json` khác cấu hình chốt trừ seed; commit huấn luyện khác `595bc70` hoặc dirty; `best_epoch`, cờ hội tụ, NDCG@20 val khác toml.
+   - Ghi commit, sha256 của toml, của script và của mọi đầu vào vào log và `summary_*.json`.
+3. **Kế hoạch mục 13** (commit `6fdc169`, trước khi chạy test): ghi 2 sai khác sau khi dò val (LightGCN chưa chắc hội tụ; cấu hình tốt nhất ở biên lưới) và cách tổng hợp CVR / bootstrap.
+
+**Vì sao:** kế hoạch mục 7.2 (commit cấu hình trước khi chạy test, test chạy một lần bằng một script) và mục 8.
+
+**Kiểm 6 lần chạy** (`results/n5/val_sweep_20261010/`, `results/n5/final_20261009/`): đủ `best.pt` và `result.json`; cấu hình trùng nhau trừ seed; cùng sha256 đầu vào; `git` lúc bắt đầu và lúc xong đều `595bc70`, dirty = False.
+
+| NDCG@20 val (full ranking) | seed 1 | seed 2 | seed 3 | TB ± ĐLC | epoch tốt nhất / đã chạy |
+|---|---:|---:|---:|---:|---|
+| LightGCN λ = 1e-3 | 0,04045 | 0,04040 | 0,04054 | 0,04046 ± 0,00007 | 290/300, 260/300, 300/300 → **chưa chắc hội tụ** (cả 3 seed) |
+| R-GCN lr = 0,001 | 0,02287 | 0,02324 | 0,02272 | 0,02294 ± 0,00027 | 20/45, 15/40, 35/60 (dừng sớm) |
+
+- λ = 1e-3 là giá trị **lớn nhất** của lưới {1e-5, 1e-4, 1e-3} (NDCG@20 val 0,03769 / 0,03803 / 0,04045); lr = 0,001 là giá trị **nhỏ nhất** của lưới {0,01; 0,001} (0,01868 / 0,02287). Cả hai ở biên lưới.
+
+**Thử trên val trước khi chạy test**
+- `finalcheck_val_20261009_lan1`: lỗi (đường dẫn tương đối khi ghi kết quả), sửa trước commit. `lan2`: chạy đủ, trước commit. `lan3`: trên commit `476f730`, cây sạch. lan2 và lan3 ra cùng số.
+- Chấm lại 6 checkpoint trên val: lệch tuyệt đối lớn nhất so với `result.json` lúc huấn luyện = **0** (cả R-GCN).
+- Popularity / MountAware trên val khớp số cũ (`val_popularity_20261009_lan2`): Recall@10 0,0228 / 0,0229, CVR@10 0,6759 / 0.
+
+**Chạy test một lần** (log `results/n5/test_final_20261009/run_test_20261009_125447.log`, sha256 `c06b0ff9…f07e071`, không lên git vì `*.log` bị `.gitignore`; kết quả `summary_test_20261009_125536.json` / `.md`, sha256 json `f617285c…1905cbc985`; commit `476f730`, dirty = False; 0,8 phút). Không thấy lỗi script sau khi chạy, không chạy lại.
+- Số người kịch bản trên test khớp khảo sát (kế hoạch mục 5.2): lắp được 762, không lắp được 282 (có cặp ngàm chuyển 11), không phán được 16.
+- CVR của MountAware = 0 ở K = 5, 10, 20, cả toàn catalog lẫn kịch bản (script tự kiểm).
+
+**Ảnh hưởng: số test** (67.661 người dùng; ứng viên bỏ train + item val; mô hình học: TB ± ĐLC qua 3 seed)
+
+| Full ranking, test | Recall@10 | NDCG@10 | Recall@20 | NDCG@20 | CVR@10 | CVR@20 |
+|---|---:|---:|---:|---:|---:|---:|
+| Popularity | 0,0218 | 0,0112 | 0,0358 | 0,0147 | 0,6773 | 0,7017 |
+| Popularity-MountAware | 0,0220 | 0,0112 | 0,0359 | 0,0147 | 0 | 0 |
+| LightGCN | 0,0448 ± 0,0002 | 0,0248 ± 0,0001 | 0,0657 ± 0,0004 | 0,0301 ± 0,0001 | 0,1297 ± 0,0011 | 0,1462 ± 0,0012 |
+| R-GCN | 0,0274 ± 0,0007 | 0,0145 ± 0,0006 | 0,0425 ± 0,0004 | 0,0183 ± 0,0004 | 0,4038 ± 0,1090 | 0,4252 ± 0,1115 |
+
+- Recall@K = Hit@K từng người (script kiểm). CVR tính trên 10.406 người có thân; R-GCN dao động mạnh giữa seed: CVR@10 = 0,4639 / 0,4695 / 0,2780.
+
+| Kịch bản, chỉ ống (số chính) | Recall@10 | NDCG@10 | Recall@20 | CVR@10 |
+|---|---:|---:|---:|---:|
+| Lắp được (762): Popularity | 0,1365 | 0,0736 | 0,1824 | 0,6956 |
+| Lắp được: MountAware | 0,1850 | 0,1110 | 0,2402 | 0 |
+| Lắp được: LightGCN | 0,3158 ± 0,0027 | 0,1862 ± 0,0009 | 0,4195 ± 0,0053 | 0,1404 ± 0,0011 |
+| Lắp được: R-GCN | 0,2082 ± 0,0209 | 0,1158 ± 0,0081 | 0,2861 ± 0,0211 | 0,4021 ± 0,0929 |
+| Không lắp được (282): Popularity | 0,0390 | 0,0196 | 0,0816 | 0,7704 |
+| Không lắp được: MountAware | 0 | 0 | 0 | 0 |
+| Không lắp được: LightGCN | 0,0496 ± 0,0035 | 0,0229 ± 0,0012 | 0,0697 ± 0,0020 | 0,3144 ± 0,0125 |
+| Không lắp được: R-GCN | 0,0296 ± 0,0125 | 0,0155 ± 0,0062 | 0,0520 ± 0,0054 | 0,5524 ± 0,0578 |
+
+Số phụ, toàn catalog, Recall@10: lắp được 0,0210 / 0,0210 / 0,1623 ± 0,0053 / 0,1059 ± 0,0092; không lắp được 0,0071 / 0 / 0,0154 ± 0,0020 / 0,0142 ± 0,0071 (Popularity / MountAware / LightGCN / R-GCN).
+
+| Bootstrap ghép cặp (B = 2000), K = 10 | Hiệu | Khoảng 95% | Khác 0? |
+|---|---:|---|---|
+| S1 LightGCN − Popularity, Recall@10 | +0,02300 | [+0,02151; +0,02449] | có |
+| S1 LightGCN − Popularity, NDCG@10 | +0,01367 | [+0,01277; +0,01459] | có |
+| S2 R-GCN − LightGCN, Recall@10 | −0,01747 | [−0,01863; −0,01632] | có |
+| S2 R-GCN − LightGCN, NDCG@10 | −0,01036 | [−0,01103; −0,00967] | có |
+| S3 MountAware − Popularity, CVR@10 (người có thân) | −0,67727 | [−0,68659; −0,66846] | có |
+| S3 MountAware − Popularity, Recall@10 (mọi người) | +0,00012 | [+0,00001; +0,00022] | có (rất nhỏ) |
+| S4 R-GCN − LightGCN, CVR@10 (gộp 3 seed: 0,4118 − 0,1297) | +0,28209 | [+0,27496; +0,28962] | có |
+| S5 MountAware − Popularity, Recall@10 chỉ ống, lắp được | +0,04856 | [+0,03412; +0,06434] | có |
+| S5 MountAware − Popularity, Recall@10 chỉ ống, không lắp được | −0,03901 | [−0,06383; −0,01773] | có |
+
+**Sampled 1+99 (số phụ) so với full ranking, test**
+
+| | Hit@10 sampled | NDCG@10 sampled | Hit@20 sampled | Recall@10 full | Recall@20 full |
+|---|---:|---:|---:|---:|---:|
+| Popularity | 0,4146 | 0,2541 | 0,5476 | 0,0218 | 0,0358 |
+| Popularity-MountAware | 0,4141 | 0,2542 | 0,5468 | 0,0220 | 0,0359 |
+| LightGCN | 0,4969 ± 0,0011 | 0,3303 ± 0,0011 | 0,6161 ± 0,0016 | 0,0448 ± 0,0002 | 0,0657 ± 0,0004 |
+| R-GCN | 0,4872 ± 0,0078 | 0,3041 ± 0,0052 | **0,6265 ± 0,0072** | 0,0274 ± 0,0007 | 0,0425 ± 0,0004 |
+| *Bản của Hải (sampled, dữ liệu cũ, không so được)* | *0,4188 / 0,4112 / 0,5334 / 0,4251* | | | | |
+
+- Sampled làm số lớn gấp 11–19 lần (Hit@10 sampled / Recall@10 full: Popularity 19,0; LightGCN 11,1; R-GCN 17,8) và gần như xóa khoảng cách R-GCN / LightGCN: Hit@10 sampled 0,4872 / 0,4969 (≈ 0,98 lần), còn Recall@10 full 0,0274 / 0,0448 (≈ 0,61 lần). Ở **Hit@20 sampled, R-GCN đứng trên LightGCN** (0,6265 > 0,6161), ngược với full ranking (Recall@20 0,0425 < 0,0657). Đây là ví dụ thật cho nhận xét của Krichene & Rendle (2020). *(Tỷ lệ tính tay từ bảng; thứ tự @20 sampled là mô tả, không có bootstrap.)*
+- Số của Hải (`results/benchmark_summary.json`, sampled, 70.424 người, M cũ, bộ lọc cũ) chỉ để đặt cạnh; "R-GCN variant" của Hải không phải R-GCN (L1).
+
+**Điểm đã kiểm là đúng:** 6 checkpoint đúng sha256 và đúng cấu hình chốt; chấm lại trên val trùng số lúc huấn luyện; Popularity val trùng lần chạy trước; số người kịch bản trên test trùng khảo sát; CVR MountAware = 0.
+
+**Chưa chắc / phía sau phải làm**
+- LightGCN chưa chắc hội tụ; cấu hình tốt nhất ở biên lưới (STATUS, hạn chế nội dung 5). Nếu chạy thêm (nhiều epoch hơn, mở rộng lưới) thì đã sau khi xem test: phải báo cả hai lần chạy và ghi là thăm dò.
+- Số test thấp hơn val ở mọi mô hình (vd LightGCN NDCG@20 0,0405 → 0,0301; Popularity 0,0152 → 0,0147): chưa phân tích.
+- R-GCN có CVR cao hơn LightGCN dù đồ thị có cạnh tương thích: chưa phân tích nguyên nhân (ca sai chưa đọc).
+- Thư mục thử `results/n5/finalcheck_val_20261009_lan1/`, `_lan2/` không lên git (chờ Nam cho xóa hay giữ).
+- Báo cáo 5 và nội dung 1 (pipeline) phải cập nhật theo số mới.
+
+---
+
 ## 09/10/2026: nội dung 5 — sửa code 05 theo kế hoạch đăng ký trước; chạy Popularity / MountAware trên val; chạy thử LightGCN, R-GCN. Nhánh `nam/content4`, code ở commit `f21ced4`
 
 Theo `docs/reviews/n5_eval_plan.md` (mục 2: lỗi L1–L17; QĐ 5-1 .. 5-6). **Không huấn luyện dài, không chấm test.**

@@ -1,6 +1,6 @@
 # TRẠNG THÁI ĐỒ ÁN — Camera Recommender
 
-Cập nhật lần cuối: 09/10/2026 (nội dung 5: sửa code 05 theo kế hoạch, commit `f21ced4`; Popularity / MountAware chạy trên val; LightGCN / R-GCN chỉ chạy thử 1–3 epoch; script dò val chờ Nam chạy qua đêm; chưa chấm test; trước đó cùng ngày: kế hoạch đánh giá đăng ký trước `docs/reviews/n5_eval_plan.md`, Nam chốt 6 câu [HỎI]; trước đó 08/10 khuya, nội dung 4: thêm cờ `ngam_khong_chac`, dựng lại đồ thị, 6A ĐẠT; sửa ví dụ QĐ 4-9; trước đó: dựng đồ thị mới, sửa `common_05.py` theo QĐ 4-9; nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
+Cập nhật lần cuối: 09/10/2026 chiều (nội dung 5: **đã chạy test một lần** — cấu hình chốt `ai/config/n5_final.toml`, script `05_test_final.py` commit `476f730`, kết quả commit `2aa2fd7`; nội dung 5 lên "Đã kiểm thử"; thêm hạn chế nội dung 5; trước đó cùng ngày: Nam chạy dò val + seed 2, 3; sửa code 05 theo kế hoạch, commit `f21ced4`; Popularity / MountAware chạy trên val; LightGCN / R-GCN chỉ chạy thử 1–3 epoch; script dò val chờ Nam chạy qua đêm; chưa chấm test; trước đó cùng ngày: kế hoạch đánh giá đăng ký trước `docs/reviews/n5_eval_plan.md`, Nam chốt 6 câu [HỎI]; trước đó 08/10 khuya, nội dung 4: thêm cờ `ngam_khong_chac`, dựng lại đồ thị, 6A ĐẠT; sửa ví dụ QĐ 4-9; trước đó: dựng đồ thị mới, sửa `common_05.py` theo QĐ 4-9; nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
 
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
@@ -65,12 +65,20 @@ Việc 1 (luật mục đích) xong 08/10: `ai/config/usecase_rules.toml` **v0.3
 - khẩu độ đúng số f: 223/228 = 97,8% [95,8–99,5];
 - **khẩu độ đúng khoảng nút:** 223/228 = 97,8% [95,8–99,5];
 - 77 ô lệch đọc tay (Claude): **0 do bộ đọc**, 75 do đáp án (66 khớp nhầm, 9 Wikidata thiếu giá trị), 2 tiêu đề không ghi khẩu độ. Số thô là cận dưới (hạn chế nội dung 4, điểm 9–12) |
-| 5 | Baselines và đo lường | **Đã triển khai** (code mới, 09/10, `f21ced4`); phần chấm + Popularity / MountAware trên val **đã kiểm thử**; LightGCN / R-GCN **chưa huấn luyện** | **09/10 (sửa code theo kế hoạch, CHANGELOG 09/10):**
+| 5 | Baselines và đo lường | **Đã kiểm thử** (09/10 chiều: có số test cuối của 4 baseline, chạy một lần; chưa Red Team nên chưa "Đã đánh giá") | **09/10 chiều: chạy test một lần** (CHANGELOG 09/10 tiếp; kế hoạch mục 13–14). Cấu hình chốt theo NDCG@20 val: LightGCN λ = 1e-3, R-GCN lr = 0,001 (`ai/config/n5_final.toml`). 6 checkpoint kiểm đủ (cùng commit `595bc70`, dirty False, cấu hình trùng trừ seed). NDCG@20 val TB ± ĐLC 3 seed: LightGCN 0,04046 ± 0,00007 (**cả 3 seed chạm 300 epoch: chưa chắc hội tụ**), R-GCN 0,02294 ± 0,00027. λ và lr tốt nhất **ở biên lưới**. Script `ai/pipeline/05_test_final.py` (commit `476f730`), thử trên val trước; test chạy trên cây sạch, kết quả `results/n5/test_final_20261009/summary_test_20261009_125536.json` (commit `2aa2fd7`), log `run_test_20261009_125447.log` (ngoài git). **Số test (full ranking, 67.661 người; TB ± ĐLC 3 seed), Recall@10 / NDCG@10 / Recall@20 / NDCG@20 / CVR@10:**
+- Popularity 0,0218 / 0,0112 / 0,0358 / 0,0147 / 0,6773;
+- MountAware 0,0220 / 0,0112 / 0,0359 / 0,0147 / 0;
+- LightGCN 0,0448 ± 0,0002 / 0,0248 ± 0,0001 / 0,0657 ± 0,0004 / 0,0301 ± 0,0001 / 0,1297 ± 0,0011;
+- R-GCN 0,0274 ± 0,0007 / 0,0145 ± 0,0006 / 0,0425 ± 0,0004 / 0,0183 ± 0,0004 / 0,4038 ± 0,1090.
+
+Kịch bản chỉ ống, Recall@10 (Popularity / MountAware / LightGCN / R-GCN): lắp được (762) 0,1365 / 0,1850 / 0,3158 / 0,2082; không lắp được (282) 0,0390 / **0** / 0,0496 / 0,0296. Bootstrap S1–S5 (K = 10): cả 9 khoảng 95% không chứa 0 — LightGCN > Popularity; R-GCN < LightGCN về Recall / NDCG và **CVR cao hơn** (+0,282); MountAware giảm CVR@10 0,677 → 0, Recall@10 gần như không đổi (+0,0001); kịch bản: +0,049 ở nhóm lắp được, −0,039 ở nhóm không lắp được. Sampled 1+99 (số phụ): Hit@10 0,4146 / 0,4141 / 0,4969 / 0,4872; ở Hit@20 sampled R-GCN **đứng trên** LightGCN (0,6265 > 0,6161), ngược full ranking. Hạn chế: mục 4, "Hạn chế cần nêu trong báo cáo (nội dung 5)".
+
+**09/10 (sửa code theo kế hoạch, CHANGELOG 09/10):**
 - `eval_05.py` (full ranking, quy tắc hòa π, CVR, kịch bản, sampled, bootstrap); `05a` / `05b` / `05c` viết lại (R-GCN thật bằng `RGCNConv`); `train_05.py` (chạy tiếp được); `05_val_sweep.py`. Đã sửa L1–L11, L13, L14, L16, L17; L12, L15 một phần (chưa có 3 seed, chưa có bảng tổng hợp + bootstrap trên test).
 - Kiểm thử dựng tay `test_eval_05.py` ĐẠT CẢ (log `ai/data/survey/n5/run_test_eval_05_20261009_lan2_f21ced4.log`). Mặt nạ MountAware = `judge_lens is True` ở mọi ô 10.406 người × 1.033 ống. **CVR MountAware = 0** ở mọi K.
 - **Val, full ranking** (`results/n5/val_popularity_20261009_lan2/`): Popularity Recall@10 0,0228, NDCG@20 0,0152; MountAware 0,0229 / 0,0153. CVR@10 0,6759 / 0. Kịch bản (chỉ ống) Recall@10: nhóm lắp được (904) 0,1471 / 0,2179; nhóm không lắp được (236) 0,0551 / **0**. Chạy 3 lần trùng sha256 14/14 mảng.
 - Thời gian thật / epoch: LightGCN 12,5–14,0 s, R-GCN 27,4–28,9 s; một lần chấm val 3,5 s. R-GCN không tất định trên GPU (cùng seed, epoch 1: NDCG@20 val 0,01229 và 0,01360).
-- **Việc tiếp:** Nam chạy `05_val_sweep.py --label <ngày>` (xấu nhất ≈ 5 giờ) → chốt `n5_final.toml` → seed 2, 3 → viết script chạy test một lần.
+- ~~Việc tiếp: Nam chạy `05_val_sweep.py` → chốt `n5_final.toml` → seed 2, 3 → script chạy test~~ → **đã làm 09/10** (xem đoạn trên).
 
 Trước 09/10: xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`/`item_map.json` (07/10, nhánh `nam/content3`). **08/10 khuya:** `common_05.py` đọc đầu ra mới, CVR theo QĐ 4-9 (kiểm thử dựng tay `ai/survey/content4/test_cvr.py` đúng cả); **chưa chạy lại script 05 nào**; `05c_rgcn_train.py` không chạy được với đồ thị mới (thuộc lỗi 1). **Việc phải làm khi sửa script 05:** bộ lọc Popularity MountAware (`05a_popularity.py`) chỉ được loại ống **"chắc chắn vi phạm"** theo QĐ 4-9 (`common_05.judge_lens` trả True); ống "không chấm được" (trả None) thì **giữ lại** (Nam chốt 08/10 khuya). Hiện code 05a loại mọi ống không thuộc tập M = 1 của người dùng: **chưa sửa**. **09/10:** kế hoạch đánh giá đăng ký trước `docs/reviews/n5_eval_plan.md` (17 lỗi L1–L17 kèm file/hàm; full ranking, CVR, kịch bản, 4 baseline, siêu tham số có nguồn, bootstrap; 6 câu [HỎI] Nam đã chốt 09/10, QĐ 5-1 .. 5-6). Khảo sát (chỉ đếm, log `ai/data/survey/n5/run_survey_n5_sets_20261009_lan1.log`): bộ lọc MountAware cũ loại mất item test của 3.856 người (3.268 người không có thân), bộ lọc mới 282; kịch bản ống cho người có thân trên test 1.060 người (lắp được 762, không lắp được 282, không phán được 16). Đo tài nguyên (không huấn luyện, `run_probe_gpu_20261009_lan1.log`): đỉnh GPU ≤ 1,6 GB. **Chưa sửa code 05, chưa huấn luyện** |
 | 6 | Module ràng buộc cứng và mềm | Chưa bắt đầu | |
@@ -215,6 +223,20 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 13. **Ngàm của phụ kiện chưa đo** (cạnh `has_spec → mount` từ 954 phụ kiện và 155 ngàm chuyển). Phép đo của nội dung 3 chỉ chấm thân và ống. Hướng ngàm chuyển ("A>B" = ống A lên thân B) lấy theo thứ tự trong tiêu đề, chưa đo.
 14. **Khổ cảm biến của khung "khac" suy từ ngàm** (mft / four_thirds → four_thirds, nikon_1 → one_inch, fuji_g → medium, pentax_q → small, EOS-1D và Leica M8 → aps_h), theo ghi chú trong `mount_detect.py`, chưa đo. Khổ của ống nói chung cũng chưa đo (điểm 4).
 
+### Hạn chế cần nêu trong báo cáo (nội dung 5) — sau khi chạy test (09/10/2026)
+Nguồn số: `results/n5/val_sweep_20261010/summary_20261009_053905.json`, `result.json` của 6 lần chạy, `results/n5/test_final_20261009/summary_test_20261009_125536.json`.
+1. **LightGCN "chưa chắc hội tụ".** Cả 3 seed của cấu hình chốt (λ = 1e-3) chạy hết 300 epoch mà không dừng sớm (epoch tốt nhất 290 / 260 / 300); NDCG@20 val còn nhích ở các lần chấm cuối (seed 1: 0,04001 ở epoch 230 → 0,04045 ở epoch 290). Giới hạn 300 epoch là sai khác so với bài gốc (~1000 epoch, QĐ 5-5). Số LightGCN có thể thấp hơn mức mô hình đạt được.
+2. **Cấu hình tốt nhất nằm ở biên lưới dò.** λ = 1e-3 là giá trị lớn nhất của {1e-5, 1e-4, 1e-3} (NDCG@20 val 0,03769 / 0,03803 / 0,04045); lr R-GCN = 0,001 là giá trị nhỏ nhất của {0,01; 0,001} (0,01868 / 0,02287). Chưa biết giá trị ngoài lưới có tốt hơn không; lưới đã đăng ký trước nên không mở rộng trước khi chạy test. Với λ, bài LightGCN §4.5 ghi λ > 1e-3 làm kết quả giảm nhanh. Với R-GCN, lr 0,01 đạt tốt nhất ngay lần chấm đầu (epoch 5) rồi giảm; lr 0,001 đạt đỉnh ở epoch 15–35 rồi giảm → có thể cần lr nhỏ hơn: chưa thử.
+3. **R-GCN lệch bài gốc** (kế hoạch mục 6.4): d = 64, loss BPR, mini-batch, chuẩn hóa c_{i,r}, chỉ edge dropout, tối đa 100 epoch; bỏ qua cờ cạnh `src_phu_kien`, `phia`, `crop_unknown`. Kết quả "R-GCN kém LightGCN" (S2) chỉ đúng cho cài đặt này, không phải kết luận chung về R-GCN.
+4. **CVR của R-GCN dao động mạnh giữa seed** (CVR@10 test 0,4639 / 0,4695 / 0,2780). Khoảng bootstrap của S4 (gộp 3 seed) không chứa phần dao động do seed (kế hoạch mục 8); kết luận S4 dựa trên 3 seed.
+5. **Bootstrap theo người dùng không chứa dao động do seed**; không hiệu chỉnh đa so sánh (9 khoảng của S1–S5); so sánh ngoài S1–S5 là thăm dò.
+6. **CVR của MountAware = 0 là do cách dựng** (bộ lọc loại đúng các ống "chắc chắn vi phạm"), không phải kết quả đo. Cái giá đo được ở kịch bản: nhóm "không lắp được" Recall@10 = 0 (chỉ ống).
+7. **Nhóm "không lắp được" nhỏ** (282 người trên test), khoảng tin cậy rộng; chỉ biết thân người dùng có viết đánh giá (QĐ 3-5), nên một phần nhóm này có thể là người đã có thân khác mà không đánh giá.
+8. **Không so được với số của Hải**: dữ liệu (gộp lặp), M, bộ lọc MountAware, định nghĩa CVR (QĐ 4-9) đều đã đổi; "R-GCN variant" của Hải không phải R-GCN.
+9. **GPU không tất định**: huấn luyện lại R-GCN cùng seed có thể lệch nhỏ (đã thấy ở epoch 1); chấm lại cùng checkpoint thì trùng (lệch 0 trên val).
+10. **Số test thấp hơn val ở mọi mô hình** (LightGCN NDCG@20 0,0405 → 0,0301; Popularity 0,0152 → 0,0147); chưa phân tích nguyên nhân.
+11. Log chạy test không lên git (`*.log` bị `.gitignore`); sha256 của log và của `summary_test_*.json` ghi ở CHANGELOG.
+
 ### Chia đôi tập đánh giá (08/10/2026) — để sửa lỗi phân loại mà số đo vẫn độc lập
 - 1.493 sản phẩm khớp được chia thành **fix 746 / holdout 747**, phân tầng theo loại của đáp án:
 
@@ -271,6 +293,11 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 - [x] Nội dung 4, việc 1: duyệt luật mục đích → **đã chốt 08/10** (QĐ 4-11 .. 4-15)
 - [x] Nội dung 4: nguồn gốc file trang Canon USA lens guide → **đã xác nhận 08/10**: bản Wayback 20260904 do Nam lưu bằng trình duyệt (đã tắt VPN), đúng bản Claude đã đọc; đổi tên thành `manual/canon_us_lens_guide_wb20260904.html`
 - [x] Nội dung 5: 6 câu [HỎI] của kế hoạch đánh giá (`docs/reviews/n5_eval_plan.md` mục 12) → **Nam chốt 09/10** (nhật ký, QĐ 5-1 .. 5-6)
+- [x] Nội dung 5: chốt cấu hình, chạy test một lần → **đã làm 09/10 chiều** (`n5_final.toml`, `05_test_final.py`)
+- [ ] Nội dung 5: có chạy thêm (LightGCN quá 300 epoch, mở rộng lưới λ / lr) không? Nếu có thì đã sau khi xem test: phải báo cả số đã đăng ký lẫn số mới, ghi là thăm dò (hạn chế nội dung 5, điểm 1–2)
+- [ ] Nội dung 5: Red Team kết quả test (điều kiện để lên "Đã đánh giá"); đọc ca sai (vd vì sao R-GCN có CVR cao hơn LightGCN)
+- [ ] Nội dung 5: xóa hay giữ thư mục thử `results/n5/finalcheck_val_20261009_lan1/`, `_lan2/` (ngoài git; lan1 là lần lỗi đường dẫn, lan2 trùng số với lan3 đã commit)
+- [ ] Nội dung 5: xác nhận giữ khởi tạo Xavier cho LightGCN (code tác giả dùng normal) — còn chờ từ 09/10 sáng
 - [x] Có bỏ bản ghi lặp trước k-core không? → **Có**, mỗi cặp (user, item) giữ 1 dòng sớm nhất (07/10, xem nhật ký)
 
 ## 7. Nhật ký quyết định
@@ -364,3 +391,6 @@ Số liệu do các script trong `ai/survey/content3/` sinh ra, chạy trên 27.
 | 09/10/2026 | **QĐ nội dung 5 – 5 (ngân sách GPU):** batch 2048; LightGCN tối đa 300 epoch, chấm NDCG@20 val mỗi 10 epoch; R-GCN tối đa 100 epoch, chấm mỗi 5 epoch; dừng khi 5 lần chấm liên tiếp không tăng; dò trên val 1 seed, cấu hình chốt chạy 3 seed; chạm giới hạn epoch thì ghi "chưa chắc hội tụ" ở kết quả và hạn chế | Nam chốt. Sai khác so với bài gốc (~1000 epoch, LightGCN §4.1.2). Xấu nhất ≈ 8,3 giờ GPU (tính từ `run_probe_gpu_20261009_lan1.log`), thay cho ~60 giờ nếu 1000 epoch |
 | 09/10/2026 | **QĐ nội dung 5 – 6:** chọn cấu hình theo NDCG@20 full ranking trên val; 5 so sánh đăng ký trước (S1–S5, kế hoạch mục 8) ở K = 10, bootstrap ghép cặp theo người dùng | Nam chốt |
 | 09/10/2026 | **Sửa code 05 theo kế hoạch** (commit `f21ced4`; làm rõ cài đặt ở kế hoạch mục 13, commit `bb8de6e`). Chạy Popularity / MountAware trên val; LightGCN, R-GCN chỉ chạy thử 1–3 epoch; không chấm test. Giữ Xavier cho LightGCN dù code tác giả dùng normal (std 0,01 / 0,1) | Theo yêu cầu của Nam. Số và kiểm thử ở CHANGELOG 09/10. **Chờ Nam:** chạy `05_val_sweep.py` qua đêm; xác nhận giữ Xavier |
+| 09/10/2026 | **Nội dung 5: chốt cấu hình** `ai/config/n5_final.toml` theo NDCG@20 val seed 1 (QĐ 5-6): LightGCN λ = 1e-3, R-GCN lr = 0,001; seed 2, 3 do Nam chạy cùng commit `595bc70`. Ghi vào kế hoạch mục 13 (commit `6fdc169`, trước khi chạy test): LightGCN cả 3 seed chạm 300 epoch → "chưa chắc hội tụ"; λ và lr tốt nhất ở biên lưới, **không mở rộng lưới** | Theo kế hoạch mục 7.2 bước 3–4. Kiểm 6 lần chạy: đủ `best.pt`, `result.json`, cấu hình trùng trừ seed, dirty False. NDCG@20 val 0,04046 ± 0,00007 / 0,02294 ± 0,00027 |
+| 09/10/2026 | **Nội dung 5: chạy test một lần** bằng `ai/pipeline/05_test_final.py` (commit `476f730` cùng toml, thử trên val trước; kết quả commit `2aa2fd7` trước khi phân tích). Không thấy lỗi script, không chạy lại | Kế hoạch mục 7.2 bước 5–6. Số ở mục 3 (dòng 5), CHANGELOG 09/10 (tiếp), kế hoạch mục 14 |
+| 09/10/2026 | Nội dung 5 lên **Đã kiểm thử** (chưa "Đã đánh giá") | Có số test cuối, chạy trên cây sạch, kiểm thử dựng tay đạt, chấm lại checkpoint trùng số val; chưa Red Team, Nam chưa trình bày lại |
