@@ -1,0 +1,171 @@
+{
+  "split": "val",
+  "n_users": 67661,
+  "full": {
+    "hit@5": 0.013552859106427631,
+    "recall@5": 0.013552859106427631,
+    "ndcg@5": 0.00839417746864366,
+    "hit@10": 0.022937881497465305,
+    "recall@10": 0.022937881497465305,
+    "ndcg@10": 0.011395309316370941,
+    "hit@20": 0.03816083120261303,
+    "recall@20": 0.03816083120261303,
+    "ndcg@20": 0.015252894431172575
+  },
+  "n_users_tie_at_target": 61460,
+  "top10_type_mix": {
+    "than": 0.0,
+    "ong": 0.886492957538316,
+    "phu_kien": 9.113507042461684,
+    "khac": 0.0
+  },
+  "cvr": {
+    "cvr@5": 0.0,
+    "cvr_n_users@5": 7,
+    "cvr_n_lenses@5": 7,
+    "cvr_n_violations@5": 0,
+    "cvr@10": 0.0,
+    "cvr_n_users@10": 3268,
+    "cvr_n_lenses@10": 3268,
+    "cvr_n_violations@10": 0,
+    "cvr@20": 0.0,
+    "cvr_n_users@20": 5922,
+    "cvr_n_lenses@20": 6028,
+    "cvr_n_violations@20": 0,
+    "cvr_n_users_with_body": 10406
+  },
+  "scenario": {
+    "lap_duoc": {
+      "n_users": 904,
+      "n_with_adapter_pair": 0,
+      "lens_only": {
+        "hit@5": 0.14380530973451328,
+        "recall@5": 0.14380530973451328,
+        "ndcg@5": 0.0959420466629528,
+        "hit@10": 0.2179203539823009,
+        "recall@10": 0.2179203539823009,
+        "ndcg@10": 0.11953626218312045,
+        "hit@20": 0.2809734513274336,
+        "recall@20": 0.2809734513274336,
+        "ndcg@20": 0.1355196730320966
+      },
+      "lens_only_cvr": {
+        "cvr@5": 0.0,
+        "cvr@10": 0.0,
+        "cvr@20": 0.0
+      },
+      "lens_only_cvr_n_lenses": {
+        "@5": 2407,
+        "@10": 4177,
+        "@20": 6659
+      },
+      "full_catalog": {
+        "hit@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@5": 0.0,
+        "hit@10": 0.022123893805309734,
+        "recall@10": 0.022123893805309734,
+        "ndcg@10": 0.007083678335928853,
+        "hit@20": 0.04535398230088496,
+        "recall@20": 0.04535398230088496,
+        "ndcg@20": 0.013246281118206858
+      }
+    },
+    "khong_lap_duoc": {
+      "n_users": 236,
+      "n_with_adapter_pair": 18,
+      "lens_only": {
+        "hit@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@5": 0.0,
+        "hit@10": 0.0,
+        "recall@10": 0.0,
+        "ndcg@10": 0.0,
+        "hit@20": 0.0,
+        "recall@20": 0.0,
+        "ndcg@20": 0.0
+      },
+      "lens_only_cvr": {
+        "cvr@5": 0.0,
+        "cvr@10": 0.0,
+        "cvr@20": 0.0
+      },
+      "lens_only_cvr_n_lenses": {
+        "@5": 465,
+        "@10": 799,
+        "@20": 1272
+      },
+      "full_catalog": {
+        "hit@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@5": 0.0,
+        "hit@10": 0.0,
+        "recall@10": 0.0,
+        "ndcg@10": 0.0,
+        "hit@20": 0.0,
+        "recall@20": 0.0,
+        "ndcg@20": 0.0
+      }
+    },
+    "khong_phan_duoc": {
+      "n_users": 12,
+      "n_with_adapter_pair": 0,
+      "lens_only": {
+        "hit@5": 0.3333333333333333,
+        "recall@5": 0.3333333333333333,
+        "ndcg@5": 0.1718005259704042,
+        "hit@10": 0.4166666666666667,
+        "recall@10": 0.4166666666666667,
+        "ndcg@10": 0.19808926570254828,
+        "hit@20": 0.4166666666666667,
+        "recall@20": 0.4166666666666667,
+        "ndcg@20": 0.19808926570254828
+      },
+      "lens_only_cvr": {
+        "cvr@5": 0.0,
+        "cvr@10": 0.0,
+        "cvr@20": 0.0
+      },
+      "lens_only_cvr_n_lenses": {
+        "@5": 9,
+        "@10": 11,
+        "@20": 18
+      },
+      "full_catalog": {
+        "hit@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@5": 0.0,
+        "hit@10": 0.0,
+        "recall@10": 0.0,
+        "ndcg@10": 0.0,
+        "hit@20": 0.08333333333333333,
+        "recall@20": 0.08333333333333333,
+        "ndcg@20": 0.021887461253099465
+      }
+    }
+  },
+  "sampled_1_99": {
+    "hit@5": 0.3438317494568511,
+    "ndcg@5": 0.24710082409198603,
+    "hit@10": 0.4603242636082825,
+    "ndcg@10": 0.28472671200095206,
+    "hit@20": 0.5938428341289664,
+    "ndcg@20": 0.3184164248691674
+  },
+  "arrays_sha256": {
+    "users.npy": "4de06f357d39f8965e254def8336699b8987bd1bce341b3f37b3a75ead847ac3",
+    "rank_full.npy": "8c81bb59f4621a2b05de6937945c9162a82a03f35c9c289ebe38cc54ce90f45c",
+    "top20_full.npy": "4722dc9bbbeddd1a4e8f42a7c59038d5ee00f339bf07a863932f7aab4c6845fa",
+    "n_tie_full.npy": "0b81067c20814419a0043405aee331432146aef79cc8abc4cb1968f6c2f13873",
+    "rank_sampled.npy": "91b2819ed2043deed55d5333847b198b12d543637adb3644e8e186f9b6e132cd",
+    "scn_users.npy": "4535a1b552c6fe4a14d993cc58dfa0e01bc390631f298a2e2effe819a2f2ad7b",
+    "rank_lens_only.npy": "1690eb4f808449589fc5761db6b0753679d31638f3f4fe0aa60ad16a9c09b641",
+    "top20_lens_only.npy": "1f2fe874249ec78e03916244c6aee005e80bea09e2f8e06324415bc7a2ba0c90",
+    "cvr_n_lenses_at5.npy": "6905b8c04fc7cd641fd0f86c7fec3c3eee163f003406fa425a6a73044acd4ea8",
+    "cvr_n_viol_at5.npy": "7da3f5af4b10ae89b076a1fb264a3df1955cd461337816d06b3c082ce87624a5",
+    "cvr_n_lenses_at10.npy": "ff028a2142a76bb315af7bfc1e7f5a7eea58c31cd638f5372f2d104af7e3040d",
+    "cvr_n_viol_at10.npy": "7da3f5af4b10ae89b076a1fb264a3df1955cd461337816d06b3c082ce87624a5",
+    "cvr_n_lenses_at20.npy": "b04714eb283a53277f3723b87d0280d3a34e9b136ea4cda7f2b83cc7eb42293a",
+    "cvr_n_viol_at20.npy": "7da3f5af4b10ae89b076a1fb264a3df1955cd461337816d06b3c082ce87624a5"
+  }
+}
