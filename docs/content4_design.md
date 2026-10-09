@@ -18,22 +18,25 @@ Số liệu trong file do các script khảo sát sinh ra (chạy trên đầu r
 
 ## 1. Ví dụ trước
 
-Một người dùng `u` trong tập train đã mua thân **Canon EOS Rebel T7i** (iid 13343) và ống **Canon EF 50mm f/1.8 STM** (iid 7056). Trong đồ thị, các cạnh liên quan:
+*(Sửa 09/10/2026.)* Bản đầu của mục này dùng một người dùng có thân **Canon EOS Rebel T7i** (iid 13343) và ống **Canon EF 50mm f/1.8 STM** (iid 7056). Đó là **ví dụ giả định**: trong `train.txt` không người dùng nào có cả hai sản phẩm này (cũng không ai có Rebel T6s iid 12902 + EF 50mm STM iid 20518), theo `ai/survey/content4/vidu_chuong4.py`, log `ai/data/survey/run_c4_vidu_chuong4_20261009_lan1.log`. Ví dụ dưới đây là **người dùng thật `uid 47`**, mọi cạnh in từ `run_c4_vidu_chuong4_20261009_lan2.log` (script đọc `kg_edges_*.csv`, `item_attributes.csv`, `train/val/test.txt`).
+
+Người dùng `uid 47` (chỉ số trong `user_map.json`): train có thân **Nikon D4S** (iid 12369), ống **Nikon AF-S 200-400mm f/4G ED VR II** (iid 3680), ống **Nikon 70-200mm f/2.8G ED VR II** (iid 13215) và 5 phụ kiện; val là thân **Nikon D500** (iid 14934); test là pin EN-EL15. Các cạnh liên quan:
 
 ```
-u ──interacted_with──▶ T7i                    (từ train.txt)
-u ──interacted_with──▶ EF 50mm f/1.8 STM      (từ train.txt)
-T7i ──compatible_with──▶ EF 50mm f/1.8 STM    (nội dung 3, luật canon_ef_efs_on_efs_body)
-T7i ──compatible_with──▶ EF 70-200mm f/2.8L   (nội dung 3)
-T7i ──has_spec──▶ [ngàm canon_efs]            T7i ──has_spec──▶ [khổ APS-C]
-EF 50mm ──has_spec──▶ [ngàm canon_ef]         EF 50mm ──has_spec──▶ [khổ full-frame]
-EF 50mm ──has_spec──▶ [tiêu cự 36–70mm]       EF 50mm ──has_spec──▶ [khẩu độ ≤ f/2.0]
-EF 70-200 ──suitable_for──▶ [chân dung], [thể thao/chim]   (luật mục đích, mục 4)
+uid 47 ──interacted_with──▶ D4S, 200-400mm, 70-200mm, 5 phụ kiện     (train.txt)
+D4S ──compatible_with──▶ 200-400mm      (nội dung 3, luật same_mount_lens_covers_body)
+D4S ──compatible_with──▶ 70-200mm       (cùng luật)
+D4S, 200-400mm, 70-200mm ──has_spec──▶ [ngàm nikon_f], [khổ ff]
+200-400mm ──has_spec──▶ [tiêu cự 136-300], [>300], [khẩu độ <=4]
+70-200mm  ──has_spec──▶ [tiêu cự 36-70], [71-135], [136-300], [khẩu độ <=2.8]
+200-400mm ──suitable_for──▶ [thể thao/chim]
+70-200mm  ──suitable_for──▶ [chân dung]
+D500 (val, không có cạnh interacted_with với uid 47) ──compatible_with──▶ 200-400mm, 70-200mm
 ```
 
-Nhờ đường đi `u → T7i → compatible_with → EF 70-200`, mô hình (nội dung 7) và phần giải thích (nội dung 8) có thể nói: "gợi ý EF 70-200 vì lắp được trên T7i bạn đang có".
+Nhờ đường đi `uid 47 → D4S → compatible_with → ống X → suitable_for → [chân dung]`, mô hình (nội dung 7) và phần giải thích (nội dung 8) có thể nói: "gợi ý ống X vì lắp được trên D4S bạn đang có, hợp chụp chân dung". Theo log, có 27 ống như vậy mà người này chưa có, vd Nikon 85mm f/1.4D (iid 99).
 
-Lưu ý rút ra từ chính ví dụ này: ống EF 50mm là ống full-frame, tiêu cự quy đổi là 50mm. Nhưng khi lắp trên T7i (APS-C, hệ số 1,6) thì góc nhìn tương đương 80mm, rất hợp chụp chân dung. **Mục đích sử dụng phụ thuộc cả thân lẫn ống**, còn đồ thị chỉ gắn nhãn cho ống theo khổ ống được thiết kế. Đây là một hạn chế phải nêu (xem [HỎI 4]).
+Lưu ý rút ra từ chính ví dụ này: ống 70-200mm là ống full-frame. Lắp lên D500 (DX, hệ số 1,5) thì góc nhìn tương đương 105–300mm (*tính tay*), theo luật thì thành cả chân dung lẫn thể thao/chim, nhưng đồ thị chỉ gắn nhãn chân dung. **Mục đích sử dụng phụ thuộc cả thân lẫn ống**, còn đồ thị chỉ gắn nhãn cho ống theo khổ ống được thiết kế. Đây là một hạn chế phải nêu (xem [HỎI 4]).
 
 ## 2. Loại nút (V)
 
@@ -79,9 +82,9 @@ Lấy nguyên từ nội dung 3, không thêm quy tắc mới.
 
 ### 3.3. Dải ISO — không có nguồn đáng tin
 - **Amazon:** `details` có "Expanded ISO Minimum / Maximum" cho 424 / 544 thân. Nhưng dữ liệu không nhất quán:
-  - Cùng một máy mà các listing ghi khác nhau. 31 / 247 dòng máy có hơn một giá trị. Ví dụ Rebel T7i có listing ghi 12800, có listing 25600, có listing 51200; 5D Mark IV có listing 25600, có listing 102400.
+  - Cùng một máy mà các listing ghi khác nhau. 31 / 247 dòng máy có hơn một giá trị (số 08/10, phân loại cũ 544 thân, không còn log). Đếm lại 09/10 trên phân loại hiện tại (543 thân, 424 có trường): 31 / 246 nhóm theo luật dòng máy (`ai/survey/report/c4_checks.py`, log `ai/data/survey/report/run_c4_checks_20261009_lan1.log`). Ví dụ Rebel T7i có listing ghi 12800, có listing 25600, có listing 51200; 5D Mark IV có listing 25600, có listing 102400 (cùng log).
   - Trường mang tên "Expanded" (ISO mở rộng), nhưng lúc thì người bán ghi ISO gốc, lúc ghi ISO mở rộng.
-- **Wikidata:** không có thuộc tính ISO. Tra danh sách thuộc tính bằng `wbsearchentities` ngày 08/10: chỉ ra ISO standard, ISNI…
+- **Wikidata:** ~~không có thuộc tính ISO~~ (**sửa 09/10**). Lần tra ngày 08/10 bằng `wbsearchentities` chỉ ra ISO standard, ISNI… và kết luận "không có" là **sai**. Tra lại 09/10 bằng SPARQL (`ai/survey/report/c4_wikidata_iso.py`, log `ai/data/survey/report/run_c4_wikidata_iso_20261009_lan1.log`, `_lan2.log`): có **P6789 "ISO speed"**, dùng ở 169 item (173 giá trị), phần lớn là mẫu máy ảnh số; mỗi máy một giá trị, lúc là ISO thấp nhất (Nikon D300: 200), lúc là cao nhất (Sony α7: 25600). Phủ ít và không nhất quán, nên đề xuất không đổi.
 - **Lensfun, openMVG:** không có ISO.
 - **DPReview:** không có dữ liệu mở. Muốn dùng phải cào trang, mà điều khoản trang không cho phép, nên không dùng.
 - **Đề xuất:** không đưa ISO vào đồ thị và ghi là hạn chế. Xem [HỎI 2].
@@ -259,7 +262,7 @@ Số cạnh thân–ống lấy từ `ai/data/kg/mount_compat_stats.json`; cạn
 
 | # | Quyết định | Thay đổi so với đề xuất ở mục 1–8 |
 |---|---|---|
-| 1 | **Nút tiêu cự theo tiêu cự thật** (mm ghi trên ống), giữ các mốc `<24 / 24–35 / 36–70 / 71–135 / 136–300 / >300`. Ống zoom nối mọi khoảng nó đi qua. Tiêu cự quy đổi 35mm **chỉ dùng trong luật mục đích** | Đề xuất cũ dùng khoảng quy đổi cho nút. Hệ quả: nút tiêu cự không còn phụ thuộc khổ ống, nên 205 ống không rõ khổ (cũ 218) vẫn có cạnh tiêu cự. Ví dụ ống MFT 50mm nằm ở khoảng 36–70, dù góc nhìn tương đương 100mm. Biên khoảng (cài trong `lens_specs.py`): `<24`, `[24, 35]`, `(35, 70]`, `(70, 135]`, `(135, 300]`, `>300` |
+| 1 | **Nút tiêu cự theo tiêu cự thật** (mm ghi trên ống), giữ các mốc `<24 / 24–35 / 36–70 / 71–135 / 136–300 / >300`. Ống zoom nối mọi khoảng nó đi qua. Tiêu cự quy đổi 35mm **chỉ dùng trong luật mục đích** | Đề xuất cũ dùng khoảng quy đổi cho nút. Hệ quả: nút tiêu cự không còn phụ thuộc khổ ống, nên 205 ống không rõ khổ (cũ 218) vẫn có cạnh tiêu cự. Ví dụ ống MFT 50mm nằm ở khoảng 36–70, dù góc nhìn tương đương 100mm. Biên khoảng (cài trong `lens_specs.py`): `<24`, `[24, 35]`, `(35, 70]`, `(70, 135]`, `(135, 300]`, `>300`. *(Ghi thêm 09/10:)* mốc 24, 35, 300 có câu trích trong các trang Canon đã lưu cho luật mục đích; **mốc 70 và 135 là quyết định nhóm**, không có nguồn |
 | 2 | **Bỏ ISO**, ghi hạn chế kèm lý do (mục 3.3): Amazon không nhất quán; Wikidata, Lensfun, openMVG không có ISO; DPReview không có dữ liệu mở | Như đề xuất |
 | 3 | **5 nhãn mục đích:** chân dung, phong cảnh, thể thao/chim, vlog, **macro**. **Vlog phải định nghĩa lại cho khác phong cảnh, dựa trên nguồn; không có căn cứ thì bỏ nhãn vlog.** Luật macro cũng phải có nguồn | Thêm macro; luật vlog nháp (`lo` ≤ 24mm) bị bỏ |
 | 4 | Nhãn mục đích gắn theo **khổ mà ống được thiết kế cho**. Chấp nhận, ghi hạn chế (ví dụ ống FF 50mm trên thân APS-C) | Như đề xuất |

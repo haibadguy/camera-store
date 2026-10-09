@@ -6,6 +6,33 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 09/10/2026 (tối): kiểm số cho 4 chương báo cáo, tái lập 01→04, sửa ví dụ ở script 04 và `content4_design`. Nhánh `nam/content4`
+
+**Sửa gì**
+- `ai/pipeline/04_build_knowledge_graph.py`: **chỉ docstring**. Ví dụ "Rebel T7i + EF 50mm f/1.8 STM" thay bằng người dùng thật `uid 47` (D4S, 200-400mm f/4, 70-200mm f/2.8), ghi rõ ví dụ cũ là giả định. Không đổi dòng code nào.
+- `docs/content4_design.md`: mục 1 (ví dụ thật `uid 47`), mục 3.3 (ISO: số 31/246 đếm lại; sửa câu "Wikidata không có ISO"), QĐ mục 9 số 1 (mốc 70 và 135mm là quyết định nhóm).
+- Thêm script chỉ đọc `ai/survey/report/` (10 file) và hai script ví dụ đã viết khi viết chương: `ai/survey/content4/vidu_chuong4.py`, `ai/survey/content5/vidu_chuong5.py`. Không script nào ghi vào `ai/data/processed`, `ai/data/kg`, `results/`.
+
+**Vì sao**
+- Ví dụ T7i + EF 50mm STM không có thật: không người dùng nào trong train có cả hai (`run_c4_vidu_chuong4_20261009_lan1.log`).
+- Các chương báo cáo còn những chỗ [CẦN SỐ / KIỂM / NGUỒN] phải có số từ script.
+
+**Ảnh hưởng (log ở `ai/data/survey/report/`)**
+
+| Kiểm | Kết quả |
+|---|---|
+| Chạy lại 01–02 vào `ai/data/processed_rerun_20261009/` | 10/10 file trùng sha256; 01: 393,6 s, 2,02 GiB; 02: 77,4 s, 0,32 GiB |
+| Chạy lại 03 (cache mới) vào `ai/data/kg_rerun_20261009/` | 7/8 file trùng (khác: `mount_compat_log.txt`, 2 dòng "dùng cache"); 178,3 s, 0,11 GiB |
+| Chạy lại 04 trước và sau khi sửa docstring | 13/13 file trùng cả hai lần; 39,4 s, 1,45 GiB |
+| Người dùng thô của Electronics | 18.286.191 (`run_c2_raw_scan_20261009_lan1.log`) |
+| "9.461 nhóm lặp" (mục 07/10) | = nhóm (user, item, timestamp) ≥ 2 dòng trong k-core bản cũ; 9.460 trùng y hệt asin + nội dung trong file gốc |
+| Wikidata có ISO không | **Có** P6789 "ISO speed", 169 item (câu "không có" ngày 08/10 sai); QĐ 4-2 giữ |
+| Hạn chế mới | STATUS mục 4: nội dung 3 điểm 17, nội dung 4 điểm 15–18, nội dung 5 điểm 12–14 |
+
+Không đổi số nào của pipeline. Chỗ báo cáo của Hải ghi sai: không phát hiện thêm.
+
+---
+
 ## 09/10/2026 (tiếp): nội dung 5 — chốt cấu hình `n5_final.toml`, chạy test một lần. Nhánh `nam/content4`; script ở commit `476f730`, kết quả ở commit `2aa2fd7`
 
 Theo `docs/reviews/n5_eval_plan.md` mục 7.2 bước 3–6 và mục 8. Không sửa code cũ của Hải; thêm 2 file mới thay vai trò bảng tổng hợp của `05_evaluate.py` (lỗi L12, L15 còn lại).

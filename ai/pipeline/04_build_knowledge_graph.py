@@ -3,12 +3,14 @@ Script: 04_build_knowledge_graph.py — Nội dung 4: dựng đồ thị tri th�
 
 Thiết kế: docs/content4_design.md mục 2, 5, 6, 9 (khi mục 9 khác các mục trước thì theo mục 9).
 
-Ví dụ (content4_design mục 1): người dùng u đã mua thân Canon EOS Rebel T7i và ống EF 50mm f/1.8 STM
-  u ──interacted_with──▶ T7i, EF 50mm                     (train.txt)
-  T7i ──compatible_with──▶ EF 70-200mm f/2.8L             (nội dung 3, compat_pairs.csv)
-  T7i ──has_spec──▶ [ngàm canon_efs], [khổ apsc]
-  EF 50mm ──has_spec──▶ [ngàm canon_ef], [khổ ff], [tiêu cự 36-70], [khẩu độ <=2.0]
-  EF 70-200 ──suitable_for──▶ [chan_dung]                 (luật mục đích, usecase_rules.toml)
+Ví dụ (content4_design mục 1, sửa 09/10/2026): người dùng thật uid 47 (train có Nikon D4S iid 12369,
+ống 200-400mm f/4 iid 3680, ống 70-200mm f/2.8 iid 13215; in từ ai/survey/content4/vidu_chuong4.py)
+  uid 47 ──interacted_with──▶ D4S, 200-400mm, 70-200mm    (train.txt)
+  D4S ──compatible_with──▶ 200-400mm, 70-200mm            (nội dung 3, compat_pairs.csv)
+  D4S ──has_spec──▶ [ngàm nikon_f], [khổ ff]
+  70-200mm ──has_spec──▶ [ngàm nikon_f], [khổ ff], [tiêu cự 36-70, 71-135, 136-300], [khẩu độ <=2.8]
+  70-200mm ──suitable_for──▶ [chan_dung]                  (luật mục đích, usecase_rules.toml)
+(Ví dụ cũ "Rebel T7i + EF 50mm f/1.8 STM" là ví dụ giả định: không người dùng nào trong train có cả hai.)
 
 Nút: user | item (thân / ống / phụ kiện / khác) | mount | sensor_format | focal_range | aperture_class | usecase
 Cạnh (chiều xuôi; ToUndirected(merge=False) thêm rev_* cho mọi quan hệ, kể cả item -> item):
