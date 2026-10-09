@@ -106,6 +106,10 @@ Từ 08/10/2026 (bảng luật v0.5, theo Red Team T5) áp **chuẩn QĐ nội d
 - **Khác biệt phiên bản:** trang chân dung bản lưu 08/10/2026 ghi "around 85mm or longer"; bản Wayback 25/02/2024 (`canon_eu_portrait_wb20240225.html`) ghi "a focal length over 85mm". Trích theo bản 08/10/2026.
 - **Nguồn bỏ:** trang Nikon 105mm f/2D (không có chữ "portrait"). Các bản Wayback cũ hơn tải trước đó (`*_wb202604*.html`, `*_wb20260511.html`, `canon_us_lens_buying_guide_wb20260904.html` — bản thô thiếu nội dung do JavaScript sinh) không dùng.
 
+### 2.6. Điều khoản sử dụng DPReview (lý do không dùng DPReview cho ISO, nội dung 4 QĐ 4-2; 09/10/2026)
+- URL: https://www.dpreview.com/terms-of-use/ (trang ghi "Last Updated: May 29, 2026", đơn vị vận hành Gear Patrol, LLC; nội dung mục 6 đọc qua công cụ đọc trang ngày 09/10/2026, chương 4 mục "Vì sao không có ISO").
+- **Chưa có bản sao.** Tải bằng `curl` ngày 09/10/2026 (User-Agent chung của dự án) bị chặn: HTTP 403, trang chặn bot tiêu đề "Just a moment..." (5.467 byte). File trả về giữ ở `ai/data/external/dpreview_terms/BI_CHAN_403_dpreview_terms_20261009.html` chỉ để làm bằng chứng bị chặn, **không phải bản sao điều khoản**. Nam sẽ lưu trang bằng trình duyệt vào `ai/data/external/dpreview_terms/`, rồi ghi sha256 vào đây và chương 4.
+
 ## 3. Cách tải lại
 
 ```bash

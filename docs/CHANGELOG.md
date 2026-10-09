@@ -31,6 +31,8 @@ Mục mới nhất nằm trên cùng.
 
 Không đổi số nào của pipeline. Chỗ báo cáo của Hải ghi sai: không phát hiện thêm.
 
+**Bổ sung cùng tối (Nam quyết):** `results/n5/finalcheck_val_20261009_lan2/` lên git (10 file json/md, 162 KB; mục 09/10 "tiếp" ghi thư mục này chờ Nam quyết). Trang điều khoản DPReview tải bằng `curl` bị chặn (HTTP 403), chưa có bản sao (DATA_SOURCES mục 2.6).
+
 ---
 
 ## 09/10/2026 (tiếp): nội dung 5 — chốt cấu hình `n5_final.toml`, chạy test một lần. Nhánh `nam/content4`; script ở commit `476f730`, kết quả ở commit `2aa2fd7`
