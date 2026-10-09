@@ -151,7 +151,7 @@ def make_reference(path):
     st["Bia Trai"].paragraph_format.left_indent = Cm(3)
     s = get_style(doc, "TLTK")
     set_font(s, 12)
-    para(s, align=WD_ALIGN_PARAGRAPH.JUSTIFY, spacing=1.2, after=4, indent=Cm(-0.8))
+    para(s, align=WD_ALIGN_PARAGRAPH.LEFT, spacing=1.2, after=4, indent=Cm(-0.8))
     s.paragraph_format.left_indent = Cm(0.8)
     # kiểu ký tự cho mã (dùng ở phụ lục)
     s = get_style(doc, "Verbatim Char", WD_STYLE_TYPE.CHARACTER)
