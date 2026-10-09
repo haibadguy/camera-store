@@ -1,89 +1,59 @@
-# Camera Store 📷
+# Camera Store — đồ án tốt nghiệp
 
-Hệ thống thương mại điện tử bán máy ảnh và thiết bị nhiếp ảnh tích hợp hệ thống gợi ý sản phẩm (Recommendation System).
+**Đề tài:** Hệ thống tư vấn cá nhân hóa lựa chọn thiết bị nhiếp ảnh trong thương mại điện tử bằng mô hình gợi ý lai có ràng buộc và giải thích được. GVHD: TS. Đỗ Thị Liên. Nhóm: Nam, Hải, Quyền.
 
----
+Dữ liệu: Amazon Reviews 2023, nhóm Electronics. Trạng thái dự án, quyết định và hạn chế: **`docs/STATUS.md`** (nguồn sự thật). Lịch sử sửa so với bản của Hải: `docs/CHANGELOG.md`.
 
-## 📁 Cấu trúc Thư mục
+> Phần `backend/` (Spring Boot) và `frontend/` (React) thuộc hướng cũ (bản đề xuất 16/09), không còn là hướng chính.
 
-- `backend/`: Spring Boot API, JPA entities, và Flyway migrations
-- `frontend/`: React + Vite UI (TypeScript, TailwindCSS)
-- `ai/`: Python ML pipeline cho Recommendation System (Training, Inference, Models)
-- `docs/`: Tài liệu kiến trúc, kế hoạch, yêu cầu hệ thống (SRS) và hướng dẫn
+## Thư mục chính
 
----
+| Thư mục | Nội dung |
+|---|---|
+| `ai/pipeline/` | Code nội dung 1–5 (script `01`…`05`, `common_05.py`, `eval_05.py`, ...) |
+| `ai/config/` | Luật và cấu hình: `mount_rules.toml`, `usecase_rules.toml`, `n5_final.toml` |
+| `ai/data/raw/` | Dữ liệu gốc (không sửa, không lên git) |
+| `ai/data/processed/` | Đầu ra script 01–02 (k-core, train/val/test) |
+| `ai/data/kg/` | Đầu ra script 03–04 (ma trận tương thích M, đồ thị tri thức `kg_hetero.pt`) |
+| `ai/survey/` | Script khảo sát, kiểm chứng, đo cho báo cáo; log ở `ai/data/survey/` |
+| `results/n5/` | Kết quả nội dung 5 (val, test cuối) |
+| `docs/` | `STATUS.md`, `CHANGELOG.md`, thiết kế, kế hoạch đánh giá `docs/reviews/` |
 
-## 🛠️ Công nghệ Sử dụng
+## Môi trường
 
-- **Backend:** Java 21 / Spring Boot 3.x, Spring Data JPA, Flyway, JWT
-- **Frontend:** React, TypeScript, Vite, TailwindCSS, TanStack Query
-- **Database & Cache:** PostgreSQL 17, Redis 7 (chạy qua Docker)
-- **AI/ML:** Python 3.11+ (TF-IDF, Cosine Similarity)
+Windows 11, Python 3.12, GPU CUDA 12.6. Luôn dùng venv `ai/.venv`; môi trường chuẩn để tái lập kết quả là `ai/requirements-lock.txt` (`ai/requirements.txt` chỉ ghi phiên bản tối thiểu).
 
----
-
-## 📋 Hướng dẫn Setup & Khởi chạy Dự án (Dành cho thành viên nhóm)
-
-### 📌 Bước 1: Cài đặt công cụ cần thiết (Chỉ làm 1 lần đầu)
-Mỗi thành viên cần cài đặt 5 công cụ sau trên máy Windows:
-1. **Git:** [Tải tại đây](https://git-scm.com/download/win)
-2. **Node.js (LTS):** [Tải tại đây](https://nodejs.org/)
-3. **Java JDK (JDK 17 hoặc 21):** [Tải tại đây](https://www.oracle.com/java/technologies/downloads/#java21)
-4. **Maven:** [Tải tại đây](https://maven.apache.org/download.cgi) *(hoặc tích hợp trong IDE)*
-5. **Docker Desktop:** [Tải tại đây](https://www.docker.com/products/docker-desktop/)
-
----
-
-### 📌 Bước 2: Clone Source Code từ GitHub
 ```powershell
-git clone https://github.com/haibadguy/camera-store.git
-cd camera-store
+py -3.12 -m venv ai\.venv
+ai\.venv\Scripts\python.exe -m pip install -r ai/requirements-lock.txt
 ```
 
----
+## Thứ tự chạy (từ thư mục gốc repo)
 
-### 📌 Bước 3: Cài đặt thư viện Frontend (Chỉ làm 1 lần đầu)
-Tại thư mục `camera-store`:
+Đặt `Electronics.jsonl.gz` và `meta_Electronics.jsonl.gz` vào `ai/data/raw/`.
+
 ```powershell
-cd frontend
-npm install
-cd ..
+# 1. Lọc nhóm camera, gộp tương tác lặp, k-core (k = 5)  -> ai/data/processed/
+ai\.venv\Scripts\python.exe ai/pipeline/01_filter_camera_domain.py
+# 2. Chia train/val/test theo thời gian                   -> ai/data/processed/
+ai\.venv\Scripts\python.exe ai/pipeline/02_split_time_aware.py
+# 3. Ngàm, khung, ma trận tương thích M (thêm --overwrite nếu ai/data/kg đã có file)  -> ai/data/kg/
+ai\.venv\Scripts\python.exe ai/pipeline/03_mount_compat.py --out-dir ai/data/kg
+# 4. Đồ thị tri thức + 8 kiểm tra (--run-label đặt tên log, không ghi đè log cũ)       -> ai/data/kg/
+ai\.venv\Scripts\python.exe ai/pipeline/04_build_knowledge_graph.py --run-label <nhãn>
+# 5a. Dò siêu tham số trên val (LightGCN, R-GCN; chạy tiếp được nếu bị ngắt)           -> results/n5/val_sweep_<nhãn>/
+ai\.venv\Scripts\python.exe ai/pipeline/05_val_sweep.py --label <nhãn>
+# 5b. Cấu hình chốt: ai/config/n5_final.toml (đã chốt 09/10/2026, không sửa sau khi chấm test)
+# 5c. Chấm test đúng một lần, Popularity, MountAware, LightGCN, R-GCN (3 seed cho hai mô hình huấn luyện) (thử --split val trước; --out phải là thư mục mới)
+ai\.venv\Scripts\python.exe ai/pipeline/05_test_final.py --split val  --out results/n5/<nhãn mới>
+ai\.venv\Scripts\python.exe ai/pipeline/05_test_final.py --split test --out results/n5/<nhãn mới>
 ```
 
----
+Huấn luyện từng mô hình riêng: `05b_lightgcn_train.py --l2 <λ> --seed <s> --run-dir <thư mục>`, `05c_rgcn_train.py --lr <lr> --seed <s> --run-dir <thư mục>`, `05a_popularity.py --split val --out <thư mục>`.
 
-### 📌 Bước 4: Khởi động Database (Bật mỗi khi bắt đầu làm việc)
-1. Mở ứng dụng **Docker Desktop** trên máy tính (đợi trạng thái xanh *Engine Running*).
-2. Mở Terminal tại thư mục `camera-store` và chạy:
-   ```powershell
-   docker compose up -d postgres redis
-   ```
+## Kết quả nằm ở đâu
 
----
-
-### 📌 Bước 5: Khởi động Ứng dụng
-
-- **Terminal 1 - Chạy Backend (Spring Boot):**
-  ```powershell
-  cd backend
-  mvn spring-boot:run
-  ```
-  *(Backend API chạy tại: `http://localhost:8080`)*
-
-- **Terminal 2 - Chạy Frontend (React + Vite):**
-  ```powershell
-  cd frontend
-  npm run dev
-  ```
-  *(Giao diện Web chạy tại: `http://localhost:5173`)*
-
----
-
-## 📖 Tài liệu Tham khảo Khác
-Chi tiết kiến trúc và quy trình phát triển xem tại thư mục `docs/`:
-- [docs/setup.md](docs/setup.md): Hướng dẫn cài đặt chi tiết
-- [docs/plan.md](docs/plan.md): Kế hoạch phát triển các Phase
-- [docs/architecture.md](docs/architecture.md): Tổng quan kiến trúc hệ thống
-
-
-
+- Số test cuối nội dung 5: `results/n5/test_final_20261009/summary_test_20261009_125536.{json,md}`; bảng đọc nhanh ở `docs/STATUS.md` mục 3.
+- Đồ thị và ma trận M: `ai/data/kg/` (`kg_stats.json`, `mount_compat_stats.json`, log kiểm tra `kg_validation_log_*.txt`).
+- Dữ liệu sau lọc: `ai/data/processed/` (`filtering_stats.json`, `train.txt`, `val.txt`, `test.txt`).
+- Log mỗi lần chạy ghi ra file tên mới kèm ngày/nhãn, không ghi đè.
