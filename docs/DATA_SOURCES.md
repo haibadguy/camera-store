@@ -108,7 +108,10 @@ Từ 08/10/2026 (bảng luật v0.5, theo Red Team T5) áp **chuẩn QĐ nội d
 
 ### 2.6. Điều khoản sử dụng DPReview (lý do không dùng DPReview cho ISO, nội dung 4 QĐ 4-2; 09/10/2026)
 - URL: https://www.dpreview.com/terms-of-use/ (trang ghi "Last Updated: May 29, 2026", đơn vị vận hành Gear Patrol, LLC; nội dung mục 6 đọc qua công cụ đọc trang ngày 09/10/2026, chương 4 mục "Vì sao không có ISO").
-- **Chưa có bản sao.** Tải bằng `curl` ngày 09/10/2026 (User-Agent chung của dự án) bị chặn: HTTP 403, trang chặn bot tiêu đề "Just a moment..." (5.467 byte). File trả về giữ ở `ai/data/external/dpreview_terms/BI_CHAN_403_dpreview_terms_20261009.html` chỉ để làm bằng chứng bị chặn, **không phải bản sao điều khoản**. Nam sẽ lưu trang bằng trình duyệt vào `ai/data/external/dpreview_terms/`, rồi ghi sha256 vào đây và chương 4.
+- **Bản sao (09/10/2026):** Nam lưu bằng trình duyệt: `ai/data/external/dpreview_terms/dpreview_terms_20261009.html` (542.506 byte, sha256 `1f0ad6d9f337dbc74fbd38b5c7da6d7e47c4f87e959909054d4e5c2ebc0dbaa7`; thư mục kèm `dpreview_terms_20261009_files/` do trình duyệt tạo, không dùng). Không lên git (`ai/data/external/` bị `.gitignore`).
+  - Kiểm bằng `ai/survey/report/c4_dpreview_terms.py` (chỉ đọc file đã lưu), log `ai/data/survey/report/run_c4_dpreview_terms_20261009_lan1.log`: ĐẠT CẢ — không phải trang chặn bot; có dấu "saved from url" đúng URL trên; có "Last Updated: May 29, 2026", "Gear Patrol, LLC"; mục đánh số 6 là "ACCESS TO AND USE OF CONTENT"; định nghĩa "DPR Content" có chữ "data".
+  - Câu trích (nguyên văn, mục 6): "Use automated means, including scrapers, crawlers, bots, scripts, or audit tools, to scan, scrape, index, monitor, or extract data or content from the Platform or any DPR Property, whether for commercial purposes, competitive intelligence, regulatory or legal enforcement, compliance auditing, or any other purpose, without Gear Patrol, LLC’s prior written consent".
+- Lần tải bằng `curl` ngày 09/10/2026 (User-Agent chung của dự án) bị chặn: HTTP 403, trang chặn bot tiêu đề "Just a moment..." (5.467 byte). File trả về giữ ở `ai/data/external/dpreview_terms/BI_CHAN_403_dpreview_terms_20261009.html` chỉ để làm bằng chứng bị chặn, **không phải bản sao điều khoản**.
 
 ## 3. Cách tải lại
 
