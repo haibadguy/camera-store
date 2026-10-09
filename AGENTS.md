@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Role
-Bạn là AI assistant cho Camera Store - một dự án đồ án thương mại điện tử chuyên về máy ảnh, tích hợp hệ thống tư vấn & gợi ý cá nhân hóa (Recommendation System). Trọng tâm đồ án là Recommendation System. Sử dụng kiến trúc Modular Monolith với Spring Boot 3, JPA/Hibernate + Flyway, PostgreSQL 17 và React 19.
+Bạn là AI assistant cho Camera Store - một dự án đồ án thương mại điện tử chuyên về máy ảnh, tích hợp hệ thống tư vấn & gợi ý cá nhân hóa (Recommendation System). Trọng tâm đồ án là Recommendation System. Kiến trúc demo: React 19 → Spring Boot 3 (backend nghiệp vụ, Modular Monolith, JPA/Hibernate + Flyway, PostgreSQL 17) → FastAPI (dịch vụ mô hình, code AI ở `ai/`). Spring Boot được giữ (quyết định 09/10/2026, `docs/STATUS.md`).
 
 ## Commands
 - Backend dev: `cd backend && mvn spring-boot:run` (Port: 8080)
@@ -11,6 +11,7 @@ Bạn là AI assistant cho Camera Store - một dự án đồ án thương mạ
 - Frontend build: `cd frontend && npm run build`
 
 ## Source of Truth (Thứ tự ưu tiên khi có mâu thuẫn thông tin)
+0. `docs/STATUS.md` – Trạng thái dự án, quyết định và hạn chế; thắng mọi tài liệu bên dưới khi mâu thuẫn
 1. `docs/FOUNDATION_BASELINE.md` – Bản móng kỹ thuật & ranh giới 3 thành viên
 2. `docs/PROJECT_STATUS_AND_ROADMAP.md` – Lộ trình trọng tâm AI & phân nhóm A/B
 3. `docs/constitution.md` – Nguyên tắc kiến trúc bất biến
@@ -21,10 +22,10 @@ Bạn là AI assistant cho Camera Store - một dự án đồ án thương mạ
 8. `docs/checklist.md` – Danh sách kiểm tra tiến độ
 
 ## Scope & Constraints
-- Đồ án tập trung vào hệ thống tư vấn gợi ý thiết bị nhiếp ảnh (Content-based, Constraint filtering, Explainable reasons).
+- Đồ án tập trung vào hệ thống tư vấn gợi ý thiết bị nhiếp ảnh (mô hình lai có ràng buộc tương thích, giải thích được; chi tiết ở `docs/STATUS.md`).
 - Giao diện E-commerce chỉ là nền tảng tối thiểu để hiển thị và thu thập hành vi (`user_behaviors`).
 - Ưu tiên giải pháp đơn giản, dễ bảo trì, dễ demo.
-- Không giới thiệu các mẫu kiến trúc phức tạp (Microservices, CQRS, Event Sourcing, DDD đầy đủ, Hexagonal).
+- Không giới thiệu các mẫu kiến trúc phức tạp (Microservices, CQRS, Event Sourcing, DDD đầy đủ, Hexagonal). Ngoại lệ duy nhất: một dịch vụ FastAPI cho mô hình, Spring Boot gọi qua HTTP.
 - Tránh tạo abstraction không cần thiết.
 
 ## AI Skills
