@@ -1,18 +1,24 @@
 """
-05b_lightgcn_train.py -- LightGCN baseline (pure user-item CF).
+05b_lightgcn_train.py -- LightGCN (He et al., SIGIR 2020), dò trên val theo docs/reviews/n5_eval_plan.md mục 6.3, 7.
 
-Chay tu thu muc goc camera-store:
-  python ai/pipeline/05b_lightgcn_train.py
+Viết lại 09/10/2026 (bản của Hải: lr 2.5e-3, batch 16384, 30 epoch, khởi tạo normal 0,01, chấm sampled; lỗi L5, L9,
+L10, L11, L13, L14 của kế hoạch mục 2).
 
-Output:
-  results/lightgcn_best.pt
-  results/lightgcn_results.json
+Ví dụ: u có train {A, B}; mỗi bước lấy cặp (u, A) và 1 âm mẫu C mà u chưa có; loss BPR = −ln σ(ŷ_uA − ŷ_uC),
+ŷ_ui = e_uᵀ e_i, với e = trung bình embedding của lớp 0..3 trên đồ thị user–item (chỉ cạnh train).
+
+Cấu hình (mục 7.1): d 64, K 3 lớp, α_k = 1/(K+1), Xavier, Adam lr 0,001, batch 2048, không dropout;
+λ dò {1e-5, 1e-4, 1e-3}; tối đa 300 epoch, chấm NDCG@20 val mỗi 10 epoch, dừng sau 5 lần chấm không tăng.
+Hạng L2 theo code của tác giả (kuandeng/LightGCN `create_bpr_loss`, gusye1234/LightGCN-PyTorch `bpr_loss`):
+λ · ½(‖e_u⁰‖² + ‖e_i⁰‖² + ‖e_j⁰‖²) / số cặp trong batch, chỉ embedding lớp 0.
+
+Chạy (từ thư mục camera-store; chỉ val, không chấm test):
+  ai\\.venv\\Scripts\\python.exe ai/pipeline/05b_lightgcn_train.py --l2 1e-4 --seed 1 --run-dir results/n5/<nhãn>/<tên>
+Chạy lại đúng lệnh đó sau khi bị ngắt -> chạy tiếp từ lần chấm val gần nhất.
 """
 
-import json
-import random
+import argparse
 import sys
-import time
 from pathlib import Path
 
 import numpy as np
@@ -22,299 +28,81 @@ import torch.nn.functional as F
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import common_05 as C  # noqa: E402
+import eval_05 as E    # noqa: E402
+import train_05 as T   # noqa: E402
 
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
 
-# -- Hyperparameters -------------------------------------------------------
-SEED        = C.SEED
-EMB_DIM     = 64
-N_LAYERS    = 3
-LR          = 2.5e-3
-L2_REG      = 1e-4
-BATCH_SIZE  = 16384
-MAX_EPOCH   = 30
-EVAL_EVERY  = 2      # epochs
-PATIENCE    = 4      # eval cycles (= 8 epochs)
-DEVICE      = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-random.seed(SEED)
-np.random.seed(SEED)
-torch.manual_seed(SEED)
-
-
-# -- Normalized Adjacency --------------------------------------------------
-
-def build_norm_adj(train_dict, n_users, n_items):
-    """
-    Build D^(-1/2) A D^(-1/2) cho LightGCN.
-    A = [[0, R], [R^T, 0]], R la user-item interaction matrix.
-    Tra ve sparse FloatTensor [N+M, N+M].
-    """
-    print("Building normalized adjacency...", flush=True)
-    rows, cols = [], []
-    for uid, items in train_dict.items():
-        for iid in items:
-            rows.append(uid)
-            cols.append(n_users + iid)
-            rows.append(n_users + iid)
-            cols.append(uid)
-
+def build_norm_adj(train, n_users, n_items):
+    """D^(-1/2) A D^(-1/2), A = [[0, R], [Rᵀ, 0]], R = ma trận user–item của train."""
+    u, i = T.train_pairs(train)
+    rows = np.concatenate([u, n_users + i])
+    cols = np.concatenate([n_users + i, u])
     N = n_users + n_items
-    indices = torch.tensor([rows, cols], dtype=torch.long)
-    values  = torch.ones(len(rows), dtype=torch.float32)
-    A = torch.sparse_coo_tensor(indices, values, (N, N)).coalesce()
+    deg = np.bincount(rows, minlength=N).astype(np.float64)
+    dis = np.zeros(N)
+    dis[deg > 0] = deg[deg > 0] ** -0.5
+    idx = torch.as_tensor(np.stack([rows, cols]))
+    val = torch.as_tensor(dis[rows] * dis[cols], dtype=torch.float32)
+    return torch.sparse_coo_tensor(idx, val, (N, N)).coalesce()
 
-    # Degree vector D^(-1/2)
-    deg = torch.sparse.sum(A, dim=1).to_dense()
-    deg_inv_sqrt = deg.pow(-0.5)
-    deg_inv_sqrt[deg_inv_sqrt == float("inf")] = 0.0
-
-    # D^(-1/2) A D^(-1/2): scale rows and cols
-    row_idx = indices[0]
-    col_idx = indices[1]
-    norm_vals = deg_inv_sqrt[row_idx] * values * deg_inv_sqrt[col_idx]
-
-    norm_adj = torch.sparse_coo_tensor(indices, norm_vals, (N, N)).coalesce()
-    print(f"  Norm adj: {N} x {N}, nnz={norm_adj._nnz():,}", flush=True)
-    return norm_adj.to(DEVICE)
-
-
-# -- LightGCN Model --------------------------------------------------------
 
 class LightGCN(nn.Module):
-    def __init__(self, n_users, n_items, emb_dim, n_layers, norm_adj):
+    def __init__(self, n_users, n_items, dim, n_layers, adj, l2):
         super().__init__()
-        self.n_users  = n_users
-        self.n_items  = n_items
-        self.n_layers = n_layers
-        self.norm_adj = norm_adj
+        self.n_users, self.n_layers, self.l2, self.adj = n_users, n_layers, l2, adj
+        self.user_emb = nn.Embedding(n_users, dim)
+        self.item_emb = nn.Embedding(n_items, dim)
+        nn.init.xavier_uniform_(self.user_emb.weight)      # bài §4.1.2: Xavier
+        nn.init.xavier_uniform_(self.item_emb.weight)
 
-        self.user_emb = nn.Embedding(n_users, emb_dim)
-        self.item_emb = nn.Embedding(n_items, emb_dim)
-        nn.init.normal_(self.user_emb.weight, std=0.01)
-        nn.init.normal_(self.item_emb.weight, std=0.01)
-
-    def get_all_embeddings(self):
-        E = torch.cat([self.user_emb.weight, self.item_emb.weight], dim=0)
-        layers = [E]
+    def propagate(self):
+        E0 = torch.cat([self.user_emb.weight, self.item_emb.weight])
+        acc, Ek = E0, E0
         for _ in range(self.n_layers):
-            E = torch.sparse.mm(self.norm_adj, E)
-            layers.append(E)
-        E_final = torch.stack(layers, dim=0).mean(dim=0)
-        return E_final[:self.n_users], E_final[self.n_users:]
+            Ek = torch.sparse.mm(self.adj, Ek)
+            acc = acc + Ek
+        Ef = acc / (self.n_layers + 1)                     # α_k = 1/(K+1)
+        return Ef[:self.n_users], Ef[self.n_users:]
 
-    def bpr_loss(self, users, pos_items, neg_items):
-        u_emb, i_emb = self.get_all_embeddings()
-        u   = u_emb[users]
-        pos = i_emb[pos_items]
-        neg = i_emb[neg_items]
-        pos_score = (u * pos).sum(dim=1)
-        neg_score = (u * neg).sum(dim=1)
-        loss = -F.logsigmoid(pos_score - neg_score).mean()
-        # L2 regularization on initial embeddings only
-        l2 = (self.user_emb.weight[users].norm(2).pow(2)
-              + self.item_emb.weight[pos_items].norm(2).pow(2)
-              + self.item_emb.weight[neg_items].norm(2).pow(2)) / len(users)
-        return loss + L2_REG * l2
+    def loss(self, u, i, j):
+        eu, ei = self.propagate()
+        bpr = F.softplus(-((eu[u] * ei[i]).sum(1) - (eu[u] * ei[j]).sum(1))).mean()   # = −ln σ(·), trung bình
+        reg = 0.5 * (self.user_emb(u).pow(2).sum() + self.item_emb(i).pow(2).sum()
+                     + self.item_emb(j).pow(2).sum()) / len(u)
+        return bpr + self.l2 * reg
 
+    @torch.no_grad()
+    def score_fn(self):
+        eu, ei = self.propagate()
+        return lambda uids: eu[uids] @ ei.T
 
-# -- Training --------------------------------------------------------------
-
-def train_one_epoch(model, optimizer, train_pairs, sampler):
-    model.train()
-    rng = np.random.default_rng(SEED)
-    rng.shuffle(train_pairs)
-
-    total_loss = 0.0
-    n_batches  = 0
-
-    for start in range(0, len(train_pairs), BATCH_SIZE):
-        batch = train_pairs[start:start + BATCH_SIZE]
-        users     = torch.tensor([x[0] for x in batch], dtype=torch.long, device=DEVICE)
-        pos_items = torch.tensor([x[1] for x in batch], dtype=torch.long, device=DEVICE)
-        neg_items = torch.tensor(
-            [sampler.sample(x[0]) for x in batch], dtype=torch.long, device=DEVICE
-        )
-
-        optimizer.zero_grad()
-        loss = model.bpr_loss(users, pos_items, neg_items)
-        loss.backward()
-        optimizer.step()
-
-        total_loss += loss.item()
-        n_batches  += 1
-
-    return total_loss / max(n_batches, 1)
-
-
-@torch.no_grad()
-def evaluate(model, pos_dict, neg_dict, split="val"):
-    model.eval()
-    rng = np.random.default_rng(SEED)
-
-    # Compute embeddings ONCE for the entire evaluation
-    u_emb, i_emb = model.get_all_embeddings()
-    u_np = u_emb.cpu().numpy()
-    i_np = i_emb.cpu().numpy()
-
-    def score_fn(uid, pos_iid, neg_iids):
-        candidates = [pos_iid] + list(neg_iids)
-        u = u_np[uid]
-        i = i_np[candidates]
-        return (u * i).sum(axis=1)
-
-    return C.sampled_eval(score_fn, pos_dict, neg_dict, rng=rng)
-
-
-# -- Main ------------------------------------------------------------------
 
 def main():
-    print("=" * 60, flush=True)
-    print("MUC 5b: LIGHTGCN TRAINING", flush=True)
-    print(f"Device: {DEVICE}", flush=True)
-    print("=" * 60, flush=True)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--l2", type=float, required=True, help="λ, dò {1e-5, 1e-4, 1e-3}")
+    ap.add_argument("--seed", type=int, required=True)
+    ap.add_argument("--run-dir", required=True)
+    ap.add_argument("--max-epoch", type=int, default=300)
+    ap.add_argument("--eval-every", type=int, default=10)
+    ap.add_argument("--patience", type=int, default=5)
+    ap.add_argument("--stop-after", type=int, default=None, help="(kiểm thử) dừng sau N epoch như bị ngắt")
+    a = ap.parse_args()
+    cfg = {"dim": 64, "n_layers": 3, "lr": 1e-3, "batch": 2048, "l2": a.l2, "init": "xavier_uniform",
+           "seed": a.seed, "max_epoch": a.max_epoch, "eval_every": a.eval_every, "patience": a.patience,
+           "select_metric": "val ndcg@20 full ranking"}
+    if a.stop_after:
+        cfg["_stop_after"] = a.stop_after
 
-    # Load data
-    print("\nLoading data...", flush=True)
-    train_dict     = C.load_train()
-    val_pos        = C.load_pos("val")
-    val_neg        = C.load_negatives("val")
-    test_pos       = C.load_pos("test")
-    test_neg       = C.load_negatives("test")
-    item_type      = C.load_item_type()
-    body_to_lenses = C.load_body_to_lenses()
-    cvr_users      = C.build_train_bodies(train_dict, body_to_lenses, item_type)
+    def build(train, log):
+        adj = build_norm_adj(train, C.N_USERS, C.N_ITEMS).to(E.DEVICE)
+        log(f"Ma trận kề chuẩn hóa {C.N_USERS + C.N_ITEMS:,} nút, {adj._nnz():,} phần tử khác 0 (= 2 × cặp train)")
+        m = LightGCN(C.N_USERS, C.N_ITEMS, cfg["dim"], cfg["n_layers"], adj, cfg["l2"]).to(E.DEVICE)
+        return m, m.parameters()
 
-    # Flatten train pairs: [(uid, iid), ...]
-    train_pairs = [(uid, iid) for uid, items in train_dict.items() for iid in items]
-    print(f"  train pairs: {len(train_pairs):,}", flush=True)
-    print(f"  val users:   {len(val_pos):,}", flush=True)
-    print(f"  CVR users:   {len(cvr_users):,}", flush=True)
-
-    # Build norm adj
-    norm_adj = build_norm_adj(train_dict, C.N_USERS, C.N_ITEMS)
-
-    # Model + optimizer
-    model = LightGCN(C.N_USERS, C.N_ITEMS, EMB_DIM, N_LAYERS, norm_adj).to(DEVICE)
-    optimizer = torch.optim.Adam(model.parameters(), lr=LR)
-    sampler   = C.OnlineNegSampler(train_dict, C.N_ITEMS, np.random.default_rng(SEED))
-
-    print(f"\nModel: LightGCN | n_layers={N_LAYERS} | emb_dim={EMB_DIM}", flush=True)
-    print(f"Config: lr={LR} | l2={L2_REG} | batch={BATCH_SIZE} | patience={PATIENCE} eval cycles", flush=True)
-
-    best_val_ndcg10 = -1.0
-    best_epoch      = 0
-    patience_cnt    = 0
-    best_state      = None
-
-    # Training loop
-    print("\nTraining...", flush=True)
-    t0 = time.time()
-
-    for epoch in range(1, MAX_EPOCH + 1):
-        ep_t0 = time.time()
-        loss = train_one_epoch(model, optimizer, train_pairs, sampler)
-        ep_time = time.time() - ep_t0
-
-        if epoch % EVAL_EVERY == 0:
-            eval_t0 = time.time()
-            val_metrics = evaluate(model, val_pos, val_neg, "val")
-            eval_time = time.time() - eval_t0
-            ndcg10 = val_metrics["ndcg@10"]
-            elapsed = time.time() - t0
-
-            print(f"  Epoch {epoch:2d}/{MAX_EPOCH} | loss={loss:.4f} ({ep_time:.1f}s) | "
-                  f"val Hit@10={val_metrics['hit@10']:.4f} NDCG@10={ndcg10:.4f} "
-                  f"(eval {eval_time:.1f}s) | total {elapsed:.0f}s", flush=True)
-
-            if ndcg10 > best_val_ndcg10:
-                best_val_ndcg10 = ndcg10
-                best_epoch      = epoch
-                patience_cnt    = 0
-                best_state      = {k: v.clone() for k, v in model.state_dict().items()}
-                # Save checkpoint immediately
-                torch.save({
-                    "state_dict":       best_state,
-                    "config": {
-                        "n_layers": N_LAYERS, "emb_dim": EMB_DIM,
-                        "lr": LR, "l2": L2_REG, "batch_size": BATCH_SIZE,
-                    },
-                    "best_epoch":       best_epoch,
-                    "best_val_ndcg10":  best_val_ndcg10,
-                    "seed":             SEED,
-                }, C.RESULTS_DIR / "lightgcn_best.pt")
-            else:
-                patience_cnt += 1
-                if patience_cnt >= PATIENCE:
-                    print(f"\n  Early stopping at epoch {epoch} "
-                          f"(best: epoch {best_epoch}, val NDCG@10={best_val_ndcg10:.4f})", flush=True)
-                    break
-        else:
-            print(f"  Epoch {epoch:2d}/{MAX_EPOCH} | loss={loss:.4f} ({ep_time:.1f}s)", flush=True)
-
-    # Load best checkpoint
-    model.load_state_dict(best_state)
-    print(f"\nBest checkpoint: epoch {best_epoch}, val NDCG@10={best_val_ndcg10:.4f}", flush=True)
-
-    # Test evaluation — sampled 1+99
-    print("\nTest evaluation (sampled 1+99)...", flush=True)
-    test_hit_ndcg = evaluate(model, test_pos, test_neg, "test")
-    C.print_results("LightGCN (sampled)", test_hit_ndcg)
-
-    # Test evaluation — CVR full-catalog
-    print("\nTest CVR (full-catalog, 2,488 users)...", flush=True)
-    model.eval()
-
-    # Precompute embeddings ONCE with torch.no_grad() and detach()
-    with torch.no_grad():
-        u_emb, i_emb = model.get_all_embeddings()
-        u_np = u_emb.detach().cpu().numpy()
-        i_np_T = i_emb.detach().T.cpu().numpy()
-
-    def score_fn_full(uid):
-        return u_np[uid] @ i_np_T
-
-    cvr_results = C.full_catalog_cvr(
-        score_fn=score_fn_full,
-        cvr_users=cvr_users,
-        train_dict=train_dict,
-        body_to_lenses=body_to_lenses,
-        item_type=item_type,
-    )
-    C.print_results("LightGCN (CVR)", cvr_results)
-
-    # Combine results
-    all_results = {**test_hit_ndcg, **cvr_results}
-
-    # Save checkpoint
-    out_pt = C.RESULTS_DIR / "lightgcn_best.pt"
-    torch.save({
-        "state_dict":       best_state,
-        "config": {
-            "n_layers": N_LAYERS, "emb_dim": EMB_DIM,
-            "lr": LR, "l2": L2_REG, "batch_size": BATCH_SIZE,
-        },
-        "best_epoch":       best_epoch,
-        "best_val_ndcg10":  best_val_ndcg10,
-        "seed":             SEED,
-    }, out_pt)
-    print(f"\nSaved: {out_pt}", flush=True)
-
-    out_json = C.RESULTS_DIR / "lightgcn_results.json"
-    with open(out_json, "w") as f:
-        json.dump({
-            "model": "LightGCN",
-            "config": {"n_layers": N_LAYERS, "emb_dim": EMB_DIM,
-                       "lr": LR, "l2": L2_REG, "batch_size": BATCH_SIZE},
-            "best_epoch": best_epoch,
-            "best_val_ndcg10": best_val_ndcg10,
-            "results": all_results,
-        }, f, indent=2)
-    print(f"Saved: {out_json}", flush=True)
-
-    total_time = time.time() - t0
-    print(f"\n=== HOAN TAT 05b | {total_time/60:.1f} phut ===", flush=True)
+    T.run("LightGCN", cfg, build, a.run_dir, extra_argv=sys.argv)
 
 
 if __name__ == "__main__":

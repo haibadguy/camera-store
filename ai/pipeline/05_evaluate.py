@@ -1,6 +1,10 @@
 """
 05_evaluate.py -- Tong hop ket qua benchmark cua cac mo hinh trong Muc 5.
 
+(Ghi chú 09/10/2026: bản cũ của Hải, chỉ đọc kết quả cũ results/*.json — sampled 1+99, "R-GCN variant" không phải
+R-GCN. Kết quả nội dung 5 mới nằm ở results/n5/ (eval_05.py, 05a/05b/05c, 05_val_sweep.py). Bảng tổng hợp mới
+kèm bootstrap và so sánh S1–S5 (kế hoạch docs/reviews/n5_eval_plan.md mục 8) sẽ viết cùng script chạy test.)
+
 Doc tat ca file ket qua trong results/:
   - popularity_global.json
   - popularity_mountaware.json

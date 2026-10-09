@@ -1,0 +1,48 @@
+{
+  "model": "LightGCN",
+  "cfg": {
+    "dim": 64,
+    "n_layers": 3,
+    "lr": 0.001,
+    "batch": 2048,
+    "l2": 0.001,
+    "init": "xavier_uniform",
+    "seed": 2,
+    "max_epoch": 300,
+    "eval_every": 10,
+    "patience": 5,
+    "select_metric": "val ndcg@20 full ranking"
+  },
+  "git": {
+    "commit": "595bc7072a81a3a73902d81e63afe35b4f55bcfb",
+    "dirty": false
+  },
+  "inputs_sha256": {
+    "ai/data/processed/train.txt": "ebd29b03a4866cfca243edc1ee31539f16be19b756bfbd4c388e3f20ca06a5c5",
+    "ai/data/processed/val.txt": "e8a47d06bd6e6977fe7eebc485cbf07eb75e7e9bdb651da955e8fd7f85a3a900",
+    "ai/data/processed/test.txt": "410fc46cea72cdc5115a3e0413036456d1d1d59b8bcb7c63da6edd026e4da8ea",
+    "ai/data/processed/val_negatives.json": "f6ad945f101c2c33c58f011bf437599c71d17faec4ef58fa05c040329e5a277f",
+    "ai/data/processed/test_negatives.json": "8c408f53b7fe62ef33c8b75114abab101ee59b9e62e25feaab8c05501293b205",
+    "ai/data/kg/item_attributes.csv": "3b05f535c5dad6e08cd99f2c360e34a95c20b816cd6cd8ce0ca9fbbd4cc7b621",
+    "ai/data/kg/kg_hetero.pt": "abf149b5a75b18926cf4c39f826e6d71e3e34f17b2943e891ef50203c69fce4b",
+    "ai/data/kg/kg_edges_compatible_with.csv": "77c8d5c86d824a028bef6838759499702952f537d891ae204610cac607c9bb60",
+    "ai/data/kg/kg_edges_crops_sensor.csv": "a2a052a5210f9e7f547da6db46ec91111dbf6138aa2989bafdc75240201c688e",
+    "ai/data/kg/kg_edges_requires_adapter.csv": "177447cd04689586eb099767bf5924782cec4c7a62306e6075024a4013364a94",
+    "ai/data/kg/unknown_mask.npz": "c9ae5c10e4fa80b60210049f6210828bbc4ff4b240ca67496d6b810db5d98b2d",
+    "ai/data/kg/body_index.json": "dfffbc204edfc945b09fb5e4b88c35b3499ac28747152bcf39d24375f18cda8d",
+    "ai/data/kg/lens_index.json": "f774c8e53d5679b952026e725daf74d1a85b4c66452239dad37c0baebc57862d",
+    "ai/pipeline/common_05.py": "dd79d6bcea8e07b53f0b8d82020b0534196acaa45acc1ffa1bbcb44b7315a020",
+    "ai/pipeline/eval_05.py": "bf81159cd940b3774c6c8dae647ee4649dfb94b90de118eda9822dbeec406e24"
+  },
+  "device": "cuda",
+  "torch": "2.14.1+cu126",
+  "argv": [
+    "ai/pipeline/05b_lightgcn_train.py",
+    "--l2",
+    "1e-3",
+    "--seed",
+    "2",
+    "--run-dir",
+    "results/n5/final_20261009/lightgcn_l2-1e-03_s2"
+  ]
+}

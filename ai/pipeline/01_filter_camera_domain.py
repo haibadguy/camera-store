@@ -3,6 +3,7 @@ Script: 01_filter_camera_domain.py
 Mục đích:
 1. Trích xuất Domain Camera & Photo từ meta_Electronics.jsonl.gz.
 2. Lọc các tương tác từ Electronics.jsonl.gz thuộc các sản phẩm Camera.
+   2b. Mỗi cặp (user, parent_asin) chỉ giữ 1 tương tác có timestamp sớm nhất (sửa 07/10/2026, xem docs/CHANGELOG.md).
 3. Thực hiện lọc k-core lặp (Iterative k-core filtering, k=5) để loại bỏ nhiễu và dữ liệu thưa.
 4. Xuất file thống kê và dữ liệu chuẩn bị cho bước chia train/val/test.
 """
@@ -141,6 +142,49 @@ def step_2_filter_interactions(camera_asins):
     
     return interactions, total_reviews
 
+def step_2b_dedup_user_item(interactions):
+    """
+    Mỗi cặp (user, parent_asin) chỉ giữ 1 tương tác: bản có timestamp sớm nhất.
+    Lý do: bài toán là gợi ý sản phẩm user chưa có; bản ghi lặp làm val/test trùng train.
+    Các dòng bị bỏ được tách làm 2 loại:
+      - bản sao y hệt: trùng cả (user, parent_asin, timestamp, rating) với một dòng khác
+        (file gốc Amazon chứa các dòng lặp nguyên văn)
+      - đánh giá lại: cùng (user, parent_asin) nhưng khác timestamp hoặc rating
+    """
+    print("\n" + "=" * 60)
+    print("BƯỚC 2b: GỘP TƯƠNG TÁC LẶP (MỖI CẶP USER–ITEM GIỮ BẢN SỚM NHẤT)...")
+    print("=" * 60)
+
+    # Sắp xếp để các dòng cùng cặp đứng liền nhau, bản sớm nhất đứng đầu.
+    # Bản sao y hệt sẽ đứng ngay sau dòng giống nó.
+    interactions.sort(key=lambda r: (r["user_id"], r["parent_asin"], r["timestamp"], r["rating"]))
+
+    deduped = []
+    n_exact_copy = 0
+    n_re_review = 0
+    prev = None
+    for r in interactions:
+        if prev is not None and r["user_id"] == prev["user_id"] and r["parent_asin"] == prev["parent_asin"]:
+            if r["timestamp"] == prev["timestamp"] and r["rating"] == prev["rating"]:
+                n_exact_copy += 1
+            else:
+                n_re_review += 1
+        else:
+            deduped.append(r)
+        prev = r
+
+    n_removed = n_exact_copy + n_re_review
+    print(f"-> Trước khi gộp: {len(interactions):,} tương tác")
+    print(f"-> Bỏ {n_removed:,} dòng: {n_exact_copy:,} bản sao y hệt + {n_re_review:,} đánh giá lại")
+    print(f"-> Sau khi gộp:  {len(deduped):,} tương tác (mỗi cặp user–item 1 dòng)")
+
+    dedup_stats = {
+        "dedup_removed_total": n_removed,
+        "dedup_removed_exact_copy": n_exact_copy,
+        "dedup_removed_re_review": n_re_review,
+    }
+    return deduped, dedup_stats
+
 def step_3_iterative_k_core(interactions, k=5):
     print("\n" + "=" * 60)
     print(f"BƯỚC 3: THỰC HIỆN THUẬT TOÁN LỌC K-CORE LẶP (k = {k})...")
@@ -185,7 +229,15 @@ def main():
     
     # 2. Lọc Reviews
     camera_interactions, total_reviews = step_2_filter_interactions(camera_asins)
-    
+    n_raw_camera_interactions = len(camera_interactions)
+    n_raw_camera_users = len({r["user_id"] for r in camera_interactions})
+    n_raw_camera_items_with_inter = len({r["parent_asin"] for r in camera_interactions})
+    print(f"-> Trước k-core: {n_raw_camera_users:,} users | {n_raw_camera_items_with_inter:,} items có tương tác")
+
+    # 2b. Gộp tương tác lặp
+    camera_interactions, dedup_stats = step_2b_dedup_user_item(camera_interactions)
+    n_dedup_interactions = len(camera_interactions)
+
     # 3. Lọc k-core
     dense_interactions = step_3_iterative_k_core(camera_interactions, k=K_CORE)
     
@@ -230,7 +282,11 @@ def main():
         "raw_electronics_reviews": total_reviews,
         "raw_electronics_metadata": total_meta,
         "raw_camera_items": total_camera_items,
-        "raw_camera_interactions": len(camera_interactions),
+        "raw_camera_interactions": n_raw_camera_interactions,
+        "raw_camera_users": n_raw_camera_users,
+        "raw_camera_items_with_interaction": n_raw_camera_items_with_inter,
+        **dedup_stats,
+        "dedup_interactions": n_dedup_interactions,
         "k_core": K_CORE,
         "filtered_users": n_users,
         "filtered_items": n_items,

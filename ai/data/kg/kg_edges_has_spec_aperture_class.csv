@@ -1,0 +1,1289 @@
+iid,parent_asin,a1,a2,aperture_class,title
+23,B00004THCX,3.5,5.6,<=4,Canon EF 28-80mm f/3.5-5.6 II Standard Zoom Lens for Canon SLR Cameras (Discontinued by Manufacturer)
+24,B00004THCY,4,5.6,<=4,Canon EF 35-80mm f/4-5.6 III Lens (Discontinued by Manufacturer)
+25,B00004THD0,4,5.6,<=4,Canon EF 75-300mm f/4-5.6 III Telephoto Zoom Lens for Canon SLR Cameras
+28,B00004THM6,4.5,5.6,>4,Canon EF 80-200mm f/4.5-5.6 II Telephoto Zoom Lens for Canon SLR Cameras
+54,B00004XOND,4.5,5.6,>4,Canon EF 100-300mm f/4.5-5.6 USM Telephoto Zoom Lens for Canon SLR Cameras (Discontinued by Manufacturer)
+55,B00004XONF,4,5.6,<=4,Canon EF 75-300mm f/4-5.6 IS USM Telephoto Zoom Lens for Canon SLR Cameras (Discontinued by Manufacturer)
+58,B00004YZLY,3.5,5.6,<=4,Canon EF 28-200mm f/3.5-5.6 USM Standard Zoom Lens for Canon SLR Cameras
+59,B00004YZQ8,3.5,4.5,<=4,Canon EF 28-105mm f/3.5-4.5 II USM Standard Zoom Lens for Canon SLR Cameras (Discontinued by Manufacturer)
+73,B00004ZD2X,3.5,5.6,<=4,Tamron AF 28-80mm f/3.5-5.6 Aspherical Lens for Canon Digital SLR Cameras (Model 177DE)
+74,B00004ZD2Y,3.5,5.6,<=4,Tamron AF 28-80mm f/3.5-5.6 Aspherical Lens for Nikon Digital SLR Cameras (Model 177DN)
+75,B00004ZD30,3.5,5.6,<=4,Tamron AF 28-80mm f/3.5-5.6 Aspherical Lens for Pentax Digital SLR Cameras
+85,B000053HGW,2.8,,<=2.8,Canon EF 17-35mm F/2.8 L USM Lens for Canon-AF Camera (Discontinued by Manufacturer)
+86,B000053HHD,3.5,4.5,<=4,Canon EF 24-85mm f/3.5-4.5 USM Standard Zoom Lens for Canon SLR Cameras
+93,B00005LE6Z,2.8,,<=2.8,Nikon AF FX NIKKOR 24mm f/2.8D Fixed Zoom Lens with Auto Focus for Nikon DSLR Cameras - White Box (New)
+94,B00005LE71,2.8,,<=2.8,Nikon AF FX NIKKOR 28mm f/2.8D Lens with for Nikon DSLR Cameras
+95,B00005LE72,2,,<=2.0,"Nikon AF NIKKOR 1923 35mm f/2D Lens with Auto Focus for Nikon DSLR Cameras,Black"
+96,B00005LE73,2.8,,<=2.8,Nikon AF FX NIKKOR 14mm f/2.8D ED Ultra Wide Angle Fixed Zoom Lens with Auto Focus for Nikon DSLR Cameras
+97,B00005LE74,2.8,4,<=2.8,Nikon AF FX NIKKOR 24-85mm f/2.8-4D IF Zoom Lens with Auto Focus for Nikon DSLR Cameras
+98,B00005LE75,1.8,,<=2.0,Nikon 85mm f/1.8D Auto Focus Nikkor Lens for Nikon Digital SLR Cameras - Fixed
+99,B00005LE76,1.4,,<=1.4,Nikon 85mm f/1.4D AF Nikkor Lens for Nikon Digital SLR Cameras - White Box(Bulk Packaging) (New)
+100,B00005LE77,2.8,,<=2.8,AF Micro-NIKKOR 60mm f/2.8D Lens for Nikon DSLR Cameras
+101,B00005LE78,2.8,,<=2.8,Nikon 105mm f/2.8D AF Micro-Nikkor Lens for Nikon Digital SLR Cameras
+102,B00005LE7A,3.5,4.5,<=4,Nikon 18-35mm f/3.5-4.5D ED-IF AF Zoom Nikkor Lens for Nikon Digital SLR Cameras
+104,B00005LENO,1.4,,<=1.4,Nikon AF FX NIKKOR 50mm F/1.4D DSLR Lens with Auto Focus for Nikon DSLR Cameras
+105,B00005LENU,3.5,4.5,<=4,Nikon 28-105mm f/3.5-4.5D Autofocus Zoom Nikkor Lens (Discontinued by Manufacturer)
+106,B00005LEOC,2.8,,<=2.8,Nikon AF FX NIKKOR 20mm f/2.8D Fixed Zoom Lens with Auto Focus for Nikon DSLR Cameras
+107,B00005LEOD,2.8,,<=2.8,Nikon 35-70mm f/2.8D Auto Focus Zoom Nikkor Lens for Nikon Digital SLR Cameras (Discontinued by Manufacturer)
+108,B00005LEOI,2.8,,<=2.8,Nikon AF FX NIKKOR 180mm f/2.8D IF-ED prime telephoto Lens with Auto Focus for Nikon DSLR Cameras
+109,B00005LEOK,2,,<=2.0,Nikon AF FX DC-NIKKOR 105mm f/2D Telephoto Lens with Auto Focus for Nikon DSLR Cameras
+110,B00005LEOM,4,,<=4,Nikon AF-S FX NIKKOR F/4D IF-ED 300mm Fixed Zoom Lens with Auto Focus for Nikon DSLR Cameras
+111,B00005LEOO,4.5,5.6,>4,Nikon 80-400mm f/4.5-5.6D ED Autofocus VR Zoom Nikkor Lens (OLD MODEL)
+112,B00005LEOR,2.8,,<=2.8,Nikon 28-70mm f/2.8D ED-IF AF-S Zoom Nikkor Lens for Nikon Digital SLR Cameras (Discontinued by Manufacturer)
+113,B00005LEOS,2.8,,<=2.8,Nikon AF-S FX NIKKOR 17-35mm f/2.8D IF-ED Zoom Lens with Auto Focus for Nikon DSLR Cameras
+118,B00005NI79,2.8,,<=2.8,Sigma 14mm f/2.8 EX HSM RF Aspherical Ultra Wide Angle Lens for Nikon SLR Cameras
+119,B00005NJEJ,3.8,5.6,<=4,Tamron Autofocus 28-200mm f/3.8-5.6 XR Aspherical (IF) Lens for Canon SLR Cameras (Black)
+120,B00005NPOB,1.8,,<=2.0,Canon EF 85mm f/1.8 USM Telephoto Le
+131,B00005QIZ8,2.8,,<=2.8,Nikon AF FX Fisheye-NIKKOR 16mm f/2.8D Fixed Lens with Auto Focus for Nikon DSLR Cameras
+133,B00005RKTB,3.5,4.5,<=4,Sigma 15-30mm f/3.5-4.5 Ex Dg If Aspherical Ultra Wide Angle Zoom Lens for Canon
+134,B00005RKTC,3.5,4.5,<=4,Sigma 15-30mm f/3.5-4.5 EX DG IF Aspherical Ultra Wide Angle Zoom Lens for Nikon SLR Cameras
+140,B00005V8S8,4,5.6,<=4,Tamron AF 75-300mm f/4.0-5.6 LD for Konica Minolta and Sony Digital SLR Cameras (Model 672DM)
+141,B00005V8S9,4,5.6,<=4,Tamron AF 75-300mm f/4.0-5.6 LD Macro Lens (Model 672DN)
+171,B00006I53Q,2.8,,<=2.8,Canon EF 16-35mm f/2.8L USM Ultra Wide Angle Zoom Lens for Canon SLR Cameras (Discontinued by Manufacturer)
+172,B00006I53S,3.5,5.6,<=4,Canon 2562A002 EF 28-135mm f/3.5-5.6 is USM Standard Zoom Lens for Canon SLR Cameras
+173,B00006I53T,2.8,,<=2.8,Canon EF 28mm f/2.8 Lens for Canon SLR Cameras (Discontinued by Manufacturer)
+174,B00006I53V,2.5,,<=2.8,Canon EF 50mm f/2.5 Compact Macro Lens
+175,B00006I53X,2.8,,<=2.8,Canon EF 70-200mm f/2.8L IS USM Telephoto Zoom Lens for Canon SLR Cameras - White Box(Bulk Packaging)
+183,B00006I5J4,2,,<=2.0,Nikon AF FX DC-NIKKOR 135mm f/2D Fixed Lens with Auto Focus for Nikon DSLR Cameras
+184,B00006I5J5,4,,<=4,Nikon AF FX Micro-NIKKOR 200mm f/4D IF-ED Fixed Zoom Lens with Auto Focus for Nikon DSLR Cameras
+193,B00006I5WR,3.5,5.6,<=4,Tamron SP Autofocus 24-135mm f/3.5-5.6 AD Aspherical (IF) Lens for Canon SLR Cameras
+204,B00006JQO9,3.5,6.3,<=4,Tamron 28-300mm f/3.5-6.3 XR LD Aspherical Macro Ultra Zoom Lens for Nikon AF Cameras
+228,B00007EE8M,2.8,,<=2.8,Canon 24-70mm f/2.8L EF L-Series Standard Zoom Lens USM
+229,B00007FWKD,1.8,,<=2.0,YONGNUO YN85mm f1.8 AF/MF Standard Medium Telephoto Prime Lens Fixed Focal Camera Lens for Canon EF Mount EOS Cameras (YN85mm F1.8 - Canon)
+231,B00007GQLT,2.8,,<=2.8,Canon EF 20mm f/2.8 USM Wide-Angle Fixed Lens
+237,B00007KWRC,3.5,4.5,<=4,Nikon 24-85mm f/3.5-4.5G ED-IF AutoFocus Zoom Nikkor Lens
+243,B000089JKR,4,5.6,<=4,Canon EF 28-105mm f/4-5.6 USM Standard Zoom Lens for Canon SLR Cameras
+260,B000092M1T,4,,<=4,Nikon AF-S DX NIKKOR 12-24mm f/4G IF-ED Zoom Lens with Auto Focus for Nikon DSLR Cameras
+268,B00009MDBQ,2.8,,<=2.8,Nikon 70-200mm f/2.8G ED-IF AF-S VR Zoom Nikkor Lens for Nikon Digital SLR Cameras - White Box (New)
+320,B00009R6WK,2.8,,<=2.8,Canon EF 135mm f/2.8 with Softfocus Telephoto Lens for Canon SLR Cameras
+322,B00009R6WN,2.8,,<=2.8,Canon EF 15mm f/2.8 Fisheye Lens for Canon SLR Cameras (Discontinued by Manufacturer)
+323,B00009R6WR,3.5,4.5,<=4,Canon EF 20-35mm f/3.5-4.5 USM Ultra Wide Angle Zoom Lens for Canon SLR Cameras
+324,B00009R6WS,1.4,,<=1.4,Canon EF 24mm f/1.4L USM Wide Angle Lens for Canon SLR Cameras
+325,B00009R6X4,4,,<=4,Canon EF 500mm f/4L is USM Super Telephoto Lens for Canon SLR Cameras
+391,B00009USVW,2,,<=2.0,Canon EF 100mm f/2 USM Lens
+392,B00009USW1,3.5,5.6,<=4,Canon EF 35-350mm f/3.5-5.6L USM Zoom Lens
+429,B00009VQG6,3.5,5.6,<=4,Nikon 24-120mm f/3.5-5.6G ED IF Autofocus VR Nikkor Zoom Lens (Discontinued by Manufacturer)
+452,B00009XVBU,3.5,,<=4,Canon EF 180mm f3.5L Macro USM AutoFocus Telephoto Lens for Canon SLR Cameras
+454,B00009XVCD,3.5,,<=4,Canon TS-E 24mm f/3.5L Tilt Shift Lens for Canon SLR Cameras
+455,B00009XVCU,2,,<=2.0,Canon EF 35mm f/2 Wide Angle Lens for Canon SLR Cameras (OLD MODEL)
+456,B00009XVD5,2.8,,<=2.8,Canon MP-E 65mm f/2.8 1-5X Macro Lens for Canon SLR Cameras
+459,B00009XVDP,2.8,,<=2.8,"Canon TS-E 90mm f/2.8 Tilt Shift Lens for Canon SLR Cameras, Black - 2544A003"
+466,B0000A1G07,2.8,,<=2.8,Tamron Autofocus 28-75mm f/2.8 XR Di LD Aspherical (IF) for Nikon DSLR Cameras
+519,B0000BVDZZ,2.8,,<=2.8,Nikon 55mm f/2.8 Micro Nikkor Lens AIS IMP
+527,B0000BZZGB,1.5,,<=2.0,Voigtlander Nokton 50mm f/1.5 Aspherical Standard Manual Focus Lens - Silver
+539,B0000D81OA,4,,<=4,Voigtlander 21mm f4 VM Colour Skopar Lens
+540,B0000D81PX,3,,<=4,"Voigtlander 20 mm / F3,5 Color Skopar SL II Lens"
+552,B0000ET9DG,2.8,3.5,<=2.8,"Olympus 261001-14-54 14-54mm f/2.8-3.5 Zuiko ED Digital SLR Lens for E1, E300 and E500 Cameras"
+555,B0000TU7I6,2,,<=2.0,Olympus 50mm f/2.0 Telephoto Macro ED Lens for Olympus Digital SLR Cameras
+592,B0000Y5TI4,2.8,3.5,<=2.8,Olympus 50-200mm Zuiko Digital f/2.8-3.5 ED Lens for Digital SLR Cameras
+595,B0000ZL2J8,2.8,4,<=2.8,Tamron AF 17-35mm f/2.8-4.0 Di LD SP Aspherical (IF) Ultra Wide Angle Zoom Lens for Canon Digital SLR Cameras (Discontinued by Manufacturer)
+607,B000144I2Q,2.8,,<=2.8,Nikon AF-S DX NIKKOR 17-55mm f/2.8G IF-ED Zoom Lens with Auto Focus for Nikon DSLR Cameras
+608,B000144I30,2.8,,<=2.8,Nikon AF DX NIKKOR 10.5mm f/2.8G ED Fixed Zoom Fisheye Lens with Auto Focus for Nikon DSLR Cameras
+616,B00015QGM0,4.5,5.6,>4,Sigma 12-24mm f/4.5-5.6 EX DG IF HSM Aspherical Ultra Wide Angle Zoom Lens for Nikon SLR Cameras
+641,B0001DBZKK,4,,<=4,Pentax 16-45mm f/4.0 SMC PDA ED AL Zoom Lens for Pentax and Samsung Digital SLR Cameras
+651,B0001G6U3Y,4.5,5.6,>4,Canon EF 70-300mm f/4.5-5.6 DO IS USM Lens for Canon EOS Cameras
+669,B0001M47FG,2.8,3.5,<=2.8,Olympus 11-22mm f/2.8-3.5 Zuiko Zoom Lens for 4/3 Cameras
+674,B0001VQ11U,4.5,5.6,>4,Sigma 12-24mm f/4.5-5.6 EX DG IF HSM Aspherical Ultra Wide Angle Zoom Lens for Canon SLR Cameras
+675,B0001VQ124,3.5,5.6,<=4,Sigma 18-50mm f/3.5-5.6 DC Autofocus Zoom Aspherical Lens for Canon Digital SLR Cameras
+680,B0001YEOCU,3.5,4.5,<=4,Nikon 18-70mm f/3.5-4.5G ED IF AF-S DX Nikkor Zoom Lens - White Box(Bulk Packaging)
+707,B0002ALDKO,2.8,,<=2.8,Sigma 24-60mm f/2.8 EX DG IF Aspherical Wide Angle Zoom Lens for Canon SLR Cameras
+759,B0002P19O4,2.8,,<=2.8,Sigma 18-50mm F/2.8 EX DC Lens for Canon Digital SLR Cameras
+760,B0002P19XK,2.8,,<=2.8,Sigma 105mm f/2.8 EX DG Medium Telephoto Macro Lens for Nikon SLR Cameras
+773,B0002XNRG4,4,5.6,<=4,Canon EF-S 17-85mm f/4-5.6 is USM
+780,B0002Y5WXE,3.5,4.5,<=4,Canon EF-S 10-22mm f/3.5-4.5 USM SLR Lens for EOS Digital SLRs
+781,B0002Y5WXO,4,5.6,<=4,Canon EF-S 17-85mm f/4-5.6 Image Stabilized USM SLR Lens for EOS Digital SLR's - White Box (Bulk Packaging)
+782,B0002Y5WXY,3.5,5.6,<=4,Canon EF-S 18-55mm f/3.5-5.6 USM SLR Lens for Select Digital Rebel and EOS SLRs
+793,B00061J2BQ,3.5,5.6,<=4,Pentax DA 18-55mm f/3.5-5.6 AL Lens for Pentax and Samsung Digital SLR Cameras
+812,B0006NAB9G,3.5,4.5,<=4,"Olympus 40-150mm f/3.5-4.5 Zuiko Digital Zoom Lens for E1, E300 & E500 Cameras"
+823,B00077KMXG,2.8,,<=2.8,Pentax DA 40mm f/2.8 Ultra Compact Lens for Pentax and Samsung Digital SLR Cameras
+840,B0007LHVEU,2.8,,<=2.8,Nikon 300mm f/2.8G IF-ED AF-S VR Nikkor Lens for Nikon Digital SLR Cameras
+873,B0007WDH3I,4,,<=4,Olympus Zuiko 7-14mm f/4.0 Aspherical Super ED Lens for Olympus Digital SLR Cameras
+878,B0007WK8KS,2.8,,<=2.8,Canon EF-S 60mm f/2.8 Macro Lens
+881,B0007WK8NA,3.5,6.3,<=4,Tamron Autofocus 18-200mm f/3.5-6.3 XR Di II Macro Lens for Nikon Digital SLR Cameras
+882,B0007WK8NU,4.5,5.6,>4,Tamron AF 11-18mm f/4.5-5.6 Di-II SP LD Aspherical (IF) Lens for Canon Digital SLR Cameras
+884,B0007WQ5LY,2.8,,<=2.8,Pentax 14mm f/2.8 DA ED (IF) Lens for Pentax and Samsung Digital SLR Cameras
+895,B0008032NO,2.8,,<=2.8,Sigma 24-70mm f/2.8 EX DG Macro Aspherical Large Aperture Standard Zoom Lens for Nikon SLR Cameras
+912,B00099C2M6,4,,<=4,Tokina 12-24mm F/4 PRO DX Autofocus Zoom Lens for Nikon Digital SLR Cameras
+913,B00099XTKA,4,,<=4,Tokina Tokina 12mm - 24mm f/4 PRO DX Autofocus Zoom Lens for Canon EOS Digital SLR Cameras.
+914,B0009E1XF8,2.8,,<=2.8,Sigma 24-70mm f/2.8 EX DG Macro Aspherical Large Aperture Standard Zoom Lens for Canon SLR Cameras
+919,B0009F3MPQ,4,6.3,<=4,Sigma 50-500mm f/4-6.3 EX DG HSM APO RF Telephoto Zoom Lens for Canon SLR Cameras
+920,B0009F3MQK,4,6.3,<=4,Sigma 50-500mm f/4-6.3 EX DG APO HSM Telephoto Zoom Lens for Nikon SLR Cameras
+926,B0009HN57E,3.5,5.6,<=4,Nikon 18-55mm f/3.5-5.6G ED Auto Focus-S DX Non-VR Nikkor Zoom Lens (Discontinued by Manufacturer)
+928,B0009HN57Y,4,5.6,<=4,Nikon 55-200mm f4-5.6G ED Auto Focus-S DX Nikkor Zoom Lens - White Box (New)
+945,B0009OAFI4,4,5.6,<=4,Pentax DA 50-200mm f/4-5.6 ED Lens for Pentax and Samsung DSLR Cameras
+961,B0009V13XS,2.8,,<=2.8,Sigma APO 70-200mm f/2.8 EX DG HSM Lens for Canon Digital SLR Cameras
+962,B0009V5WUI,3.3,5.6,<=4,Nikon 28-80mm f/3.3-5.6G Autofocus Nikkor Zoom Lens (Silver)
+963,B0009VDJNK,4,5.6,<=4,Nikon 55-200mm f/4-5.6G ED AF-S DX Autofocus Zoom Lens - International Version (No Warranty)
+969,B0009XQPJ8,3.5,6.3,<=4,Sigma 28-300mm f/3.5-6.3 DG IF Macro Aspherical Lens for Canon SLR Cameras
+970,B0009XQPJS,3.5,6.3,<=4,Sigma 28-300mm f/3.5-6.3 DG IF Macro Aspherical Lens for Pentax and Samsung SLR Cameras
+971,B0009XQPK2,3.5,6.3,<=4,Sigma 28-300mm f/3.5-6.3 DG IF Macro Aspherical Lens for Minolta and Sony SLR Cameras
+973,B000A0UHXU,4,5.6,<=4,Sigma 70-300mm f/4-5.6 DG Macro Telephoto Zoom Lens for Nikon SLR Cameras (Discontinued by Manufacturer)
+1023,B000B84KAW,4,,<=4,Canon EF 24-105mm f/4 L IS USM Lens for Canon EOS SLR Cameras - White Box (Bulk Packaging)
+1024,B000B84KB6,4,5.6,<=4,Canon EF 70-300mm f/4-5.6 is USM Lens
+1025,B000B8AF9W,4,,<=4,Pentax DA 12-24mm f/4 ED AL (IF) Lens for Pentax and Samsung Digital SLR's
+1036,B000BKP1JE,2,,<=2.0,Olympus 35-100mm f/2.0 Zuiko Lens for E Series DSLR Cameras
+1042,B000BONMMI,4,5.6,<=4,Tamron Auto Focus 55-200mm F/4.0-5.6 Di-II LD Macro Lens for Nikon Digital SLR Cameras (Model A15N)
+1046,B000BTFZMS,3.5,6.3,<=4,Olympus 18-180mm f/3.5-6.3 Zuiko Lens for E Series DSLR Cameras
+1047,B000BTFZZA,3.5,,<=4,Olympus 35mm f/3.5 1:1 Macro Zuiko Lens for E Series DSLR
+1050,B000BY52NU,3.5,5.6,<=4,Nikon G ED-IF AF-S DX VR 2159 18-200mm f/3.5-5.6 Zoom Nikkor Lens for Nikon F White Box(Bulk Packaging) (New)
+1060,B000BZIO0M,2.8,,<=2.8,Tokina at-X 100mm f/2.8 PRO D Macro Lens for Canon EOS Digital and Film Cameras
+1066,B000C1MY1A,3.5,5.6,<=4,Canon EF 28-135mm f/3.5-5.6 is USM Standard Zoom Lens for Canon SLR Cameras - White Box
+1077,B000CMNJTA,3.5,4.5,<=4,Nikon Nikkor AF 28-70mm f3.5-4.5D Macro Zoom
+1078,B000CMNL52,2.8,,<=2.8,Tokina at-X PRO M 100mm F2.8 D Macro Lens - Nikon AF Mount
+1079,B000CNI016,3.5,4.5,<=4,PENTAX DA 10-17mm f/3.5-4.5 ED (IF) Fish-Eye Lens for Pentax Digital SLR
+1095,B000DZH712,2.8,,<=2.8,Sony 50mm f/2.8 Macro Lens for Sony Alpha Digital SLR Camera
+1096,B000DZH7J4,2.8,,<=2.8,Sony 100mm f/2.8 Macro Lens for Sony Alpha Digital SLR Camera
+1097,B000DZH7JO,4.5,5.6,>4,Sony DT 11-18mm f/4.5-5.6 Aspherical ED Super Wide Angle Zoom Lens for Sony Alpha Digital SLR Camera
+1098,B000DZH7TO,3.5,5.6,<=4,Sony DT 18-70mm f/3.5-5.6 Aspherical ED Standard Zoom Lens for Sony Alpha Digital SLR Camera
+1099,B000DZH80C,3.5,6.3,<=4,Sony DT 18-200mm f/3.5-6.3 Aspherical ED High Magnification Zoom Lens for Sony Alpha Digital SLR Camera
+1100,B000DZH9H4,4.5,5.6,>4,Sony 75-300mm f/4.5-5.6 Compact Super Telephoto Zoom Lens for Sony Alpha Digital SLR Camera
+1101,B000DZH9MY,1.4,,<=1.4,Sony 50mm f/1.4 Lens for Sony Alpha Digital SLR Camera
+1104,B000DZKOJ4,2.8,,<=2.8,Sony SAL70200G 70-200mm f/2.8 SSM Lens for Sony Alpha Digital SLR Camera (OLD MODEL)
+1122,B000EG46O6,2.8,4.5,<=2.8,Sigma 17-70mm f/2.8-4.5 DC IF Macro Lens for Pentax and Samsung Digital SLR Cameras
+1123,B000EGAMBW,2.8,4.5,<=2.8,Sigma 17-70mm f/2.8-4.5 DC IF Macro Lens for Canon Digital SLR Cameras
+1127,B000EHMGBA,1.7,,<=2.0,Minolta 50mm f1.7 AF Lens
+1137,B000EMXB82,3.5,,<=4,Olympus 8mm f/3.5 Zuiko Fisheye Lens for Olympus Digital SLR Cameras
+1162,B000EXR0SI,2.8,,<=2.8,L1 17-50MM F2.8 DI II F/Canon
+1163,B000EXV0QQ,2.8,,<=2.8,Tamron SP AF17-50mm F/2.8 Di II LD Aspherical (IF) Lens with hood for Nikon-D DSLR Cameras
+1181,B000F8YEFO,1.9,,<=2.0,Pentax SMCP-FA 43mm f/1.9 Limited Lens with Case and Hood (Black)
+1202,B000FNGLSM,3.5,4.5,<=4,Cosina 19-35mm f/3.5-4.5 MC AF Wide Angle Zoom Lens for Canon EOS / EF
+1214,B000FZ2VXY,3.2,,<=4,Pentax 21mm F/3.2 AL Limited Lens for Pentax Digital SLR Cameras
+1251,B000GUKWMU,4,,<=4,Tokina 12-24mm f/4 AT-X Pro DX AF Wide Angle Lens for Nikon Digital Cameras
+1267,B000HCN0RG,8,,>4,"Opteka 500mm f/8 High Definition Preset Telephoto Lens for Canon EOS 80D, 77D, 70D, 60D, 60Da, 50D, 7D, 6D, 5D, 5DS, 1DS, T7i, T7s, T7, T6s, T6i, T6, T5i, T5, T4i, T3i, SL2 and SL1 Digital SLR Cameras"
+1268,B000HCNFD0,8,,>4,"Opteka 500mm f/8 High Definition Telephoto Mirror Lens for Nikon D5, D4s, D4, D3x, Df, D810, D800, D750, D610, D500, D7500, D7200, D7100, D5600, D5500, D5300, D5200, D3400, D3300 Digital SLR Cameras"
+1279,B000HJPK0Y,3.5,5.6,<=4,Nikon 18-135mm f/3.5-5.6G ED-IF AF-S DX Zoom-Nikkor Lens for Nikon Digital SLR Cameras - White Box(Bulk Packaging)
+1280,B000HPMP6A,2.8,,<=2.8,Sigma 50-150mm F/2.8 APO EX DC HSM Telephoto Zoom Lens for Nikon Digital SLR Cameras
+1288,B000I67V3U,8,,>4,Minolta 500mm F/8 Auto Focus Mirror Lens - Fixed
+1293,B000IBI3YQ,3.5,6.3,<=4,Tamron 18-250mm F/3.5-6.3 AF Di-II LD Aspherical (IF) Macro Lens for Nikon Digital SLR Cameras
+1294,B000IBLMHQ,3.5,6.3,<=4,Tamron AF 18-250mm F/3.5-6.3 Di-II LD Aspherical (IF) Macro Zoom Lens for Canon Digital SLR Cameras (Model A18)
+1301,B000IMRTFO,8,,>4,"Opteka 650-1300mm f/8 HD Telephoto Zoom Lens for Canon EOS 80D, 77D, 70D, 60D, 60Da, 50D, 7D, 6D, 5D, 5Ds, 1Ds, T7i, T7s, T7, T6s, T6i, T6, T5i, T5, T4i, T3i, T3, T2i, SL2, SL1 Digital SLR Cameras"
+1330,B000JDJJ82,2.8,,<=2.8,Sigma 18-50mm f/2.8 EX DC SLD ELD Aspherical Macro Lens for Canon Digital SLR Cameras
+1331,B000JE5CIC,1.8,,<=2.0,Sony SAL-135F18Z 135mm f/1.8 Carl Zeiss Sonnar T Telephoto Lens for Sony Alpha Digital SLR Camera
+1332,B000JE5CKA,3.5,4.5,<=4,Sony 16-80mm f/3.5-4.5 Carl Zeiss Vario-Sonnar T DT Zoom Lens for Sony Alpha Digital SLR Camera
+1333,B000JE5CQO,1.4,,<=1.4,Sony SAL-85F14Z 85mm f1.4 Carl Zeiss Planar T Coated Telephoto Lens for Sony Alpha Digital SLR Camera
+1405,B000LRL3DU,2.8,,<=2.8,"Tokina AT-X 535 PRO DX, Telephoto Zoom, 50-135mm f/2.8 Lens, for Nikon"
+1408,B000LWJ1ES,3.5,5.6,<=4,Nikon AF-S DX NIKKOR 18-55mm f/3.5-5.6G ED II Zoom Lens with Auto Focus for Nikon DSLR Cameras
+1486,B000NO5QV6,2.8,,<=2.8,Pentax SMC DA* Series 16-50mm f/2.8 ED AL IF SDM Wide Angle Zoom Lens for Pentax Digital SLR Cameras
+1487,B000NO5QVG,2.8,,<=2.8,Pentax SMC DA Series 50-135mm f/2.8 ED IF SDM Telephoto Zoom Lens for Pentax and Digital SLR Cameras
+1489,B000NOSCGM,3.5,6.3,<=4,Sigma 18-200mm f/3.5-6.3 DC Auto Focus OS (Optical Stabilizer) Zoom Lens for Canon Digital SLR Cameras
+1504,B000O6MBWK,4.5,,>4,Voigtlander Super Wide Heliar 15mm f/4.5 Aspherical III Lens for Leica M
+1517,B000OQM85A,3.5,5.6,<=4,Nikon AF 28-80mm f/3.5-5.6 D Lens with Aperture Ring
+1557,B000Q639S8,4,5.6,<=4,Olympus 40-150mm f/4.0-5.6 ED Zuiko Digital Lens for Olympus Digital SLR Cameras
+1563,B000Q8AD7G,1.4,,<=1.4,Voigtlaender Nokton Classic Lens 40 mm / F1.4
+1570,B000R96FP8,3.5,5.6,<=4,Canon EF-S 18-55mm f/3.5-5.6 IS II SLR Lens
+1572,B000RF8BAO,4,5.6,<=4,Nikon Nikkor 35-80mm f4-5.6D AF Zoom Lens
+1575,B000RGGU3I,2.8,,<=2.8,Tokina 16-50mm f/2.8 at-X 165 PRO DX Autofocus Lens for Nikon
+1596,B000SSLR5Q,4,5.6,<=4,Olympus Zuiko 70-300mm f/4.0-5.6 ED Lens for Olympus and Panasonic Standard Four Thirds Digital SLR Cameras
+1627,B000UC26CS,2.8,4.5,<=2.8,Sigma 17-70mm f/2.8-4.5 DC HSM Macro Lens for Nikon DSLR
+1628,B000UC5YSQ,2.8,,<=2.8,Sigma 18-50mm f/2.8 EX DC HSM Macro Lens for Nikon DSLR (OLD MODEL)
+1659,B000V5K3FG,3.5,5.6,<=4,Canon EF-S 18-55mm f/3.5-5.6 IS II SLR Lens
+1661,B000V5P94Q,2.8,,<=2.8,Canon EF 14mm f/2.8L II USM Ultra-Wide Angle Fixed Lens for Canon Digital SLR Cameras
+1666,B000V9D5LG,4,5.6,<=4,Canon EF-S 55-250mm f/4-5.6 is Image Stabilizer Telephoto Zoom Lens - International Version (No Warranty)
+1667,B000V9F3AW,3.5,5.6,<=4,Canon EF-S 18-55mm f/3.5-5.6 IS Zoom Lens for Canon SLR Cameras
+1672,B000VC7EVU,8,,>4,"Opteka 500mm f/8 High Definition Telephoto Mirror Lens for Canon EOS 80D, 77D, 70D, 60D, 60Da, 50D, 7D, 6D, 5D, 5DS, 1DS, T7i, T7s, T7, T6s, T6i, T6, T5i, T5, T4i, T3i, SL2 and SL1 Digital SLR Cameras"
+1673,B000VDA3TO,3.5,6.3,<=4,Tamron AF28-300mm A20 F/3.5-6.3 XR Di VC Macro Zoom Lens with Built in Motor for Nikon Digital SLR Cameras Aspherical Black
+1675,B000VDCT14,4,,<=4,Nikon 500mm f/4.0G ED VR AF-S SWM Super Telephoto Lens for Nikon FX and DX Format Digital SLR
+1676,B000VDF5LU,4,,<=4,Nikon AF-S FX NIKKOR 600mm f/4G ED Vibration Reduction Front Lens with Auto Focus Cover
+1694,B000VUFDPG,3.5,6.3,<=4,Sony SAL18250 Alpha DT 18-250mm f/3.5-6.3 High Magnification Zoom Lens
+1696,B000VUIXOE,3.5,5.6,<=4,Sony SAL16105 16-105mm f/3.5-5.6 Wide-Range Zoom Lens
+1714,B000WJOF1O,3.5,6.3,<=4,Pentax DA 18-250mm f/3.5-6.3 ED AL IF Lens for Pentax and Samsung Digital SLR Cameras
+1727,B000X1P5RE,2.8,3.5,<=2.8,Olympus Zuiko 50-200mm f/2.8-3.5 Digital ED SWD Lens for Olympus Digital SLR Cameras
+1735,B000XCQ0LI,2.8,4,<=2.8,Olympus Zuiko 12-60mm f/2.8-4.0 Digital ED SWD Lens for Olympus Digital SLR Cameras
+1741,B000XYIIP2,4,,<=4,Minolta Maxxum AF 70-210mm F/4 Telephoto Zoom Lens FOR SONY ALPHA
+1767,B000ZFEMF4,4,,<=4,Canon EF 24-105mm f/4L IS USM Zoom Lens - White Box (New) (Bulk Packaging)
+1773,B000ZNQUBU,2,,<=2.0,Voigtlander Ultron 40mm f/2 SL-II Aspherical Compact Manual Focus Lens for Nikon
+1777,B001046ES2,2.8,,<=2.8,Sigma 70-200mm f/2.8 EX DG HSM II Macro Zoom Lens for Canon Digital SLR Cameras
+1838,B00125XA36,3.5,6.3,<=4,Tamron AF 18-250mm F/3.5-6.3 Di-II LD Aspherical (IF) Macro Zoom Lens with Built In Motor for Nikon DSLR
+1857,B0012GDOQS,2.8,,<=2.8,Tamron AF 70-200mm f/2.8 Di LD IF Macro Lens with Built in Motor for Nikon Digital SLR Cameras (Model A001NII)
+1865,B0012LLYPG,2.8,,<=2.8,Tamron Auto Focus 70-200mm f/2.8 Di LD IF Macro Lens for Canon Digital SLR Cameras (Model A001E)
+1875,B0012QCYNM,4,5.8,<=4,Pentax DA 55-300mm f/4-5.8 ED Lens for Pentax and Samsung Digital SLR Cameras
+1876,B0012QE4DK,3.5,5.6,<=4,Pentax DA 18-55mm f/3.5-5.6 AL II Lens for Pentax and Samsung Digital SLR Cameras
+1897,B00132CJR6,2,,<=2.0,Canon EF 200mm f/2L IS Telephoto Lens for Canon SLR Cameras
+1901,B0013545U2,4,,<=4,Pentax DA 300mm F/4 ED (IF) SDM Lens
+1907,B0013A1XDE,3.5,5.6,<=4,Nikon AF-S DX NIKKOR 16-85mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras
+1908,B0013BEEUW,3.5,,<=4,Nikon PC-E FX NIKKOR 24mm f/3.5D ED Fixed Zoom Lens for Nikon DSLR Cameras
+1913,B0013DCX1C,2.8,,<=2.8,Tamron SP AF 70-200mm F/2.8 Di LD [IF] Macro Lens for Nikon
+1914,B0013DFZNK,2.8,,<=2.8,Tamron SP AF 17-50mm F/2.8 XR Di-II LD (IF) Aspherical Lens for Pentax K-Mount
+1916,B0013GQ2WU,4.5,5.6,>4,Sony SAL70300G 70-300mm f/4.5-5.6 SSM ED G-Series Compact Super Telephoto Zoom Lens
+1926,B0013UQ0Z0,1.4,,<=1.4,Voigtlander Nokton 58mm f/1.4 SL-II N Manual Focus Lens with Integrated CPU for Nikon AIS Lens
+1944,B0014G9YD8,1.4,,<=1.4,Voigtlander Lens F1.4/35 mm Nokton Classic MC Lens M
+1949,B0014Z3XMC,2.8,,<=2.8,Tokina 11-16mm f/2.8 Pro DX Digital Lens - EOS
+1957,B0015AOU9Q,2.8,,<=2.8,Olympus 25mm f/2.8 Pancake Lens for Olympus Digital SLR Cameras
+1961,B0015CRAZA,2.8,,<=2.8,Pentax DA 35mm f2.8 Macro Lens for Pentax K Mount Camera
+1997,B0016Q6BXC,2.8,,<=2.8,Tokina 35mm f/2.8 AT-X PRO DX Macro Lens for Canon Digital SLR Cameras
+1998,B0016QDHCK,2.8,,<=2.8,Tokina 35mm f/2.8 AT-X PRO DX Macro Lens for Nikon Digital SLR Cameras
+2037,B0018ZDGAC,1.4,,<=1.4,Sigma 50mm f/1.4 EX DG HSM Lens for Canon Digital SLR Cameras
+2038,B0018ZDGAW,1.4,,<=1.4,Sigma 50mm f/1.4 EX DG HSM Lens for Nikon Digital SLR Cameras
+2108,B001AZ8N6M,4,,<=4,Pentax 17-70mm f/4 DA SMC AL IF SDM Lens for Pentax Digital SLR Cameras
+2143,B001BTAZHM,2.8,,<=2.8,Nikon PC-E FX Micro NIKKOR 85mm f/2.8D Fixed Zoom Lens for Nikon DSLR Cameras
+2145,B001BTG3NW,2.8,,<=2.8,Nikon PC-E FX Micro NIKKOR 45mm f/2.8D ED Fixed Zoom Lens for Nikon DSLR Cameras
+2227,B001EGWE5I,4,,<=4,Nikon 70-210mm F4-F5.6 D AF Macro Zoom Lens
+2229,B001EJ5P0G,2,,<=2.0,Voigtlaender Ultra Lens 28 mm/F 2.0 Leica M Connection
+2236,B001EO6W8K,3.5,5.6,<=4,Nikon AF-S DX NIKKOR 18-105mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras - (New)
+2246,B001EZ46F0,4,5.6,<=4,Olympus E 9-18mm f/4.0-5.6 Zuiko Lens for Olympus Digital SLR Cameras
+2252,B001F514F4,4,,<=4,Pentax SMC DA* 60-250mm f/4 ED IF SDM Telephoto Zoom Lens w/ Case for Pentax Digital SLR Cameras
+2267,B001FORGMK,4,5.6,<=4,Sony SAL70400G 70-400mm f/4-5.6 G SSM Lens
+2290,B001G7PIBC,3.5,4.5,<=4,Tamron AF 10-24mm f/3.5-4.5 SP Di II LD Aspherical (IF) Lens for Canon Digital SLR Cameras (Model B001E)
+2300,B001GAPHRE,1.4,,<=1.4,Pentax SMC DA 55mm f/1.4 SDM Prime Standard Lens w/ Case for Pentax Digital SLR Cameras
+2319,B001GKLMH8,8,,>4,"Opteka 500-1000mm f/8 High Definition Telephoto Mirror Lens for Canon EOS 1D, 5D, 6D, 7D, 10D, 20D, 30D, 40D, 50D, 60D, Rebel XT, XTi, XS, XSi, T1i, T2i, T3, T3i and T4i Digital SLR Cameras"
+2322,B001GKPU9O,3.5,5.6,<=4,"Sigma 18-50mm f/3.5-5.6 DC HSM Wide Angle Zoom Lens for Nikon D90, D80, D70, D60, D50, D40, D40X, D5000, D3000, D700, D300, D200, & D3 Digital SLRs"
+2427,B001LD51GS,4,,<=4,Tokina AF 12-24mm f/4 AT-X 124 Pro DX II Lens - Nikon Mount
+2428,B001LD51H2,4,,<=4,Tokina at-X PRO 12-24mm F4 DXII Lens - Canon AF Mount
+2558,B001RPEY1S,2.8,,<=2.8,Tamron SP AF 90mm F/2.8 Di Macro 1:1 Lens for Nikon
+2559,B001RPM73U,3.5,6.3,<=4,Tamron AF 18-200mm F/3.5-6.3 XR Di II LD Aspherical [IF] Macro Lens for Nikon
+2560,B001RTTO4Q,1.8,,<=2.0,Nikon 35mm f/1.8G AF-S DX
+2589,B001TDL2O0,3.5,,<=4,Canon TS-E 24mm f/3.5L II Ultra Wide Tilt-Shift Lens for Canon Digital SLR Cameras
+2590,B001TDL2OA,4,,<=4,Canon TS-E 17mm f/4L UD Aspherical Ultra Wide Tilt-Shift Lens for Canon Digital SLR Cameras
+2598,B001TKRLRU,2.8,3.5,<=2.8,Olympus 14-54mm f/2.8-3.5 II AF Zuiko Lens for Olympus Digital SLR Cameras
+2615,B001UHOR4W,4,,<=4,Pentax SMC 15mm f/4.0 DA ED AL Limited Wide Angle Lens for Pentax Digital SLR Cameras
+2668,B0022VFDRK,6.3,,>4,"Opteka 500mm f/6.3 HD Telephoto Mirror Lens for Canon EOS 80D, 77D, 70D, 60D, 60Da, 50D, 7D, 6D, 5D, 5DS, 1DS, T7i, T7s, T7, T6s, T6i, T6, T5i, T5, T4i, T3i, T3, T2i, SL2 and SL1 Digital SLR Cameras"
+2752,B0028Y5GKK,4,,<=4,"PANASONIC LUMIX G VARIO LENS, 7-14MM, F4.0 ASPH., MIRRORLESS MICRO FOUR THIRDS, H-F007014 (USA BLACK)"
+2753,B0028Y5GLO,4,5.8,<=4,Panasonic 14-140mm f/4.0-5.8 OIS Video Optimized Micro Four Thirds Lens for Panasonic Digital SLR Cameras
+2767,B0029U0X1A,4,5.6,<=4,Sony 55-200mm f/4-5.6 SAM DT Telephoto Zoom Lens for Sony Alpha Digital SLR Cameras
+2768,B0029U0X24,1.8,,<=2.0,Sony 50mm f/1.8 SAM DT Lens for Sony Alpha Digital SLR Cameras - Fixed
+2793,B002BSGUZI,4,5.6,<=4,Pentax 21870 DA 50-200mm F/4-5.6 AL Weather Resistant Lens
+2822,B002DGXUQK,2.8,4.5,<=2.8,"Sigma 18-50mm f/2.8-4.5 SLD Aspherical DC OS HSM Wide Angle Zoom Lens for Canon EOS Digital Rebel XT, XTi, XS, XSi, T3i, T3, T2i, T2, T1i, 5D, 7D, 10D, 20D, 30D, 40D, 50D & 60D Digital SLR Cameras"
+2894,B002IKLJV4,3.5,5.6,<=4,"PANASONIC LUMIX G Vario Lens, 14-45MM, F3.5-5.6 ASPH, MIRRORLESS Micro Four Thirds, MEGA O.I.S, H-FS014045 (USA Black)"
+2895,B002IKLJVE,1.7,,<=2.0,Panasonic Lumix G H-H020 20mm f/1.7 Aspherical Pancake Lens for Micro Four Thirds Interchangeable Digital SLR Cameras
+2953,B002KLY9I6,3.5,,<=4,"Opteka 6.5mm f/3.5 Manual Focus Aspherical Fisheye Lens for Canon EOS 7D, 6D, 5D, 1DX, 70D, 60D, 50D, 40D, T5i, T4i, T3i, T3, T2i and SL1 Digital SLR Cameras (New Version)"
+2954,B002KMAWO0,3.5,,<=4,"Opteka 6.5mm f/3.5 Manual Focus Aspherical Fisheye Lens for Nikon Nikon D610, D500, D7500, D7200, D7100, D5600, D5500, D5300, D5200, D3400, D3300 Digital SLR Cameras"
+2981,B002MVHZ0S,1.8,,<=2.0,Nikon 35mm F/1.8G AF-S DX Nikkor Lens with Deluxe Accessory Kit
+2994,B002NEGTTM,3.5,5.6,<=4,Canon EF-S 15-85mm f/3.5-5.6 IS USM UD Standard Zoom Lens for Canon Digital SLR Cameras
+2997,B002NKM29C,2.8,,<=2.8,"PANASONIC LUMIX G LEICA DG MACRO-ELMAR LENS, 45MM, F2.8 ASPH., PROFESSIONAL MIRRORLESS MICRO FOUR THIRDS, MEGA OPTICAL I.S., H-ES045 (USA BLACK)"
+2999,B002NU5UOQ,2.8,,<=2.8,Sony 28-75mm f/2.8 Smooth Autofocus Motor (SAM) Full Frame Lens for Sony A-mount Digital SLR Cameras
+3089,B002SQKVE4,3.5,,<=4,Nikon AF-S DX Micro NIKKOR 85mm f/3.5G ED Vibration Reduction Fixed Zoom Lens with Auto Focus for Nikon DSLR Cameras
+3129,B002UBPWAK,2.8,,<=2.8,Zeiss 21mm f/2.8 Distagon T* ZE Series Lens for Canon EOS Digital SLR Cameras
+3199,B002YP314Q,2,,<=2.0,Zeiss Ikon 100mm f/2.0 Makro Planar ZE MF Macro Lens (Canon EOS-Mount)
+3231,B0030FJK80,1.1,,<=1.4,Voigtlander Nokton 50mm f/1.1 Leica M Mount Lens - Black
+3232,B0030GGS3O,2.8,,<=2.8,Pentax 100mm f/2.8 WR D FA smc Macro Lens for Pentax Digital SLR Cameras
+3291,B003384ELM,4,5.6,<=4,Canon EF-S 55-250mm f/4.0-5.6 is II Telephoto Zoom Lens + Tiffen 58mm UV Prot.
+3342,B0035LBRM6,4,5.6,<=4,"Olympus M.Zuiko Digital ED 9-18mm F4.0-5.6 Lens, for Micro Four Thirds Cameras"
+3343,B0035LBRMQ,4,5.6,<=4,Olympus ED 14-150mm f/4.0-5.6 micro Four Thirds Lens for Olympus and Panasonic Micro Four Third Interchangeable Lens Digital Camera
+3376,B0037107NY,2,,<=2.0,Zeiss 100mm F/2 Makro Planar ZF.2 Manual Focus Macro Lens for the Nikon F AI-S Bayonet SLR System.
+3390,B0037KM0X0,1.4,,<=1.4,Nikon AF-S FX NIKKOR 24mm f/1.4G ED Wide-Angle Prime Lens for Nikon DSLR Cameras
+3412,B00385YI9I,2.8,,<=2.8,Tokina at-X Pro DX 11-16mm F/2.8 Asph for Sony/Minolta
+3415,B0038EKRYY,2,,<=2.0,Samsung 30mm f/2.0 Lens for NX Cameras
+3608,B003FWLGIK,2,,<=2.0,Samsung 30mm f/2.0 Lens for NX Cameras
+3680,B003JBHSHK,4,,<=4,Nikon AF-S FX NIKKOR 200-400mm f/4G ED Vibration Reduction II Zoom Lens with Auto Focus for Nikon DSLR Cameras
+3742,B003M0D0P2,2.8,,<=2.8,Sony Alpha 16mm F2.8 Wide-Angle E-Mount Fixed Lens for NEX-5 NEX-3 | SEL16F28 - International Version (No Warranty)
+3763,B003NRHAH8,2.8,,<=2.8,Sony SEL16F28 16mm f/2.8 Wide-Angle Lens for NEX Series Cameras
+3769,B003O868UG,3.5,,<=4,"PANASONIC LUMIX G FISHEYE Lens, 8MM, F3.5, MIRRORLESS Micro Four Thirds, H-F008 (USA Black)"
+3876,B003U8Q7TC,3.5,5.6,<=4,Sony Alpha SEL1855 E-mount 18-55mm F3.5-5.6 OSS Lens (Silver)
+3935,B003VS9UP4,2.8,,<=2.8,Rokinon 14mm f/2.8 IF ED MC Super Wide Angle Lens for Nikon (No AE chip)
+3936,B003VSGZ4S,2.8,,<=2.8,Rokinon FE14M-P 14mm F2.8 Ultra Wide Fixed Lens for Pentax (Black)
+4128,B0040X4OZU,4,,<=4,Canon EF 8-15mm f/4L Fisheye USM Ultra-Wide Zoom Lens for Canon EOS SLR Cameras
+4158,B00421SGTA,3.5,5.6,<=4,Canon EF-S 18-55mm f/3.5-5.6 IS II SLR Lens
+4174,B0042GFYHW,2.8,,<=2.8,Sony Alpha SAL85F28 85mm f/2.8 A-mount Standard & Medium Telephoto Fixed Lens (Black)
+4175,B0042GFYLI,3.5,6.3,<=4,Sony Alpha SEL18200 E-Mount 18-200mm F3.5-6.3 OSS Lens (Silver)
+4198,B0042X9LBK,2,,<=2.0,Nikon AF FX NIKKOR 200mm f/2G ED Vibration Reduction II DSLR Lens with Auto Focus for Nikon DSLR Cameras
+4227,B0043RTLA6,3.5,5.6,<=4,"Pentax 21977 DA 18-135mm f/3.5-5.6 ED AL (IF) DC WR Lens for Pentax Digital SLR cameras,Black"
+4231,B0043VE28S,4,5.6,<=4,"PANASONIC LUMIX G VARIO LENS, 100-300MM, F4.0-5.6 ASPH., MIRRORLESS MICRO FOUR THIRDS, MEGA OPTICAL I.S., H-FS100300 (USA BLACK)"
+4232,B0043VE29C,25,,>4,Panasonic Lumix 14mm f/25 G Aspherical Lens for Micro Four Thirds Interchangeable Lens Cameras (White Box)
+4236,B00440D7RA,2,,<=2.0,Sony SAL-24F20Z 24mm f/2.0 A-mount Wide Angle Lens
+4280,B0044ZV1W8,8,,>4,"Opteka 650-1300mm f/8 HD Telephoto Zoom Lens for Nikon D5, D4, D810, D800, D750, D610, D600, D500, D7500, D7200, D7100, D5600, D5500, D5300, D5200, D3400, D3300 and D3200 Digital SLR Cameras"
+4340,B0046EC1OE,0.95,,<=1.4,"Voigtlander 25mm f/0.95 Nokton Aspherical Lens, Type II, Manual Focus for Micro 4/3 Mount"
+4355,B0046WLBNS,4,5.6,<=4,Olympus M.Zuiko 40-150mm f/4.0-5.6 Micro ED Digital Zoom Lens
+4592,B004FLJVYQ,3.5,6.3,<=4,Tamron 18-270mm f/3.5-6.3 Di II VC PZD Zoom Lens for Nikon DSLR Cameras (Model B008N) - International Version (No Warranty)
+4760,B004JHY5OC,6.3,,>4,Rokinon ED500M-B-EOS 500mm F6.3 Mirror Lens for Canon EOS (Black)
+4761,B004JHY5OM,6.3,,>4,Rokinon ED500M-B-AI 500mm F6.3 Mirror Lens for Nikon (Black)
+4804,B004L06QC6,1.8,,<=2.0,Nikon 50mm f/1.8 series E AIS lens (pancake style)
+4816,B004LEKIY4,4,5.6,<=4,Nikon AF Nikkor 70-210mm 1:4-5.6 Zoom Lens
+4822,B004LZMK8U,3.5,,<=4,Nippon Kogaku Japan Nikon 135mm f/3.5 f3.5 Nikkor-Q non-AI manual focus lens
+4874,B004NNUN02,2.8,,<=2.8,Rokinon 14mm f/2.8 IF ED UMC Ultra Wide Angle Fixed Lens w/ Built-in AE Chip for Nikon
+5091,B004V97MXE,4,,<=4,Canon EF 24-105mm f/4L IS USM Zoom Lens - White Box (New) (Bulk Packaging)
+5122,B004WA8Z74,3.5,5.6,<=4,Nikon 18-105mm f/3.5-5.6 AF-S DX VR ED Nikkor Lens for Nikon Digital SLR Cameras + WSP Lens Cleaning kit.
+5126,B004WLEEHI,6.3,,>4,"Opteka 500mm f/6.3 (with 2X- 1000mm) Telephoto Mirror Lens for Canon EF-Mount EOS 90D, 80D, 77D, 70D, 60D, 50D, 7D, 6D, 5D, 5DS, 1DS, T8, T8i, T7i, T7s, T7, T6s, T6i, T6, T5, SL3 and SL2 DSLR Cameras"
+5129,B004WP1FGW,8,,>4,"Opteka 500-1000mm f/8 High Definition Preset Telephoto Lens for Canon EOS 1D, 5D, 6D, 7D, 10D, 20D, 30D, 40D, 50D, 60D, Rebel XT, XTi, XS, XSi, T1i, T2i, T3, T3i and T4i Digital SLR Cameras"
+5156,B004XXAK5U,1.8,,<=2.0,"Nikon AF-S NIKKOR 50mm f/1.8G Len [International Version, No Warranty]"
+5354,B0054I54JU,3.5,,<=4,Sony SEL30M35 30mm f/3.5 e-mount Macro Fixed Lens
+5414,B0056E49MK,4,5.6,<=4,Canon EFS 55-250mm f/4.0-5.6 is II Telephoto Zoom Lens for Canon Digital SLR Cameras - International Version (No Warranty)
+5461,B0057R27YI,8,,>4,Bower SLY650C Long-Range 650mm-1300mm f/8 Telephoto Zoom Lens for Canon
+5481,B0058NYVXG,2.8,,<=2.8,Sigma 105mm F2.8 EX DG OS HSM Macro Lens for Canon SLR Camera
+5515,B005AM8Z3W,4,,<=4,Tokina 17-35mm f/4 at-X Pro FX Lens for Nikon
+5708,B005H1Z8P4,1.8,,<=2.0,Canon EF 50mm f/1.8 II Camera Lens (2514A002) - Super Saver KIT with 3 pc. Lens Cleaning Kit
+5709,B005H2CN38,1.4,,<=1.4,"Canon EF 50mm f1.4 USM Standard & Medium Telephoto Lens for Canon SLR Cameras (2515A003) with 58mm 3-piece Filter Kit (includes a UV, CPL, FLD filters ), 58mm Hard Lens Hood, 5 pc. Lens Cleaning Kit, and Lens Cap Keeper"
+5753,B005IHAI8O,1.8,,<=2.0,Sony Carl ZEISS Sonnar T E 24mm F1.8 ZA E-Mount Prime Lens
+5775,B005IY2OD4,2.8,,<=2.8,Sony 16-50mm f/2.8 Standard Zoom Lens for Sony A-Mount Cameras
+5820,B005KNZSLS,1.4,,<=1.4,Canon 50mm f/1.4 FD Manual Focus Lens
+5848,B005LZX7YK,2.8,,<=2.8,Tamron SP Auto Focus 17-50mm F/2.8 XR Di-II LD SP Aspherical (IF) Zoom Lens with Built In Motor for Nikon Digital SLR
+5849,B005LZX81W,2.8,,<=2.8,Tamron AF 28-75mm f/2.8 SP XR Di LD Aspherical (IF) Lens for Konica Minolta and Sony Digital SLR Cameras (Model A09M)
+5850,B005LZX86W,3.5,6.3,<=4,Tamron AF 28-300mm f/3.5-6.3 XR Di LD Aspherical (IF) Macro Ultra Zoom Lens for Minolta and Sony Digital SLR Cameras (Model A061M)
+5851,B005LZX88A,4,5.6,<=4,Tamron AF 70-300mm f/4.0-5.6 Di LD Macro Zoom Lens for Pentax Digital SLR Cameras (Model A17P)
+5852,B005LZX8KI,3.5,6.3,<=4,Tamron Auto Focus 18-270mm f/3.5-6.3 Di II VC LD Aspherical IF Macro Zoom Lens with Built in Motor for Nikon DSLR Cameras (Model B003NII) (Discontinued by Manufacturer)
+5853,B005LZX902,3.5,6.3,<=4,Tamron Auto Focus 18-270mm f/3.5-6.3 PZD All-In-One Zoom Lens with Built in Motor for Sony DSLR Cameras (Model B008S)
+5854,B005LZX9GG,4,5.6,<=4,Tamron AF 70-300mm f/4.0-5.6 SP Di VC USD XLD for Nikon Digital SLR Cameras
+5855,B005LZX9LG,2.8,,<=2.8,Tamron SP 17-50mm F/2.8 XR Di-II VC LD Aspherical for Nikon APS-C Digital SLR Cameras (6 Year Tamron Limited USA Warranty)
+5870,B005MGVGDW,4,,<=4,Nikon 70-210mm f/4.0 1:4 f4 Nikkor AF lens
+5950,B005OFK89E,8,,>4,Holga 60mm f/8 Lens for Canon DSLR (Black)
+5951,B005OFK8EE,8,,>4,Holga 60mm f/8 Lens for Nikon DSLR (Black)
+6011,B005RZY9FK,2.8,,<=2.8,Sigma 258306 105mm F2.8 EX DG OS HSM Macro Lens for Nikon DSLR Camera
+6108,B005YOWGUE,3.5,6.3,<=4,Tamron Auto Focus 18-200mm f/3.5-6.3 XR Di II LD Aspherical (IF) Macro Zoom Lens for Pentax Digital SLR Cameras (Model A14P)
+6146,B0061JOROE,2.8,,<=2.8,Sigma 150mm f/2.8 EX DG HSM APO HSM IF Macro Lens for Nikon SLR Cameras
+6192,B0064I7APA,2.8,,<=2.8,Sigma 150mm f/2.8 AF APO EX DG OS HSM Macro Lens for Canon Digital SLRs
+6195,B0064I7DBQ,4.5,5.6,>4,Sigma 8-16mm f/4.5-5.6 DC HSM FLD AF Ultra Wide Zoom Lens for APS-C sized Sigma Digital DSLR Camera
+6196,B0064I7DI4,4.5,5.6,>4,Sigma 12-24mm f/4.5-5.6 AF II DG HSM Lens for Nikon Digital SLRs
+6197,B0064I7EK6,2.8,,<=2.8,Sigma 70mm F/2.8 EX DG Macro Lens for Canon Digital SLR Cameras
+6198,B0064I7EQK,1.4,,<=1.4,Sigma 30mm f/1.4 EX DC HSM Lens for Canon Digital SLR Cameras
+6200,B0064I7G6S,1.4,,<=1.4,Sigma 85mm f/1.4 EX DG HSM Large Aperture Medium Telephoto Prime Lens for Nikon Digital SLR Cameras
+6201,B0064I7GC2,2.8,,<=2.8,Sigma 50mm f/2.8 EX DG Macro Lens for Minolta and Sony SLR Cameras
+6202,B0064I7GH2,1.8,,<=2.0,Sigma 20mm f/1.8 EX DG RF Aspherical Wide Angle Lens for Sigma SLR Cameras
+6203,B0064I7H0I,1.8,,<=2.0,Sigma 24mm f/1.8 EX DG Aspherical Macro Large Aperture Wide Angle Lens for Minolta and Sony SLR Cameras
+6204,B0064I7H4E,1.8,,<=2.0,Sigma 28mm f/1.8 EX DG Aspherical Macro Large Aperture Wide Angle Lens for Canon SLR Cameras
+6205,B0064I7HOE,2.8,,<=2.8,Sigma 15mm f/2.8 EX DG Diagonal Fisheye Lens for Canon SLR Cameras
+6206,B0064I7HSA,2.8,,<=2.8,Sigma 10mm f/2.8 EX DC HSM Fisheye Lens for Canon Digital SLR Cameras (OLD MODEL)
+6207,B0064I7I20,4,5.6,<=4,Sigma 70-300mm f/4-5.6 DG APO Macro Telephoto Zoom Lens for Minolta and Sony SLR Cameras
+6208,B0064I7INO,4,5.6,<=4,Sigma 70-300mm f/4-5.6 DG Macro Telephoto Zoom Lens for Pentax SLR Cameras - International Version (No Warranty)
+6209,B0064I7IRK,2.8,,<=2.8,Sigma 24-70mm f/2.8 IF EX DG HSM AF Standard Zoom Lens for Canon Digital SLR Cameras
+6210,B0064I7IXE,4,5.6,<=4,Sigma 70-300mm F/4-5.6 DG OS SLD Super Multi-Layer Coated Telephoto Lens for Nikon Auto Focus Mount Digital SLR Cameras
+6211,B0064I7J2E,2.8,,<=2.8,Sigma 17-50mm f/2.8 EX DC OS HSM FLD Large Aperture Standard Zoom Lens for Nikon Digital DSLR Camera
+6212,B0064I7J60,2.8,,<=2.8,Sigma 70-200mm f/2.8 APO EX DG HSM OS FLD Large Aperture Telephoto Zoom Lens for Sony Digital DSLR Camera
+6213,B0064I7KAA,2.8,,<=2.8,Sigma 200-500mm f/2.8 APO EX DG Ultra-Telephoto Zoom Lens for Nikon DSLR Cameras
+6214,B0064I7L9U,4,5.6,<=4,Sigma 50-200mm f/4.0-5.6 DC IF SLD Optical Stabilized (OS) Lens with Hyper Sonic Motor (HSM) for Canon Digital SLR Cameras
+6215,B0064I7M7Q,4.5,5.6,>4,Sigma 120-400mm f/4.5-5.6 AF APO DG OS HSM Telephoto Zoom Lens for Canon Digital SLR Cameras
+6216,B0064I7MU8,5,6.3,>4,Sigma 73A205 150-500mm F/5-6.3 APO HSM DG Telephoto Zoom Lens for Sony DSLRs
+6217,B0064I7N8Y,4.5,6.3,>4,Sigma 50-500mm f/4.5-6.3 APO DG OS HSM SLD Ultra Telephoto Zoom Lens for Canon Digital SLR Camera
+6218,B0064I7NC0,3.5,6.3,<=4,Sigma 18-200mm f/3.5-6.3 DC Lens for Canon Digital SLR Cameras
+6220,B0064I7NXO,3.8,5.6,<=4,Sigma 18-125mm f/3.8-5.6 AF DC OS HSM Zoom Lens for Canon Digital SLR Cameras
+6221,B0064I7O2O,2.8,4.5,<=2.8,Sigma 18-50mm f/2.8-4.5 SLD Aspherical DC Optical Stabilized (OS) Lens with Hyper Sonic Motor (HSM) for Sigma Digital SLR Cameras
+6259,B0065OVIX8,3.3,4.5,<=4,Nikon AF Nikkor 35-70mm f/3.3-4.5 Lens
+6260,B0065PLDV4,2.8,,<=2.8,Nikon Nikkor 28mm F/2.8 Ai Wide Angle Lens
+6304,B0067W0T38,2.8,,<=2.8,Olympus M.Zuiko 17mm f/2.8 Lens
+6367,B006C1IL6G,3.5,,<=4,"Rokinon FE8M-NEX 8mm f/3.5 Fisheye Lens for Sony E-Mount Cameras (NEX and VG10), Black"
+6368,B006C1ILUC,1.4,,<=1.4,Rokinon 85M-MFT 85mm F1.4 Ultra Wide Lens for Micro Four-Thirds Mount Fixed Lens for Olympus/Panasonic Micro 4/3 Cameras
+6369,B006C1IM2E,2.8,,<=2.8,"Rokinon AE14M-C 14mm f/2.8-22 Ultra Wide Angle Lens with Built-In AE Chip for Canon EF Digital SLR,Black"
+6370,B006C1IMBK,1.4,,<=1.4,Rokinon 35mm f/1.4 Lens for Canon Cameras
+6371,B006C1IMK6,3.5,,<=4,"Rokinon FE75MFT-S 7.5mm F3.5 UMC Fisheye Lens for Micro Four Thirds (Olympus PEN and Panasonic),Silver"
+6395,B006GPZ28I,3.5,,<=4,Sony DSLR SEL30M35 30mm F3.5 E-Mount Nex Macro Lens Bundle
+6399,B006HC8D04,1.8,,<=2.0,Sony Sonnar T E 24mm F1.8 ZA Lens | SEL24F18Z- International Version (No Warranty)
+6408,B006IMI63W,4,5.6,<=4,Sigma 10-20 mm f4-5.6 EX DC for SLR Cameras with 4/3rd Mount
+6416,B006JGE73A,2.8,,<=2.8,Samsung NX 60mm f/2.8 Macro Camera Lens - Fixed
+6456,B006MI1V8E,3.5,,<=4,Samyang SY75MFT-B 7.5mm f/3.5 Lens for Micro Four Thirds
+6529,B006UL00R6,1.4,,<=1.4,Fujifilm XF35mmF1.4 R
+6614,B007261AZE,1.4,,<=1.4,Samsung NX 85mm f/1.4 Camera Fixed Lens
+6616,B007261C6Q,2.4,,<=2.8,Samsung NX 16mm f/2.4 Camera Lens (Black) - Fixed
+6643,B007409UVY,2.8,,<=2.8,Nikon 1 NIKKOR 10mm f/2.8 (White)
+6644,B007409V1S,3.8,5.6,<=4,Nikon 1 NIKKOR 30-110mm f/3.8-5.6 VR (Black)
+6686,B0076BNKOY,2.8,,<=2.8,Canon EF24mm f/2.8 is USM Lens
+6687,B0076BNKU8,2.8,,<=2.8,"Canon EF 28mm f/2.8 is USM Wide Angle Lens - Fixed, Black, Model:5179B002"
+6731,B0078IH95Q,4.8,,>4,"Olympus 75-300mm f/4.8 Lens for Olympus Pen Cameras, Micro Four-Thirds Mount Cameras"
+6759,B007B90ZI0,3.5,6.3,<=4,Sigma 18-200mm F3.5-6.3 II DC OS HSM Lens for Nikon SLR Camera (OLD MODEL)
+6886,B007ORX8ME,2.8,,<=2.8,Tokina 11-16mm f/2.8 AT-X116 Pro DX II Digital Zoom Lens (AF-S Motor) (for Nikon)
+6907,B007PELVDO,4,5.6,<=4,Tamron SP 70-300mm F/4-5.6 Di VC USD for Canon - International Version (No Warranty)
+6919,B007PXLCXY,2.8,,<=2.8,Sigma 50-150mm f/2.8 EX DC OS HSM Lens for Canon
+6947,B007RKL1KE,2.8,,<=2.8,"Tamron SP 24-70mm F/2.8 Di VC USD, Canon - Objetivo (Canon, Standard Zoom, SLR, 0.945-2.76"" (24-70 mm), Canon)"
+6971,B007SRLJCQ,2.8,,<=2.8,Sigma 50-150mm f/2.8 EX DC OS HSM APO Lens for Nikon
+7001,B007VAZB10,2.8,,<=2.8,Tamron SP 24-70mm f/2.8 Di VC USD for Nikon (Model A007N) - International Version (No Warranty)
+7004,B007VGGIRK,1.8,,<=2.0,Nikon AF FX NIKKOR 28mm f/1.8G Compact Wide-angle Prime Lens with Auto Focus for Nikon DSLR Cameras
+7005,B007VHDUN4,0.95,,<=1.4,Voigtlander 17.5mm f0.95 Nokton Micro Four Thirds Lens
+7040,B007XJUV9Q,3.5,6.3,<=4,Sigma 18-250mm f/3.5-6.3 DC OS HSM IF Lens for Sony Digital SLR Cameras
+7056,B007Y5PQQ2,1.8,,<=2.0,"Canon EF 50mm f/1.8 STM Prime Lens Bundle with 49mm Multicoated UV Protective Filter, Microfiber Cleaning Cloth and Accessories (5 Items)"
+7067,B007ZTKWFM,5,6.3,>4,Sigma 150-500mm F/5-6.3 APO DG OS HSM Autofocus Lens for Canon EOS Lens Kit Bundle
+7068,B007ZTL5DK,5,6.3,>4,Beach Camera Sigma 150-500mm F/5-6.3 APO DG OS HSM Autofocus Lens for Nikon Lens Kit Bundle
+7074,B00803LC2E,4,5.6,<=4,"Sigma 70-300mm f/4-5.6 SLD DG Macro Lens for Nikon DSLR Cameras Includes Bonus Xit 60"" Full Size Photo / Video Tripod, and More"
+7134,B00836H3Z8,3.5,5.6,<=4,Sony SAL18135 18-135mm f/3.5-5.6 Zoom Lens
+7158,B00843ERMW,2.8,,<=2.8,"Panasonic LUMIX G X VARIO LENS, 12-35MM, F2.8 ASPH., PROFESSIONAL MIRRORLESS MICRO FOUR THIRDS, POWER OPTICAL I.S. H-HS12035 (2012 Model - USA BLACK)"
+7175,B00851KM8Q,2.8,,<=2.8,Zeiss 15mm f/2.8 Distagon T ZF.2 Series Lens for Nikon F Mount SLR Cameras
+7182,B00855ZL38,2.8,,<=2.8,Panasonic LUMIX G X Vario 12-35mm/F2.8 ASPH./Power O.I.S./H-HS12035 - International Version (No Warranty)
+7210,B0086UXT9K,2.8,,<=2.8,Rokinon 8mm F2.8 Ultra-Wide Fisheye Lens for Sony E-mount and Sony NEX Cameras 28FE8BK-SE Black
+7211,B0086UXTP4,2.8,,<=2.8,Rokinon 8mm F2.8 Ultra-Wide Fisheye Lens for Sony E-mount and NEX Cameras Silver
+7244,B00894YP00,2.8,,<=2.8,Canon Cameras US 6310B002 EF 40mm f/2.8 STM Lens - Fixed Black
+7270,B008B14TQ6,3.5,4.5,<=4,NIKON 24-85mm F/3.5-4.5G ED VR AF-S Nikkor Lens - White Box
+7301,B008BOLHWM,4,,<=4,Canon FD 70-210mm f/4.0 Zoom Lens
+7455,B008J54P0E,2.8,,<=2.8,Canon EF 80-200mm f/2.8 L Zoom Lens
+7473,B008L1QXTC,2.8,,<=2.8,"Nikon 2200 AF-S DX Micro-NIKKOR 40mm f/2.8G Lens Bundle with 52mm Multicoated UV Protective Filter, 3 Pieces Cleaning Kit and Microfiber Cleaning Cloth"
+7485,B008LXPS0K,2.8,,<=2.8,Canon EF 40mm f/2.8 STM Pancake Lens Kit for T6s T6i T5i T5 T3i T4i
+7508,B008MO0PWE,1.8,,<=2.0,"Canon EF 50mm f/1.8 II Lens with 3 UV/CPL/ND8 Filters + Hood + Kit for EOS 6D, 70D, 5D Mark II III, Rebel T3, T3i, T4i, T5, T5i, SL1 DSLR Cameras"
+7522,B008NF8BKK,3.5,5.6,<=4,Canon EF-M 18-55mm f3.5-5.6 is STM Compact System Lens
+7523,B008NF8BRI,2,,<=2.0,Canon EF-M 22mm f2 STM Compact System Lens
+7555,B008OMOEO4,4.5,5.6,>4,Sony 55-300mm DT f/4.5-5.6 SAM Telephoto Zoom A-Mount Lens
+7574,B008PFE3PU,1.8,,<=2.0,Canon EF 50mm f/1.8 II Camera Fixed Lens + Deluxe Accessory Bundle for Canon EOS Rebel Digital SLR Cameras
+7593,B008RKEJV6,8,,>4,Bower SLY500PC High-Power 500mm f/8 Telephoto Lens for Canon
+7597,B008RYQPC8,4,5.6,<=4,Canon EF-S 55-250mm f/4-5.6 is II Telephoto Zoom Lens for Canon EOS DSLR Cameras (White Box)
+7621,B008UGMLWQ,3.5,5.6,<=4,Canon EF-S 18-135mm f/3.5-5.6 is STM
+7643,B008X1C16O,2.8,,<=2.8,"Rokinon 28FE8MBK-FX 8mm f/2.8 Ultra Wide Angle Fisheye Lens for Fuji X Mount 8-8mm, Fixed-Non-Zoom Lens (OLD MODEL)"
+7725,B0091JRPJK,4,5.6,<=4,Panasonic Lumix G X Vario PZ 45-175mm/F4.0-5.6 Lens for Panasonic Lumix G-Series Digital Cameras
+7738,B0092MD6S0,2.8,4,<=2.8,Fujinon XF18-55mmF2.8-4 R LM OIS
+7870,B009A8D4S8,1.8,,<=2.0,Nikon 1 NIKKOR 18.5mm f/1.8 (Silver)
+8026,B009T4WYQ6,3.5,6.3,<=4,Sigma 18-250mm f3.5-6.3 DC MACRO HSM for Pentax Digital SLR Cameras
+8031,B009U5FA2O,1.4,,<=1.4,Minolta Rokkor-X 50mm 1:1.4 manual focus lens
+8083,B009Z3PBZC,4,,<=4,Sony E 10-18mm F4 OSS Lens Sel1018 for E Mount - International Version (No Warranty)
+8105,B00A2I1A0E,2.8,,<=2.8,Tamron SP 70-200mm F2.8 Di VC USD Telephoto Zoom Lens for Canon (Model A009E) - International Version (No Warranty)
+8133,B00A34GO58,2.8,,<=2.8,Tamron SP 70-200MM F/2.8 DI USD TELEPHOTO ZOOM LENS 70-200mm Telephoto Lens for Sony Alpha Cameras
+8134,B00A35X6NU,1.4,,<=1.4,"Sigma 35mm F1.4 Art DG HSM Lens for Canon, Black, 3.7 x 3.03 x 3.03 (340101)"
+8135,B00A35X6XK,1.4,,<=1.4,Sigma 35mm F1.4 ART DG HSM Lens for Sony A
+8136,B00A35X8ZG,1.4,,<=1.4,"Sigma 35mm F1.4 Art DG HSM Lens for Nikon, Black, 3.7 x 3.03 x 3.03 (340306)"
+8167,B00A49ZOK8,2.8,,<=2.8,Tamron SP 70-200MM F2.8 DI VC USD Telephoto Zoom Lens for Nikon (Model A009N) - International Version (No Warranty)
+8225,B00AAZG5YA,2.8,,<=2.8,Canon Lens FD 28mm 1:2.8
+8287,B00AHRK9BG,3.5,5.6,<=4,"PANASONIC LUMIX G X Vario Power Zoom Lens, 14-42MM, F3.5-5.6 ASPH., MIRRORLESS Micro Four Thirds, Power O.I.S., H-PS14042K (USA Black)"
+8340,B00APQ9PVE,3.5,5.6,<=4,Canon 18-135mm f/3.5-5.6 EF-S is STM Lens New (White Box)
+8449,B00AYRXALA,3.5,5.6,<=4,Nikon 1 NIKKOR 6.7-13mm f/3.5-5.6 VR (Black)
+8450,B00AYRXB6Y,4,5.6,<=4,Nikon 1 NIKKOR 10-100mm f/4.0-5.6 VR (Black)
+8506,B00B4G67GK,4,5.6,<=4,Samsung NX 50-200mm f/4.0-5.6 OIS Zoom Camera Lens (White)
+8557,B00B7O31TA,3.5,4.5,<=4,Nikon AF-S FX NIKKOR 18-35mm f/3.5-4.5G ED Zoom Lens with Auto Focus for Nikon DSLR Cameras
+8641,B00BFQHGWI,1.4,,<=1.4,Sony SAL-50F14Z Carl Zeiss Planar T 50mm F1.4 ZA Fixed Lens
+8717,B00BP4EMAO,3.5,,<=4,Tamron AF 180mm f/3.5 Di SP A/M FEC LD (IF) 1:1 Macro Lens for Nikon Digital SLR Cameras (Model B01N)
+8718,B00BP4EO9S,5,6.3,>4,Tamron Auto Focus 200-500mm f/5.0-6.3 Di LD SP FEC (IF) Lens for Nikon Digital SLR Cameras (Model A08N) (Discontinued by Manufacturer)
+8719,B00BP4EOX4,2,,<=2.0,Tamron AF 60mm f/2.0 SP DI II LD IF 1:1 Macro Lens for Nikon Digital SLR Cameras (Model G005NII)
+8720,B00BP4EPCY,2.8,,<=2.8,Tamron AF 90mm f/2.8 Di SP A/M 1:1 Macro Lens for Pentax Digital SLR Cameras (Model 272EP)
+8743,B00BQC2R20,3.5,,<=4,Sigma 10-20mm f/3.5 EX DC HSM ELD SLD Aspherical Super Wide Angle Lens for Nikon Digital SLR Cameras
+8744,B00BQC2S7E,2.8,,<=2.8,Sigma 180mm F2.8 EX APO DG HSM OS Macro for Canon SLR Cameras
+8745,B00BQC2UJU,2.8,4,<=2.8,Sigma 17-70mm f/2.8-4 DC Macro OS HSM Lens for Nikon Mount Digital SLR Cameras
+8746,B00BQC2VVC,2.8,,<=2.8,Sigma 19mm F2.8 EX DN -Micro 4/3 400963
+8748,B00BQC2YIM,3.5,,<=4,Sigma 8mm f/3.5 EX DG Circular Fisheye Fixed Lens for Nikon SLR Cameras
+8749,B00BQC30I0,2.8,4,<=2.8,Sigma 17-70mm f/2.8-4 DC Macro OS (Optical Stabilizer) HSM Lens for Canon EOS Cameras
+8753,B00BQVXWUC,3.5,,<=4,Rokinon TSL24M-C 24mm f/3.5 Tilt Shift Fixed Lens for Canon
+8789,B00BUSXXP0,1.8,,<=2.0,"Opteka 85mm f/1.8 Manual Focus Aspherical Medium Telephoto Lens for Canon EOS 80D, 70D, 60D, 60Da, 50D, 7D, 6D, 5D, 5DS, 1Ds, Rebel T6s, T6i, T6, T5i, T5, T4i, T3i, T3, T2i and SL1 Digital SLR Cameras"
+8808,B00BWH2LFC,3.5,,<=4,Bower Ultra-Wide 7.5mm f/3.5 Fisheye Lens for Micro 4/3 SLY75BM43
+8809,B00BWH2MVA,3.5,,<=4,Bower Ultra Wide-Angle 8mm f/3.5 Fisheye Fixed Lens for Nikon - SLY358N
+8810,B00BWH2N9Q,2.8,,<=2.8,Bower SLY1428C Ultra Wide-Angle 14mm f/2.8 Fisheye Lens for Canon
+8811,B00BWH2O2W,1.4,,<=1.4,Bower SLY3514OD Wide-Angle 35mm f/1.4 Fixed Lens for Olympus 4/3 Digital Cameras
+8813,B00BWH2U6W,2.8,,<=2.8,Tamron AFF004N700 SP 90MM F/2.8 DI MACRO 1:1 VC USD For Nikon 90mm IS Macro Lens for Nikon (FX) Cameras - Fixed
+8814,B00BWH2V6Q,2.8,,<=2.8,Tamron SP 70-200MM F/2.8 DI VC USD Telephoto Zoom Lens for Nikon (FX) Cameras
+8869,B00C2PJXD6,3.5,6.3,<=4,"Olympus M.Zuiko Digital ED 12-50mm F3.5-6.3 EZ Lens, for Micro Four Thirds Cameras (Black)"
+8918,B00C94WIK0,1.4,,<=1.4,Canon EF 50mm f/1.4 USM Standard & Medium Telephoto Lens for Canon SLR Cameras - Fixed (Renewed)
+8950,B00CBTLDOK,4,5.6,<=4,Samsung NX 50-200mm f/4.0-5.6 OIS Zoom Camera Lens (Black)
+8952,B00CBZ8G3K,3.5,,<=4,"Rokinon HD8M-C 8mm f/3.5 HD Fisheye Lens with Removeable Hood for Canon DSLR 8-8mm, Fixed-Non-Zoom Lens,Black"
+8953,B00CBZ8IW4,1.4,,<=1.4,"Rokinon 24mm F/1.4 Aspherical Wide Angle Lens for Nikon with Automatic AE Chip for Auto Aperture, Auto Exposure and Focus Confirmation RK24MAF-N"
+8995,B00CGYJ8NI,3.5,5.6,<=4,Panasonic Lumix G Vario 14-140mm f/3.5-5.6 Lens (Black)
+9004,B00CHG8CY6,2.8,,<=2.8,Sigma 30mm F2.8 EX DN Art (Silver) for Sony SE
+9067,B00CNZTPGA,3.5,4.8,<=4,Fujifilm XF55-200mmF3.5-4.8 R LM OIS
+9088,B00CPGG8RG,1.8,,<=2.0,"OM SYSTEM OLYMPUS M.Zuiko Digital 75mm F1.8 Black For Micro Four Thirds System Camera, Compact Design, Beautiful Bokeh,Bright"
+9089,B00CPGG9RK,1.8,,<=2.0,"OM SYSTEM OLYMPUS M.Zuiko Digital 45mm F1.8 Black For Micro Four Thirds System Camera, Compact Design, Beautiful Bokeh, Bright"
+9090,B00CPGGA2E,1.8,,<=2.0,"OM SYSTEM OLYMPUS M.Zuiko Digital 17mm F1.8 Silver For Micro Four Thirds System Camera, Compact Design, Beautiful Bokeh, Bright"
+9093,B00CPKUZ5S,1.4,,<=1.4,Sigma 30mm F1.4 Art DC HSM Lens for Nikon
+9094,B00CPKV1CY,2.8,,<=2.8,Sigma 19mm F2.8 EX DN Art (Silver) for Micro 4/3
+9113,B00CRTVK2Y,1.2,,<=1.4,Nikon 1 NIKKOR 32mm f/1.2 (Silver)
+9275,B00D6BOXOY,1.4,,<=1.4,Samyang SY85M-S 85mm F1.4 Lens for Sony Alpha
+9276,B00D6BPCTE,3.5,,<=4,"Samyang SY8M-P 8mm f3.5 Lens for Pentax,Black"
+9279,B00D6BSDZY,3.5,,<=4,Samyang SYHD8M-C 8mm f/3.5 HD Lens with Removable Hood for Canon
+9280,B00D6BVJ9G,1.4,,<=1.4,"Samyang SY24M-C 24mm f/1.4 Wide Angle Lens for Canon,Black"
+9281,B00D6BVQB2,2.8,,<=2.8,"Samyang SY14M-C 14mm F2.8 Ultra Wide Fixed Angle Lens for Canon , Black"
+9282,B00D6BVWNE,1.4,,<=1.4,Samyang SY35M-C 35mm F1.4 Fixed Lens for Canon Black
+9290,B00D7B9O38,4,5.6,<=4,"OM SYSTEM OLYMPUS M.Zuiko Digital 40-150mm F4.0-5.6 R Black For Micro Four Thirds System Camera, 3.75x Zoom Lens, Portable Design"
+9297,B00D83S2BK,1.8,,<=2.0,Samsung NX 45mm f/1.8 Camera Lens (Black)
+9334,B00DCLFGCQ,2.8,,<=2.8,Sigma 60mm F2.8 EX DN Art (Black) for Micro 4/3
+9370,B00DIGMQB4,4,,<=4,Tokina ATXAF128DXN 12.28mm f/4.0 Pro DX Lens for Nikon
+9386,B00DM298KG,1.7,,<=2.0,"PANASONIC LUMIX G II Lens, 20MM, F1.7 ASPH, MIRRORLESS Micro Four Thirds, H-H020AK (USA Black)"
+9405,B00DO2M27K,1.8,,<=2.0,Sigma 18-35mm F1.8 Art DC HSM Lens for Pentax
+9406,B00DO2MESW,2.8,,<=2.8,Sigma 120-300mm F2.8 Sports DG APO OS HSM Lens for Nikon
+9445,B00DR7ENWO,3.5,5.6,<=4,"Fujifilm XC 16-50mm F3.5-5.6 OIS Zoom Camera Lens, Silver"
+9460,B00DU5UGFG,6.3,,>4,Rokinon 300M-M-S 300mm F6.3 Mirror Lens for Canon M Mirrorless Interchangeable Lens Camera
+9461,B00DU5UU2U,6.3,,>4,Samyang SY300M-FX-S 300mm F6.3 Mirror Lens for Fuji X Mirrorless Interchangeable Lens Cameras
+9478,B00DY4EAG4,2,,<=2.0,Rokinon 16M-C 16mm f/2.0 Aspherical Wide Angle Lens for Canon EF Cameras
+9479,B00DY4EFXW,2,,<=2.0,Samyang SY16M-P 16mm f/2.0 Aspherical Wide Angle Lens for Pentax KAF Cameras
+9482,B00DY94BUE,4,5.6,<=4,"Canon EF 70-300mm f/4-5.6 IS USM Telephoto Zoom Lens for Canon EOS 1D, 1DS, 5D Mark II/III, 6D, 7D, 40D, 60D, EOS Rebel SL1, T1i, T2i, T3, T3i, T4i, T5i, XS, XSi, XT, & XTi Digital SLR Cameras + 6pc Bundle Accessory Kit"
+9532,B00E3Y4XZM,2.8,,<=2.8,"Tokina ATXAF116DXIIC 11-16mm f/2.8 Pro DX-II Lens for Canon EF, Black"
+9533,B00E3Y4ZH8,2.8,,<=2.8,"Tokina ATXAFM100PRON 100mm f/2.8 Pro D Macro Autofocus Lens for Nikon AF-D, Black"
+9575,B00EARYR9O,8,,>4,Bower 500mm/1000mm f/8 MF Telephoto Lens for Canon EOS T5i 700D T4i 650D 1D Mark IV 5D Mark II 60Da 60D 50D 40D 30D 20D 10D 7D EOS-1D X T3I T2i T1i 600D 550D 500D 400D XS XSi T1i XTi XSi 450D 1000D 1100D
+9696,B00ET0669Q,1.8,,<=2.0,Sony 50mm f/1.8 Mid-Range Lens for Sony E Mount Nex Cameras
+9735,B00EYWRJ5E,3.5,5.6,<=4,"OM SYSTEM OLYMPUS M.Zuiko Digital 14-42mm F3.5-5.6 IIR Silver For Micro Four Thirds System Camera, Compact 3x zoom Lens"
+9746,B00EZJPRLO,4,,<=4,Pentax K-Mount HD DA 15mm f/4 ED AL 15-15mm Fixed Lens for Pentax KAF Cameras (Limited Black)
+9747,B00EZJPU48,2.8,,<=2.8,Pentax K-Mount HD DA 35mm f/2.8 Macro 35-35mm Fixed Lens for Pentax KAF Cameras (Limited Black)
+9748,B00EZK11A4,4,,<=4,Sony SEL1670Z Vario-Tessar T E 16-70mm F4 ZA OSS - International Version (No Warranty)
+9749,B00EZK12TY,4,,<=4,Sony E PZ 18-105mm f/4 G OSS Lens for Sony Digital SLR Cameras - International Version (No Warranty)
+9826,B00F8K8UAE,4.5,6.7,>4,Fujinon XC 50-230mm F4.5-6.7 Black Camera Lens
+9841,B00FB2XA18,4,5.6,<=4,Samsung NX 12-24mm f/4.0-5.6 Camera Lens (Black)
+9925,B00FLMLJXE,4,5.8,<=4,Pentax HD Pentax-DA 55-300mm f/4-5.8 ED WR Lens
+9931,B00FMVBNLC,8,,>4,Olympus M.Zuiko 15mm f8.0 Body CapLens BLC-1580 for Micro Four Thirds Cameras (Silver)
+9933,B00FO8KFKS,1.8,,<=2.0,Sigma 210101 18-35mm F1.8 DC HSM Lens for Canon APS-C DSLRs (Black) + 12 Piece Deluxe Accessory Package Kit
+9937,B00FP6BAA8,4,5.8,<=4,Pentax HD Pentax-DA 55-300mm f/4-5.8 ED WR Lens
+9938,B00FPKDPF2,4,,<=4,Fujifilm XF10-24mmF4 R OIS
+9997,B00FYOF61K,1.8,,<=2.0,SONY E-Mount Interchangeable Lens Sonnar T FE 55mm F1.8 ZA SEL55F18Z - International Version (No Warranty)
+9998,B00FYOF8SQ,4,,<=4,SONY E-mount Lens Vario-Tessar T * FE 24-70mm F4 ZA OSS Interchangeable Full Frame Lens - International Version (No Warranty)
+9999,B00FYOFADE,3.5,5.6,<=4,Sony 28-70mm F3.5-5.6 FE OSS Interchangeable Standard Zoom Lens - International Version (No Warranty)
+10084,B00G9ZQIL0,2.8,,<=2.8,Fujifilm XF27mmF2.8 - Black
+10125,B00GFWC5XC,3.5,,<=4,Canon FD 135mm f/3.5
+10129,B00GGBRHFS,4,,<=4,Sigma 24-105mm F4.0 Art DG OS HSM Lens for Sigma
+10189,B00GM33B7S,1.4,,<=1.4,Zeiss 55mm f/1.4 Otus Distagon T Lens for Nikon F Mount
+10259,B00GTXHQ8Q,3.5,5.6,<=4,Sony 28-70mm F3.5-5.6 FE OSS Interchangeable Standard Zoom Lens
+10285,B00GX6K1X6,1.4,,<=1.4,SainSonic 25mm F/1.4 C Mount CCTV Lens for Pentax Q P/Q Mount Interchangeable Lens Camera
+10344,B00H7LLZLS,2.8,,<=2.8,Tokina ATXAF116DXIIS 11-16mm f/2.8 Pro DX-II Lens for Sony A
+10361,B00HAF167Y,2.8,,<=2.8,Rokinon FE14M-E 14mm F2.8 Ultra Wide Lens for Sony E-mount and Fixed Lens for Other Cameras
+10410,B00HK8Z9AG,1.2,,<=1.4,Fujinon XF56mmF1.2 R
+10452,B00HQ4W4PC,3.5,5.6,<=4,Nikon AF-S DX NIKKOR 18-55mm f/3.5-5.6G Vibration Reduction II Zoom Lens with Auto Focus for Nikon DSLR Cameras
+10496,B00HV6KMQ8,2,2.8,<=2.0,Samsung NX 16-50mm f/2.0-2.8 S Series Zoom Camera Lens with OIS and UPSM (Black)
+10499,B00HV936AY,2.5,,<=2.8,"Panasonic LUMIX G Lens, 14mm, F2.5 II ASPH., Mirrorless Micro Four Thirds, H-H014AK (USA BLACK)"
+10521,B00HXE4GZQ,1.2,,<=1.4,"Panasonic LUMIX G LEICA DG NOCTICRON LENS, 42.5MM, F1.2 ASPH., PROFESSIONAL MIRRORLESS MICRO FOUR THIRDS, POWER OPTICAL I.S., H-NS043 (USA BLACK)"
+10522,B00HYC1GMI,3.5,5.6,<=4,"OM SYSTEM OLYMPUS M.Zuiko Digital 14-42mm F3.5-5.6 EZ Black For Micro Four Thirds System Camera, Compact 3x zoom Lens"
+10523,B00HYC1HR2,1.8,,<=2.0,"OM SYSTEM OLYMPUS M.Zuiko Digital 25mm F1.8 Black For Micro Four Thirds System Camera, Compact Design, Beautiful Bokeh, Bright"
+10552,B00I0O7VXC,4.5,6.3,>4,Sony E 55-210mm F4.5-6.3 Lens for Sony E-Mount Cameras (Black) - International Version (No Warranty)
+10700,B00IJEF6IK,4.5,5.6,>4,Canon EF 100-400mm f/4.5-5.6L is II USM Zoom Telephoto Lens + Filter Kit + Accessory Bundle
+10722,B00INBDP8C,4,5.6,<=4,Sigma 70-300mm f/4-5.6 SLD DG Macro Lens (Nikon) w/Pro Backpack & Essential Accessory Bundle
+10723,B00INL2UQ0,3.5,6.3,<=4,Sigma 18-200mm F3.5-6.3 Contemporary DC Macro OS HSM Lens for Canon
+10815,B00IX277EE,1.8,,<=2.0,"Opteka 85mm f/1.8 Aspherical Telephoto Portrait Lens for Nikon D5, D4s, D4, D3x, Df, D810, D800, D750, D610, D500, D7500, D7200, D7100, D5600, D5500, D5300, D5200, D3400, & D3300 Digital SLR Cameras"
+10820,B00IYP9JUK,4.5,5.6,>4,Nikon 1 NIKKOR VR 70-300mm f/4.5-5.6 Lens (Black)
+10884,B00J8HV6DG,1.7,,<=2.0,"Panasonic LUMIX G Leica DG SUMMILUX Lens, 15MM, F1.7 ASPH, Professional MIRRORLESS Micro Four Thirds, H-X015K (USA Black)"
+10895,B00J9T5PCQ,3.5,,<=4,Altura Photo 8mm f/3.5 Aspherical HD Fisheye Lens for CANON DSLR Cameras + Magicfiber Microfiber Lens Cleaning Cloth
+10909,B00JD4SWT0,3.5,,<=4,Lensbaby Circular Fisheye 5.8mm f/3.5 Lens for Canon
+10910,B00JD4T9II,2.8,,<=2.8,Samyang 8mm F2.8 UMC Fisheye II (Black) Lens for Sony E-Mount (NEX) Cameras (SY8MBK28-E)
+10911,B00JD4T9M4,2.8,,<=2.8,Samyang 8mm F2.8 UMC Fisheye II (Black) Lens for Fuji X Mount Digital Cameras (SY8MBK28-FX)
+10912,B00JD4TA9G,2,,<=2.0,Rokinon 12mm F2.0 NCS CS Ultra Wide Angle Lens for Fuji X Mount Digital Cameras (Black) (RK12M-FX) - Fixed
+10913,B00JD4TACI,2,,<=2.0,Rokinon 12mm F2.0 NCS CS Ultra Wide Angle Lens for Samsung NX Mount Digital Cameras (Black) (RK12M-NX)
+10914,B00JD4TAEQ,2,,<=2.0,Rokinon RK12M-M 12mm F2.0 NCS CS Ultra Wide Angle Fixed Lens for Canon EF-M Mount Compact System Cameras (Black)
+10917,B00JDGB6UA,3.5,,<=4,Rokinon 8mm f3.5 AS IF MC CSII DH Fisheye Lens with Removable Hood for Olympus and Panasonic Micro 4/3 (MFT) Mount Digital Cameras (HD8M-MFT)
+10918,B00JDGB94S,2,,<=2.0,Rokinon 12mm F2.0 NCS CS Ultra Wide Angle Fixed Lens for Olympus and Panasonic Micro 4/3 (MFT) Mount Digital Cameras (Black) (RK12M-MFT)
+11031,B00JTGSLU2,1.4,,<=1.4,Sigma 50mm F1.4 Art DG HSM Lens for Nikon
+11108,B00K3T3GFY,2,,<=2.0,Rokinon RK12M-FX-SIL 12mm F2.0 Ultra Wide Angle Lens for Fujifilm X-Mount Cameras
+11109,B00K3T3IYS,2,,<=2.0,Rokinon RK12M-MFT-SIL 12mm F2.0 Ultra Wide Angle Lens for Olympus/Panasonic Micro 4/3 Cameras
+11261,B00KME6REC,8,,>4,"High-Power 500mm f/8 Manual Telephoto Lens for Nikon D3400, D5600, D7500, D500, D600, D610, D700, D750, D800, D810, D3100, D3200, D3300, D5100, D5200, D5300, D5500, D5600, D7000, D7100, D7200 DSLR"
+11262,B00KMEPHF2,8,,>4,"High-Power 500mm/1000mm f/8 Manual Telephoto Lens for Canon EOS 80D, EOS 90D, Rebel T3, T3i, T5, T5i, T6i, T6s, T7, T7I, T8I, SL3, EOS 60D, EOS 70D, EOS 5D, EOS5D IV, EOS 6D II, EOS 7D II SLR Cameras"
+11263,B00KMFN8E8,8,,>4,"Big Mike’s High-Power 500mm/1000mm f/8 Manual Telephoto Lens for Nikon DSLR, Black"
+11279,B00KQ9RH5G,4.5,5.6,>4,Canon EF-S 10-18mm f/4.5-5.6 IS STM Zoom Lens for Canon SLR Cameras (Renewed)
+11354,B00L2PN5L8,4,5.6,<=4,"Canon EF-S 55-250mm f/4-5.6 is STM Zoom Lens for Canon EOS 7D, 60D, EOS Rebel SL1, T1i, T2i, T3, T3i, T4i, T5i, XS, XSi, XT, XTi Digital SLR Cameras with Accessories Bundle"
+11380,B00L5PGK5I,3.5,6.3,<=4,Sigma 18-250mm f3.5-6.3 DC Macro OS HSM Lens for Nikon DSLR Cameras w/Advanced Photo and Travel Bundle
+11392,B00L84MVLI,4,5.6,<=4,Sigma 70-300mm F4-5.6 DG Macro Lens w/58mm 3 Pc Filter Kit & More for Canon EOS (Electro-Optical System)Cameras
+11524,B00LU3QN34,4,5.6,<=4,"Canon EF 75-300mm f/4-5.6 III Telephoto Zoom Lens for Canon SLR Cameras, includes; 9pc CD Supply Accessory Kit"
+11526,B00LUILBDQ,2,,<=2.0,"Samyang SY12M-FX-SIL 12mm F2.0 Ultra Wide Angle Lens for Fujifilm X-Mount Cameras, Silver"
+11527,B00LUILGSQ,2,,<=2.0,"Samyang SY12M-MFT-BK 12mm F2.0 Ultra Wide Angle Fixed Lens for Olympus/Panasonic Micro 4/3 Cameras, Black"
+11528,B00LUILNQG,2,,<=2.0,"Samyang SY12M-E-SIL 12mm F2.0 Ultra Wide Angle Lens for Sony E Cameras, Silver"
+11599,B00M2X1Q6U,4,5.6,<=4,"Panasonic Lumix G II Vario Lens, 45-200mm, F4.0-5.6, Mirrorless (H-FSA45200)"
+11681,B00MEF2PO8,3.5,6.3,<=4,Tamron 28-300mm F/3.5-6.3 Di VC PZD Zoom Lens for Canon EF Cameras
+11810,B00MWA7E78,4,5.6,<=4,Canon EF-M 11-22mm f/4-5.6 STM Lens
+11814,B00MX80VWY,3.5,,<=4,Vivitar 8mm f/3.5 Fisheye Lens (for Canon EOS Cameras)
+11932,B00NGSLSK4,2.8,,<=2.8,"Olympus OM SYSTEM OLYMPUS M.Zuiko Digital ED 40-150mm F2.8 PRO For Micro Four Thirds System Camera, Light weight powerful zoom, Weather Sealed Design, MF Clutch, Compatible with Teleconverter"
+11934,B00NGTN0Y0,4,,<=4,Sony 28-135mm FE PZ F4 G OSS Full-Frame E-Mount Power Zoom Lens
+11972,B00NKQ0HW2,5,6.3,>4,"Tamron AFA011C700 SP 150-600mm F/5-6.3 Di VC USD Zoom Lens for Canon Cameras Bundle with 95mm UV Filter, 95mm Circular Polarizing Filter and Cleaning Kit (5 Items)"
+11973,B00NKQ2SBK,5,6.3,>4,Tamron SP 150-600mm AFA011N700 F/5-6.3 Di VC USD Zoom Lens for Nikon Cameras + Polaroid 95mm UV Filter + Polaroid 95mm Circular Polarizer Filter + Cleaning Kit + Lens Cap Keeper Accessory Bundle
+12018,B00NTT6TC2,3.5,6.3,<=4,Sigma 18-300mm F3.5-6.3 Contemporary DC Macro OS HSM Lens for Pentax
+12024,B00NUHDHBY,1.4,,<=1.4,Sigma 35mm F1.4 Art DG HSM Lens for Canon DSLR Cameras + Sigma USB Dock with Altura Photo Essential Accessory and Travel Bundle
+12089,B00O5IQC46,0.95,,<=1.4,Zhongyi Mitakon Speedmaster 50mm f/0.95 Sony E Mount Full Frame
+12098,B00O7HJM9W,2.8,,<=2.8,Canon EF 40mm f/2.8 STM Pancake Lens (White)
+12109,B00O91UUHY,8,,>4,"500mm f/8 Telephoto Mirror Lens for Nikon D3100, D3200, D3300, D3400, D5200, D5300, D5500, D5600, D7100, D7200, D7500, D90, D5, D300, D500, D600, D610, D700, D750, D800, D810, D850 Digital SLR Camera"
+12118,B00OACMRN2,8.3,,>4,"Opteka 420-800mm f/8.3 HD Telephoto Zoom Lens for Canon EOS 90D, 80D, 77D, 70D, 60D, 50D, 7D, 6D, 5D, 5DS, 1DS, T7i, T7s, T7, T6s, T6i, T6, T5i, T5, T4i, T3i, T3, T2i, SL3 and SL2 Digital SLR Cameras"
+12130,B00ODVGN44,3.5,6.3,<=4,Tamron 16-300mm F/3.5-6.3 Di-II VC PZD All-In-One Zoom Lens for Canon APS-C Digital SLR Cameras (6 Year Limited USA Warranty)
+12132,B00OEK6ZCY,8.3,,>4,"Opteka 420-1600mm f/8.3 HD Telephoto Zoom Lens for Canon EOS 80D, 77D, 70D, 60D, 60Da, 50D, 7D, 6D, 5D, 5DS, 1Ds, Rebel T7i, T7s, T6s, T6i, T6, T5i, T5, T4i, T3i, T3, T2i and SL1 Digital SLR Cameras"
+12133,B00OELIMWO,8.3,,>4,"Opteka 420-1600mm f/8.3 HD Telephoto Zoom Lens for Nikon D4s, D4, D3x, Df, D810, D800, D750, D610, D600, D500, D7200, D7100, D7000, D5600, D5500, D5300, D5200, D3400, D3300, D3200 Digital SLR Cameras"
+12268,B00P04SGGG,3.5,6.3,<=4,Sigma 18-300mm F3.5-6.3 Contemporary DC Macro OS HSM Lens for Canon DSLR Cameras with Altura Photo Advanced Accessory and Travel Bundle
+12277,B00P1C5I1I,4.5,6.3,>4,Sony E-Mount 55-210mm F 4.5-6.3 Lens for Sony E-Mount Cameras Bundle with PixiBytes Microfiber Cleaning Cloth (Black)
+12278,B00P1GNMJY,4.5,6.3,>4,Sony E 55-210mm F4.5-6.3 Lens for Sony E-Mount Cameras (Black) + Pixi-Basic Accessory Bundle
+12283,B00P2NZLYA,1.8,,<=2.0,Nikon 35mm f/1.8G AF-S DX Lens + Pixi-Basic Accessory Bundle
+12297,B00P899OXM,2.8,,<=2.8,"Canon EF-S 24mm f/2.8 STM Camera Lens Bundle with 52mm UV, Polarizer & FLD Deluxe Filter kit and Camera Bag for DSLR"
+12379,B00PJ9LZ2Y,4.5,6.3,>4,"Sony E 55-210mm f/4.5-6.3 OSS E-Mount Telephoto Zoom Lens (Black) for a3000, a3500, a5000, a5100, a6000, a6300, a6500, NEX-3/5/6/7, NEXC3/F3 + 10pc Accessory Kit w/HeroFiber - International Version"
+12395,B00PP3CKAK,4,,<=4,"Canon EF 24-105mm f/4 L IS USM Lens (White Box) for Canon EOS SLR Cameras T3, T3i, T4i, T5, T5i, 5D, 6D, 60D, 7D, 70D, SL1 + AUD Essential Accessory Bundle"
+12458,B00Q4SHRN0,2,,<=2.0,Rokinon RK12M-E-SIL 12mm F2.0 Ultra Wide Angle Fixed Lens for Sony E-mount (NEX) and for Other Cameras
+12464,B00Q4SLIV2,2.8,,<=2.8,Rokinon 8mm F2.8 UMC Fisheye II (Black) Fixed Lens for Sony E-Mount (NEX) Cameras (RK8MBK28-E)
+12493,B00QAMUI4A,3.5,6.3,<=4,Sigma 18-300mm F3.5-6.3 Contemporary DC Macro Os HSM Lens for Nikon DSLR Cameras with Altura Photo Advanced Accessory and Travel Bundle
+12508,B00QEXM4YC,1.8,,<=2.0,YONGNUO YN50mm F1.8 Lens Large Aperture Auto Focus Lens Compatible with Canon EF Mount EOS Camera
+12603,B00R1MXPFW,4.5,5.6,>4,Beach Camera Nikon 55-300mm f/4.5-5.6G ED VR AF-S DX Nikkor Zoom Lens for Nikon Digital SLR (Renewed)
+12612,B00R2A0LKU,2.8,,<=2.8,Rokinon 12mm F2.8 Ultra Wide Fisheye Lens for Nikon AE DSLR Cameras - Full Frame Compatible
+12613,B00R2A0QD2,2.8,,<=2.8,Samyang 12mm F2.8 Ultra Wide Fisheye Lens for Sony E Mount Interchangeable Lens Cameras (NEX) - Full Frame Compatible
+12714,B00RQ4ERY8,1.4,,<=1.4,Rokinon 50mm F1.4 Lens for Canon EF Digital SLR
+12720,B00RSQTDMA,2.8,,<=2.8,Fujinon XF16-55mmF2.8 R LM WR
+12722,B00RUBKAS4,4,,<=4,Nikon AF-S FX NIKKOR 300MM f/4E PF ED Vibration Reduction Lens with Auto Focus for Nikon DSLR Cameras
+12787,B00SG504QQ,6.3,,>4,"Opteka 500mm f/6.3 (with 2X- 1000mm) Telephoto Mirror Lens for Nikon F-Mount D6, D5, D4, D850, D810, D800, D780, D750, D610, D600, D7500, D7200, D5600, D5500, D5300, D3500 and D3400 DSLR Cameras"
+12791,B00SHRO9X2,6.3,,>4,"Opteka 500mm f/6.3 (with 2X- 1000mm) Telephoto Mirror Lens for Sony E-Mount a9, a7R, a7S, a7, a6600, a6500, a6400, a6300, a6000, a5100, a5000, a3000, NEX-7, NEX-6, 5T, 5N, 5R, 3N Mirrorless Cameras"
+12792,B00SHT0MR2,1.4,,<=1.4,Sigma 35mm F1.4 Art DG HSM Lens for Nikon DSLR Cameras + Sigma USB Dock with Altura Photo Essential Accessory and Travel Bundle
+12793,B00SHT3MLU,1.4,,<=1.4,Sigma 50mm F1.4 Art DG HSM Lens for Canon DSLR Cameras + Sigma USB Dock with Altura Photo Essential Accessory and Travel Bundle
+12794,B00SHT3R60,1.4,,<=1.4,Sigma 50mm F1.4 Art DG HSM Lens for Nikon DSLR Cameras + Sigma USB Dock with Altura Photo Essential Accessory and Travel Bundle
+12851,B00SXU9RXU,2.8,,<=2.8,"Tokina ATXAF120DXC 11-20mm f/2.8 Pro DX Lens for Canon EF,Black"
+12867,B00SYY1ZEO,3.5,,<=4,"Opteka 6.5mm f/3.5 HD Aspherical Fisheye Lens for Sony E-Mount a6500, a6300, a6000, a5100, a5000, NEX-7, NEX-6, 5T, 5N, 5R, 3N Digital Mirrorless Cameras"
+12877,B00T3ERXKE,4,,<=4,Canon EF 11-24mm f/4L USM Lens
+12886,B00T48CE7G,2,,<=2.0,Rokinon 135mm F2.0 ED UMC Telephoto Lens for Canon Digital SLR Cameras
+12944,B00TED95VY,3.5,5.6,<=4,Nikon AF-S DX NIKKOR 18-55mm F/3.5-5.6 G VR II Lens # 2211 - (Renewed)
+12951,B00TG5FPHS,4,5.6,<=4,Canon EF-S 55-250mm f/4.0-5.6 IS II Telephoto Zoom Lens
+12957,B00THIRUWW,3.5,,<=4,Altura Photo 8mm f/3.5 Aspherical HD Fisheye Lens for NIKON DSLR Cameras
+12967,B00TIZKLHA,5,6.3,>4,Tamron 150-600mm SP AFA011C700 F/5-6.3 Di VC USD Zoom Lens for Canon Cameras + Padded Backpack + Polaroid 95mm UV Filter & Circular Polarizer Filter + Cleaning Kit + Lens Cap Keeper Accessory Bundle
+12988,B00TRCJZCG,4,,<=4,"Canon EF 24-105mm f/4 L is USM Lens for Canon EOS SLR Cameras T3, T3i, T4i, T5, T5i, 5D, 6D, 60D, 7D, 70D, SL1, 600D, 650D, 700D, 100D, 1100D + Essential Expo-Accessory Bundle"
+12999,B00TXOYHYE,2.8,,<=2.8,"Panasonic LUMIX G MACRO LENS, 30MM, F2.8 ASPH, MIRRORLESS MICRO FOUR THIRDS, MEGA OPTICAL I.S, H-HS030 (USA BLACK)"
+13001,B00TXVHMGC,4,5.6,<=4,Nikon 55-200mm f4-5.6G ED AF-S DX Nikkor Zoom Lens (Renewed)
+13009,B00U1V4ASQ,2.8,,<=2.8,Tokina at-X PRO 16-28mm F2.8 FX Lens - Nikon AF Mount
+13017,B00U29GN6O,2,,<=2.0,Sony SEL28F20 FE 28mm f/2-22 Standard-Prime Lens for Mirrorless Cameras
+13030,B00U5NCYMY,2,,<=2.0,Rokinon 135mm F2.0 ED UMC Telephoto Lens for Sony E-Mount (NEX) Interchangeable Lens Cameras
+13037,B00U6CQKLK,8,,>4,Vivitar 500mm f/8.0 Telephoto Lens (T Mount) (White)
+13039,B00U6PA6S0,8,,>4,"High-Power 500mm/1000mm f/8 Manual Telephoto Lens for Canon Digital EOS Rebel T2i, T3, T3i, T5, T5i, T6i, T6s, T7i, SL1, EOS60D, EOS70D, EOS 5D, EOS5D III, EOS 5Ds, EOS 6D, EOS 7D II Cameras"
+13053,B00U7HQSLQ,2.8,,<=2.8,"Sony VCLECU2 12-16 MM,f/2.8 Petal Shaped Fixed Ultra Wide Converter for SEL16F28 and SEL20F28,Black"
+13063,B00UB7ZUBG,1.8,,<=2.0,Canon EF 85mm f/1.8 USM Medium Telephoto Lens for Canon SLR Cameras - Fixed
+13064,B00UB7ZVDS,2.8,,<=2.8,Canon EF 100mm f/2.8 Macro USM Fixed Lens for Canon SLR Cameras
+13106,B00UJR41E0,2,,<=2.0,Helios 44-2 58mm F2 Russian Lens for Nikon DSLR Cameras
+13144,B00UW08HBM,1.2,,<=1.4,Canon EF 50mm f/1.2 L USM Lens for Canon Digital SLR Cameras - Fixed
+13145,B00UW08IDY,2.8,,<=2.8,Canon EF 70-200mm f/2.8L IS II USM Telephoto Zoom Lens for Canon SLR Cameras
+13166,B00UZM0G0W,1.4,,<=1.4,Sigma 24mm f/1.4 DG HSM Art Lens for Nikon F
+13200,B00V7B5B7I,2.8,,<=2.8,Tamron AF 28-75mm f/2.8 XR Di LD Aspherical (IF) Autofocus Lens for Canon DSLR + More - International Version (No Warranty)
+13208,B00V85BIIY,2,,<=2.0,Helios 44-2 58mm F2 Russian Lens for Sony E NEX (for E-mount cameras)
+13209,B00V85FLOG,2,,<=2.0,"Helios 44-2 58mm F2 Russian Lens for Micro 4/3 Panasonic, Olympus"
+13210,B00V8VLF5E,3.5,5.6,<=4,Nikon AF-S DX NIKKOR 18-140mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras
+13211,B00V8VM7SS,2.8,,<=2.8,Nikon AF-S FX NIKKOR 24-70mm f/2.8G ED Zoom Lens with Auto Focus for Nikon DSLR Cameras
+13212,B00V8VMLA2,1.8,,<=2.0,"Nikon AF-S DX NIKKOR 35mm f/1.8G Lens with Auto Focus for Nikon DSLR Cameras, 2183, Black"
+13213,B00V8VMXFU,1.8,,<=2.0,Nikon AF-S Nikkor 50mm f/1.8G Lens
+13214,B00V8VNL2E,2.8,,<=2.8,Nikon AF-S VR Micro-NIKKOR 105mm f/2.8G IF-ED Lens
+13215,B00V8Y6OMK,2.8,,<=2.8,"Nikon 70-200mm f/2.8G ED VR II AF-S Nikkor Zoom Lens For Nikon Digital SLR Cameras (New, White box)"
+13243,B00VGWFKH4,4.5,5.6,>4,Canon EF-S 10-18mm f/4.5-5.6 IS STM Wide Angle Lens with Altura Photo Essential Accessory Bundle
+13253,B00VIYPKRU,2.8,,<=2.8,Rokinon 100mm F2.8 ED UMC Full Frame Telephoto Macro Lens for Sony E-Mount Interchangeable Lens Cameras
+13277,B00VQGUNYU,2,,<=2.0,Helios 44-2 58mm F2 Russian Lens for FujiFilm FX Mount X-Pro1 X-E1 X-E2 X-M1 X-A1 X-A2 X-T1
+13318,B00W2PCWLG,3.5,5.6,<=4,Nikon 18-105mm f/3.5-5.6 AF-S DX VR ED Nikkor Lens for Nikon Digital SLR Cameras (Renewed)
+13322,B00W3SCHNU,1.8,,<=2.0,Nikon 35mm f/1.8G AF-S DX Lens for Nikon DSLR Cameras (Renewed)
+13340,B00W87UZ6W,1.8,,<=2.0,"Opteka 85mm f/1.8 Manual Focus Aspherical Telephoto Portrait Lens for Sony NEX E-Mount a9, a7r, a7s, a7, a6500, a6300, a6000, a5100, a5000, NEX-7, NEX-6, NEX-5T, NEX-5R & Digital Mirrorless Cameras"
+13419,B00WUI07XK,1.8,,<=2.0,Canon Cameras US 2514A002 EF 50mm f/1.8 II Camera Lens - Fixed (Discontinued by Manufacturer)
+13424,B00WUI38F4,4,,<=4,Canon EF 24-105mm f/4 L IS USM Lens for Canon EOS SLR Cameras
+13426,B00WUI3UNY,1.4,,<=1.4,Nikon AF-S FX NIKKOR 50mm f/1.4G Lens with Auto Focus for Nikon DSLR Cameras
+13431,B00WUI57DU,3.5,5.6,<=4,AF-S DX Nkr 18-200mm F/3.5-5.6G ED VR II
+13434,B00WUI60YU,2.8,,<=2.8,Nikon AF-S NIKKOR 14-24mm f/2.8G ED
+13438,B00WUI6M5C,1.8,,<=2.0,Nikon AF-S NIKKOR 35mm f/1.8G ED Fixed Zoom Lens with Auto Focus for Nikon DSLR Cameras
+13439,B00WUI6QJO,1.8,,<=2.0,Sony SEL35F18 35mm f/1.8 Prime Fixed Lens
+13440,B00WUI6VDK,2.8,,<=2.8,Canon EF 16-35mm f/2.8L II USM Ultra Wide Angle Zoom Lens
+13441,B00WUI708K,4,,<=4,"Canon EF 70-200mm f/4L USM Telephoto Zoom Lens for Canon SLR Cameras, Lens Only"
+13443,B00WUI7ZNA,4,5.6,<=4,Canon EF 75-300mm f/4-5.6 III USM Telephoto Zoom Lens for Canon SLR Cameras
+13445,B00WUI8VYW,2.8,,<=2.8,Canon EF 100mm f/2.8L IS USM Macro Lens with UV Protection Lens Filter
+13447,B00WUI97P4,2.8,,<=2.8,Canon EF-S 17-55mm f/2.8 IS USM Lens for Canon DSLR Cameras and Amazon Basics UV Protection Lens Filter - 77 mm
+13448,B00WUI9ITO,4,,<=4,Canon EF 24-70mm f/4.0L is USM Standard Zoom Lens - 6313B002
+13452,B00WUIALT0,4.5,5.6,>4,Canon EF 100-400mm f/4.5-5.6L IS USM Telephoto Zoom Lens for Canon SLR Cameras
+13455,B00WUIB9F0,4,5.6,<=4,Canon EF 70-300mm f/4-5.6 IS USM Lens for Canon EOS SLR Cameras
+13461,B00WUICQT8,2.8,,<=2.8,Canon EF 70-200mm f/2.8L USM Telephoto Zoom Lens for SLR Cameras
+13463,B00WUIDE8K,3.5,4.5,<=4,Nikon AF-S DX NIKKOR 10-24mm f/3.5-4.5G ED Zoom Lens with Auto Focus for Nikon DSLR Cameras
+13464,B00WUIDJ1M,1.2,,<=1.4,Canon EF 85mm f1.2L II USM Lens for Canon DSLR Cameras
+13466,B00WUIDQLK,3.5,5.6,<=4,Nikon AF-S FX NIKKOR 28-300mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras
+13468,B00WUIEBH8,3.5,5.6,<=4,Canon EF-S 18-135mm f/3.5-5.6 is Standard Zoom Lens for Canon Digital SLR Cameras
+13470,B00WUIEJYI,4,,<=4,Canon EF 70-200mm f/4 L is USM Lens for Canon Digital SLR Cameras
+13472,B00WUIEQY6,1.8,,<=2.0,Canon EF 28mm f/1.8 USM Wide Angle Lens for Canon SLR Cameras
+13478,B00WUIGLRQ,2.8,,<=2.8,Nikon AF FX NIKKOR 80-200mm f/2.8D ED Zoom Lens with Auto Focus for Nikon DSLR Cameras
+13480,B00WUIHL7A,4,6.3,<=4,"PANASONIC LUMIX G LEICA DG VARIO-ELMAR PROFESSIONAL LENS, 100-400MM, F4.0-6.3 ASPH., MIRRORLESS MICRO FOUR THIRDS, POWER OPTICAL I.S., H-RS100400 (USA BLACK)"
+13484,B00WUIIM00,1.4,,<=1.4,Canon EF 35mm f/1.4L USM Wide Angle Lens for Canon SLR Cameras - White Box (New) (Bulk Packaging)
+13485,B00WUIISUO,3.5,5.6,<=4,Nikon 18-55mm f/3.5-5.6G AF-S DX VR Nikkor Zoom Lens - White Box (New) (Bulk Packaging)
+13489,B00WUIJKME,3.5,5.6,<=4,Canon EF-S 18-200mm f/3.5-5.6 IS Standard Zoom Lens for Canon DSLR Cameras
+13496,B00WUILCBQ,3.5,6.3,<=4,Nikon AF-S DX NIKKOR 18-300mm f/3.5-6.3G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras
+13499,B00WUILZKE,4,,<=4,Nikon AF-S FX NIKKOR 16-35mm f/4G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras
+13501,B00WUIMVI4,4,,<=4,Nikon 24-120mm f/4G ED VR AF-S NIKKOR Lens for Nikon Digital SLR (Renewed)
+13507,B00WUWTLD8,3.5,,<=4,Sigma 10-20mm f/3.5 EX DC HSM ELD SLD Wide-Angle Lens for Canon DSLR Cameras with Altura Photo Essential Accessory Bundle
+13510,B00WVI3ZB0,3.5,,<=4,Sigma 10-20mm f/3.5 EX DC HSM ELD SLD Wide-Angle Lens for Nikon DSLR Cameras with Altura Photo Essential Accessory Bundle
+13535,B00X8J8NCM,5,6.3,>4,"Sigma 745101 150-600mm F/5-6.3 DG OS HSM Contemporary Lens for Canon EF Cameras, 95mm UV Filter, 95mm Circular Polarizer Filter, 64GB Memory Card, Polaroid Bag, Monopod and Accessory Bundle"
+13551,B00XCHYZN6,2.8,,<=2.8,Sigma 17-50mm f/2.8 EX DC OS HSM Zoom Lens (for Canon DSLRs with APS-C Sensors) Bundle Includes Manufacturer Accessories + 3 PC Filter Kit + Lens Cap + Lens Pen + Cap Keeper + Microfiber Cloth
+13565,B00XI4PAZ0,2,,<=2.0,Fujifilm XF90mmF2 R LM WR
+13568,B00XIBNVL8,1.8,,<=2.0,"Canon EF 50mm f/1.8 STM Lens Bundle Includes EF 50mm f1.8 STM Lens, 49mm UV Filter, Lens Cap Keeper and Micro Fiber Cloth"
+13572,B00XIOX0SE,4.5,5.6,>4,Canon EF-S 10-18mm f/4.5-5.6 is STM Lens Bundle for Canon DSLR Cameras
+13587,B00XLV4GB4,2.8,,<=2.8,"Canon EF 70-200mm f/2.8L is II USM Zoom Lens, Sandisk 64GB Card, Ritz Gear Cleaning Kit & Accessory Bundle"
+13595,B00XNFMC4G,5,6.3,>4,Sigma 150-600mm f/5-6.3 DG OS HSM Contemporary Lens for Canon EF Bundle Includes Manufacturer Accessories + 72 inch Monopod with Quick Release + UV Filter + Lens Pen + Microfiber Cleaning Cloth
+13596,B00XNFRPTS,5,6.3,>4,Sigma 150-600mm f/5-6.3 DG OS HSM Contemporary Lens for Nikon F Bundle Includes Manufacturer Accessories + 72 inch Monopod with Quick Release + UV Filter + Lens Pen + Microfiber Cleaning Cloth
+13606,B00XTPE4DC,4.5,6.7,>4,Fujifilm 50-230mm f/4.5-6.7 XC OIS II Zoom Lens (Black)
+13620,B00XY195DK,2,,<=2.0,Helios 44M-4 58mm F2 Russian Lens M42 Mount
+13643,B00Y7GUZ7G,2,,<=2.0,YONGNUO YN35mm F2 Lens 1:2 AF/MF Wide-Angle Fixed/Prime Auto Focus Lens for Canon EF Mount EOS Camera
+13650,B00YB10GCQ,1.8,,<=2.0,"Canon EF 50mm f/1.8 STM Standard Prime Lens with Essentials Bundle Including: 49mm UV Filter, Padded Lens Pouch, Lens Cap Keeper, and Lens Cleaning Pen"
+13712,B00YQG52VG,2.8,,<=2.8,Canon EF 100mm f/2.8L is USM Macro Lens with Altura Photo Essential Accessory and Travel Bundle
+13713,B00YQZ9KUG,2.8,,<=2.8,"Canon EF 100mm f/2.8L is USM Macro AF Lens Kit - U.S.A - Bundle with 67mm Filter Kit, Lens Cap Leash, Lens Cleaning Kit, Lens Wrap (15x15), Professional Software Package"
+13719,B00YTACQBS,4,,<=4,Canon EF 16-35mm f/4L is USM Lens with Altura Photo Essential Accessory and Travel Bundle
+13827,B00ZVFESW0,5,6.3,>4,"Tamron AFA011C700 SP 150-600mm F/5-6.3 Di VC USD Zoom Lens for Canon Cameras + Polaroid 95mm Filter Set + 72"" Professional Monopod + Ritz Gear Cleaning Kit + Pouch + Lens Cap Strap Accessory Bundle"
+13836,B00ZY8CII0,3.5,6.3,<=4,Sony SEL24240 FE 24-240mm f/3.5-6.3 OSS Zoom Lens for Mirrorless Cameras
+13837,B00ZYT7OG0,2.8,,<=2.8,Canon EF 24-70mm f/2.8L II USM Standard Zoom Lens with Altura Photo Advanced Accessory and Travel Bundle
+13863,B010EK78CI,0.95,,<=1.4,Voigtlander Nokton 10.5mm f/0.95 Manual Focus Lens for Micro 4/3 Mount
+13864,B010FAU86K,4,5.6,<=4,Canon EF-S 55-250mm F4-5.6 is STM Lens for Canon SLR Cameras (Renewed)
+13887,B010R8MGA6,2.8,,<=2.8,"Oshiro 60mm f/2.8 2:1 LD UNC Ultra Macro Lens for Nikon F-Mount D500, D7500, D7200, D5600, D5500, D5300, D5200, D5100, D3500, D3400, D3300, D3200, D3100 DX DSLR Cameras"
+13888,B010R8MVK6,2.8,,<=2.8,"Oshiro 60mm f/2.8 2:1 LD UNC Macro Lens for Canon EF-Mount EOS 90D, 80D, 77D, 70D, 60D, 7D, 6D, 5D, 5DS, 1DS, T8i, T7i, T7s, T7, T6s, T6i, T6, T5i, T5, SL3, SL2, SL1 DSLR Cameras"
+13889,B010RAAOIK,2.8,4,<=2.8,Nikon AF-S DX NIKKOR 16-80mm f/2.8-4E ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras
+13894,B010TEMRUW,4.5,6.3,>4,"Sony E 55-210mm (SEL55210) F4.5-6.3 OSS Lens for Sony E-Mount Cameras (Black) With UV Filter, Cleaning Pen & CS Microfiber Cleaning Cloth"
+13928,B0117PHLP8,2.8,,<=2.8,"Canon EF-S 24mm f/2.8 STM Lens w/ Essential Photo and Travel Bundle - Includes: Altura Photo Sling Backpack, UV-CPL-ND4, Neoprene Lens Pouch, Camera Cleaning Set"
+13929,B011822MJK,4,5.6,<=4,Canon EF 75-300mm f/4-5.6 III Telephoto Zoom Lens Premium Bundle
+13935,B011A356TU,2,,<=2.0,"Oshiro 35mm f/2 LD UNC AL Wide Angle Full Frame Prime Lens for Canon EF EOS 80D, 77D, 70D, 60D, 50D, 7D, 6D, 5D, 5DS, 1DS, T7i, T7s, T7, T6s, T6i, T6, T5i, T5, T4i, T3i, SL2, SL1 Digital SLR Cameras"
+14079,B013D1BBBY,1.8,,<=2.0,Nikon AF-S FX NIKKOR 24mm f/1.8G ED Fixed Lens with Auto Focus for Nikon DSLR Cameras
+14085,B013FB9ZT2,4,5.6,<=4,Nikon 55-200mm f/4-5.6G VR II DX AF-S ED Zoom-Nikkor Lens (Renewed)
+14093,B013HXY21E,3.5,6.3,<=4,Tamron AF 18-200mm F/3.5-6.3 Di-II VC All-in-One Zoom for Nikon APS-C Digital SLR
+14103,B013JLO7C8,1.8,,<=2.0,Nikon AF-S FX NIKKOR 20mm f/1.8G ED Fixed Lens with Auto Focus for Nikon DSLR Cameras
+14104,B013JLON9U,2.8,,<=2.8,Nikon AF-S FX Micro-NIKKOR 2177 60mm f/2.8G ED Standard Macro Lens for Nikon DSLR Cameras
+14105,B013JLQ8MK,4,,<=4,Canon EF 16-35mm f/4L IS USM Lens with Circular Polarizer Lens - 77 mm
+14106,B013JLQP7S,2,,<=2.0,Canon 5178B002 EF 35mm f/2 is USM Wide-Angle Lens for Canon EF Cameras
+14107,B013JLRWKW,1.8,,<=2.0,Nikon AF S NIKKOR 85mm f/1.8G Fixed Lens with Auto Focus for Nikon DSLR Cameras
+14151,B013VP74PO,3.5,6.3,<=4,Tamron 16-300mm f/3.5-6.3 Di II VC PZD Macro Lens for Canon DSLR Cameras with Altura Photo Advanced Accessory and Travel Bundle
+14152,B013VP8DP4,3.5,6.3,<=4,Tamron 16-300mm f/3.5-6.3 Di II VC PZD Macro Lens for Nikon DSLR Cameras with Altura Photo Advanced Accessory and Travel Bundle
+14224,B014B830R6,4,5.6,<=4,Canon EF 70-300mm f/4-5.6L IS USM UD Telephoto Zoom Lens for Canon EOS SLR Cameras
+14229,B014C1LO3O,2.8,,<=2.8,Canon EF 24-70mm f/2.8L II USM Standard Zoom Lens
+14261,B014JS1CMI,6.3,,>4,"500mm f/6.3 Manual Focus Telephoto Mirror Lens + 2X Teleconverter = 1000mm for Nikon D3200, D3300, D5200, D5300, D5500, D7100, D7200, D610, D700, D750, D800, D810 Digital SLR Camera"
+14262,B014JS9DEW,6.3,,>4,"500mm f/6.3 Manual Focus Telephoto Mirror Lens + 2X Teleconverter = 1000mm for Canon EOS Rebel T6s, T6i, SL1, T5, T5i, T4i, 70D, 60D, 60Da, 7D, 6D, 5D, 5DS R, 1D Digital SLR Camera"
+14265,B014MC1HUI,3.5,6.3,<=4,Tamron AF 18-200mm F/3.5-6.3 Di-II VC All-in-One Zoom for Canon APS-C Digital SLR
+14324,B01535NNGY,1.8,,<=2.0,Yongnuo YN50mm F/1.8 Lens Large Aperture AF Lens in Black for Canon EOS Rebel Digital Camera+INSEESI Clean Cloth (LYSB01535NNGY-ELECTRNCS)
+14327,B0153WGIW8,3.5,5.6,<=4,"PANASONIC LUMIX G VARIO LENS, 14-140MM, F3.5-5.6 ASPH., MIRRORLESS MICRO FOUR THIRDS, POWER OPTICAL I.S., H-FS14140AK (USA BLACK)"
+14344,B01575YKUI,1.8,,<=2.0,Sony 55mm F1.8 Sonnar T FE ZA Full Frame Prime Lens + Free Extras Bundle
+14368,B015HW3LEC,2.8,,<=2.8,Nikon 24-70mm f/2.8G ED Auto Focus-S Nikkor Wide Angle Zoom Lens (Renewed)
+14369,B015I5GW26,1.8,,<=2.0,Tamron AFF013N-700 SP 45mm F/1.8 Di VC USD (model F013) For Nikon
+14370,B015I5U8YE,1.8,,<=2.0,Tamron AFF012C-700 SP 35mm F/1.8 Di VC USD (model F012) For Canon
+14466,B016CMDTBQ,4.5,6.3,>4,Canon EF-M 55-200mm f/4.5-6.3 Image Stabilization STM Zoom Lens (Silver)
+14492,B016KG9V5M,1.4,,<=1.4,Rokinon RK21M-FX 21mm F1.4 ED AS UMC High Speed Wide Angle Lens for Fuji (Black)
+14508,B016RMB6XE,1.2,,<=1.4,Rokinon RK50M-M 50mm F1.2 AS UMC High Speed Lens for Canon (Black)
+14512,B016SN92V0,4,5.6,<=4,Canon EF 75-300mm f/4-5.6 III Telephoto Zoom Lens for Canon SLR Cameras (Certified Refurbished)
+14521,B016V9RSYO,4.5,5.6,>4,Canon EF 100-400mm f/4.5-5.6L is II USM Lens with Altura Photo Complete Accessory and Travel Bundle
+14535,B016XPF9TM,2,,<=2.0,Fujinon XF35mmF2 R WR - Silver
+14541,B016ZHCWDO,4,,<=4,Canon EF 24-105mm f/4L is II USM Lens + UV Filter + Microfiber Cleaning Cloth Bundle (Bulk Packaging)
+14553,B0175AMBTA,2.8,,<=2.8,Sigma 17-50mm f/2.8 EX DC OS HSM Zoom Lens for Canon DSLRs with APS-C Sensors
+14584,B017E3TXEY,1.4,,<=1.4,Sigma 20mm F1.4 Art DG HSM Lens for Canon
+14609,B017JF8MIU,8.3,,>4,"High-Power 420-1600mm f/8.3 HD Manual Telephoto Zoom Lens for Canon EOS 80D, EOS 90D, Rebel T3, T3i, T5, T5i, T6i, T6s, T7, T7I, T8I, SL3, EOS 70D, EOS 5D, EOS5D IV, EOS 6D II, EOS 7D II SLR Cameras"
+14623,B017LBQR6Q,2,,<=2.0,Sigma 24-35mm F2.0 Art DG HSM Lens for Canon
+14635,B017NZA3VU,3.5,,<=4,"Tamron 16-300mm (6 Year USA Warranty) AFB016N700 F/3.5 6.3 Di II VC PZD Macro Interchangeable Lens for Nikon Cameras + 72"" Monopod + Polaroid Filter Set + Ritz Gear Bag and Accessory Bundle"
+14663,B017TCOS7W,2.8,,<=2.8,"Oshiro 135mm f/2.8 LD UNC AL Telephoto Full Frame Prime Lens for Nikon D5, D4S, DF, D4, D850, D810, D750, D610, D500, D7500, D7200, D5600, D5500, D5300, D5200, D3400, D3300, D3200 Digital SLR Cameras"
+14715,B01882XYPO,3.5,5.6,<=4,Nikon AF-S DX NIKKOR 18-140mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras (Renewed)
+14786,B018WN62NU,4,5.6,<=4,"Canon EF 75-300mm f/4-5.6 III Telephoto Zoom Lens with 2X Telephoto Lens, HD Wide Angle Lens and Accessories (8 Piece Kit)"
+14817,B01997LHU6,2.8,,<=2.8,Nikon AF-S FX NIKKOR 24-70mm f/2.8E ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras
+14818,B0199BCKYY,4,,<=4,Sony FE 70-200mm F4 G OSS Interchangeable Lens for Sony Alpha Cameras
+14819,B0199BF5KA,2.8,,<=2.8,"Sony SEL90M28G FE 90mm f/2.8-22 Macro G OSS Standard-Prime Lens for Mirrorless Cameras,Black"
+14820,B0199BF6TA,4,,<=4,Sony 24-70mm f/4 Vario-Tessar T FE OSS Interchangeable Full Frame Zoom Lens
+14821,B0199BF87K,1.4,,<=1.4,Sony SEL35F14Z Distagon T FE 35mm f/1.4 ZA Standard-Prime Lens for Mirrorless Cameras
+14822,B0199BFAY6,4,,<=4,Sony SEL1670Z Vario-Tessar T E 16-70mm F4 ZA OSS
+14830,B019CSI6KQ,1.4,,<=1.4,Sigma 24mm F1.4 Art DG HSM Lens for Canon DSLR Cameras + Sigma USB Dock with Altura Photo Essential Accessory and Travel Bundle
+14832,B019D00NK4,5.6,,>4,Nikon AF-S FX NIKKOR 200-500mm f/5.6E ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras
+14908,B019Y5UBT6,4.5,5.6,>4,Fujifilm XF100-400mmF4.5-5.6 R LM OIS WR
+14928,B01A6Y1242,2.8,,<=2.8,Rokinon 10mm F2.8 ED AS NCS CS Ultra Wide Angle Lens for Nikon Digital SLR Cameras with AE Chip for Auto Metering (10MAF-N)
+15005,B01ARZ1U2O,4,5.6,<=4,Canon EF-S 55-250mm F4-5.6 is Mark II Lens for Canon SLR Cameras + 58mm Polaroid Tulip Lens Hood + Ritz Gear Large Neoprene Protective Lens Pouch Bundle
+15006,B01AS7MBQ0,8,,>4,"Opteka 500mm/1000mm f/8 Manual Telephoto Lens Compatible with Canon EF-Mount EOS 90D, 80D, 77D, 70D, 60D, 60Da, 1Ds, Mark III II 7D, 6D, 5D, 5DS, Rebel T8i, T7i, T7s, T7, T6s, T6i, T6, T5, SL3, SL2"
+15007,B01AS8LJ4E,8,,>4,"Opteka 500mm/1000mm f/8 Manual Telephoto Lens for Nikon F-Mount D6, D5, D4, DF, D850, D810, D780, D750, D700, D610, D500, D7500, D7200, D7100, D5600, D5500, D5300, D5200, D3500, D3400, D3300, D3200"
+15013,B01ATZ3QLU,8,,>4,"Opteka 500mm/1000mm f/8 Manual Telephoto Lens for Sony E-Mount Alpha a9, a7R, a7S, a7, a1, ZV-E10, a6600, a6500, a6400, a6300, a6100, a6000, a5100, a5000, a3000, NEX-7, NEX-6, 5T, 5N, 5R, 3N"
+15172,B01BUYJYOW,3.5,5.6,<=4,Canon Cameras US 1276C002 All-Round Lens EF-S 18-135mm f/3.5-5.6 is USM (Black)
+15220,B01C9AE8T2,2.8,,<=2.8,Tamron AFF017N700 SP 90mm F/2.8 Di VC USD 1:1 Macro for Nikon Cameras (Black)
+15280,B01CKH53V6,5,6.3,>4,Sigma 150-600mm f/5.0-6.3 Contemporary DG OS HSM Lens & 1.4X Teleconverter with USB Dock + Pistol Grip Tripod + 2 Filters + Kit for Nikon DSLR Cameras
+15290,B01CQDZXOG,1.8,,<=2.0,Tamron AFF016C700 SP 85mm F/1.8 Di VC USD Lens (Black)
+15338,B01D0JN5HC,1.8,,<=2.0,Sigma 50-100mm F1.8 Art DC HSM Lens for Nikon DSLR Cameras w/Sigma USB Dock & Advanced Photo and Travel Bundle
+15340,B01D0JN7GQ,1.4,,<=1.4,Sigma 30mm F1.4 Contemporary DC DN Lens for Sony E Mount Cameras with Essential Photo and Travel Bundle
+15399,B01DFHO4OM,2.8,,<=2.8,Sigma 17-50mm f/2.8 EX DC OS HSM FLD Large Aperture Standard Zoom Lens for Canon Digital DSLR Camera - International Version (No Warranty)
+15400,B01DFHO5SM,2.8,,<=2.8,Sigma 17-50mm f/2.8 EX DC OS HSM FLD Large Aperture Standard Zoom Lens for Nikon Digital DSLR Camera - International Version (No Warranty)
+15403,B01DG6ETR4,2,,<=2.0,Meike MK-FX-50-2.0 50mm f 2.0 Large Aperture Manual Focus Lens APS-C for Fujifilm Mirrroless Cameras
+15404,B01DG6ETRY,2,,<=2.0,Meike 50mm f2.0 Large Aperture APS-C Manual Focus Lens Compatible with Sony E Mount Mirrorless Camera NEX 3 3N 5 NEX 5T NEX 5R NEX 6 7 A6400 A5000 A5100 A6000 A6100 A6300 A6500 A6600
+15405,B01DG6ETU6,2,,<=2.0,Meike 50mm f2.0 Large Aperture Manual Focus MFT M4/3 Lens APS-C for Olympus Panasonic Lumix Micro 4/3 System Mirrorless Cameras GH4 GH5 GH6 OM-1
+15415,B01DJ3ZA3Q,1.7,,<=2.0,Meike 35mm f1.7 Large Aperture Manual Focus APSC Lens Compatible with Fujifilm X Mount Mirrorless Camera X-T3 X-H1 X-Pro2 X-E3 X-T1 X-T2 X-T4 X-T5 X-T10 X-T20 X-T200 X-A2 X-E2 X-E1 X30 X70 X-A1 XPro1
+15416,B01DJ4BCF0,1.7,,<=2.0,Meike 35mm F1.7 Manual Focus Prime Lens for Micro 4/3 MFT M4/3 Compatible with Olympus and Panasonic Mirrorless Cameras GH4 GH5 GH6 OM-1
+15418,B01DJX5NSS,5.6,,>4,"Nikon 200-500mm f/5.6E ED AF-S VR Zoom NIKKOR Lens- Bundle with 95mm Filter Kit, Flex Lens Shade, Cleaning Kit, Cap Leash, Software Package"
+15481,B01DZ6TK60,2.8,,<=2.8,"Meike 28mm f2.8 Fixed Manual Focus Lens Compatible with Fujifilm X Mount Mirrorless APS-C Camera X-Pro2 X-E3 X-T1 X-T2 X-T3 X-T4 X-T10 X-T20 X-A2 X-E2 X-T100 X-E1 X30 X70 X-M1 X-A1 X-S10 XPro1,etc"
+15485,B01DZP4UAM,4,5.6,<=4,"Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor Zoom Lens Bulk packaging (White box, New)"
+15488,B01E0C9P2C,1.8,,<=2.0,"Canon EF 50mm f/1.8 STM Lens with 3pc Filter Kit (UV, CPL, FLD), Deluxe Lens Pouch, Lens Hood, Deluxe Cleaning Kit, Lens Accessory Bundle"
+15560,B01EKCVOOY,3.5,,<=4,"Oshiro 8mm f/3.5 LD UNC AL Wide Angle Fisheye Lens for Nikon D5, D4s, D4, D3x, Df, D850, D810, D750, D610, D500, D7500, D7200, D7100, D5600, D5500, D5300, D5200, D3400, D3300 Digital DSLR Cameras"
+15571,B01ELNEC7I,5.6,,>4,Nikon AF-S FX NIKKOR 200-500mm f/5.6E ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras (Renewed)
+15593,B01EO2PYBO,4.5,,>4,"Voigtlander Super Wide-Heliar 15mm f/4.5 Lens, Black, for Sony E-Mount Cameras"
+15657,B01F9EK0XI,1.4,,<=1.4,Sigma 30mm F1.4 DC DN Lens for Sony E Mount Bundle with Sandisk 64GB Extreme SDXC Memory UHS-I Card
+15658,B01F9LSYNY,8,,>4,"Opteka 500mm/1000mm f/8 Manual Mirror Telephoto Lens for Canon EF EOS 90D, 80D, 77D, 70D, 60D, 60Da, 1Ds, Mark III II 7D, 6D, 5D, 5DS, Rebel T8i, T7i, T7s, T7, T6s, T6i, T6, T5i, T5, T4i, SL3, SL2"
+15673,B01FEA3SN6,8,,>4,"Super 500mm/1000mm f/8 Mirror Telephoto Lens for Nikon F-Mount D6, D5, D4, D850, D810, D800, D780, D750, D610, D600, D500, D7500, D7200, D7100, D5600, D5500, D5300, D5200, D3500, D3400"
+15680,B01FFACQYW,3.5,,<=4,"Canon EF-M 28mm f/3.5 Macro is STM Lens, Black - 1362C005"
+15706,B01FM5N52M,2,,<=2.0,"Neewer 50mm f/2.0 Manual Focus Prime Fixed Lens for Sony E-Mount Digital Cameras, Such as NEX3, 3N, 5, 5T, 5R, 6, 7, A5000, A5100, A6000, A6100 and A6300 (NW-E-50-2.0)"
+15712,B01FO394CC,2,,<=2.0,Samyang 135mm f/2.0 ED UMC Telephoto Lens for Nikon Digital SLR Cameras
+15743,B01FWEQ8ZY,5,6.3,>4,Sigma 150-600mm F5-6.3 DG OS HSM Zoom Lens (Contemporary) for Nikon DSLR Cameras (Renewed)
+15744,B01FWFW9S8,1.8,,<=2.0,Sigma 18-35mm F/1.8 DC HSM Lens for Canon APS-C DSLR Cameras (Renewed)
+15817,B01G9APDE2,6.3,,>4,"Oshiro 500mm f/6.3 LD UNC AL Super Telephoto Lens for Canon EOS 80D, 70D, 60D, 60Da, 50D, 40D, 30D, 1Ds, Mark III II, 7D, 6D, 5D, 5DS, Rebel T6s, T6i, T6, T5i, T5, T4i, T3i and T3 Digital SLR Cameras"
+15842,B01GEOO2SQ,6.3,,>4,"Oshiro 500mm f/6.3 LD UNC AL Super Telephoto Lens for Nikon D5, D4S, DF, D3X, D850, D810, D750, D610, D500, D7500, D7200, D5600, D5500, D5300, D3500, D3400, D3300 Digital SLR Cameras"
+15846,B01GH0B58M,5.6,,>4,Voigtlander Heliar-Hyper Wide 10mm f/5.6 Aspherical Lens for Sony E Mount Camera
+15922,B01H0LYVZG,1.8,,<=2.0,Sony 55mm F1.8 Sonnar T FE ZA Full Frame Prime Lens - Fixed
+15923,B01H0MDLRO,4,,<=4,Sony 16-35mm Vario-Tessar T FE F4 ZA OSS E-Mount Lens
+15929,B01H1MNW68,1.4,,<=1.4,"Panasonic LUMIX G Leica DG SUMMILUX Lens, 12mm, F1.4 ASPH, Wide Angle, Professional Mirrorless Micro Four Thirds, H-X012 (USA Black)"
+15988,B01HEZK95Y,1.8,,<=2.0,YONGNUO YN EF 50mm f/1.8 AF Lens YN50 Aperture Auto Focus for Nikon Camera as AF-S 50mm 1.8G with Cleaning Cloth
+16051,B01HQLVXFG,4,5.6,<=4,Canon EF 75-300mm f/4-5.6 III Telephoto Zoom Lens for Canon SLR Cameras (Renewed)
+16138,B01IBOMEQY,3.5,6.3,<=4,Pentax K-Mount DA 18-270mm f3.5-6.3 ED SDM Interchangeable Lens
+16142,B01IDA4G3K,4,5.6,<=4,Nikon 70-300 mm f/4-5.6G Zoom Lens with Auto Focus for Nikon DSLR Cameras
+16177,B01INWKWL8,3.5,,<=4,"Vivitar 8mm Ultra-Wide f/3.5 Fisheye Lens For Nikon D3000, D3100, D3200, D3300, D5000, D5100, D5200, D5300, D5500, D7000, D7100, D7200, D40, D50, D60, D70, D70s, D80, D90, D100, D200, D300, D500 DSLR"
+16183,B01IPC1EOU,2.4,,<=2.8,Irix Blackstone 15mm f/2.4-22 Ultra Wide Angle Lens with Built-In Chip for Nikon EF Digital SLR
+16242,B01J9SR100,1.4,,<=1.4,Rokinon IO50AF-E AF 50mm F1.4 Full Frame Auto Focus Lens for Sony E-Mount
+16254,B01JFTMBH6,3.5,5.6,<=4,Canon EF 28-300mm f/3.5-5.6L is USM Lens
+16369,B01KJ8UMKK,4.5,6.3,>4,Nikon AF-P DX NIKKOR 70-300mm f/4.5-6.3G ED VR Lens for Nikon DSLR Cameras
+16370,B01KJ8URUK,4.5,6.3,>4,Nikon AF-P DX NIKKOR 70-300mm f/4.5-6.3G ED Lens for Nikon DSLR Cameras
+16407,B01KRMCVUW,4,5.6,<=4,Nikon 70-300 mm f/4-5.6G Zoom Lens with Auto Focus for Nikon DSLR Cameras (Renewed)
+16447,B01L0AF7T2,2,,<=2.0,Fujinon XF23mmF2 R WR - Silver
+16450,B01L1FZN8G,2.8,,<=2.8,"Rokinon 14mm F2.8 Full Frame Auto Focus Lens for Sony E-Mount, Black (IO14AF-E)"
+16451,B01L1JCKRY,2,,<=2.0,YONGNUO YN35mm F2N Lens 1:2 AF/MF Wide-Angle Fixed/Prime Auto Focus Lens for Nikon DSLR Cameras
+16469,B01L74R85W,4.5,5.6,>4,Canon EF 100-400mm f/4.5-5.6L is II USM Lens - 9524B002 (Renewed)
+16488,B01LC8GMV4,2.8,,<=2.8,Sony SEL50M28 FE 50mm F2.8 Full Frame E-mount Lens (Black)
+16533,B01LNDARMS,3.5,,<=4,Neewer 8mm F/3.5 Ultra Wide Angle Manual Focus Rectangle Fisheye Lens for APS-C DSLR Nikon D500 D3200 D3300 D3400 D5200 D5300 D5500 D5600 D7100 D7200 D7500 DSLR Cameras
+16534,B01LNSAYP8,5,6.3,>4,Tamron SP 150-600mm F/5-6.3 Di VC USD G2 for Nikon Digital SLR Cameras
+16537,B01LOVWG8C,3.5,5.6,<=4,Sony 16-50mm f/3.5-5.6 OSS Alpha E-Mount Retractable Zoom Lens (Bulk Packaging)
+16555,B01LW2UGTD,5,6.3,>4,"Tamron SP 150-600mm F/5-6.3 Di VC USD G2 Zoom Lens for Canon Mount SLR / DSLR - Includes Tamron Original Tap-In Console, Sandisk 64GB Class 10 SDXC Card and More"
+16560,B01LW6L7WM,5,6.3,>4,"Tamron SP 150-600mm F/5-6.3 Di VC USD G2 Zoom Lens for Nikon SLR / DSLR Mount - Includes Tamron Original Tap-In Console, Sandisk 64gb Class 10 SD Card and More"
+16563,B01LWC5IMC,4,,<=4,"OM SYSTEM OLYMPUS M.Zuiko Digital ED 12-100mm F4.0 IS PRO For Micro Four Thirds System Camera, High Magnification Zoom lens, Weather Sealed Design, MF Clutch, L-Fn Button"
+16626,B01LXZZPKQ,2.8,,<=2.8,Canon EF 200mm f/2.8L II USM Telephoto Fixed Lens for Canon SLR Cameras
+16631,B01LY2PRT3,5.6,,>4,Canon EF 400mm f/5.6L USM Super Telephoto Lens for Canon SLR Cameras
+16632,B01LY2PUSE,4,,<=4,Canon EF 300mm f/4L IS USM Telephoto Fixed Lens for Canon SLR Cameras - 2530A004
+16645,B01LYEBBPS,2,,<=2.0,Canon EOS M Series EF-M 22mm f/2 STM Wide-Angle Lens
+16685,B01LZMIKWO,1.4,,<=1.4,Sigma 30mm f/1.4 DC DN Contemporary Lens for Sony E-Mount Cameras + Expo-Fiber Microfiber Cleaning Cloth
+16697,B01LZZVWO8,4,,<=4,Sigma 12-24mm f/4 DG HSM Art Lens for Nikon F (205955)
+16699,B01M0115A6,1.4,,<=1.4,Canon EF 35mm f/1.4L II USM Lens (International Model) No Warranty
+16712,B01M0CP2ZG,2.8,,<=2.8,Canon EF-S 24mm f/2.8 STM Lens
+16733,B01M0XFDZJ,3.5,5.6,<=4,Canon EF 24-105mm f/3.5-5.6 is STM Lens
+16743,B01M1A65XN,1.4,,<=1.4,Sigma 85mm f/1.4 DG HSM Art Lens for Canon EF (321954)
+16746,B01M1BUF6C,2,,<=2.0,"Canon EF 135mm f/2L USM Lens for Canon SLR Cameras - Fixed, Black - 2520A004"
+16747,B01M1BULMC,1.4,,<=1.4,"Canon EF 24mm f/1.4L II USM Wide Angle Lens - Fixed - 2750B002 , Black"
+16775,B01M35CZMQ,1.4,,<=1.4,"Voigtlander Nokton 58mm f/1.4 SL II S Ai-S Lens, Silver"
+16799,B01M5EG4V1,1.4,,<=1.4,Sigma 85mm f/1.4 DG HSM Art Lens for Canon EF Cameras + Sigma USB Dock with Altura Photo Advanced Accessory and Travel Bundle
+16832,B01M74EPJJ,1.8,,<=2.0,SIGMA 18-35mm F1.8 Art DC HSM Lens for Nikon (210306) (Renewed)
+16845,B01M7XDDMV,8,,>4,"Super 500mm/1000mm f/8 Manual Telephoto Lens for Nikon D5, D4S, DF, D4, D810, D800, D750, D700, D610, D500, D300, D90, D7200, D7100, D5500, D5300, D5200, D5100, D3400, D3300, D3200 Digital SLR Camera"
+16859,B01M9FZB3A,1.8,,<=2.0,VILTROX 85 Fuji 85mm f/1.8 ii STM (Fuji X Version) Lens Autofocus Lens for Fuji X-Mount Camera X-PRO2 X-T3 X-T2 X-T30 X-T20 X-T10 X-T100
+16875,B01MCRJXB2,3.5,6.3,<=4,"Canon Cameras US EF-M 18-150IS STM Lens 18-150mm f/3.5-6.3 Fixed Zoom Camera Lens, Silver"
+16876,B01MCRWSCT,5,6.3,>4,Sigma 150-600mm F5-6.3 DG OS HSM Zoom Lens Contemporary for Canon DSLR Cameras (745-101) with Sigma USB Dock for Canon Lens & Sandisk Extreme Extreme PRO SDXC 32GB UHS-1 Memory Card
+16881,B01MCUQP4X,4,5.6,<=4,Canon EF 75-300mm f/4-5.6 III Telephoto Zoom Lens for Canon SLR Cameras (Renewed)
+16926,B01MQCMKSH,1.4,,<=1.4,"Voigtlander Nokton 58mm f/1.4 SL II S AI-S Lens, Black"
+16945,B01MR6Z8Z2,4,,<=4,Fujinon GF32-64mmF4 R LM WR Lens
+16949,B01MRELMGB,4,,<=4,Opteka 15mm f/4 LD UNC AL 1:1 Macro Wide Angle Full Frame Lens for Nikon Digital SLR Cameras
+16969,B01MS8EWXM,2.8,,<=2.8,Fujinon GF63mmF2.8 R WR Lens
+16976,B01MSDTXAL,5.6,,>4,"Tamron AFA022N700 SP 150-600mm Di VC USD G2 f/5.6-40.0 Telephoto-Zoom for Nikon A022, Filter Kit, Ritz Gear Backpack, 64GB & Accessory Bundle"
+16990,B01MSW2URA,2,,<=2.0,YONGNUO YN100mm F2 Medium Telephoto Prime Lens with AF MF 100mm Fixed Focal Length Aperture F/2~F/22 for Canon EOS Rebel Cameras
+17013,B01MU3WOVP,2.8,,<=2.8,Panasonic H-HSA35100 F2.8 II ASPH 35-100mm Mirrorless Micro Four Thirds Mount POWER Optical I.S. LUMIX G X VARIO Professional Lens
+17068,B01MYWW8UM,2,,<=2.0,HELIOS-44-2 58mm F2 SLR Lens lente Bayonet Canon - EOS for Canon
+17081,B01MZAQJVY,1.8,,<=2.0,"Neewer 85mm f/1.8 Manual Focus Aspherical Medium Telephoto Lens for APS-C DSLR Nikon D5, D4s, D4, D3x, Df, D810, D800, D750, D610, D500, D7500, D7200, D7100, D5600, D5500, D5300, D5200, D3400, D3300 D"
+17082,B01MZARLEQ,4,,<=4,Fujinon GF120mmF4 R LM OIS WR Macro Lens
+17088,B01MZIGOV9,2.8,,<=2.8,Tamron AFA009S-700 SP 70-200mm F/2.8 Di VC USD G2 Lens A025 for Canon Full-Frame Bundle with TAP-in Console Lens Accessory for Canon Lens Mount
+17092,B01N03LZAK,1.8,,<=2.0,Pentax 31mm F/1.8 FA Limited Lens for Pentax and Samsung SLR Cameras
+17120,B01N17BIDH,1.4,,<=1.4,Canon EF 35mm f/1.4L II USM Lens with Altura Photo Essential Accessory and Travel Bundle
+17172,B01N427E1D,1.2,,<=1.4,Rokinon 35mm F1.2 High Speed Wide Angle Lens for Fujifilm X Mount - Black - Fuji X
+17241,B01N7DIMEZ,1.8,,<=2.0,YONGNUO YN85mm F1.8 AF/MF Standard Medium Prime Fixed Telephoto Lens for Canon EF Mount Rebel DSLR Cameras
+17251,B01N7LGSZO,2.8,4,<=2.8,"Panasonic LUMIX Professional 12-60mm Camera Lens, Leica DG Vario-ELMARIT, F2.8-4.0 ASPH, Dual I.S. 2.0 with Power O.I.S, Mirrorless Micro Four Thirds, H-ES12060 (Black)"
+17265,B01N817A71,3.5,4.5,<=4,Tamron 10-24mm F/3.5-4.5 Di-II VC HLD Wide Angle Zoom Lens for Nikon APS-C Digital SLR Cameras
+17290,B01N9PPTFO,4,,<=4,Irix IL-11FF Ultra Wide-Angle Lens Firefly 11 mm F4
+17294,B01N9VPHE4,4,5.6,<=4,Canon EF 75-300mm f/4-5.6 III Telephoto Zoom Lens
+17319,B01NAZHGB3,1.2,,<=1.4,"Rokinon Special Performance (SP) 85mm f/1.2 High Speed Lens for Canon EF with Built-in AE Chip, Black"
+17329,B01NBSPUC5,4,,<=4,Irix 11mm f/4.0 Blackstone Lens - Wide Angle Rectilinear Lens w/Built-in AE Chip for Canon
+17333,B01NBVO72B,1.8,,<=2.0,"Neewer 85mm f/1.8 Manual Focus Aspherical Medium Telephoto Lens for APS-C DSLR Canon EOS 80D, 70D, 60D, 60Da, 50D, 7D, 6D, 5D, 5DS, 1Ds, Rebel T6s, T6i, T6, T5i, T5, T4i, T3i, T3, T2i and SL1 Digital"
+17334,B01NC0YKI5,4,5.6,<=4,Canon EF 70-300mm f/4-5.6 is II USM Lens with Altura Photo Essential Accessory Bundle
+17413,B06WW1MXDZ,4.5,6.3,>4,"Nikon AF-P DX NIKKOR 70-300mm f/4.5-6.3G ED Lens for Nikon DSLR Cameras, Model 20061 (Renewed)"
+17445,B06X912HYF,3.5,4.5,<=4,Tamron 10-24mm F/3.5-4.5 Di-II VC HLD Wide Angle Zoom Lens for Canon APS-C Digital SLR Cameras (6 Year Limited USA Warranty)
+17455,B06X9CV5VK,4.5,5.6,>4,Sony FE 70-300mm SEL70300G F4.5-5.6 G OSS Lens
+17463,B06X9PVB7K,2.8,,<=2.8,Tamron SP 70-200mm f/2.8 Di VC USD G2 Lens for Nikon F Cameras + Tamron Tap-in Console with Altura Photo Advanced Accessory and Travel Bundle
+17570,B06XP4Z2M7,4,5.6,<=4,"Canon EF 75-300mm f/4-5.6 III Telephoto Zoom Lens for Canon SLR Cameras, 6473A003 (Renewed)"
+17580,B06XPTYXS6,1.8,,<=2.0,Sigma 135mm f/1.8 DG HSM Art Lens for Canon EF (240954)
+17631,B06XTBNBK6,1.1,,<=1.4,"Kamlan 50 mm F1.1 APS-C Large Aperture Manual Fixed Focus Lens, Standard Prime Lens"
+17649,B06XW5CVFY,1.8,,<=2.0,Opteka 85mm f/1.8 Full Frame Aspherical Telephoto Portrait Lens for Nikon DSLR with Removable Hood and Optical Cleaning Kit
+17723,B06Y4FMGC2,5,6.3,>4,Sigma 100-400mm f/5-6.3 DG OS HSM Contemporary Lens for Nikon F + Sigma USB Dock with Altura Photo Essential Accessory Bundle
+17724,B06Y4GPNXF,5,6.3,>4,Sigma 100-400mm f/5-6.3 DG OS HSM Contemporary Lens for Canon EF + Sigma USB Dock with Altura Photo Essential Accessory Bundle
+17726,B06Y4WCYCW,4.5,6.3,>4,Nikon 70-300mm f/4.5-6.3G DX AF-P ED Zoom-Nikkor Lens - (Renewed)
+17761,B06ZY7HP5Z,1.8,,<=2.0,Olympus 25mm f1.8 Interchangeable Lens - International Version (No Warranty)
+17768,B06ZYJ6HZK,3.5,5.6,<=4,Sony 18-55mm f/3.5-5.6 SAM DT Standard Zoom Lens for Sony Alpha Digital SLR Cameras (Discontinued by Manufacturer)
+17776,B06ZYSL2GD,2.8,,<=2.8,Sony 24 -70mm f/2.8 Carl Zeiss Vario Sonnar T Zoom Lens for Sony Alpha Digital SLR Cameras
+17777,B06ZYSLP64,1.8,,<=2.0,Olympus M. Zuiko Digital ED 45mm f1.8 (Black) Lens for Micro 4/3 Cameras - International Version (No Warranty)
+17779,B06ZYSMVRD,3.5,6.3,<=4,Olympus M.ZUIKO Digital ED 12-50mm F3.5-6.3 EZ Lens V314040BU000 - International Version (No Warranty)
+17804,B06ZZNK3Y9,4.5,6.3,>4,Sony E 55-210mm F4.5-6.3 OSS Lens for Sony E-Mount Cameras (Silver)
+17811,B0711BH6FJ,5,6.3,>4,Tamron SP 150-600mm F/5-6.3 Di VC USD for Nikon DSLR Cameras (Tamron 6 Year Limited USA Warranty)
+17822,B0713TK7H4,3.5,5.6,<=4,Nikon 18-55mm f/3.5-5.6G VR AF-P DX Zoom-Nikkor Lens - (Renewed)
+17855,B0719QXW6B,2.8,,<=2.8,"PANASONIC LUMIX G X VARIO LENS, 35-100MM, F2.8 ASPH., PROFESSIONAL MIRRORLESS MICRO FOUR THIRDS, POWER OPTICAL I.S., H-HS35100 (2012 Model - USA BLACK)"
+17911,B071GZDZMK,2.8,,<=2.8,Canon EF-S 35mm f/2.8 Macro is STM Lens with Altura Photo Essential Accessory Bundle
+17926,B071JPFXBR,4,,<=4,Opteka 15mm f/4 LD UNC AL 1:1 Macro Manual Focus Full Frame Wide Angle Lens for Canon EOS Digital SLR Cameras
+17945,B071LTFPDQ,3.5,4.5,<=4,"Nikon AF-S FISHEYE NIKKOR 8-15mm f/3.5-4.5E ED F/4.5-29 Fixed Zoom Camera Lens, Black"
+17955,B071QWM469,2.8,4,<=2.8,"Panasonic LUMIX Professional 8-18mm Camera Lens, G LEICA DG VARIO-ELMARIT, F2.8-4.0 ASPH, Mirrorless Micro Four Thirds, H-E08018 (Black)"
+17960,B071R2XGWW,4,,<=4,Fujifilm Fujinon GF23mmF4 R LM WR Lens
+18058,B0722SK43M,1.8,,<=2.0,"YONGNUO YN50mm F1.8C Lens, Large Aperture Auto Focus Lens, 50MM F1.8 for Canon EF Mount EOS Cameras"
+18102,B072FPNGZB,4,5.6,<=4,"PANASONIC LUMIX G VARIO LENS, 35-100MM, F4.0-5.6 ASPH., MIRRORLESS MICRO FOUR THIRDS, MEGA OPTICAL I.S., H-FS35100K (USA BLACK)"
+18113,B072J4B6WS,4,,<=4,"Sony - FE 12-24mm F4 G Wide-Angle Zoom Lens (SEL1224G),Black"
+18158,B072MP2V3H,4.5,5.6,>4,Canon EF-S 10-18mm f/4.5-5.6 is STM Lens + Deluxe Accessory Bundle
+18183,B072R49R5N,2.8,,<=2.8,"Rokinon IO35AF-E 35mm f/2.8 Ultra Compact Wide Angle Lens for Sony E Mount Full Frame, Black"
+18189,B072WC35M6,2.8,,<=2.8,Tamron AFA012N700 SP 15-30mm f/2.8 Di VC USD Wide-Angle Lens for Nikon F(FX) Cameras
+18201,B072YV3G2N,3.5,6.3,<=4,Tamron 18-400mm F/3.5-6.3 DI-II VC HLD All-In-One Zoom For Canon APS-C Digital SLR Cameras (6 Year Limited USA Warranty)
+18204,B072ZRJK8B,3.5,,<=4,"OM SYSTEM OLYMPUS M.Zuiko Digital ED 30mm F3.5 Macro For Micro Four Thirds System Camera, Compact Macro lens, 1.25x Image Maginification, Fast AF, Beautiful Bokeh"
+18205,B072ZRX9B3,2.8,,<=2.8,"OLYMPUS M.Zuiko Digital ED 7-14mm F2.8 Pro Lens, for Micro Four Thirds Cameras"
+18206,B072ZS1MG1,4,5.6,<=4,"Olympus M.Zuiko Digital ED 14-150mm F4.0-5.6 II Lens, for Micro Four Thirds Cameras (Black)"
+18208,B072ZSNVY6,4.8,6.7,>4,"OM SYSTEM OLYMPUS M.Zuiko Digital 75-300mm F4.8-6.7 For Micro Four Thirds System Camera, Compact Powerful Zoom lens, Outdoor"
+18209,B072ZTD1D6,1.2,,<=1.4,"OM SYSTEM OLYMPUS M.Zuiko Digital ED 25mm F1.2 PRO For Micro Four Thirds System Camera, Ultra Bright F1.2 lens, Weather Sealed Design, MF Clutch, L-Fn Button"
+18210,B072ZTTW87,2.8,,<=2.8,"OM SYSTEM OLYMPUS M.Zuiko Digital ED 60mm F2.8 Macro For Micro Four Thirds System Camera, Weather Sealed Design, Focus Limit Switch Bright"
+18211,B072ZTTW8B,4,,<=4,OM SYSTEM OLYMPUS M.Zuiko Digital ED 300mm F4.0 IS PRO For Micro Four Thirds System Camera Powerful Telephoto Prime lens Weather Sealed Design MF Clutch
+18212,B072ZWLL69,1.8,,<=2.0,OM SYSTEM OLYMPUS M.Zuiko Digital ED 8mm F1.8 FISHEYE PRO For Micro Four Thirds System Camera Fast and Furious Fisheye Weather Sealed Design Wide Angle
+18243,B0735YX359,3.5,6.3,<=4,Tamron 18-400mm f/3.5-6.3 Di II VC HLD All-in-One Zoom Lens for Nikon Mount + 64GB Ultimate Filter & Flash Photography Bundle (AFB028N-700)
+18278,B073GRJTZ8,2.8,,<=2.8,7artisans 7.5mm F2.8 II V2.0 Fisheye Lens with 190° Angle of View Compatible with Fujifilm Fuji Camera X-A1 X-A10 X-A2 X-A3 A-at X-M1 XM2 X-T1 X-T3 X-T10 X-T2 X-T20 X-T30 X-Pro1 X-Pro2 X-E1.
+18279,B073GSY8KD,2.8,,<=2.8,"7artisans 7.5mm F2.8 II V2.0 Fisheye Lens with 190° Angle of View, Compatible with Olympus and Panasonic MFT M4/3 Mount Cameras"
+18280,B073GT8ZNC,2.8,,<=2.8,"7artisans 7.5mm F2.8 II V2.0 APS-C Format Fisheye Lens with 190° Angle of View Compatible with Sony Emount Cameras with Protective Lens Cap, Lens Hood and Carrying Bag"
+18320,B073S8FYTH,2,,<=2.0,Fujinon XF50mmF2 R WR Lens - Silver
+18331,B073V3CTMG,4.5,6.3,>4,Sony E 55-210mm (SEL55210) F4.5-6.3 OSS Lens for Sony E-Mount Cameras (Black) 12 PCS Expo Accessories Bundle.
+18332,B073V6HXZZ,4.5,5.6,>4,"Nikon AF-P NIKKOR 70-300mm f/4.5-5.6E ED VR Fixed Zoom Digital Slr Camera Lens, Black"
+18361,B073ZJ2JCR,2.8,,<=2.8,"Samyang SYIO35AF-E 35mm f/2.8 Ultra Compact Wide Angle Lens for Sony E Mount Full Frame, Black"
+18428,B0747YK76M,2.8,,<=2.8,Tamron SP 24-70mm f/2.8 Di VC USD G2 Lens for Canon EF with Altura Photo Advanced Accessory and Travel Bundle
+18429,B07481KNLQ,2.8,,<=2.8,Tamron SP 24-70mm f/2.8 Di VC USD G2 Lens for Nikon F + Tamron Tap-in Console with Altura Photo Advanced Accessory and Travel Bundle
+18471,B074G3SKTB,2.8,,<=2.8,Sigma 24-70mm f/2.8 DG OS HSM Art Lens for Canon EF with Sandisk 128GB SD Card & Altura Photo Advanced Accessory and Travel Bundle
+18473,B074H1M8TR,2,,<=2.0,Voigtlander Macro APO-LANTHAR 65mm F2 Aspherical Macro Lens for Sony E Mount Camera
+18480,B074JJ63YB,3.5,6.3,<=4,"Tamron 18-400mm F/3.5-6.3 DI-II VC HLD All-in-One Zoom (6 Year Limited USA Warranty) for Canon APS-C Digital SLR Cameras, Lexar 32GB, TruDigita Filter Kit, Lens Pouch, and Accessory Bundle"
+18512,B074P95S1T,1.8,,<=2.0,"Canon EF 50mm f/1.8 STM Lens for Canon Digital SLR Cameras with 49mm Filter Kit (UV, CPL, FLD) + Accessory Bundle (12 Items)"
+18513,B074PBQXHC,2.8,,<=2.8,"Canon EF-S 24mm f/2.8 STM Lens for Canon Digital SLR Cameras with 52mm Filter Kit (UV, CPL, FLD) (12 Items)"
+18546,B074V6V4KW,2.8,,<=2.8,"Samyang SYIO14AF-E 14mm F2.8 Full Frame Auto Focus Lens for Sony E-Mount, Black"
+18565,B074WT74N2,1.8,,<=2.0,7artisans 25mm F1.8 Manual Focus Portrait Lens for Sony E Mount Cameras Like A7 A7II A7R A7RII A7S A7SII A6500 A6300 A6000 A5100 A5000 EX-3 NEX-3N NEX-3R NEX-F3K NEX-5 NEX-5N - Black
+18567,B074X7M592,2.8,,<=2.8,7artisans 7.5mm F2.8 II APS-C Manual Fisheye Lens Compatible with E-Mount Cameras NEX-5N NEX-7 NEX-3N NEX-5T a3000 a5000 a6000 a3500 a5100 a6300 a6500
+18590,B0752698WM,4,,<=4,SLR Magic 8mm f/4.0 Ultra Wide Angle MFT Lens
+18642,B0756X5WR2,1.1,,<=1.4,"Kamlan 50 mm F1.1 APS-C Large Aperture Manual Fixed Focus Lens, Standard Prime Lens"
+18728,B075N59XN7,1.8,,<=2.0,"7artisans 25mm F1.8 Large Aperture Portrait Manual Focus Lens for Fuji Cameras，with Caden Lens Pouch Bag,Black"
+18740,B075QNMDXL,3.5,6.3,<=4,"Tamron 18-400mm f/3.5-6.3 Di II VC HLD All-in-One Lens for Canon Mount Bundle with 64GB Memory Card, 72mm Filter Sets, 72mm Filter Kit, Paintshop Pro, Tripod, and Accessories (5 Items) AFB028C-700"
+18763,B075SBGTBB,5,6.3,>4,"Sigma 150-600mm f/5-6.3 Contemporary DG OS HSM Lens for Nikon DSLR Cameras Bundle with USB Dock, Backpack, 62-inch Monopod, Lens Filters, 64 GB Memory Card (2-Pack), and Cleaning Kit (8 Items)"
+18777,B075VJK1VM,3.5,5.6,<=4,Canon EF-S 18-55mm f/3.5-5.6 is STM Camera Lens
+18806,B075ZTC8X7,2,,<=2.0,Venus Laowa 15mm f/2 FE Zero-D Lens for Sony E
+18838,B0765VBNL2,8.3,,>4,JINTU 420-800mm f/8.3 Manual Zoom Telephoto Lens for Nikon SLR D5600 D5500 D5300 D5200 D5100 D3500 D3400 D3X D3300 D3100 D3200 D7500 D7200 D7000 D7100 D750 D90 D850 Camera Lenses
+18849,B0767MMV1Q,1.2,,<=1.4,"OM SYSTEM OLYMPUS M.Zuiko Digital ED 17mm F1.2 PRO For Micro Four Thirds System Camera, Ultra Bright F1.2 lens, Weather Sealed Design, MF Clutch, L-Fn Button"
+18850,B0767NDXY5,1.2,,<=1.4,"OM SYSTEM OLYMPUS M.Zuiko Digital ED 45mm F1.2 PRO For Micro Four Thirds System Camera, Ultra Bright F1.2 lens, Weather Sealed Design, MF Clutch, L-Fn Button"
+18852,B0767ZVJL3,1.2,,<=1.4,Voigtlander Nokton 40mm f/1.2 Aspherical Lens for Sony E
+18864,B076BPJ8YD,4.5,6.3,>4,Nikon CRTNK70300KRB 70-300mm f/4.5-6.3G VR DX AF-P ED Zoom-NIKKOR Lens - (Renewed)
+18887,B076H8BGTB,1.8,,<=2.0,Sigma 50-100mm F1.8 Art DC HSM Lens for Canon DSLR Cameras + Sigma USB Dock with Altura Photo Essential Accessory and Travel Bundle
+18906,B076JJG669,1.2,,<=1.4,"Samyang SYXP85-C XP 85mm f/1.2 High Speed Lens for Canon EF with Built-in AE Chip, Black"
+18909,B076KCDMCT,2.8,,<=2.8,MEKE 85mm F2.8 Manual Focus Aspherical Medium Telephoto Full Frame Macro Lens with Portrait Capability for Sony E-Mount Cameras
+18912,B076KPK9GV,2.8,,<=2.8,MEKE 85mm F2.8 Full Frame Manual Focus Aspherical Medium Telephoto Macro Lens with Portrait Capability for Fuji X-Mount Cameras such as X-Pro2 X-E3 X-T1 X-T2 X-T3 X-T10 X-T20 X-A2 X-T100 X-E1 X-T4 X30
+18933,B076QD7MJ5,2.5,,<=2.8,Nikon 105mm f/2.5 Ai-S Manual Focus Lens
+18941,B076V6YCCJ,1.4,,<=1.4,"Rokinon AF 35mm f/1.4 Auto Focus Wide Angle Full Frame Lens for Sony FE Mount, Black (IO3514-E)"
+18950,B076WL194K,4.5,6.3,>4,Tamron 100-400mm F/4.5-6.3 VC USD Telephoto Zoom Lens for Canon Digital SLR Cameras (6 Year Limited USA Warranty)
+18952,B076WQ8JY7,4.5,6.3,>4,Tamron 100-400mm F/4.5-6.3 VC USD Telephoto Zoom Lens for Nikon Digital SLR Cameras (6 Year Limited USA Warranty)
+18994,B0774WRRWF,2.4,,<=2.8,"Rokinon SP14MAE-N Special Performance 14mm F/2.4 Ultra Wide Angle Lens with Built-in AE Chip for Nikon DSLR, Black"
+18995,B0775Q52GB,2.8,,<=2.8,Tamron SP 70-200mm F/2.8 Di VC G2 for Nikon FX DSLR (6 Year Limited USA Warranty for New Lenses Only)
+19001,B0776FBHYZ,3.5,6.3,<=4,Tamron 18-400mm F/3.5-6.3 DI-II VC HLD All-In-One Zoom For Nikon APS-C Digital SLR Cameras and Tiffen 72mm UV Protection Filter
+19011,B0777X2CWK,4,,<=4,"Canon EF 24–105mm f/4L is II USM Lens, Black - 1380C002"
+19024,B077983RSS,4.5,5.6,>4,Sony FE 100-400mm F4.5–5.6 GM OSS White
+19025,B0779D1PDZ,2.8,,<=2.8,Sony SEL-20F28 E-Mount 20mm F2.8 Prime Fixed Lens
+19042,B077GXWRDC,1.4,,<=1.4,Sigma 16mm f/1.4 DC DN Contemporary Lens for Sony with 64GB Extreme PRO SD Card and Accessory Bundle
+19055,B077KF29S6,3.5,5.6,<=4,Fujinon XF18-135mmF3.5-5.6 R LM OIS WR
+19060,B077NGWQRS,4.5,6.3,>4,Tamron 100-400mm f/4.5-6.3 Di VC USD Lens for Canon EF with Altura Photo Essential Accessory and Travel Bundle
+19061,B077NL3DV6,4.5,6.3,>4,Tamron 100-400mm f/4.5-6.3 Di VC USD Lens for Nikon F with Altura Photo Essential Accessory and Travel Bundle
+19067,B077PDQ8J2,3.5,6.3,<=4,Tamron 16-300mm F/3.5-6.3 Di-II VC PZD All-In-One Zoom for Nikon DX DSLR Cameras
+19068,B077PQ3D8W,1.2,,<=1.4,Voigtlander Nokton 40mm f/1.2 Wide Angle Leica M Mount Lens - Black
+19100,B077VKNJGV,4,,<=4,Sony - FE 24-105mm F4 G OSS Standard Zoom Lens (SEL24105G)
+19102,B077VLLLVY,4,5.6,<=4,NIKON AF-S DX NIKKOR 55-200mm f/4-5.6G ED VR II Lens - White Box (New)
+19106,B077VY7CT6,2.8,,<=2.8,Nikon AF-S NIKKOR 70-200mm f/2.8E FL ED VR Lens
+19107,B077VYV7PH,1.8,,<=2.0,"Sony SEL85F18 85mm F/1.8-22 Medium-Telephoto Fixed Prime Camera Lens, Black"
+19108,B077VZ4H5G,2.8,,<=2.8,Fujinon XF80mmF2.8 R LM OIS WR Lens
+19110,B077W1XFTZ,2.8,,<=2.8,Sony 35mm F2.8 Sonnar T FE ZA Full Frame Prime Fixed Lens
+19111,B077W2XXWR,1.8,,<=2.0,Sony - FE 50mm F1.8 Standard Lens (SEL50F18F/2)
+19119,B077XMJ1C2,1.4,,<=1.4,Nikon AF-S FX NIKKOR 85mm f/1.4G Lens with Auto Focus for Nikon DSLR Cameras
+19120,B077XMWV75,4.5,5.6,>4,Nikon AF-P DX NIKKOR 10-20mm f/4.5-5.6G VR Lens
+19121,B077XNZV1S,4.5,5.6,>4,Nikon AF-S DX NIKKOR 55-300mm f/4.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras
+19122,B077XPS25J,4,,<=4,"Sony - E 10-18mm F4 OSS Wide-Angle Zoom Lens (SEL1018),Black"
+19139,B077ZM3VRV,1.4,,<=1.4,"7artisans 55mm F1.4 II V2.0 Portrait Lens, Compatible with Fuji X-Mount Cameras X-A1 X-A10 X-A2 X-A3 X-at X-M1 XM2 X-T1 X-T10 X-T2 X-T20 X-Pro1 X-Pro2 X-E1 X-E2 X-E2s"
+19161,B0785NMZFJ,1.8,,<=2.0,Canon EF 50mm f/1.8 STM Lens
+19203,B078GGJLCD,1.4,,<=1.4,Sony SEL50F14Z Planar T* FE 50mm f/1.4 ZA Lens
+19204,B078GM723Q,4,5.6,<=4,Canon EF-S 55-250mm F4-5.6 IS STM Lens with UV Protection Filter - 58 mm
+19210,B078HHDTPZ,1.4,,<=1.4,Nikon AF FX NIKKOR 35mm f/1.4G Fixed Focal Length Lens with Auto Focus for Nikon DSLR Cameras
+19264,B078S8GL8Y,5,6.3,>4,Sigma 150-600mm f/5.0-6.3 Contemporary DG OS HSM Zoom Lens (for Canon EOS) & MC-11 Mount Converter + USB Dock + Filters + Monopod Kit for Sony FE & E-Mount Cameras
+19275,B078TMMDZZ,4.5,5.6,>4,"Canon EF-S 10-18mm f/4.5-5.6 is STM Lens, Lens Only"
+19277,B078TT74V4,1.4,,<=1.4,Sony FE 85mm f/1.4 GM Lens
+19280,B078V2MXVK,1.8,,<=2.0,Lightdow 85mm F1.8 Medium Telephoto Manual Focus Full Frame Portrait Lens for Nikon D7500 D7200 D5600 D5500 D5300 D5200 D5100 D3500 D3400 D3300 D3200 D850 D810 D800 D750 D610 D500 D60 D6 D5 D4 etc
+19282,B078VGP8RQ,1.4,,<=1.4,Canon EF 85mm f/1.4L with UV Protection Lens Filter
+19316,B0791W7C8Z,1.8,,<=2.0,Nikon AF FX NIKKOR 50mm f/1.8D Lens for Nikon DSLR Cameras
+19319,B0791Y983T,3.5,5.6,<=4,Nikon AF-S DX NIKKOR 18-300mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras
+19330,B0792L2KXH,2.8,,<=2.8,Tamron SP 70-200mm F/2.8 Di VC G2 for Canon EF DSLR (6 Year Limited USA Warranty for New Lenses Only)
+19365,B0797J347F,2.8,,<=2.8,"Rokinon AF 14mm F2.8 Weather Sealed Auto Focus Wide Angle Lens for Canon EF, Black (IO14AF-C)"
+19385,B079BRLDF7,3.5,5.6,<=4,Fujinon XC15-45mmF3.5-5.6 OIS PZ Lens - Black
+19405,B079HZDPLS,4,5.6,<=4,"Canon Cameras US EF 70-300 is II USM 70-300mm f/4-5.6 Fixed Zoom Camera Lens, Black (0571C005)"
+19438,B079T6YSR9,2,,<=2.0,Rokinon 12mm F2.0 NCS CS Ultra Wide Angle Lens Sony E-Mount (NEX) (Black) (RK12M-E)
+19441,B079W3LRZH,2.8,,<=2.8,Tamron 24-70mm F/2.8 G2 Di VC USD G2 Zoom Lens for Nikon Mount
+19471,B07B214GCR,4,,<=4,Canon EF 500mm f/4L is II USM Lens
+19486,B07B49V8QF,2.8,4,<=2.8,"Panasonic LUMIX Professional 50-200mm Camera Lens, G Leica DG Vario-ELMARIT, F2.8-4.0 ASPH, Dual I.S. 2.0 with Power O.I.S, Mirrorless Micro Four Thirds, H-ES50200 (Black)"
+19502,B07B88J8L8,4,,<=4,Tamron 70-210mm F/4 Di VC USD for Nikon FX Digital SLR Camera (6 Year Tamron Limited USA Warranty)
+19528,B07BFCFGGF,2.8,,<=2.8,Sigma 14-24mm f/2.8 DG HSM Art Lens for Nikon F + Sigma USB Dock with Altura Photo Advanced Accessory and Travel Bundle
+19540,B07BH49JSY,1.4,,<=1.4,"Samyang SYIO3514-E AF 35mm f/1.4 Auto Focus Wide Angle Full Frame Lens for Sony FE Mount, Black"
+19556,B07BLG5X47,2.8,,<=2.8,"Sigma 14-24mm F2.8 DG HSM, Black (212955) for Nikon"
+19568,B07BMBHG38,1.8,,<=2.0,Pentax DA 50mm f1.8 lens for Pentax DSLR Cameras
+19587,B07BNJWZWF,1.4,,<=1.4,Nikon AF-S FX NIKKOR 105mm f/1.4E ED Lens with Auto Focus for Nikon DSLR Cameras with UV filter
+19608,B07BR7J9WZ,1.4,,<=1.4,Sigma 35mm f/1.4 DG HSM Art Lens for Sony E Mount Cameras with Altura Photo Advanced Accessory and Travel Bundle
+19657,B07BYM1SN1,4.5,6.3,>4,SONY E 55-210mm F4.5-6.3 Lens for SONY E-Mount Cameras (Black) (Renewed)
+19661,B07BZ1TVJM,2.8,,<=2.8,Sony SEL90M28G FE 90mm f/2.8-22 Macro G OSS Lens for Mirrorless Cameras (Renewed)
+19672,B07C1L6S9X,1.7,,<=2.0,"Panasonic LUMIX G LENS, 42.5MM, F1.7 ASPH., MIRRORLESS MICRO FOUR THIRDS, POWER OPTICAL I.S., H-HS043K (USA BLACK)"
+19684,B07C2YPD65,1.8,,<=2.0,7artisans 25mm F1.8 APS-C Manual Focus Fixed Lens Compatible with Fujifilm Fuji Cameras X-A1 X-A10 X-A2 X-A3 X-at X-M1 XM2 X-T1 X-T10 X-T2 X-T20 X-Pro1 X-Pro2 X-E1 X-E2 X-E2s - Black
+19702,B07C5QKNRV,3.5,5.6,<=4,Canon EF-S 18-135mm f/3.5-5.6 Image Stabilization USM Lens (Black) (Renewed)
+19721,B07C7PKTB4,4,,<=4,"Sony SELP18105G E PZ 18-105mm F4 G OSS , Black"
+19730,B07C9FJ4W5,4.5,5.6,>4,Canon EF 100-400mm f/4.5-5.6L IS II USM Lens with UV Protection Lens Filter - 77 mm
+19767,B07CH88YR1,2.8,,<=2.8,"Canon EF 16–35mm f/2.8L III USM Lens, Black (0573C002)"
+19783,B07CKHLWGM,3.5,5.6,<=4,Sony 18-135mm F3.5-5.6 OSS APS-C E-Mount Zoom Lens
+19800,B07CMRX9Y2,5,6.3,>4,Tamron SP 150-600mm F/5-6.3 Di VC USD G2 for Canon Digital SLR Cameras
+19804,B07CN6X7GW,1.4,,<=1.4,Nikon AF-S FX NIKKOR 58mm f/1.4G Lens for Nikon DSLR Cameras
+19823,B07CQNMGD6,1.8,,<=2.0,Yongnuo YN50MM F1.8 II AF/MF 0.35M Focus Distance Standard Prime Lens Black for Canon 5D IV 1DX I 200D II 850D 7D 6DII
+19845,B07CV9ZMZG,1.7,,<=2.0,Meike 50mm F1.7 Full Frame Large Aperture Manual Focus Lens Compatible with Sony FE E Mount Mirrorless Cameras A7RIII A7III A7RIV A7IV A7 A9 A7C NEX 3 A9II A7II A6400 A6100 A6300 A6500 A6600 A7SIII
+19859,B07CXMQD99,2.8,,<=2.8,Nikon AF-S FX NIKKOR 300mm f/2.8G ED Vibration Reduction II Fixed Zoom Lens with Auto Focus for Nikon DSLR Cameras
+19868,B07CZ3LQJ9,3.5,6.3,<=4,Tamron B028N 18-400 mm f3.5-6.3 Di II VC HLD Lens for Nikon - Black
+19872,B07CZDLZRS,2,,<=2.0,Neewer 50mm f/2.0 Large Aperture Manual Focus MFT M4/3 Lens APS-C for Micro 4/3 System Olympus Panasonic Lumix Mirrorless Cameras
+19873,B07CZWFW6V,1.8,,<=2.0,Meike 25mm F1.8 APS-C Large Aperture Wide Angle Lens Manual Focus Lens Compatible with Sony E Mount Mirrorless Cameras NEX 3 3N 5 NEX 5T NEX 6 7 A6400 A5000 A5100 A6000 A6100 A6300 A6500 A6600 A6700
+19878,B07D1DCB65,3.5,4.8,<=4,"Fujifilm 55-200mm f/3.5-4.8 XF R LM OIS Zoom Lens with 3 UV/CPL/ND8 Filters + Flash + Soft Box + Kit for X-A2, X-E2s, X-M1, X-T1, X-T10, X-Pro2 Camera"
+19880,B07D1Y34PZ,2.8,,<=2.8,SIGMA ART 30MM F2.8 DN Black Lens For Micro Four Thirds Mount
+19891,B07D3K8G42,1.8,,<=2.0,Meike 25mm F1.8 Large Aperture Wide Angle Lens Manual Focus Lens Compatible With Fujifilm X mount Mirrorless Cameras X-Pro2 X-E3 X-T1 X-T2 X-T3 X-T4 X-T5 X-T10 X-T20 X-A2 X-E2 X-T100 X-T200 X-E1 XPro1
+19892,B07D3L7VX1,1.8,,<=2.0,Meike 25mm F1.8 Large Aperture Wide Angle Lens Manual Focus Lens Compatible with Panasonic Lumix Olympus M43 Mount Mirrorless Cameras GH4 GH5 GH6
+19903,B07D4MZ92X,2.8,,<=2.8,Tamron 28-75mm f/2.8 Di III RXD Lens for Sony E Mount Cameras with Altura Photo Advanced Accessory and Travel Bundle
+19935,B07D8GGZ6S,2.8,,<=2.8,Venus Optics Laowa 25mm f/2.8 2.5-5X Ultra-Macro (Nikon F Mount)
+19951,B07D9XD625,1.4,,<=1.4,"Sigma 259965 105mm f/1.4-16 Standard Fixed Prime Camera Lens, Black for Sony E Mount"
+19952,B07D9YGP5S,1.4,,<=1.4,Sigma 105mm f/1.4 DG HSM Art Lens For Nikon F (259955 )
+19960,B07DCCBL5H,2.8,,<=2.8,Sigma 70mm f/2.8 DG Macro Art Lens for Sony E Mount with Altura Photo Essential Accessory and Travel Bundle Black
+19970,B07DFSNT1D,4,,<=4,"Canon EF 70-200mm f/4L IS II USM Lens for Canon Digital SLR Cameras, White - 2309C002"
+19971,B07DFVF7M4,2.8,,<=2.8,"Canon EF 70-200mm f/2.8L IS III USM Lens for Canon Digital SLR Cameras, White - 3044C002"
+19995,B07DLWJN5D,1.8,,<=2.0,YONGNUO YN EF 50mm f/1.8 AF Lens 1:1.8 Standard Prime Lens Aperture Auto Focus for Canon EOS DSLR Cameras
+20001,B07DM88G68,1.8,,<=2.0,"Sony Sonnar T FE 55mm f/1.8 ZA Full Frame Lens with Pro Kit. Includes: UV Filter, Circular Polarizing Filter, Fluorescent Day Filter, Sony Lens Hood, Front & Rear Caps - International Version"
+20005,B07DNJHZTM,3.5,5.6,<=4,"Canon 2042B002-cr EF-S 18-55mm f/3.5-5.6 is II SLR Lens (Renewed), Black"
+20032,B07DWCSM2H,2.8,,<=2.8,Canon EF 70-200mm f/2.8L is III USM Lens with Altura Photo Complete Accessory and Travel Bundle
+20115,B07FFG4L1L,4,5.6,<=4,"Panasonic H-FS45150AK-CR Lumix G Vario Lens, F4.0-5.6 ASPH, Mirrorless Micro Four Thirds, Mega Optical I.S, (Black) (Certified Refurbished), 45-150MM"
+20119,B07FH133Q1,2.8,,<=2.8,"Rokinon AF 24mm f/2.8 Wide Angle Auto Focus Lens for Sony E-Mount, Black (IO24AF-E)"
+20150,B07FQ83W5W,2.8,,<=2.8,Fujinon XF8-16mmF2.8R LM WR Lens
+20155,B07FTCHPHG,1.2,,<=1.4,Neewer 35mm F1.2 Large Aperture Prime APS-C Aluminum Lens for Sony
+20197,B07G2LH19B,2,,<=2.0,Fujinon XF35mmF2 R WR - Black (Renewed)
+20209,B07G53HSDW,1.8,,<=2.0,7artisans 25mm F1.8 APS-C Large Aperture Manual Focus Fixed Lens for Olympus and Panasonic Micro Four Thirds MFT M4/3 Cameras - Black
+20215,B07G5TWZXK,2.8,,<=2.8,"Samyang 24mm F/2.8 Prime Fixed Auto Focus Wide Angle Lens, Black (SYIO24AF-E)"
+20231,B07G8N8Y5V,1.8,,<=2.0,SONY 55mm F1.8 Sonnar T FE ZA Full Frame Lens - Fixed (Renewed)
+20240,B07G9VVW6Q,2.8,4,<=2.8,Tamron 17-35mm F/2.8-4 Di OSD for Nikon Digital SLR Cameras (Tamron 6 Year Limited USA Warranty)
+20243,B07GB37GN8,1.8,,<=2.0,Meike 85mm F1.8 Full Frame Auto Focus Medium-Telephone Portrait Lens Compatible with Canon EOS EF Mount Digital SLR Cameras 5D Mark IV 6D Mark II
+20268,B07GGW3YBR,1.8,,<=2.0,Neewer 25mm F1.8 APS-C Large Aperture Wide Angle Lens Manual Focus Lens for Sony E Mount Mirrorless Cameras A7III A9 NEX 3 3N 5 NEX 5T NEX 5R NEX 6 7 A6400 A5000 A5100 A6000 A6100 A6300 A6500
+20291,B07GPVJ6HG,1.8,,<=2.0,Nikon NIKKOR Z 35mm f/1.8 S | Premium Large Aperture 35mm Prime Lens for Z Series mirrorless Cameras | Nikon USA Model
+20292,B07GPX4HK5,4,,<=4,Nikon NIKKOR Z 24-70mm f/4 S | Premium Constant Aperture mid-Range Zoom Lens for Z Series mirrorless Cameras | Nikon USA Model
+20294,B07GQ6FR5F,1.8,,<=2.0,NIKON NIKKOR Z 50mm f/1.8 S Standard Fast Prime Lens for Nikon Z Mirrorless Cameras
+20312,B07GSJQXRM,5.6,,>4,Nikon AF-S NIKKOR 500mm F/5.6E Pf ED VR Super-Telephoto Lens
+20326,B07GTFN1KR,1.8,,<=2.0,Meike 85mm f1.8 Large Aperture Full Frame Auto Focus Telephoto Lens for Canon EOS EF Mount Digital SLR Camera Compatible with APS C Bodies Such as 1D 5D3 5D4 6D 7D 70D 550D 80D
+20329,B07GV52R53,4,,<=4,Venus Laowa 15mm f/4 Wide Angle 1:1 Macro Lens with Shift for Nikon F Mount
+20371,B07H2LR77Y,4.5,6.3,>4,Sony E 55-210mm F4.5-6.3 Lens for Sony E-Mount Cameras (Black)
+20388,B07H489XDQ,4,,<=4,"Canon RF 24-105mm f/4L IS USM Lens, Black - 2963C002"
+20394,B07H4F64XL,2,,<=2.0,"Canon RF 28-70mm f/2L USM Lens, Black - 2965C002"
+20395,B07H4F65YR,1.4,,<=1.4,"Canon EF-M 32mm f/1.4 STM Lens, Black - 2439C002"
+20396,B07H4G9ZKW,1.2,,<=1.4,"Canon RF50mm F 1.2L USM Lens, Black"
+20404,B07H4SFG4G,1.8,,<=2.0,"Canon RF35mm F1.8 is Macro STM Lens, Black"
+20411,B07H5TPR24,2.8,,<=2.8,"Tamron SP 24-70mm f/2.8 Di VC USD G2 Lens for Canon Mount Bundle with TAP-in Console Lens Accessory, 64GB Memory Card, 60 Inch Tripod, Monopod, 82mm Filter Kit, Lens Cleaning Pen, Lens Bag and Cloth"
+20474,B07HJXVHSS,1.4,,<=1.4,"Sony E-mount FE 24mm F1.4 GM Full Frame Wide-angle Prime Lens (SEL24F14GM), Black"
+20496,B07HPBK2ZZ,2.8,,<=2.8,Tamron SP 15-30mm f/2.8 Di VC USD G2 Lens for Nikon F + Tamron Tap-in Console with Altura Photo Essential Accessory and Travel Bundle
+20503,B07HQXYR6N,1.8,,<=2.0,Nikon 85mm f/1.8G AF-S FX Nikkor Lens - (Renewed)
+20517,B07J21MYP5,3.5,6.3,<=4,Tamron 18-400mm F/3.5-6.3 DI-II VC HLD All-In-One Zoom For Nikon APS-C Digital SLR Cameras (Renewed)
+20518,B07J21WLDS,1.8,,<=2.0,Canon EF 50mm f/1.8 STM Lens (Renewed)
+20525,B07J2QK3Y3,1.8,,<=2.0,Canon RF 35mm f/1.8 is Macro STM Lens with Altura Photo Essential Accessory Bundle
+20545,B07J9HGTTN,4.5,6.3,>4,Canon EF-M 55-200mm f/4.5-6.3 Image Stabilization STM Zoom Lens (Silver) (Renewed)
+20748,B07KJS1N2Q,4,,<=4,Nikon NIKKOR Z 24-70mm f/4 S (Renewed)
+20756,B07KLCRTBP,2.8,,<=2.8,Sigma 70-200mm F2.8 Sports DG OS HSM for Canon Mount
+20779,B07KSFNG5H,1.4,,<=1.4,Sigma 56mm f/1.4 DC DN Contemporary Lens for Sony E Mount with Altura Photo Advanced Accessory and Travel Bundle
+20838,B07L52LMLF,5,6.3,>4,Tamron SP 150-600mm F/5-6.3 Di VC USD G2 Lens for Canon DSLR Cameras with Altura Photo Complete Accessory and Travel Bundle
+20839,B07L546RD2,2.5,,<=2.8,Voigtlander Macro APO-LANTHAR 110mm F/2.5 Lens for Sony E-Mount
+20847,B07L5S67PV,2,,<=2.0,Canon EF-M 22mm f2 STM Compact System Fixed Lens (Renewed)
+20905,B07LFX5NXQ,2.8,,<=2.8,"Meike 12mm F2.8 Ultra Wide Angle Manual Focus Lens for Sony E Mount APS-C Mirrorless Cameras NEX 3 5T NEX 6 7 A6400 A6600 A6000 A6100 A6300 A6500,etc"
+20918,B07M5BJ49K,3.5,,<=4,"Meike 8mm f3.5 Ultra Wide Angle Fisheye Lens for Canon EOS EF Mount APS-C Cameras EOS 70D 77D 80D Rebel T7i T6i T6s T6 T5i T5 T4i T3i SL2,etc"
+21019,B07MS6299X,4,,<=4,Nikon NIKKOR Z 14-30mm f/4 S | Premium constant aperture wide-angle zoom lens for Z series mirrorless cameras | Nikon USA Model
+21030,B07MW118KD,8.3,,>4,JINTU 420-800mm f/ 8.3 Manual Telephoto Zoom Lens + T-Mount for Canon EOS Rebel SL2 SL1 T3 T3i T4i T5 T5i T6 T6i T6s T7 T7i 4000D 6D 7D 60D 70D 77D 80D 5D II/III/IV 550D 650D SLR Camera Lenses
+21034,B07MWBDQN3,5.6,,>4,Fujinon GF100-200MMF5.6 R LM OIS WR
+21047,B07MZQGB5L,1.7,,<=2.0,Meike 50mm F1.7 Full Frame Manual Focus Prime Lens Compatible with Canon RF Mount Cameras EOS-R EOS-RP R5 R6
+21053,B07N1KZZQW,1.4,,<=1.4,Meike 35mm F1.4 Large Aperture Manual Focus Prime MFT Lens for Micro Four Thirds M43 Compatible with Olympus and Panasonic Mirrorless Cameras and BMPCC GH6 OM-1
+21054,B07N1LK2FB,1.4,,<=1.4,Meike 35mm F1.4 Large Aperture Manual Focus Lens APS-C Compatible with Sony E Mount Mirrorless Cameras NEX 3 NEX 3N NEX 5 NEX 5T NEX 5R NEX 6 7 A5000 A5100 A6000 A6100 A6300 A6500 A6600 A6400
+21061,B07N2SN89N,1.4,,<=1.4,MEIKE 35mm F/1.4 Manual Focus Large Aperture Lens Compatible with Fujifilm Mirrorless Camera Such as X-T1 X-T2 X-T3
+21085,B07N83WBTF,4,,<=4,"Panasonic LUMIX S 24-105mm F4 Lens, Full-Frame L Mount, Optical Image Stabilizer and Rugged Dust/Splash/Freeze-Resistant S-R24105 (USA), Black"
+21103,B07NDHH8YR,1.8,,<=2.0,"Canon EF 85mm f/1.8 USM Medium Telephoto Autofocus Lens + Lens Pouch + 58mm 3 Piece Filter Set (UV, CPL, FLD) and Accessory Bundle"
+21110,B07NHMKXS8,3.5,6.3,<=4,"OM SYSTEM OLYMPUS M.Zuiko Digital 12-200mm F3.5-6.3 For Micro Four Thirds System Camera, Outdoor 16.6x Powerful Zoom, Weather Sealed Design"
+21126,B07NPP2X4N,8.3,,>4,Lightdow 420-800mm f/8.3 Manual Zoom Telephoto Lens + T-Mount for Nikon D5500 D3300 D3200 D5300 D3400 D7200 D750 D3500 D7500 D500 D600 D700 D800 D810 D850 D3100 D5100 D5200 D7000 D7100 Camera Lenses
+21139,B07NSPQ8ZK,2.8,,<=2.8,Fujinon XF16mmF2.8 R WR Lens - Black
+21151,B07NWG28Z7,8.3,,>4,JINTU 650-1300mm Telephoto Zoom Lens F/8.3 for Canon Nikon SLR T8 T8i T7i T7s T7 T6s T6i T6 T5 SL3 SL2 4000D 650D 800D 550D 80D 90D 60D 5D IV D5600 D5500 D5100 D3300 D3200 D7500 D90
+21183,B07P42C2WJ,2.8,,<=2.8,Lightdow 135mm f/2.8 FE UMC Full Frame Telephoto Lens for Canon Rebel EOS 80D 77D 70D 60D 50D 7D 6D 5D 5DS 1DS T7i T7s T7 T6s T6i T6 T5i T5 T4i SL2 and SL1 Digital SLR Cameras
+21208,B07P7RT7M3,4,,<=4,Canon RF 24-105mm f/4L is USM Lens (Renewed)
+21214,B07P9YX2NN,1.4,,<=1.4,Sigma 30mm f/1.4 DC DN Contemporary Prime Lens for Sony E-Mount w/ 64GB Extreme PRO Bundle
+21220,B07PBGPTG6,1.8,,<=2.0,MEKE 85mm F1.8 Manual Focus Full Frame Large Aperture Standard Medium Portrait Lens with Electronic Aperture & EXIF Information Transmission for Sony E-Mount Cameras A7 A7R A7C A7RII A7SIII A7SII A9
+21280,B07PQLHG8P,1.4,,<=1.4,Viltrox 56mm F1.4 Autofocus Portrait Lens Compatible with Fujifilm X-Mount APS-C-Format Mirrorless Designed Cameras
+21295,B07PV1FFG4,2.8,,<=2.8,Tokina Opera AF 16-28MM FX F/2.8 (Canon Mount)
+21320,B07PZB3YKH,3.5,5.6,<=4,"Panasonic Lumix G Vario 14-140mm Telephoto Zoom Lens with F3.5-5.6 II ASPH, Mirrorless Micro Four Thirds Mount and Power O.I.S. - H-FSA14140 (Upgraded USA Black)"
+21340,B07Q41ZZ1S,1.4,,<=1.4,ROKINON IO85AF-E 85mm F1.4 Auto Focus Weather Sealed Lens for Sony E-Mount
+21342,B07Q47QQDT,2.8,,<=2.8,ROKINON 14mm F2.8 Ultra Wide Angle Weather Sealed Lens for Canon R Mirrorless Cameras
+21346,B07Q4VS1XM,1.8,,<=2.0,VILTROX 85mm f1.8 Mark II for Fuji x Mount 85mm ii Lens AF Auto Lens Portrait Fixed Focus Lens for Fujifilm Fuji X Mount Camera X-T3 X-T2 X-T30 X-T20 X-T10 X-T100 X-PRO2
+21353,B07Q69JQ2R,1.4,,<=1.4,Samyang SYIO85AF-E 85mm F1.4 Auto Focus Weather Sealed Lens for Sony E-Mount
+21382,B07QDS37PT,1.8,,<=2.0,"7artisans 25mm F1.8 APS-C Manual Fixed Lens for Fuji Cameras X-A1 X-A10 X-A2,X-A3 X-at X-M1 XM2 X-T1 X-T10 X-T2 X-T20 X-Pro1 X-Pro2 X-E1 X-E2 X-E2s (Black)"
+21384,B07QFFHYLC,3.5,6.3,<=4,Tamron 18-400mm f/3.5-6.3 Di II VC HLD Lens for Nikon F with Altura Photo Essential Accessory and Travel Bundle
+21402,B07QK1J9MR,2.8,,<=2.8,Tamron 28-75mm F/2.8 for Sony Mirrorless Full Frame E Mount (Renewed)
+21529,B07RB7SHD7,1.2,,<=1.4,"Canon RF 85mm F1.2 L USM Lens, Black"
+21573,B07RMKRXS9,2.8,,<=2.8,Venus Laowa 100mm f/2.8 2X Ultra Macro APO Lens for Nikon F
+21574,B07RML2CK7,2.8,,<=2.8,Laowa 100mm f/2.8 2:1 Ultra Macro APO Lens for Canon EF
+21576,B07RMZTL14,2.8,,<=2.8,Laowa 100mm f/2.8 2:1 Ultra Macro APO Lens for Sony FE
+21590,B07RS4VRL7,1.7,,<=2.0,"Panasonic Lumix G Leica DG Vario-Summilux 10-25mm, F1.7 ASPH. Lens, Stepless Aperture, Video Performance, Mirrorless Micro Four Thirds Mount, H-X1025"
+21615,B07RXWCN6W,1.8,,<=2.0,Samyang SYIO45AF-E 45mm F1.8 Full Frame Auto Focus Compact Lens for Sony E-Mount
+21618,B07RXWZ27S,1.8,,<=2.0,ROKINON 45mm F1.8 Full Frame Auto Focus Compact Lens for Sony E-Mount
+21715,B07SNBG5FS,1.8,,<=2.0,Sigma 18-35mm F1.8 Art DC HSM Lens for Canon DSLR Cameras with Altura Photo Advanced Accessory and Travel Bundle
+21727,B07STH2LJX,1.4,,<=1.4,Tamron SP 35mm f/1.4 Di USD Lens for Canon EF
+21729,B07SV3F4KV,2.8,,<=2.8,"7artisans 60mm F2.8 II V2.0 APS-C Format Macro Lens, Compatible with Sony E-Mount Cameras Cameras Sony A5000 A5100 A6000 A6100 A6300 A6400 A6500 A6600"
+21734,B07SVHD657,1.4,,<=1.4,Tamron SP 35mm f/1.4 Di USD Lens for Nikon F
+21741,B07SX6Z1BL,2.8,,<=2.8,"7artisans 60mm F2.8 II V2.0 Macro Lens, Compatible with MFT M4/3 Mount Mirrorless Cameras E-PL1 E-PL2 E-PL3 E-PL5 E-PL6 E-PL7 GH2 GH3 GH4 GH5 GH5S GM1 GM5 GM7 GX1 GX7 GX8"
+21753,B07SZXDN9X,5.6,6.3,>4,Sony FE 200-600mm F5.6-6.3 G OSS Super Telephoto Zoom Lens (SEL200600G)
+21822,B07TK5HB2Z,2,,<=2.0,Sony E Mount Lens 6.5mm f/2.0 Wide Angle Lens Circular Fisheye for Sony Alpha Mirrorless Camera A6600 A6500 A6400 A6300 A6100 A6000 A5100 A5000 NEX by Altura Photo with Protective Hard Case
+21833,B07TP4YM1F,2.8,,<=2.8,"Tamron 17-28mm f/2.8 Di III RXD for Sony Mirrorless Full Frame/APS-C E Mount, Black (AFA046S700)"
+21837,B07TPYK34N,4,6.3,<=4,"Canon RF 24–240mm F4-6.3 is USM Lens, Black"
+21875,B07TWYSHYB,4,,<=4,Fujinon XF16-80mm F4 R OIS WR
+21907,B07V5CR8S2,1.8,,<=2.0,Sony FE 35mm F1.8 Large Aperture Prime Lens (SEL35F18F)
+21917,B07VCQWDNT,1.8,,<=2.0,VILTROX 85mm F/1.8 F1.8 Mark II STM Full-Frame 85mm f1.8 ii for AF Auto Focus for Sony E-Mount Camera A7III A7RIII A7SII A7II a6500 a6400 a6300
+21939,B07VGH44GZ,1.8,,<=2.0,"Viltrox 85mm F1.8 Auto Focus Lens for Sony,Full Frame,Medium Telephoto Portrait Prime Lens for Sony E Mount A9 A7R3 A7R2 A7M3 A7M2 A7S2 A6500 A6300 A6000"
+21956,B07VKPW1V4,2.8,,<=2.8,Tamron 17-28mm f/2.8 Di III RXD Lens for Sony E with Advanced Photo & Travel Bundle
+21957,B07VKRGPYB,1.8,,<=2.0,VILTROX 85mm F1.8 Mark II STM Autofocus Large Aperture Full-Frame Portrait Lens Compatible with Sony E-Mount Cameras A7Ⅲ a7RⅢ a9 a7SⅡ a7RⅡ a7Ⅱ a7S a7 a7R a6400 a6500 with Pergear Dust Blaster
+21960,B07VLFYWCP,2,,<=2.0,YONGNUO YN35mm F2 Lens 1:2 AF/MF Wide-Angle Fixed/Prime Auto Focus Lens Compatible with Canon EF Mount EOS Camera
+21983,B07VQWGNHR,1.8,,<=2.0,NIKON NIKKOR Z 85mm f/1.8 S Portrait Fast Prime Lens for Nikon Z Mirrorless Cameras
+22028,B07W3QMZDM,2.8,,<=2.8,Tamron SP 24-70mm F/2.8 Di VC USD G2 for Canon DSLR Cameras (Tamron 6 Year Limited USA Warranty)
+22036,B07W5B54V4,2.8,,<=2.8,"Tamron AFA041N700 SP 15-30mm F/2.8 Di VC USD G2 for Nikon Digital SLR Camera, Black"
+22064,B07WDRRPDM,2.8,,<=2.8,Venus Laowa 4mm f/2.8 Circular Fisheye Lens for Micro Four Thirds
+22069,B07WFQYJYP,2.8,,<=2.8,Canon Rf 15-35mm F2.8 L is USM
+22106,B07WQ54BL8,2.8,,<=2.8,"Canon RF 24-70mm F2.8 L is USM Lens, Black"
+22116,B07WV216QZ,1.8,,<=2.0,7artisans 25mm F1.8 Manual Focus Fixed Lens for Sony E-Mount Cameras-APS-C (Black)
+22135,B07WZVKZHK,2.8,,<=2.8,Sony SEL1655G Alpha 16-55mm F2.8 G Standard Zoom APS-C Lens
+22166,B07X6HJRNV,2.8,,<=2.8,"ROKINON AF 18mm F2.8 Wide Angle auto Focus Full Frame Lens for Sony E Mount, Black"
+22169,B07X6SVMKK,2.8,,<=2.8,"Samyang SYIO18AF-E AF 18mm F2.8 Wide Angle auto Focus Full Frame Lens for Sony E Mount, Black"
+22170,B07X72DMLC,4.5,6.3,>4,Sony Alpha 70-350mm F4.5-6.3 G OSS Super-Telephoto APS-C Lens
+22171,B07X7KL6JM,4,,<=4,Sony - FE 24-105mm F4 G OSS Standard Zoom Lens (SEL24105G/2)
+22180,B07X9F35QY,1.8,,<=2.0,Auto-Focus Prime Lens VILTROX 85mm F1.8 Mark II STM Full Frame Portrait Lens for Sony E-Mount Camera A7III A7RIII A7SII A7II A9 A7 A6500 A6400 A6300
+22328,B07YX95XJL,3.5,6.3,<=4,NIKON NIKKOR Z DX 16-50mm f/3.5-6.3 VR Ultra-Compact Zoom Lens with Image Stabilization for Nikon Z Mirrorless Cameras
+22330,B07YX9KYQZ,4.5,6.3,>4,NIKON NIKKOR Z DX 50-250mm f/4.5-6.3 VR Ultra-Compact Long Telephoto Zoom Lens with Image Stabilization for Nikon Z Mirrorless Cameras
+22359,B07Z5M9M7M,2.8,,<=2.8,"Canon RF 70-200mm F2.8 L is USM Lens, Telephoto Zoom Lens, 3792C002"
+22371,B07Z89MG7D,2.8,,<=2.8,TOKINA ATX-i 11-16mm F2.8 Canon EF
+22373,B07Z8BG7S1,2.8,,<=2.8,Sigma 14-24mm f/2.8 DG DN Art Lens for Sony E Mount with Advanced Photo and Travel Bundle
+22407,B07ZHQVY8J,2.8,,<=2.8,Tamron 20mm f/2.8 Di III OSD M1:2 Lens for Sony Full Frame/APS-C E-Mount
+22484,B0815V2J9B,1.8,,<=2.0,Venus Laowa 17mm f/1.8 Lens for Micro Four Thirds
+22495,B081BBRCCG,8.3,,>4,"Opteka 420-800mm (w/ 2x- 840-1600mm) f/8.3 HD Telephoto Zoom Lens for Canon EF-Mount 90D, 80D, 77D, 70D, 60D, 50D, 7D, 6D, 5D, T8i, T7i, T7s, T7, T6s, T6i, T6, T5i, T5, T4i, T3i, SL3, SL2 DSLR Cameras"
+22539,B081HC3RBF,3,,<=4,Altura Photo 8mm f/3.0 Professional for Canon Wide Angle Lens Aspherical Fisheye Lens for Canon EOS 90D 80D 77D Rebel T8i T7 T7i T6i T6s T6 T100 SL2 SL3 DSLR Cameras with Canon EF Lens Mount
+22553,B081L5HJBP,2.8,,<=2.8,"Sigma 24-70mm F2.8 DG DN Art for Sony E Lens ,Black"
+22567,B081QKWGTC,2.8,,<=2.8,Tamron 17-28mm f/2.8 Di III RXD for Sony Mirrorless Full Frame E Mount (Renewed)
+22569,B081QPDKM9,1.4,,<=1.4,Sigma 16mm f/1.4 DC DN Contemporary Lens for Canon EF-M with Altura Photo Essential Accessory and Travel Bundle
+22615,B08233LJ1P,2.8,,<=2.8,Tamron 24mm f/2.8 Di III OSD M 1:2 Lens for Sony E with Altura Photo Essential Accessory Bundle
+22616,B08233ZL3Z,2.8,,<=2.8,Tamron 35mm f/2.8 Di III OSD M 1:2 Lens for Sony E with Altura Photo Essential Accessory Bundle
+22629,B08288SF4L,1.4,,<=1.4,Sigma 16mm F1.4 DC DN Contemporary Lens for Sony E Mount Cameras with Altura Photo Advanced Accessory and Travel Bundle
+22639,B082BDMPQT,5.6,6.3,>4,Sony FE 200-600mm F5.6-6.3 G OSS Super Telephoto Zoom Lens (SEL200600G) (Renewed)
+22712,B0833F71NQ,2.8,,<=2.8,"Samyang AF 14mm F2.8 Wide Angle Auto Focus Full Frame Weather Sealed Lens for Canon RF Mount, Black (SYIO14AF-RF)"
+22761,B083K3C5P2,2.8,,<=2.8,Nikon NIKKOR Z 70-200mm f/2.8 S | Professional large aperture telephoto zoom lens for Z series mirrorless cameras | Nikon USA Model
+22796,B083RPHHNY,1.7,,<=2.0,"Neewer 35mm F1.7 Large Aperture APS-C Manual Focus Prime Fixed Lens, Compatible with Canon EF-M EOS-M Mount Mirrorless Cameras, Including Canon EOS M M2 M3 M5 M6 M10 M50 M100, M200 etc"
+22805,B083STSCYJ,2.8,,<=2.8,Tamron 24mm F/2.8 Di III OSD M1:2 Lens for Sony Full Frame/APS-C E-Mount Mirrorless Camera
+22817,B083X5Y8RY,4,,<=4,"OM SYSTEM OLYMPUS M.Zuiko Digital ED 12-45mm F4.0 PRO For Micro Four Thirds System Camera, Compact Lightweight Zoom, Weather Sealed Design, Close-up, L-Fn Button"
+22829,B08412XPWK,2,,<=2.0,Fujinon XC35mmF2
+22839,B0847MW9X6,2.8,,<=2.8,Venus Laowa 65mm f/2.8 2x Ultra Macro APO Lens for Fuji X
+22842,B084BKXDLD,4,7.1,<=4,Canon RF24-105mm F4-7.1 is STM (4111C002)
+22859,B084KYHYKN,1.4,,<=1.4,Sigma 16mm f/1.4 DC DN Contemporary Lens for Canon EF-M with 64GB Ultra SDXC UHS-I 100MB/s Memory Card and Travel Bundle (4 Items)
+22869,B084QPDT1H,1.8,,<=2.0,NIKON NIKKOR Z 20mm f/1.8 S Ultra Wide Angle Fast Prime Lens for Nikon Z Mirrorless Cameras
+22906,B0857XT4GW,1.8,,<=2.0,SIRUI 50mm F1.8 1.33X Anamorphic Lens for E Mount APS-C
+22954,B085VHDJKJ,1.8,,<=2.0,PERGEAR 25mm F1.8 Manual Focus Fixed Lens Compatible with Sony E-Mount Cameras NEX-3 NEX-5 NEX-C3 NEX-5N NEX-7 NEX-F3 NEX-5R NEX-6 NEX-3N NEX-5T A3000 A5000 A6000 A3500 A5100 A6300 A6500 (Black)
+23049,B087G4G7QJ,1.4,,<=1.4,VILTROX 33mm F1.4 fujifilm X Mount f/1.4 XF AF Auto Focus Lens for Fujifilm Fuji X-Mount Camera X-T3 X-T2 X-H1 X20 X-T30 X-T20
+23082,B087XVGY52,1.8,,<=2.0,"Samyang AF 75mm F1.8 Compact Auto Focus Telephoto Lens for Sony FE Mount, Black (SYIO75AF-E)"
+23090,B0884KDF71,3.5,6.3,<=4,"Tamron AFB028N-700 18-400mm f/3.5-6.3 Di II VC HLD All-in-One Zoom Lens for Nikon Mount Bundle with Automatic Flash, 72-Inch Monopod, 72mm Filter Kit, Backpack, Paintshop Pro and 60 inch Tripod"
+23096,B08881Q3HD,1.4,,<=1.4,Viltrox 23mm F1.4 XF STM Autofocus Large Aperture APS-C Lens for Fujifilm Cameras X-A1 X-A2 X-A3 X-A10 X-at X-M1 X-M2 X-A20 X-A5 X-T1 X-T10 X-T2 XT-3 X-T20 (Black)
+23129,B088C3XMXK,2.8,,<=2.8,"Sigma 24-70mm f/2.8 DG DN Art Lens Sony E-Mount Bundle with 2X 64GB Memory Cards, IR Remote, 3 Piece Filter Kit, Wrist Strap, Card Reader, Memory Card Case, Tabletop Tripod"
+23134,B088D3CTHB,1.4,,<=1.4,VILTROX 23mm f/1.4 X-Mount Lens Auto Focus F1.4 Large Aperture APS-C Lens for fujifilm X-Mount Camera X-T3 X-H1 X20 T30 X-T20 X-T100 X-Pro2
+23141,B088FVZ18G,2.8,,<=2.8,Sigma 24-70mm f/2.8 DG DN Art Zoom Full Frame Compatible with Sony E-Mount Lens with LaCie Rugged Mini 1TB Hard Drive and 64GB SD Card Bundle (3 Items)
+23143,B088GF11CS,2,,<=2.0,"ZEISS Batis 40mm f/2.0 for Sony E Mount Mirrorless Cameras, Black"
+23144,B088GF3JD6,2.8,,<=2.8,"ZEISS Loxia 21mm f/2.8 Full Frame Manual Focus for Sony E Mount, Black"
+23145,B088GFKL2S,2,,<=2.0,"ZEISS Milvus 35mm f/2 Full Frame Camera Lens for Nikon F-Mount ZF.2, Black"
+23198,B0894BR24H,1.8,,<=2.0,"YONGNUO YN50mm F1.8S Lens, 50mm F1.8 Larege Aperture, APS-C Standard Prime E-Mount, Auto Manual Focus AF MF USB for Sony Cameras"
+23251,B089QSFNDK,5,6.3,>4,"Sigma 150-600mm f/5-6.3 Contemporary DG OS HSM Canon EF-Mount Bundle with 2X 64GB Memory Cards, IR Remote, 3 Piece Filter Kit, Wrist Strap, Card Reader, Memory Card Case, Tabletop Tripod"
+23316,B08BJBBL6S,5,6.3,>4,"Sigma 150-600mm f/5-6.3 Contemporary DG OS HSM Nikon F-Mount Bundle with 2X Extreme 64GB Memory Cards, IR Remote, 3 Piece Filter Kit, Wrist Strap, Card Reader, Memory Card Case, Tabletop Tripod"
+23319,B08BJDVGMJ,2.8,5.6,<=2.8,Tamron 28-200mm f/2.8-5.6 Di III RXD Lens for Sony E with Altura Photo Advanced Accessory and Travel Bundle
+23356,B08C1DGSGM,5,6.3,>4,Sigma 100-400mm F5-6.3 DG DN OS Contemporary Lens 750965 for Sony E-Mount Full Frame Mirrorless Cameras Bundle w/Deco Gear Photography Backpack Case + Filter Kit + 64GB Card + Monopod + Accessories
+23365,B08C6XBCN6,1.4,,<=1.4,Samyang AF 85mm F1.4 Weather Sealed High Speed Auto Focus Lens for Canon EOS R Cameras - RF Mount (SYIO85AF-RF)
+23366,B08C6Y8KS3,2,,<=2.0,"Canon RF 85mm F2 Macro is STM, Compact Medium-Telephoto Black Lens (4234C002)"
+23369,B08C6ZRGCL,1.4,,<=1.4,Rokinon AF 85mm F1.4 Weather Sealed High Speed Auto Focus Lens for Canon EOS R Cameras - RF Mount (IO85AF-RF)
+23370,B08C6ZRVC5,4.5,7.1,>4,Canon RF 100-500mm F4.5-7.1 L is USM Super-Telephoto Lens
+23379,B08CBK25S9,5,6.3,>4,"Sigma 100-400mm f/5-6.3 DG DN OS Contemporary Lens Sony E-Mount Bundle with 2X 64GB Memory Cards, IR Remote, 3 Piece Filter Kit, Wrist Strap, Card Reader, Memory Card Case, Tabletop Tripod"
+23503,B08DD2QGQR,1.4,,<=1.4,"VILTROX 23mm f/1.4 Auto Focus E-Mount Lens Compatible for Sony,Wide Angle Large Aperture APS-C Lens for Sony E-Mount Cameras A6500 A6300 A6100 A9 A7RⅣ A7RⅢ A7Ⅲ A7RⅡ A7Ⅱ A7S A7R"
+23515,B08DHFB2ZQ,5,6.3,>4,Sigma 100-400mm f/5-6.3 DG DN OS Contemporary Lens for Sony E with Altura Photo Advanced Accessory and Travel Bundle
+23545,B08F29S6NC,1.8,,<=2.0,Meike 85mm F1.8 Auto Focus Full Frame Large Aperture Lens Compatible with Nikon F Mount DSLR Cameras D850 D750 D780 D610 D3200 D3300 D3400 D3500 D5500 D5600 D5300 D5100 D7200 and Other F Mount Cameras
+23549,B08F65LK53,4.5,6.7,>4,Fujinon XC50-230mmF4.5-6.7 OIS II Black
+23574,B08FHTV4DB,1.4,,<=1.4,"Sigma 85mm F1.4 DG DN Sony E (322965), Black"
+23579,B08FJ3336N,1.8,,<=2.0,Meike 85mm f1.8 Wide Aperture Full Frame Auto Focus Telephoto Lens for Nikon F Mount DSLR Camera and Compatible with Nikon APS-C Cameras D610 D750 D780 D810
+23648,B08GQ2VHQ6,8.3,,>4,Lightdow 420-800mm f/8.3 Manual Zoom Super Telephoto Lens + T Mount Ring for Nikon D3500 D5600 D7500 D500 D600 D700 D750 D800 D850 D3200 D3400 D5100 D5200 D5300 D7000 D7200 Camera (White Version)
+23671,B08HD6869H,1.4,,<=1.4,VILTROX 23mm Fuji F1.4 New Version 23mm f/1.4 X-Mount Lens Auto Focus Large Aperture APS-C Lens for fujifilm X-Mount Camera X-pro 3 X-Pro 2
+23758,B08K3MXZCZ,4.5,6.3,>4,"Tamron 70-300mm F/4.5-6.3 Di III RXD for Sony Mirrorless Full Frame/APS-C E-Mount (Tamron 6 Year Limited USA Warranty), Black"
+23867,B08M2VQ2TG,2.4,,<=2.8,Pentax DA 35mm f/2.4 AL Lens for Pentax Digital SLR cameras
+23878,B08M8QPS1V,4,,<=4,Canon RF70-200mm F4 L is USM (4318C002)
+23879,B08M91FQW6,2.8,,<=2.8,Canon RF100mm F2.8 L Macro is USM
+23889,B08MFVH7SV,1.8,,<=2.0,"Canon RF50mm F1.8 STM for Canon Full Frame Mirrorless RF Mount Cameras [EOS R, EOS RP, EOS R5, EOS R6](4515C002)"
+23931,B08N4Z34N9,1.4,,<=1.4,VILTROX 56mm F1.4 f/1.4 XF Autofocus APS-C Portrait Lens for Fuji Fujifilm X-Mount X-T3 X-T2 X-H1 X20 X-T30 X-T20
+23938,B08N8KHLKV,1.8,,<=2.0,"Samyang 35mm F1.8 Auto Focus Compact Full Frame Wide Angle Lens for Sony E Mount, Black (SYIO3518-E)"
+23939,B08N8TJQHK,1.8,,<=2.0,"Rokinon 35mm F1.8 Auto Focus Compact Full Frame Wide Angle Lens for Sony E Mount, Black, IO3518-E"
+24052,B08PYYG5ZK,1.8,,<=2.0,VILTROX 85mm F1.8 STM Autofocus Large Aperture Full-Frame Portrait Lens Wide Compatible with Nikon Z-Mount Z5/Z6/Z7/Z6 II
+24055,B08Q3PNYJR,1.8,,<=2.0,VILTROX 85mm f/1.8 F1.8 STM Full-Frame Portrait Lens Autofocus Large Aperture Compatible with Nikon Z-Mount Z9 Z50 Z7 ii Z6 ii Z7 Z6 Z6 II Z5
+24084,B08QZ7PWLR,1.2,,<=1.4,TTartisan 50mm F1.2 APS-C Large Aperture Manual Focus Fixed Lens Compatible with Fuji X-Mount Camera
+24169,B08SWMH186,1.4,,<=1.4,Sony FE 35mm F1.4 GM Full-Frame Large-Aperture Wide Angle G Master Lens
+24199,B08TMZ59ZW,4,5.6,<=4,Fujifilm Fujinon XF70-300mmF4-5.6 LM OIS WR
+24200,B08TP4QYT2,2.8,,<=2.8,Fujinon XF27mmF2.8 R WR
+24216,B08V1H5XC2,2,,<=2.0,Venus Laowa 10mm f/2 Zero-D Lens for Micro Four Thirds
+24220,B08V54RH64,2.8,,<=2.8,Tamron 17-70mm f/2.8 Di III-A VC RXD Lens for Sony E Mount with Altura Photo Advanced Accessory and Travel Bundle
+24267,B08X4L99BX,2.8,,<=2.8,Pentax DA 40mm f/2.8 XS Lens
+24283,B08XPZ2DZB,4.5,6.3,>4,Canon EF-M 55-200mm f/4.5-6.3 Image Stabilization STM Lens (Black) International Version (No Warranty)
+24284,B08XPZDZPG,4,,<=4,Canon ZOOM LENS EF24-105mm F4L IS II USM - White Box (New) (Bulk Packaging)
+24308,B08Y9Y69JB,2.8,,<=2.8,NIKON NIKKOR Z 24-70mm f/2.8 S Standard Zoom Lens for Nikon Z Mirrorless Cameras
+24334,B08Z2SBDS5,3.5,5.6,<=4,PENTAX DA 18-55mm f/3.5-5.6 AL Weather Resistant Lens for Pentax Digital SLR Camera (Discontinued by Manufacturer)
+24337,B08Z3BJZ9W,1.8,,<=2.0,Sigma 14mm F/1.8 Art DG HSM Lens (for Canon EOS Cameras)
+24340,B08Z3KLJMQ,2.8,,<=2.8,Olympus M Zuiko Digital ED 12-40mm f/2.8 Pro Interchangeable Lens - International Version (No Warranty)
+24341,B08Z3MZ533,5,6.3,>4,Sigma 100-400mm f/5-6.3 DG OS HSM Contemporary Lens for Nikon F
+24342,B08Z3SJGVJ,2.8,,<=2.8,Sigma 24-70mm f/2.8 DG OS HSM Art Lens for Canon
+24345,B08Z4HVBXC,1.2,,<=1.4,Sony FE 50mm F1.2 GM Full-Frame Large-Aperture G Master Lens
+24349,B08Z75GK14,1.8,,<=2.0,Canon EF 50mm f/1.8 STM Lens International Version (No Warranty)
+24350,B08Z7MLP28,1.4,,<=1.4,Sigma 24mm F/1.4 DG HSM Art Lens for Sony E (401965)
+24353,B08Z7YRVTC,1.2,,<=1.4,Nikon AI-S FX NIKKOR 50mm f/1.2 Fixed Zoom Manual Focus Lens for Nikon DSLR Cameras
+24356,B08Z858BR9,2,,<=2.0,Olympus 150mm f/2.0 Zuiko Digital Telephoto Lens for Olympus Digital SLR Cameras
+24380,B08ZSYM3K1,2.5,,<=2.8,Sony FE 50mm F2.5 G Full-Frame Ultra-Compact G Lens
+24381,B08ZSZ5Y4T,2.5,,<=2.8,Sony FE 40mm F2.5 G Full-Frame Ultra-Compact G Lens
+24411,B091D73K61,2.8,,<=2.8,Tamron AF 28-75mm f/2.8 SP XR Di LD Aspherical (IF) for Canon (Model A09E) - International Version (No Warranty)
+24419,B091JZFR95,2.8,,<=2.8,"TTArtisan 11mm F2.8 Full Frame Ultra-Wide Fisheye Manual Lens for Sony E Mount A7, A7II (A7M2), A7III, (A7M3), A7R, A7RII (A7RM2), A7RIII (A7RM3), A7RlV(A7M4), A7S, A7S II (A7SM2), A7SIII (A7SM3), A9"
+24429,B091STYM49,3.5,5.6,<=4,Olympus 14-42mm f3.5-5.6 EZ Interchangeable Lens for Olympus/Panasonic Micro 4/3 Digital Camera (Black) - International Version (No Warranty)
+24436,B091Y2GPM7,3.5,5.6,<=4,Canon EF-S 18-55mm f/3.5-5.6 is II SLR Lens - Mark II (White Box)
+24447,B0923F7V45,1.4,,<=1.4,Fujinon XF18mmF1.4 R LM WR
+24449,B0924SBXZQ,1.8,,<=2.0,"Samyang 24mm F1.8 AF Compact Full Frame Wide Angle for Sony E, Black (SYIO2418-E)"
+24459,B092D5PFFT,3.5,5.6,<=4,"Canon EF 24-105MM 1:3.5-5.6 IS STM, 9521B005"
+24479,B092XQ2KYK,2,,<=2.0,Samyang 12mm F2.0 AF Ultra Wide Angle Auto Focus Lens for Sony E Mount (SYIO12AF-E)
+24498,B093GSKV7W,2.8,,<=2.8,Tamron A012E SP 15-30mm F2.8 Di VC USD Ultra-Wide-Angle Zoom Lens for Canon EF Camera - International Version (No Warranty)
+24503,B093KB8B7W,1.4,,<=1.4,Sigma 35mm F1.4 Art DG HSM for Sony E
+24558,B0956ZTZJS,1.4,,<=1.4,85mm F1.4 Art DG HSM for Sony E
+24609,B096DHS1BF,2.8,,<=2.8,Nikon NIKKOR Z MC 105mm f/2.8 VR S | Professional Macro Prime Lens for Z Series mirrorless Cameras | Nikon USA Model
+24622,B096KHZWJT,2.4,,<=2.8,Irix 15mm f/2.4 Firefly for Pentax K
+24639,B096WGZT43,2.8,,<=2.8,TAMRON 11-20MM F/2.8 DI III-A RXD for Sony E APS-C Mirrorless Cameras
+24653,B0973FG97K,5,6.7,>4,Tamron 150-500mm f/5-6.7 Di III VC VXD Lens for Full Frame Sony Mirrorless Camera
+24661,B097C8YQ5D,1.8,,<=2.0,"YONGNUO YN85mm F1.8R DF DSM,Autofocus Medium-Telephoto Prime Lens for RF Mount，Compatible with Canon EOS R Mirrorless Cameras"
+24670,B097PPNXX4,2.8,,<=2.8,Tamron 17-70mm f/2.8 Di III-A VC RXD Lens for Sony E APS-C Mirrorless Cameras
+24694,B0987C9SFD,1.2,,<=1.4,Canon EF 50mm f/1.2L USM Ultra-Fast Standard AutoFocus Lens - International Version (No Warranty)
+24706,B098DR6NBP,1.8,,<=2.0,JINTU 85mm F1.8 Manual Portrait Camera Lenses for Canon EOS Rebel XT XTi XS XSi T1i 5D 6D 7D T2i T3 T3i T4i T5 T5i T6i T7i T8i 4000D 2000D 1300D 800D 850D 50D 90D EF SLR Cameras
+24716,B098QFTMHG,2.8,,<=2.8,"Sigma 271965 70mm F2.8 Art DG Macro for Sony E, Black"
+24800,B09BQVW8L1,1.8,,<=2.0,Sigma 135mm F1.8 Art DG HSM for Sony E
+24809,B09BWGXRDM,5,,>4,150-600mm F5/-6.3 DG DN for Sony E
+24812,B09C2GZZ5X,2,,<=2.0,YONGNUO YN35mm F2 Lens 1:2 AF/MF Wide-Angle Fixed/Prime Auto Focus Lens for Canon EF Mount EOS Camera
+24879,B09DTJQSCH,1.4,,<=1.4,Fujinon XF33mmF1.4 R LM WR
+24880,B09DTKDNMX,1.4,,<=1.4,Fujinon XF23mmF1.4 R LM WR
+24892,B09F5RDZYB,2.8,,<=2.8,Tamron 28-75mm F/2.8 for Sony Mirrorless Full Frame E Mount (Tamron 6 Year Limited USA Warranty)
+24898,B09FFTB9V6,2.8,,<=2.8,Canon RF16mm F2.8 STM
+24919,B09G57BXZ4,2,,<=2.0,Nikon NIKKOR Z 40mm f/2 | Large aperture 40mm prime lens for Z series mirrorless cameras | Nikon USA Model
+24924,B09G76P7X4,2.8,,<=2.8,"Laowa 9mm f/2.8 Zero-D Ultra-Wide Angle Lens (SLR, 15/10, Ultra-Large Angel Lens, Fujifilm X, Manual, Fujifilm)"
+24925,B09G79M5Q2,1.4,,<=1.4,"Sigma 402963 16mm f/1.4 DC DN Contemporary Lens for Micro Four Thirds, Black"
+24966,B09HHMG2TZ,1.4,,<=1.4,30mm F1.4 DC DN | C for EF-M Mount
+24968,B09HHNDR64,1.4,,<=1.4,Sigma 16 mm f/1.4 (C) AF DC DN Lens for Canon EF-M Mirrorless
+24973,B09HMVJL47,2.8,,<=2.8,Tamron 28-75mm F/2.8 Di III VXD G2 for Sony E-Mount Full Frame/APS-C (6 Year Limited USA Warranty)
+24983,B09J1M9KQR,3.5,5.6,<=4,Nikon AF-P DX NIKKOR 18-55mm f/3.5-5.6G VR Lens for Nikon DSLR Cameras
+24984,B09J1NQT5Q,1.4,,<=1.4,50mm F1.4 Art DG HSM for Sony E
+24986,B09J21RPT5,1.4,,<=1.4,Fujifilm XF16mmF1.4 R WR
+24991,B09J22LJWM,1.4,,<=1.4,Sigma 30mm F1.4 Contemporary DC DN Lens for Micro 4/3
+25019,B09JVBB36L,2.8,,<=2.8,18-50mm F2.8 DC DN Contemporary for Sony E Black
+25133,B09MHD86Y1,1.4,,<=1.4,Viltrox 23mm F1.4 Auto Focus Wide-Angle Lens Compatible with Nikon Z-Mount APS-C Mirrorless Camera Z fc Z50 Z5 Z6 Z6 II Z7 Z7 II (Black)
+25161,B09N3FLQGS,1.4,,<=1.4,TTArtisan 23mm F1.4 APS-C Wide-Angle Prime Lens Manual Focus Fixed Lens Compatible with Fuji X-Mount Camera
+25164,B09N4539TZ,1.8,,<=2.0,Sigma 135mm f/1.8 DG HSM Art Lens for Nikon F
+25212,B09NYGJBGY,1.4,,<=1.4,Sigma 56mm F1.4 DC DN | C for Micro 4/3
+25224,B09P4QQTRG,1.4,,<=1.4,"AstrHori 50mm F1.4 Large Aperture Lens Full Frame Manual 2-in-1 Tilt Lens Miniature Model Effect Compatible with Sony E-Mount Mirrorless Camera A7,A7R,A7S,A9,A6000,A6300,A6500,A6600.etc(Black)"
+25262,B09PZDZ4QK,2,,<=2.0,MEKE 6.5mm f2.0 Ultra Wide Fisheye Lens for Sony A9 A7III A7RIII A6400 A6500 A6000 A6100 A6300 Nex3 Nex5 Nex6 Nex7 A7II A7SII A7RII Mirorrless Cameras
+25451,B09V9J124H,3.5,,<=4,"Opteka 6.5mm f/3.5 Ultra Wide Angle Aspherical Manual Focus Fisheye Lens for Nikon F-Mount D7500, D7200, D7100, D7000, D5600, D5500, D5300, D5200, D5100, D3500, D3400, D3300, D3200, D3100 and D500"
+25457,B09VH4J4CL,1.8,,<=2.0,"Samyang 135mm F1.8 AF Full Frame Auto Focus Telephoto Lens for Sony E Mount Cameras, Black, (SYIO13518-E)"
+25469,B09VRGH7PY,2.8,,<=2.8,"Sony FE 12-24mm F2.8 G Master Full-Frame Constant-Aperture Ultra-Wide Zoom Lens (SEL1224GM), Black"
+25487,B09W6CG368,4,,<=4,Sony FE PZ 16-35mm F4 G - Full-Frame Constant-Aperture Wide-Angle Power Zoom G Lens
+25491,B09W8R65TX,2,,<=2.0,Meike 6.5mm Ultra Wide f2.0 Fisheye Lens for Panasonic/Olympus Mirrorless Camera
+25582,B09Y5Q5Y17,3.5,4.5,<=4,Tamron Auto Focus 10-24mm f/3.5-4.5 SP Di II LD Aspherical (IF) Lens with Built-in Auto Focus Motor for Nikon Digital SLR Cameras (Model B001NII)
+25586,B09Y5S1LG1,4,5.6,<=4,Olympus M ED 9-18mm f/4.0-5.6 micro Four Thirds Lens for Olympus and Panasonic Micro Four Third Interchangeable Lens Digital Camera - International Version (No Warranty)
+25603,B09YD2ZRQD,1.4,,<=1.4,Sigma 56mm F1.4 DC DN for EF-M Mount (351971)
+25637,B09YYY6P98,2.8,,<=2.8,Sony FE 24-70mm F2.8 GM II Lens
+25679,B09ZPMW8QY,1.4,,<=1.4,TTArtisan 35mm F1.4 APS-C Camera Lens Silver Version for Olympus Macro 4/3 Mount Cameras Like EPM1、EPM2、EPL5、EPL6、EPL7、EPL8、EPL9、E-P1、E-P2、E-P3、E-P5、E-P6、E-M1、 E-M5、E-M10IIII、Pen-F
+25734,B0B1K7ZCDF,1.7,,<=2.0,"Panasonic LUMIX Micro Four Thirds Camera Lens, Leica DG SUMMILUX 9mm F1.7 ASPH, Large Aperture, Video Performance, H-X09"
+25778,B0B2J6YKSH,5.6,8,>4,Fujinon XF150-600mmF5.6-8 R LM OIS WR Lens
+25802,B0B2X2Z31L,4,,<=4,Sony E PZ 10-20mm F4 G APS-C Constant-Aperture Power Zoom G Lens
+25806,B0B31DRP4Z,2.8,,<=2.8,Fujifilm XF50-140mmF2.8 R LM OIS WR
+25870,B0B45P718F,2.8,,<=2.8,Sigma 70-200mmF/2.8 DG OS HSM for Nikon F
+25886,B0B49TRCZS,3.5,4.5,<=4,Tokina at-X 107 DX Fisheye Zoom Lens 10-17mm F3.5-4.5 (IF) for Canon APS-C Compatible
+25890,B0B49YVGCH,4,,<=4,Sony SEL70200G FE 70-200mm F4 G OSS E-Mount Full Frame Interchangeable Lens - International Version (No Warranty)
+25892,B0B4B3QYRZ,1.4,,<=1.4,35mm F1.4 DG DN for Sony E Mount
+25903,B0B4MQGC61,1.8,,<=2.0,Meike 85mm F1.8 Auto Focus Medium Telephoto STM Stepping Motor Full Frame Portrait Lens Compatible with Sony E Mount Mirrorless Cameras
+25914,B0B4PF3KZM,1.8,,<=2.0,YONGNUO YN50mm F1.8N Standard Prime Lens Large Aperture Auto Manual Focus AF MF for Nikon DSLR Cameras
+25930,B0B4VT19FG,1.8,,<=2.0,Sigma 50-100mm F1.8 Art DC HSM Lens for Canon
+25932,B0B4VYNVRB,4.5,6.3,>4,"Sigma 60-600mm f/22-32 Fixed Zoom F4.5-6.3 DG OS HSM Camera Lenses, Black (730954), Canon EF"
+25943,B0B568938Z,2.8,,<=2.8,TTArtisan 40mm F2.8 APS-C Macro Lens 1:1 Magnification Manual Focus Camera Lens for Panasonic/Olympus M4/3 Camera G1 G85 GF1 GF9 GM1 GH2 GH5 EM10II EPL9 EPM1 EM10III
+25977,B0B5G2W9XT,2.8,4,<=2.8,Fuji Film Fujinon Lens XF 18-55mm F2.8-4.0 Zoom Lens - International Version (No Warranty)
+26020,B0B6135VK9,5,6.3,>4,Sigma 100-400mm F5-6.3 Contemporary DG DN OS for Sony E Mount
+26023,B0B6156DZ8,1.4,,<=1.4,Sigma 30mm F1.4 DC DN Contemporary for Fujifilm X Mount
+26127,B0B7J57NSF,2.8,,<=2.8,"TTartisan 32mm F2.8 Full-Frame Autofocus Lens, Compatible with Nikon Z-Mount Z5 Z6 Z7 Z9 Z6II Z7II Z50 ZFC Z30"
+26164,B0B823Z6GR,2.8,,<=2.8,"Sigma 213965 14-24mm F2.8 DG DN Art for Sony E Mount, Black"
+26165,B0B8241VQ5,1.4,,<=1.4,VoightLander 131521 NOKTON Classic 40mm F1.4 S.C. Single Layer Coat Lens
+26253,B0B8YGNGG8,4.5,6.3,>4,"Sigma 60-600mm f/22-32 Fixed Zoom F4.5-6.3 DG OS HSM Camera Lenses, Black (730955), Nikon F"
+26260,B0B92823CK,2.8,,<=2.8,Sigma 105mm F2.8 DG DN Macro Art (Sony E-mount)
+26281,B0B9BQX3TX,2,,<=2.0,TTArtisan 50mm F2.0 Full Frame Fuji X Mount Lens
+26301,B0B9L3SPMZ,2.8,,<=2.8,Sigma 28-70mm F2.8 DG DN for Sony E
+26320,B0B9SGGVL5,2.8,,<=2.8,Meike 12mm f/2.8 Ultra Wide Angle Manual Fixed Lens with Removeable Hood for MFT Micro Four Thirds Panasonic/Olympus Mirrorless Camera
+26351,B0BB7MTPDB,1.4,,<=1.4,Sigma 105mm F/1.4 Art DG HSM Lens for Canon with Advanced Accessory and Travel Bundle | 3 Years Extended Warranty | 105mm Canon Lens
+26354,B0BB7QTXX8,2,,<=2.0,Fujinon XF18mmF2 R
+26355,B0BB7R9J51,1.4,1.4,<=1.4,"Sigma 40mm f/1.4-1.4 Fixed Prime 40mm F1.4 DG HSM, Black (Canon Mount)"
+26357,B0BB7T2FQT,2.8,,<=2.8,Tokina AT-X 116 PRO DX-II 11-16mm f/2.8 Lens for Canon Mount
+26358,B0BB7XBRQY,2,,<=2.0,Sigma 65mm F2.0 DG DN for Sony E Mount
+26400,B0BC56PJ83,2.8,,<=2.8,Pentax K-Mount HD DA 40mm f/2.8 40-40mm Fixed Lens for Pentax KAF (Limited Black)
+26441,B0BCX5QM2P,4,,<=4,HD PENTAX-D FA 70-210mm F4ED SDM WR: Telephoto zoom lens for DSLR cameras High-performance while maintaing constant f/4 aperture Weather-resistant construction min. focusing distance of 0.95 meters
+26450,B0BD7NGRC9,4.5,6.3,>4,Pentax HD DA 55-300mm f/4.5-6.3 ED PLM WR RE Lens
+26484,B0BF5H9VKG,1.2,,<=1.4,TTArtisan 50mm F1.2 APS-C Manual Focus Large Aperture Fixed Focus Lens Black for Canon M Mount Like M1 M2 M3 M6 M6II M10 M50 M100 M200
+26538,B0BFY3Q4WJ,3.5,4.5,<=4,Tamron AF 10-24mm f/3.5-4.5 SP Di II LD Aspherical (IF) Lens for Pentax Digital SLR Cameras B001P (Model B001P)
+26544,B0BG2TZTP8,2.8,,<=2.8,Fujinon XF14mmF2.8 R
+26587,B0BGL4X382,8.3,,>4,"JINTU 420-800mm f/8.3 Manual Mirrorless Camera Lens Compatible with Canon EF-M Mount M, M2, M3, M5, M6, M10, M100, M50, M200 (Black)"
+26769,B0BKPSRKV2,2.8,,<=2.8,"TTARTISAN 27mm F2.8 Autofocus Lens, Compatible with Fuji X-Mount Cameras XS10 X-A5 X-A7 X-M1 X-M2 X-E4 X-T1 X-T10 X-T2 X-T20 X-T3 X-T4 X-T100 X-T200 X-T30 X-Pro1 X-Pro2 X-Pro3 X-E1, Black"
+26778,B0BKRQHW1D,2.8,,<=2.8,TTArtisan AF 27mm F2.8 XF Auto Focus APS-C Camera Lens Compatible with Fuji X-Mount Cameras XS10 X-A5 X-A7 X-M1 X-M2 X-E4 X-T1 X-T10 X-T2 X-T20 X-T3 X-T4 X-T100 X-T200 X-T30 X-Pro1 (Black)
+27025,B0BP64H129,5.6,,>4,"Brightin Star 23mm F5.6 Full Frame Manual Focus Prime Lens for Nikon Z-Mount Mirrorless Cameras, Pancake Fixed MF Lens, Compatible with Z-6II, Z-7II, Z5, Z50, Z9, Z50, Z-FC, Z30"
+27078,B0BQ6WX3V5,1.4,,<=1.4,"Brightin Star 50mm F1.4 Big Aperture APS-C Manual Focus Mirrorless Camera Lens, Fit for Canon EOS-M Mount M, M2, M3, M5, M6, M10, M100, M50, M200 (Black)"
+27151,B0BRCWP7G5,2,,<=2.0,"TTartisan 50mm F2 Manual Focus Lens, Compatible with Fuji X-Mount Cameras X-T4 X-T3 X-E3 X-E3 X-T30 X-100 X-S10 X-PRO3 X-T2 X-PRO1 X-PRO2 X-H1 X-T1 X-T10 X-T2 X-T3 X-T20 X-A1 X-A10 (Black)"
+27152,B0BRCXSDD9,2,,<=2.0,"TTartisan 50mm F2 Full-Frame Manual Focus Lens, Compatible with Sony E-Mount Cameras A7 A7II A7III A7R A7RII A7RIII A7RIV A7S A7SII A7SIII A9 A6400 A6000 A6600 A6100 A6500 A6300 (Black)"
+27178,B0BRS4KZ93,1.4,,<=1.4,Sigma 16mm f/1.4 DC DN Contemporary Lens for Sony E (402965)
+27327,B0BVZDXZDN,1.4,,<=1.4,VILTROX 13mm f/1.4 F1.4 Fuji x Mount Ultra Wide Angle APS-C AF Lens for Fujifilm X-Mount Camera X-T30 II X-T4 X-T3 X-Pro3 X-Pro2 X-H1 X-T2
+27397,B0BXCJJTBX,1.8,,<=2.0,Sigma 50-100mm f/1.8 DC HSM Art Lens for Nikon
+27437,B0BY6PTRCY,5,6.3,>4,"OM SYSTEM OLYMPUS M.Zuiko Digital 100-400mm F5.0-6.3 IS For Micro Four Thirds System Camera, Outdoor Bird Wildlife, Weather Sealed Design, Telephoto Compatible with Teleconverter"
+27464,B0BYN8TQ46,0.95,,<=1.4,7artisans 35mm f0.95 Large Aperture APS-C Mirrorless Cameras Lens Compact for Fuji X-T1 X-T2 X-T3 X-T20 X-T30 X-E1 X-E2 X-E3
+27666,B0C4G7SLDN,1.4,,<=1.4,"ZEISS Classic Planar ZF.2 T* 85mm f/1.4 Standard Camera Lens for Nikon F-Mount SLR DSLR Cameras, Black"
+27670,B0C4GP9DP8,2,,<=2.0,Pentax SMCP-FA 35mm f/2.0 AL Lens with Case and Hood
+27692,B0C4TGW3PT,6.3,,>4,7artisans 18mm F6.3 APS-C Lens Ultra-Thin Prime for Canon Eos-M1 Eos-M2 Eos-M3 M5 M6 M10 M100 M50 Compact Mirrorless Cameras
+27709,B0C5599B9L,2.8,,<=2.8,7artisans 7.5mm F2.8 APS-C Wide Angle Fisheye Fixed Lens for Compact Mirrorless Cameras M4/3 Mount for Panasonic GH3 GH4 GF1 GM1 GM5 for Olympus E-M1 E-M5 E-M10
+27776,B0C62JR3NV,2.8,,<=2.8,"Panasonic LUMIX Professional 12-35mm Camera Lens G X VARIO II, F2.8 ASPH, Dual I.S. 2.0 with Power O.I.S., Mirrorless Micro Four Thirds, H-HSA12035 (2017 Model, Black)"
+27779,B0C669SCQ5,1.1,,<=1.4,"7artisans 50mm f/1.1 Manual Focus Lens Compatible for Leica M Mount Camera, M-M M240 M3 M6 M7 M8 M9p M10 - Black"
+27889,B0CCH155XZ,1.8,,<=2.0,"VILTROX 85mm F1.8 Mark II Auto Focus Full Frame Lens for Sony E Mount, STM Large Aperture Medium Telephoto Portrait Fixed Focus Lens for Sony Camera A9 A7R3 A7III A7RIII A7M3 A7S2 A6500 A6300"
+27898,B0CCZJJRVS,5.6,8,>4,Canon RF100-400mm F5.6-8 is USM
+27913,B0CDQC8CQX,3.5,6.3,<=4,Tamron 18-300mm F/3.5-6.3 Di III-A VC VXD for Fujifilm X-Mount (Tamron 6 Year Limited USA Warranty
+27926,B0CFM38ST9,1.8,,<=2.0,Sony E 11mm F1.8 APS-C Ultra-Wide-Angle Prime for APS-C Cameras
+27928,B0CFM3WFMR,1.8,,<=2.0,Sony FE 14mm F1.8 GM Full-Frame Large-Aperture Wide Angle Prime G Master Lens
+27931,B0CFWKNNJK,1.8,,<=2.0,"Sony FE 20mm F1.8 G Full-Frame Large-Aperture Ultra-Wide Prime Angle G Lens, Model: SEL20F18G,Black"
+27932,B0CFX2LJCB,3.5,6.3,<=4,Sony SEL24240 FE 24-240mm f/3.5-6.3 OSS Zoom Lens for Mirrorless Cameras
+27936,B0CGMNQQ7X,2.8,,<=2.8,Sony FE 70-200mm f/2.8 GM OSS Lens

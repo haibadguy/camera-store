@@ -1,0 +1,24 @@
+============================================================
+NỘI DUNG 3 — LOẠI SẢN PHẨM, NGÀM, MA TRẬN TƯƠNG THÍCH
+============================================================
+-> 27,940 sản phẩm, 67,661 người dùng
+-> dùng cache metadata: ai/data/interim\meta_k5_min.jsonl (27,940 dòng)
+-> dùng cache asin con: ai/data/interim\child_asins_k5.json
+
+THỐNG KÊ LOẠI / NGÀM
+• loại: {'phu_kien': 24301, 'than': 543, 'khac': 1757, 'ong': 1339}
+• than: nguồn ngàm / trạng thái: {'dong_may': 530, 'tieu_de': 7, 'khong_ro': 6}
+• ong: nguồn ngàm / trạng thái: {'tieu_de': 838, 'hang_slr': 271, 'khong_ro': 169, 'dong_may_nhac_toi': 57, 'vong_t': 4}
+• phu_kien: nguồn ngàm / trạng thái: {'khong_co': 23138, 'tieu_de': 1110, 'hang_slr': 27, 'dong_may_nhac_toi': 26}
+• thân có 1 ngàm: 537 | ống có 1 ngàm: 1,167 (trong đó 'không chắc' QĐ 4: 134) -> ống vào M: 1,033
+• khung thân: {'ff': 106, 'khac': 102, 'apsc': 328, 'khong_ro': 1} | thân máy phim (QĐ 16): 18
+• khung ống : {'ff': 469, 'khong_ro': 205, 'apsc': 353, 'khac': 140}
+• ngàm thân : {'canon_efs': 97, 'nikon_f': 86, 'mft': 71, 'sony_e': 57, 'canon_ef': 35, 'pentax_k': 34, 'sony_a': 32, 'fuji_x': 29, 'samsung_nx': 20, 'canon_efm': 16, 'nikon_z': 13, 'canon_rf': 12, 'nikon_1': 10, 'four_thirds': 8, 'l_mount': 4, 'pentax_q': 4, 'fuji_g': 3, 'sigma_sa': 2, 'leica_m': 2, 'canon_fd': 2}
+• ngàm ống  : {'canon_ef': 273, 'nikon_f': 261, 'sony_e': 208, 'mft': 114, 'fuji_x': 72, 'pentax_k': 45, 'canon_efs': 42, 'sony_a': 39, 'canon_rf': 24, 'canon_efm': 22, 'nikon_z': 20, 'four_thirds': 19, 'samsung_nx': 11, 'nikon_1': 7, 'leica_m': 5, 'canon_fd': 2, 't_mount': 1, 'm42': 1, 'l_mount': 1}
+
+MA TRẬN M (thân x ống, không gồm ống 'không chắc')
+• kích thước: 537 x 1,033 = 554,721 cặp
+• M = 1: 72,720 (13.11%) | không biết: 5,846 (1.05%)
+• số cặp theo mức: {'incompatible': 459854, 'compatible_with': 70472, '(ống không chắc) incompatible': 59373, 'requires_adapter': 16301, '(ống không chắc) compatible_with': 9045, 'unknown': 5846, '(ống không chắc) requires_adapter': 2419, 'crops_sensor': 2248, '(ống không chắc) unknown': 848, '(ống không chắc) crops_sensor': 273}
+• trong các cặp M = 1, gắn cờ 'chưa rõ có cắt khung' (QĐ 11): 1,686
+• số cặp theo luật: {'(mặc định)': 458384, 'same_mount_lens_covers_body': 36277, 'canon_ef_efs_on_efs_body': 27742, 'same_mount_body_apsc_lens_unknown_khung': 4767, 'canon_ef_efs_on_efm_adapter': 4576, 'canon_ef_efs_on_rf_adapter': 3432, 'canon_ef_apsc_on_ef_ff_body': 2992, 'nikon_f_on_z_adapter': 2847, 'film_body_unknown': 2819, 'nikon_f_on_1_adapter': 2190, 'sony_a_on_e_adapter': 1710, 'same_mount_ff_body_lens_khung_unknown_autocrop': 1686, 'canon_efs_on_ef_body': 1470, 'four_thirds_on_mft_adapter': 1278, 'nikon_dx_on_fx_f': 1254, 'sony_e_apsc_on_ff': 846, 'pentax_k_on_q_adapter': 152, 'leica_m_on_fuji_x_adapter': 116, 'pentax_da_on_k_ff': 84, 'sony_dt_on_a_ff': 48, 'same_mount_other': 35, 'nikon_dx_on_fx_z': 16}

@@ -1,47 +1,103 @@
 {
-  "node_counts": {
-    "user": 70424,
-    "item": 28867,
-    "mount": 8,
-    "usecase": 7
-  },
-  "edge_counts_forward": {
-    "interacted_with": 482149,
-    "compatible_with": 3258,
-    "has_mount": 257,
-    "suitable_for": 441
-  },
-  "item_type_counts": {
-    "body": 106,
-    "lens": 151,
-    "accessory": 28610
-  },
-  "coverage": {
-    "items_with_kg_edges": 257,
-    "items_without_kg_edges": 28610,
-    "pct_items_without_kg_edges": 99.11,
-    "users_with_linked_body_in_train": 2491
-  },
-  "compat_skipped": 0,
-  "compat_skip_rate_pct": 0.0,
-  "unknown_mounts": [],
-  "unknown_usecase_labels": [
-    "All-around",
-    "Architecture",
-    "Beginner",
-    "Commercial",
-    "Event",
-    "Everyday",
-    "Macro",
-    "Pancake",
-    "Video"
-  ],
-  "notes": {
-    "train_interactions": 482149,
-    "full_kcore_interactions": 622997,
-    "val_interactions": 70424,
-    "test_interactions": 70424,
-    "requires_adapter": "Out of scope — native mount compatibility only",
-    "learnable_embeddings": "Defined in model (Mục 5), not stored in data.pt"
-  }
+ "nut": {
+  "user": 67661,
+  "item": 27940,
+  "mount": 23,
+  "sensor_format": 7,
+  "focal_range": 6,
+  "aperture_class": 5,
+  "usecase": 4,
+  "tong": 95646
+ },
+ "item_theo_loai": {
+  "phu_kien": 24301,
+  "than": 543,
+  "khac": 1757,
+  "ong": 1339
+ },
+ "canh_xuoi": {
+  "interacted_with": 460193,
+  "compatible_with": 70472,
+  "crops_sensor": 2248,
+  "requires_adapter": 16301,
+  "has_spec_mount": 2968,
+  "has_spec_sensor_format": 1498,
+  "has_spec_focal_range": 2427,
+  "has_spec_aperture_class": 1288,
+  "suitable_for": 1080
+ },
+ "canh_xuoi_tong": 558475,
+ "canh_ke_ca_rev": {
+  "user__interacted_with__item": 460193,
+  "item__compatible_with__item": 70472,
+  "item__crops_sensor__item": 2248,
+  "item__requires_adapter__item": 16301,
+  "item__has_spec__mount": 2968,
+  "item__has_spec__sensor_format": 1498,
+  "item__has_spec__focal_range": 2427,
+  "item__has_spec__aperture_class": 1288,
+  "item__suitable_for__usecase": 1080,
+  "item__rev_interacted_with__user": 460193,
+  "item__rev_compatible_with__item": 70472,
+  "item__rev_crops_sensor__item": 2248,
+  "item__rev_requires_adapter__item": 16301,
+  "mount__rev_has_spec__item": 2968,
+  "sensor_format__rev_has_spec__item": 1498,
+  "focal_range__rev_has_spec__item": 2427,
+  "aperture_class__rev_has_spec__item": 1288,
+  "usecase__rev_suitable_for__item": 1080
+ },
+ "has_spec_mount_theo_nguon": {
+  "ong/khong_phai_ngam_chuyen": 1167,
+  "phu_kien/khong_phai_ngam_chuyen": 954,
+  "phu_kien/phia_ong": 155,
+  "phu_kien/phia_than": 155,
+  "than/khong_phai_ngam_chuyen": 537
+ },
+ "has_spec_sensor_format_theo_khung": {
+  "ff": 575,
+  "aps_h": 6,
+  "apsc": 681,
+  "four_thirds": 212,
+  "one_inch": 17,
+  "small": 4,
+  "medium": 3
+ },
+ "has_spec_focal_range_theo_khoang": {
+  "<24": 440,
+  "24-35": 496,
+  "36-70": 577,
+  "71-135": 470,
+  "136-300": 318,
+  ">300": 126
+ },
+ "has_spec_aperture_class_theo_khoang": {
+  "<=1.4": 156,
+  "<=2.0": 237,
+  "<=2.8": 340,
+  "<=4": 389,
+  ">4": 166
+ },
+ "suitable_for_theo_nhan": {
+  "phong_canh": 560,
+  "the_thao_chim": 287,
+  "chan_dung": 147,
+  "macro": 86
+ },
+ "ong": {
+  "tong": 1339,
+  "doc_duoc_tieu_cu_khau_do": 1288,
+  "khong_chac_QD4": 134,
+  "doc_duoc_ma_khong_nhan_muc_dich": 308
+ },
+ "has_spec_mount_ngam_khong_chac": 134,
+ "compatible_with_crop_unknown": 1686,
+ "M_nnz": 72720,
+ "unknown_nnz": 5846,
+ "than_may_phim": 18,
+ "phien_ban": {
+  "lens_specs": "v1",
+  "usecase_rules": "0.3",
+  "mount_rules": "0.5"
+ }
 }

@@ -1,0 +1,181 @@
+======================================================================
+NỘI DUNG 4 — ĐỒ THỊ TRI THỨC
+======================================================================
+-> người dùng 67,661 | sản phẩm 27,940
+-> loại sản phẩm (item_attributes.csv): {'phu_kien': 24301, 'than': 543, 'khac': 1757, 'ong': 1339}
+-> M 537 x 1033, nnz 72,720 | unknown_mask nnz 5,846
+-> compat_pairs.csv: 107,452 dòng (mọi cặp khác incompatible, kể cả ống 'không chắc')
+-> luật mục đích: usecase_rules.toml v0.3, nhãn ['phong_canh', 'the_thao_chim', 'chan_dung', 'macro']; bộ đọc lens_specs v1
+-> luật ngàm: mount_rules.toml v0.5
+
+[interacted_with] train.txt: 460,193 dòng cặp, 460,193 cặp khác nhau
+[compatible_with] 70,472 cạnh
+[crops_sensor] 2,248 cạnh
+[requires_adapter] 16,301 cạnh
+   không thành cạnh: {'mức unknown': 5846, 'ống không chắc, mức compatible_with': 9045, 'ống không chắc, mức crops_sensor': 273, 'ống không chắc, mức requires_adapter': 2419, 'ống không chắc, mức unknown': 848}
+
+[has_spec -> mount] 23 nút ngàm; 2,968 cạnh: {('than', 'khong_phai_ngam_chuyen'): 537, ('ong', 'khong_phai_ngam_chuyen'): 1167, ('phu_kien', 'khong_phai_ngam_chuyen'): 954, ('phu_kien', 'phia_than'): 155, ('phu_kien', 'phia_ong'): 155}; có cờ ngam_khong_chac: 134
+[has_spec -> sensor_format] 1,498 cạnh: {'ff': 575, 'aps_h': 6, 'apsc': 681, 'four_thirds': 212, 'one_inch': 17, 'small': 4, 'medium': 3}
+[has_spec -> focal_range] ống 1,339, đọc được tiêu cự + khẩu độ 1,288; 2,427 cạnh: {'<24': 440, '24-35': 496, '36-70': 577, '71-135': 470, '136-300': 318, '>300': 126}
+[has_spec -> aperture_class] 1,288 cạnh: {'<=1.4': 156, '<=2.0': 237, '<=2.8': 340, '<=4': 389, '>4': 166}
+[suitable_for] 1,080 cạnh: {'phong_canh': 560, 'the_thao_chim': 287, 'chan_dung': 147, 'macro': 86}; ống đọc được mà không nhãn: 308
+
+HeteroData: 7 loại nút, 9 loại cạnh xuôi, 18 loại cạnh kể cả rev_*
+
+======================================================================
+KIỂM TRA TOÀN VẸN (content4_design mục 6A)
+======================================================================
+  [1] ĐẠT: ('user', 'interacted_with', 'item'): 460,193 cạnh, chỉ số trong [0,67661) x [0,27940), không lặp (460,193 cặp khác nhau)
+  [1] ĐẠT: ('item', 'compatible_with', 'item'): 70,472 cạnh, chỉ số trong [0,27940) x [0,27940), không lặp (70,472 cặp khác nhau)
+  [1] ĐẠT: ('item', 'crops_sensor', 'item'): 2,248 cạnh, chỉ số trong [0,27940) x [0,27940), không lặp (2,248 cặp khác nhau)
+  [1] ĐẠT: ('item', 'requires_adapter', 'item'): 16,301 cạnh, chỉ số trong [0,27940) x [0,27940), không lặp (16,301 cặp khác nhau)
+  [1] ĐẠT: ('item', 'has_spec', 'mount'): 2,968 cạnh, chỉ số trong [0,27940) x [0,23), không lặp (2,968 cặp khác nhau)
+  [1] ĐẠT: ('item', 'has_spec', 'sensor_format'): 1,498 cạnh, chỉ số trong [0,27940) x [0,7), không lặp (1,498 cặp khác nhau)
+  [1] ĐẠT: ('item', 'has_spec', 'focal_range'): 2,427 cạnh, chỉ số trong [0,27940) x [0,6), không lặp (2,427 cặp khác nhau)
+  [1] ĐẠT: ('item', 'has_spec', 'aperture_class'): 1,288 cạnh, chỉ số trong [0,27940) x [0,5), không lặp (1,288 cặp khác nhau)
+  [1] ĐẠT: ('item', 'suitable_for', 'usecase'): 1,080 cạnh, chỉ số trong [0,27940) x [0,4), không lặp (1,080 cặp khác nhau)
+  [1] ĐẠT: ('item', 'rev_interacted_with', 'user'): 460,193 cạnh, chỉ số trong [0,27940) x [0,67661), không lặp (460,193 cặp khác nhau)
+  [1] ĐẠT: ('item', 'rev_compatible_with', 'item'): 70,472 cạnh, chỉ số trong [0,27940) x [0,27940), không lặp (70,472 cặp khác nhau)
+  [1] ĐẠT: ('item', 'rev_crops_sensor', 'item'): 2,248 cạnh, chỉ số trong [0,27940) x [0,27940), không lặp (2,248 cặp khác nhau)
+  [1] ĐẠT: ('item', 'rev_requires_adapter', 'item'): 16,301 cạnh, chỉ số trong [0,27940) x [0,27940), không lặp (16,301 cặp khác nhau)
+  [1] ĐẠT: ('mount', 'rev_has_spec', 'item'): 2,968 cạnh, chỉ số trong [0,23) x [0,27940), không lặp (2,968 cặp khác nhau)
+  [1] ĐẠT: ('sensor_format', 'rev_has_spec', 'item'): 1,498 cạnh, chỉ số trong [0,7) x [0,27940), không lặp (1,498 cặp khác nhau)
+  [1] ĐẠT: ('focal_range', 'rev_has_spec', 'item'): 2,427 cạnh, chỉ số trong [0,6) x [0,27940), không lặp (2,427 cặp khác nhau)
+  [1] ĐẠT: ('aperture_class', 'rev_has_spec', 'item'): 1,288 cạnh, chỉ số trong [0,5) x [0,27940), không lặp (1,288 cặp khác nhau)
+  [1] ĐẠT: ('usecase', 'rev_suitable_for', 'item'): 1,080 cạnh, chỉ số trong [0,4) x [0,27940), không lặp (1,080 cặp khác nhau)
+  [1] ĐẠT: compatible_with: đầu là thân, cuối là ống (sai: 0)
+  [1] ĐẠT: crops_sensor: đầu là thân, cuối là ống (sai: 0)
+  [1] ĐẠT: requires_adapter: đầu là thân, cuối là ống (sai: 0)
+  [2] ĐẠT: interacted_with = tập cặp train.txt: 460,193 cạnh, train 460,193 dòng cặp, kỳ vọng 460,193
+  [2] ĐẠT: giao với val = 0, với test = 0 (val 67,661, test 67,661 cặp)
+  [3] ĐẠT: compatible_with 70,472 + crops_sensor 2,248 = 72,720; nnz(M) = 72,720; kỳ vọng 72,720; trùng từng cặp với M: True
+  [3] ĐẠT: requires_adapter 16,301 cạnh = các dòng requires_adapter (ống chắc chắn) của compat_pairs.csv (16,301)
+  [3] ĐẠT: ba quan hệ thân–ống không trùng cặp: [('compatible_with', 'crops_sensor', 0), ('compatible_with', 'requires_adapter', 0), ('crops_sensor', 'requires_adapter', 0)]
+  [3] ĐẠT: không cặp nào thuộc unknown_mask (giao = 0, unknown_mask 5,846 cặp)
+  [3] ĐẠT: không cạnh nào tới ống 'không chắc' (QĐ 4-5; 134 ống)
+  [4] ĐẠT: compatible_with: luật của từng cạnh có đúng mức và khớp ngàm hai đầu (sai 0); cùng ngàm 46,804/70,472; cặp ngàm (thân, ống): {('canon_ef', 'canon_ef'): 4300, ('canon_efm', 'canon_efm'): 272, ('canon_efs', 'canon_ef'): 23668, ('canon_efs', 'canon_efs'): 4074, ('canon_rf', 'canon_rf'): 288, ('four_thirds', 'four_thirds'): 144, ('fuji_x', 'fuji_x'): 1798, ('mft', 'mft'): 7313, ('nikon_1', 'nikon_1'): 70, ('nikon_f', 'nikon_f'): 16047, ('nikon_z', 'nikon_z'): 212, ('pentax_k', 'pentax_k'): 1170, ('samsung_nx', 'samsung_nx'): 220, ('sony_a', 'sony_a'): 912, ('sony_e', 'sony_e'): 9984}
+  [4] ĐẠT: crops_sensor: luật của từng cạnh có đúng mức và khớp ngàm hai đầu (sai 0); cùng ngàm 2,248/2,248; cặp ngàm (thân, ống): {('nikon_f', 'nikon_f'): 1254, ('nikon_z', 'nikon_z'): 16, ('pentax_k', 'pentax_k'): 84, ('sony_a', 'sony_a'): 48, ('sony_e', 'sony_e'): 846}
+  [4] ĐẠT: requires_adapter: luật của từng cạnh có đúng mức và khớp ngàm hai đầu (sai 0); cùng ngàm 0/16,301; cặp ngàm (thân, ống): {('canon_efm', 'canon_ef'): 3904, ('canon_efm', 'canon_efs'): 672, ('canon_rf', 'canon_ef'): 2928, ('canon_rf', 'canon_efs'): 504, ('fuji_x', 'leica_m'): 116, ('mft', 'four_thirds'): 1278, ('nikon_1', 'nikon_f'): 2190, ('nikon_z', 'nikon_f'): 2847, ('pentax_q', 'pentax_k'): 152, ('sony_e', 'sony_a'): 1710}
+  [5] ĐẠT: thân + ống có 1 ngàm 1,704 -> đúng 1 cạnh, trùng cột mount, src_phu_kien = 0; phụ kiện có 1 ngàm 954 -> 1 cạnh, src_phu_kien = 1; ngàm chuyển 155 -> 2 cạnh (phia_ong, phia_than), src_phu_kien = 1; sản phẩm khác 0 cạnh (sai 0)
+  [5] ĐẠT: cờ ngam_khong_chac: 134 cạnh = 134 ống 'không chắc' (mỗi ống 1 cạnh), các cạnh khác cờ 0
+  [5] ĐẠT: tổng cạnh has_spec -> mount 2,968 = 1,704 + 954 + 2 x 155
+  [6] ĐẠT: 18 thân máy phim, số cạnh compatible_with / crops_sensor / requires_adapter: 0
+
+Đã ghi: kg_hetero.pt, kg_node_index.json, kg_stats.json, kg_edges_interacted_with.csv, kg_edges_compatible_with.csv, kg_edges_crops_sensor.csv, kg_edges_requires_adapter.csv, kg_edges_has_spec_mount.csv, kg_edges_has_spec_sensor_format.csv, kg_edges_has_spec_focal_range.csv, kg_edges_has_spec_aperture_class.csv, kg_edges_suitable_for.csv
+  [7] ĐẠT: torch.load đọc lại khớp từng tensor: True; đồ thị đồng nhất 95,646 nút, 1,116,950 cạnh, 18 quan hệ; RGCNConv trên cuda (NVIDIA GeForce GTX 1660 Ti) ra (95646, 16), hữu hạn
+
+=> Kiểm tra 6A (1–7): ĐẠT cả. Kiểm tra 8 (chạy 2 lần, so sha256) làm ngoài script.
+
+======================================================================
+ĐỌC BẰNG MẮT (mục 6B): 10 cạnh mỗi quan hệ, random.Random(20261008).sample trên danh sách cạnh đã sắp
+======================================================================
+-- interacted_with (460,193)
+   user 22598 -> [phu_kien 3292] Compact Battery Charger Set + Li-Ion Battery for Sony NP-FM500H
+   user 3518 -> [phu_kien 4115] Quick Neck Shoulder Strap for Canon Nikon Olympus Pentax Panasonic Son
+   user 33793 -> [phu_kien 2404] The Flash X-Tender Better Beamer FX-6 Flash Output Booster for Nikon S
+   user 18472 -> [phu_kien 11488] Altura Photo IR Universal Wireless Remote Control for Canon Nikon Sony
+   user 11797 -> [phu_kien 13456] Giottos AA1900 Rocket Air Blaster Large - Black
+   user 21603 -> [than 5955] Sony NEX-5N 16.1 MP Compact Interchangeable Lens Touchscreen Camera wi
+   user 6752 -> [phu_kien 5438] Paterson Changing Bag 27.5" x 27.5"
+   user 55188 -> [than 2980] Panasonic Lumix DMC-GF1 12.1MP Micro Four-Thirds Interchangeable Lens 
+   user 16483 -> [phu_kien 25168] 58MM Complete Lens Filter Accessory Kit (UV, CPL, ND4, ND2, ND4, ND8 a
+   user 24034 -> [phu_kien 8551] Nikon 8247 ACULON A211 7x50 Binocular (Black)
+-- compatible_with (70,472)
+   [than 12902] Canon EOS Rebel T6s Digital SLR with EF-S 18-135mm is S (canon_efs/apsc) -> [ong 20518] Canon EF 50mm f/1.8 STM Lens (Renewed) (canon_ef/ff) | canon_ef_efs_on_efs_body
+   [than 1505] Nikon D40x 10.2MP Digital SLR Camera with 18-135mm f/3. (nikon_f/apsc) -> [ong 13431] AF-S DX Nkr 18-200mm F/3.5-5.6G ED VR II (nikon_f/apsc) | same_mount_lens_covers_body
+   [than 18830] Canon T6 EOS Rebel DSLR Camera with EF-S 18-55mm f/3.5- (canon_efs/apsc) -> [ong 19730] Canon EF 100-400mm f/4.5-5.6L IS II USM Lens with UV Pr (canon_ef/ff) | canon_ef_efs_on_efs_body
+   [than 11711] Nikon D3200 24.2 Megapixel HD Video,Wi-Fi Compatibility (nikon_f/apsc) -> [ong 3680] Nikon AF-S FX NIKKOR 200-400mm f/4G ED Vibration Reduct (nikon_f/ff) | same_mount_lens_covers_body
+   [than 7246] Canon EOS Rebel T4i 18.0 MP CMOS Digital Camera with 18 (canon_efs/apsc) -> [ong 6947] Tamron SP 24-70mm F/2.8 Di VC USD, Canon - Objetivo (Ca (canon_ef/ff) | canon_ef_efs_on_efs_body
+   [than 12723] Canon EOS 7D Mark II 20.2MP HD 1080p DSLR Camera Body O (canon_efs/apsc) -> [ong 11262] High-Power 500mm/1000mm f/8 Manual Telephoto Lens for C (canon_ef/khong_ro) | canon_ef_efs_on_efs_body
+   [than 3405] OLYMPUS 262855 12.3 Megapixel E-PL1 Pen Camera (Black c (mft/khac) -> [ong 18206] Olympus M.Zuiko Digital ED 14-150mm F4.0-5.6 II Lens, f (mft/khac) | same_mount_lens_covers_body
+   [than 10653] Canon EOS Rebel T5i Digital Camera HD Video & EF-S 18-5 (canon_efs/apsc) -> [ong 12886] Rokinon 135mm F2.0 ED UMC Telephoto Lens for Canon Digi (canon_ef/khong_ro) | canon_ef_efs_on_efs_body
+   [than 13497] Nikon D300 DX 12.3MP Digital SLR Camera (Body Only) (nikon_f/apsc) -> [ong 15673] Super 500mm/1000mm f/8 Mirror Telephoto Lens for Nikon  (nikon_f/khong_ro) | same_mount_body_apsc_lens_unknown_khung
+   [than 10715] Sony Alpha a6000 24.3 Interchangeable Lens Camera with  (sony_e/apsc) -> [ong 11111] Rokinon Cine CV12M-E 12mm T2.2 Cine Fixed Lens for Sony (sony_e/khong_ro) | same_mount_body_apsc_lens_unknown_khung
+-- crops_sensor (2,248)
+   [than 14440] Sony a7R II Full-Frame Mirrorless Interchangeable Lens  (sony_e/ff) -> [ong 19783] Sony 18-135mm F3.5-5.6 OSS APS-C E-Mount Zoom Lens (sony_e/apsc) | sony_e_apsc_on_ff
+   [than 2456] Nikon D3X 24.5MP FX CMOS Digital SLR with 3.0-Inch LCD  (nikon_f/ff) -> [ong 13463] Nikon AF-S DX NIKKOR 10-24mm f/3.5-4.5G ED Zoom Lens wi (nikon_f/apsc) | nikon_dx_on_fx_f
+   [than 20751] Sony Alpha a7 III 24MP UHD 4K Mirrorless Digital Camera (sony_e/ff) -> [ong 6399] Sony Sonnar T E 24mm F1.8 ZA Lens | SEL24F18Z- Internat (sony_e/apsc) | sony_e_apsc_on_ff
+   [than 13429] Nikon D800 36.3 MP CMOS FX-Format Digital SLR Camera (B (nikon_f/ff) -> [ong 1627] Sigma 17-70mm f/2.8-4.5 DC HSM Macro Lens for Nikon DSL (nikon_f/apsc) | nikon_dx_on_fx_f
+   [than 12370] Nikon Df 16.2 MP CMOS FX-Format Digital SLR Camera Body (nikon_f/ff) -> [ong 10452] Nikon AF-S DX NIKKOR 18-55mm f/3.5-5.6G Vibration Reduc (nikon_f/apsc) | nikon_dx_on_fx_f
+   [than 14256] Nikon D610 24.3 MP CMOS FX-Format Digital SLR Camera (B (nikon_f/ff) -> [ong 13889] Nikon AF-S DX NIKKOR 16-80mm f/2.8-4E ED Vibration Redu (nikon_f/apsc) | nikon_dx_on_fx_f
+   [than 6521] Nikon D4 16.2 MP CMOS FX Digital SLR with Full 1080p HD (nikon_f/ff) -> [ong 607] Nikon AF-S DX NIKKOR 17-55mm f/2.8G IF-ED Zoom Lens wit (nikon_f/apsc) | nikon_dx_on_fx_f
+   [than 12608] Sony ILCE7S/B Alpha a7S Mirrorless Digital Camera (sony_e/ff) -> [ong 13439] Sony SEL35F18 35mm f/1.8 Prime Fixed Lens (sony_e/apsc) | sony_e_apsc_on_ff
+   [than 14938] Nikon D5 20.8 MP FX-Format Digital SLR Camera Body (CF  (nikon_f/ff) -> [ong 1279] Nikon 18-135mm f/3.5-5.6G ED-IF AF-S DX Zoom-Nikkor Len (nikon_f/apsc) | nikon_dx_on_fx_f
+   [than 12608] Sony ILCE7S/B Alpha a7S Mirrorless Digital Camera (sony_e/ff) -> [ong 20371] Sony E 55-210mm F4.5-6.3 Lens for Sony E-Mount Cameras  (sony_e/apsc) | sony_e_apsc_on_ff
+-- requires_adapter (16,301)
+   [than 13252] Nikon 1 J5 Mirrorless Digital Camera w/ 10-30mm PD-ZOOM (nikon_1/khac) -> [ong 19319] Nikon AF-S DX NIKKOR 18-300mm f/3.5-5.6G ED Vibration R (nikon_f/apsc) | nikon_f_on_1_adapter
+   [than 6139] Panasonic Lumix DMC-GX1K 16 MP Micro 4/3 Mirrorless Dig (mft/khac) -> [ong 592] Olympus 50-200mm Zuiko Digital f/2.8-3.5 ED Lens for Di (four_thirds/khac) | four_thirds_on_mft_adapter
+   [than 19448] Canon EOS M50 Mirrorless 4K Vlogging Camera Bundle Kit  (canon_efm/apsc) -> [ong 19995] YONGNUO YN EF 50mm f/1.8 AF Lens 1:1.8 Standard Prime L (canon_ef/khong_ro) | canon_ef_efs_on_efm_adapter
+   [than 12365] Nikon 1 V3 Digital Camera with 1 NIKKOR 10-30mm PD-Zoom (nikon_1/khac) -> [ong 12133] Opteka 420-1600mm f/8.3 HD Telephoto Zoom Lens for Niko (nikon_f/khong_ro) | nikon_f_on_1_adapter
+   [than 27072] Nikon Z 6II Full Frame 24.5MP 4K Video Mirrorless Digit (nikon_z/ff) -> [ong 12603] Beach Camera Nikon 55-300mm f/4.5-5.6G ED VR AF-S DX Ni (nikon_f/apsc) | nikon_f_on_z_adapter
+   [than 8448] Nikon 1 S1 10.1 MP HD Digital Camera System with 11-27. (nikon_1/khac) -> [ong 26253] Sigma 60-600mm f/22-32 Fixed Zoom F4.5-6.3 DG OS HSM Ca (nikon_f/ff) | nikon_f_on_1_adapter
+   [than 13099] Sony Alpha a5100 Wi-Fi Digital Camera & 16-50mm 55-210m (sony_e/apsc) -> [ong 2999] Sony 28-75mm f/2.8 Smooth Autofocus Motor (SAM) Full Fr (sony_a/khong_ro) | sony_a_on_e_adapter
+   [than 27842] Canon EOS R3 Body (canon_rf/ff) -> [ong 7508] Canon EF 50mm f/1.8 II Lens with 3 UV/CPL/ND8 Filters + (canon_ef/ff) | canon_ef_efs_on_rf_adapter
+   [than 7847] Sony NEX-6/B Mirrorless Digital Camera with 3-Inch LED  (sony_e/apsc) -> [ong 1098] Sony DT 18-70mm f/3.5-5.6 Aspherical ED Standard Zoom L (sony_a/apsc) | sony_a_on_e_adapter
+   [than 27072] Nikon Z 6II Full Frame 24.5MP 4K Video Mirrorless Digit (nikon_z/ff) -> [ong 204] Tamron 28-300mm f/3.5-6.3 XR LD Aspherical Macro Ultra  (nikon_f/ff) | nikon_f_on_z_adapter
+-- has_spec_mount (2,968)
+   [than 10653] Canon EOS Rebel T5i Digital Camera HD Video & EF-S 18-55 f/3.5-5.6 IS  -> canon_efs | src_phu_kien=0 | khong_phai_ngam_chuyen
+   [ong 1099] Sony DT 18-200mm f/3.5-6.3 Aspherical ED High Magnification Zoom Lens  -> sony_a | src_phu_kien=0 | khong_phai_ngam_chuyen
+   [phu_kien 15816] Lens Collar Foot Tripod Mount Ring Stand Base for Canon EF 100-400mm f -> canon_ef | src_phu_kien=1 | khong_phai_ngam_chuyen
+   [phu_kien 8628] JJC RM-DSLR2 Wireless Remote Control, Compatible with Sony NEX-5T NEX- -> sony_e | src_phu_kien=1 | khong_phai_ngam_chuyen
+   [phu_kien 5346] Fotodiox Pro, Premium Grade Tripod Mount Lens Collar for Canon EOS EF  -> canon_ef | src_phu_kien=1 | khong_phai_ngam_chuyen
+   [phu_kien 10174] Fotasy HS1650 Metal Lens Hood and Lens Cap for Sony E PZ 16-50mm f/3.5 -> sony_e | src_phu_kien=1 | khong_phai_ngam_chuyen
+   [phu_kien 2797] Sony ALCSH108 Lens Hood for Sony SAL1855 Zoom Lens - Black -> sony_a | src_phu_kien=1 | khong_phai_ngam_chuyen
+   [ong 27078] Brightin Star 50mm F1.4 Big Aperture APS-C Manual Focus Mirrorless Cam -> canon_efm | src_phu_kien=0 | khong_phai_ngam_chuyen | ngam_khong_chac
+   [phu_kien 7517] JJC MSA-10 Hot Shoe Flash Adapter for Sony NEX3 NEX-3C NEX5N (Black) -> sony_e | src_phu_kien=1 | khong_phai_ngam_chuyen
+   [phu_kien 11382] CamDesign Body Cap & Camera Rear Lens Cover Compatible with Canon EOS  -> canon_rf | src_phu_kien=1 | khong_phai_ngam_chuyen
+-- has_spec_sensor_format (1,498)
+   [ong 10700] Canon EF 100-400mm f/4.5-5.6L is II USM Zoom Telephoto Lens + Filter K -> ff (khung ff, ngàm canon_ef)
+   [than 809] Nikon F6 AF 35mm Film SLR Camera (Body Only) -> ff (khung ff, ngàm nikon_f)
+   [than 15454] Canon EOS 7D 18 MP CMOS Digital SLR Camera with 18-135mm f/3.5-5.6 IS  -> apsc (khung apsc, ngàm canon_efs)
+   [ong 8506] Samsung NX 50-200mm f/4.0-5.6 OIS Zoom Camera Lens (White) -> apsc (khung apsc, ngàm samsung_nx)
+   [ong 4816] Nikon AF Nikkor 70-210mm 1:4-5.6 Zoom Lens -> ff (khung ff, ngàm nikon_f)
+   [ong 10084] Fujifilm XF27mmF2.8 - Black -> apsc (khung apsc, ngàm fuji_x)
+   [than 1665] Canon EOS 40D 10.1MP Digital SLR Camera with EF 28-135mm f/3.5-5.6 IS  -> apsc (khung apsc, ngàm canon_efs)
+   [ong 26544] Fujinon XF14mmF2.8 R -> apsc (khung apsc, ngàm fuji_x)
+   [ong 7175] Zeiss 15mm f/2.8 Distagon T ZF.2 Series Lens for Nikon F Mount SLR Cam -> ff (khung ff, ngàm nikon_f)
+   [ong 11527] Samyang SY12M-MFT-BK 12mm F2.0 Ultra Wide Angle Fixed Lens for Olympus -> four_thirds (khung khac, ngàm mft)
+-- has_spec_focal_range (2,427)
+   [ong 13200] Tamron AF 28-75mm f/2.8 XR Di LD Aspherical (IF) Autofocus Lens for Ca -> 24-35 (đọc 28-75mm)
+   [ong 781] Canon EF-S 17-85mm f/4-5.6 Image Stabilized USM SLR Lens for EOS Digit -> 71-135 (đọc 17-85mm)
+   [ong 19061] Tamron 100-400mm f/4.5-6.3 Di VC USD Lens for Nikon F with Altura Phot -> >300 (đọc 100-400mm)
+   [ong 9749] Sony E PZ 18-105mm f/4 G OSS Lens for Sony Digital SLR Cameras - Inter -> 24-35 (đọc 18-105mm)
+   [ong 4874] Rokinon 14mm f/2.8 IF ED UMC Ultra Wide Angle Fixed Lens w/ Built-in A -> <24 (đọc 14mm)
+   [ong 12603] Beach Camera Nikon 55-300mm f/4.5-5.6G ED VR AF-S DX Nikkor Zoom Lens  -> 71-135 (đọc 55-300mm)
+   [ong 1405] Tokina AT-X 535 PRO DX, Telephoto Zoom, 50-135mm f/2.8 Lens, for Nikon -> 36-70 (đọc 50-135mm)
+   [ong 8340] Canon 18-135mm f/3.5-5.6 EF-S is STM Lens New (White Box) -> <24 (đọc 18-135mm)
+   [ong 13470] Canon EF 70-200mm f/4 L is USM Lens for Canon Digital SLR Cameras -> 71-135 (đọc 70-200mm)
+   [ong 8718] Tamron Auto Focus 200-500mm f/5.0-6.3 Di LD SP FEC (IF) Lens for Nikon -> 136-300 (đọc 200-500mm)
+-- has_spec_aperture_class (1,288)
+   [ong 13145] Canon EF 70-200mm f/2.8L IS II USM Telephoto Zoom Lens for Canon SLR C -> <=2.8 (đọc f/2.8)
+   [ong 780] Canon EF-S 10-22mm f/3.5-4.5 USM SLR Lens for EOS Digital SLRs -> <=4 (đọc f/3.5-4.5)
+   [ong 18941] Rokinon AF 35mm f/1.4 Auto Focus Wide Angle Full Frame Lens for Sony F -> <=1.4 (đọc f/1.4)
+   [ong 9998] SONY E-mount Lens Vario-Tessar T * FE 24-70mm F4 ZA OSS Interchangeabl -> <=4 (đọc f/4)
+   [ong 5854] Tamron AF 70-300mm f/4.0-5.6 SP Di VC USD XLD for Nikon Digital SLR Ca -> <=4 (đọc f/4-5.6)
+   [ong 12791] Opteka 500mm f/6.3 (with 2X- 1000mm) Telephoto Mirror Lens for Sony E- -> >4 (đọc f/6.3)
+   [ong 1628] Sigma 18-50mm f/2.8 EX DC HSM Macro Lens for Nikon DSLR (OLD MODEL) -> <=2.8 (đọc f/2.8)
+   [ong 8813] Tamron AFF004N700 SP 90MM F/2.8 DI MACRO 1:1 VC USD For Nikon 90mm IS  -> <=2.8 (đọc f/2.8)
+   [ong 13470] Canon EF 70-200mm f/4 L is USM Lens for Canon Digital SLR Cameras -> <=4 (đọc f/4)
+   [ong 9004] Sigma 30mm F2.8 EX DN Art (Silver) for Sony SE -> <=2.8 (đọc f/2.8)
+-- suitable_for (1,080)
+   [ong 14107] Nikon AF S NIKKOR 85mm f/1.8G Fixed Lens with Auto Focus for Nikon DSL -> chan_dung (khung ff)
+   [ong 913] Tokina Tokina 12mm - 24mm f/4 PRO DX Autofocus Zoom Lens for Canon EOS -> phong_canh (khung khong_ro)
+   [ong 21590] Panasonic Lumix G Leica DG Vario-Summilux 10-25mm, F1.7 ASPH. Lens, St -> phong_canh (khung khac)
+   [ong 12458] Rokinon RK12M-E-SIL 12mm F2.0 Ultra Wide Angle Fixed Lens for Sony E-m -> phong_canh (khung khong_ro)
+   [ong 6218] Sigma 18-200mm f/3.5-6.3 DC Lens for Canon Digital SLR Cameras -> the_thao_chim (khung apsc)
+   [ong 13595] Sigma 150-600mm f/5-6.3 DG OS HSM Contemporary Lens for Canon EF Bundl -> the_thao_chim (khung ff)
+   [ong 1714] Pentax DA 18-250mm f/3.5-6.3 ED AL IF Lens for Pentax and Samsung Digi -> the_thao_chim (khung apsc)
+   [ong 10700] Canon EF 100-400mm f/4.5-5.6L is II USM Zoom Telephoto Lens + Filter K -> the_thao_chim (khung ff)
+   [ong 15007] Opteka 500mm/1000mm f/8 Manual Telephoto Lens for Nikon F-Mount D6, D5 -> the_thao_chim (khung khong_ro)
+   [ong 10911] Samyang 8mm F2.8 UMC Fisheye II (Black) Lens for Fuji X Mount Digital  -> phong_canh (khung apsc)
+-- has_spec_mount, chỉ cạnh có cờ ngam_khong_chac (134)
+   [ong 12612] Rokinon 12mm F2.8 Ultra Wide Fisheye Lens for Nikon AE DSLR Cameras -  -> nikon_f | src_phu_kien=0 | khong_phai_ngam_chuyen | ngam_khong_chac
+   [ong 6108] Tamron Auto Focus 18-200mm f/3.5-6.3 XR Di II LD Aspherical (IF) Macro -> pentax_k | src_phu_kien=0 | khong_phai_ngam_chuyen | ngam_khong_chac
+   [ong 24498] Tamron A012E SP 15-30mm F2.8 Di VC USD Ultra-Wide-Angle Zoom Lens for  -> canon_ef | src_phu_kien=0 | khong_phai_ngam_chuyen | ngam_khong_chac
+   [ong 11526] Samyang SY12M-FX-SIL 12mm F2.0 Ultra Wide Angle Lens for Fujifilm X-Mo -> fuji_x | src_phu_kien=0 | khong_phai_ngam_chuyen | ngam_khong_chac
+   [ong 6371] Rokinon FE75MFT-S 7.5mm F3.5 UMC Fisheye Lens for Micro Four Thirds (O -> mft | src_phu_kien=0 | khong_phai_ngam_chuyen | ngam_khong_chac
+   [ong 12463] Rokinon Cine DS DS14M-C 14mm T3.1 ED AS IF UMC Full Frame Cine Wide An -> canon_ef | src_phu_kien=0 | khong_phai_ngam_chuyen | ngam_khong_chac
+   [ong 6206] Sigma 10mm f/2.8 EX DC HSM Fisheye Lens for Canon Digital SLR Cameras  -> canon_ef | src_phu_kien=0 | khong_phai_ngam_chuyen | ngam_khong_chac
+   [ong 8811] Bower SLY3514OD Wide-Angle 35mm f/1.4 Fixed Lens for Olympus 4/3 Digit -> four_thirds | src_phu_kien=0 | khong_phai_ngam_chuyen | ngam_khong_chac
+   [ong 13166] Sigma 24mm f/1.4 DG HSM Art Lens for Nikon F -> nikon_f | src_phu_kien=0 | khong_phai_ngam_chuyen | ngam_khong_chac
+   [ong 8952] Rokinon HD8M-C 8mm f/3.5 HD Fisheye Lens with Removeable Hood for Cano -> canon_ef | src_phu_kien=0 | khong_phai_ngam_chuyen | ngam_khong_chac

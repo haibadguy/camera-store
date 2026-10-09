@@ -1,330 +1,147 @@
 """
-05c_rgcn_train.py -- R-GCN variant baseline (HeteroConv + SAGEConv per-relation).
+05c_rgcn_train.py -- R-GCN (Schlichtkrull et al., ESWC 2018) bằng RGCNConv của PyG, trên đồ thị nội dung 4,
+theo docs/reviews/n5_eval_plan.md mục 6.4, 7 (QĐ 5-3, 5-4, 5-5).
 
-Kien truc: HeteroConv voi mot SAGEConv rieng cho tung relation trong kg_hetero.pt.
-Day la bien the di truyen cua R-GCN, khong phai implementation Schlichtkrull et al.
-nguyen ban (co ghi ro trong doc).
+Viết lại 09/10/2026. Bản của Hải ("R-GCN variant") là HeteroConv + SAGEConv, không phải R-GCN (lỗi L1), và không chạy
+được với đồ thị mới (L2); bỏ qua cờ cạnh (L3); ReLU + dropout ở lớp cuối (L16).
 
-Chay tu thu muc goc camera-store:
-  python ai/pipeline/05c_rgcn_train.py
+Ví dụ: ống EF 70-200 nhận tin từ người đã mua (quan hệ rev_interacted_with), các thân nối tới (rev_compatible_with),
+nút ngàm canon_ef (rev_has_spec), nút "thể thao/chim" (rev_suitable_for). Mỗi quan hệ r có W_r riêng; tin của hàng
+xóm loại r nhân W_r rồi lấy trung bình trong loại đó; cộng mọi loại với phần tự giữ W_0 h_i (bài Eq. 2):
+  h_i^(l+1) = σ( Σ_r Σ_{j∈N_i^r} (1/|N_i^r|) W_r h_j + W_0 h_i ).
 
-Output:
-  results/rgcn_best.pt
-  results/rgcn_results.json
+Cài đặt (mục 6.4):
+  - đồ thị đồng nhất 95.646 nút, 18 quan hệ như kg_hetero.pt; bỏ 134 cạnh has_spec → mount có cờ ngam_khong_chac
+    (và 134 cạnh ngược) -> 1.116.682 cạnh; user–item chỉ là cạnh train (script kiểm trùng train.txt);
+  - mỗi nút một embedding học được (Xavier/glorot), không dùng item.x;
+  - 2 lớp RGCNConv, d 64, phân rã cơ sở B = 2, aggr mean, root_weight, ReLU chỉ giữa hai lớp;
+  - edge dropout 0,4 mỗi bước khi huấn luyện (không dropout phần W_0);
+  - điểm user–item: DistMult f(u, i) = Σ_d e_u,d · r_d · e_i,d, r ∈ ℝ^64 khởi tạo glorot như tham số của RGCNConv;
+  - loss BPR (QĐ 5-3) + 0,01 · ‖r‖² (L2 trên bộ giải mã, bài §5.2); Adam, lr dò {0,01; 0,001}; batch 2048;
+  - tối đa 100 epoch, chấm NDCG@20 val mỗi 5 epoch, dừng sau 5 lần chấm không tăng.
+
+Chạy (từ thư mục camera-store; chỉ val, không chấm test):
+  ai\\.venv\\Scripts\\python.exe ai/pipeline/05c_rgcn_train.py --lr 0.01 --seed 1 --run-dir results/n5/<nhãn>/<tên>
 """
 
-import json
+import argparse
 import sys
-import time
 from pathlib import Path
 
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_geometric.nn import HeteroConv, SAGEConv
+from torch_geometric.nn import RGCNConv
+from torch_geometric.utils import dropout_edge
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import common_05 as C  # noqa: E402
+import eval_05 as E    # noqa: E402
+import train_05 as T   # noqa: E402
 
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
 
-# -- Hyperparameters -------------------------------------------------------
-SEED        = C.SEED
-EMB_DIM     = 64
-N_LAYERS    = 2       # 2 layers (heterogeneous graph)
-LR          = 2.5e-3
-L2_REG      = 1e-4
-BATCH_SIZE  = 16384
-MAX_EPOCH   = 30
-EVAL_EVERY  = 2
-PATIENCE    = 4
-DEVICE      = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-np.random.seed(SEED)
-torch.manual_seed(SEED)
+N_UNSURE_EXPECTED = 134          # số ống "không chắc" (QĐ 3-4), mỗi ống 1 cạnh has_spec → mount
 
 
-# -- R-GCN Variant Model ---------------------------------------------------
+def load_homogeneous(train, log):
+    """kg_hetero.pt -> (edge_index [2, E], edge_type [E], tên quan hệ, số nút, offset từng loại nút).
+    Bỏ cạnh has_spec → mount / rev_has_spec có ngam_khong_chac = 1 (QĐ 5-4). Kiểm cạnh user–item = train.txt."""
+    data = torch.load(str(C.KG_PT), weights_only=False)
+    offs, n = {}, 0
+    for nt in data.node_types:
+        offs[nt] = n
+        n += data[nt].num_nodes
+    assert data["user"].num_nodes == C.N_USERS and data["item"].num_nodes == C.N_ITEMS
+    srcs, dsts, rels, names = [], [], [], []
+    n_drop = {}
+    for r, et in enumerate(data.edge_types):
+        s, rel, d = et
+        st = data[et]
+        ei = st.edge_index
+        keep = torch.ones(ei.size(1), dtype=torch.bool)
+        if "ngam_khong_chac" in st:
+            keep = st.ngam_khong_chac.view(-1) == 0
+            n_drop[f"{s}-{rel}-{d}"] = int((~keep).sum())
+        if et == ("user", "interacted_with", "item"):
+            u, i = T.train_pairs(train)
+            a = np.sort(u * C.N_ITEMS + i)
+            b = np.sort(ei[0].numpy().astype(np.int64) * C.N_ITEMS + ei[1].numpy())
+            assert np.array_equal(a, b), "cạnh interacted_with của kg_hetero.pt khác train.txt"
+        srcs.append(ei[0, keep] + offs[s])
+        dsts.append(ei[1, keep] + offs[d])
+        rels.append(torch.full((int(keep.sum()),), r, dtype=torch.long))
+        names.append(f"{s}-{rel}-{d}")
+    assert n_drop == {"item-has_spec-mount": N_UNSURE_EXPECTED, "mount-rev_has_spec-item": N_UNSURE_EXPECTED}, n_drop
+    ei = torch.stack([torch.cat(srcs), torch.cat(dsts)])
+    et = torch.cat(rels)
+    log(f"Đồ thị đồng nhất: {n:,} nút, {len(names)} quan hệ, {ei.size(1):,} cạnh; bỏ cạnh ngam_khong_chac: {n_drop}; "
+        f"cạnh interacted_with trùng train.txt: có")
+    return ei, et, names, n, offs
 
-class RGCNVariant(nn.Module):
-    """
-    Heterogeneous GNN: HeteroConv voi SAGEConv rieng cho tung relation.
-    BPR training tren (user, interacted_with, item) edges.
 
-    item.x = one-hot item_type [3] duoc project qua Linear truoc.
-    mount.x, usecase.x = identity matrix.
-    user: learnable embedding.
-    """
-
-    def __init__(self, n_users, n_items, emb_dim, n_layers, edge_types):
+class RGCN(nn.Module):
+    def __init__(self, n_nodes, dim, n_rel, num_bases, ei, et, off_u, off_i, edge_drop, l2_dec):
         super().__init__()
-        self.n_users  = n_users
-        self.n_items  = n_items
-        self.emb_dim  = emb_dim
-        self.n_layers = n_layers
+        self.ei, self.et = ei, et
+        self.off_u, self.off_i = off_u, off_i
+        self.edge_drop, self.l2_dec = edge_drop, l2_dec
+        self.x = nn.Parameter(torch.empty(n_nodes, dim))
+        nn.init.xavier_uniform_(self.x)
+        self.convs = nn.ModuleList([RGCNConv(dim, dim, n_rel, num_bases=num_bases, aggr="mean", root_weight=True)
+                                    for _ in range(2)])
+        self.r = nn.Parameter(torch.empty(1, dim))
+        nn.init.xavier_uniform_(self.r)
 
-        # Initial node embeddings
-        self.user_emb     = nn.Embedding(n_users, emb_dim)
-        self.item_emb     = nn.Embedding(n_items, emb_dim)
-        self.item_proj    = nn.Linear(3, emb_dim, bias=False)   # item_type [3] -> emb_dim
-        self.mount_proj   = nn.Linear(8, emb_dim, bias=False)   # mount one-hot [8]
-        self.usecase_proj = nn.Linear(7, emb_dim, bias=False)   # usecase one-hot [7]
+    def encode(self):
+        ei, et = self.ei, self.et
+        if self.training and self.edge_drop > 0:
+            ei, keep = dropout_edge(ei, p=self.edge_drop, training=True)
+            et = et[keep]
+        h = F.relu(self.convs[0](self.x, ei, et))
+        h = self.convs[1](h, ei, et)                       # lớp cuối: không ReLU, không dropout
+        return h[self.off_u:self.off_u + C.N_USERS], h[self.off_i:self.off_i + C.N_ITEMS]
 
-        nn.init.normal_(self.user_emb.weight, std=0.01)
-        nn.init.normal_(self.item_emb.weight, std=0.01)
+    def loss(self, u, i, j):
+        hu, hi = self.encode()
+        eu = hu[u] * self.r
+        bpr = F.softplus(-((eu * hi[i]).sum(1) - (eu * hi[j]).sum(1))).mean()
+        return bpr + self.l2_dec * self.r.pow(2).sum()
 
-        # HeteroConv layers
-        self.convs = nn.ModuleList()
-        for _ in range(n_layers):
-            conv_dict = {et: SAGEConv(emb_dim, emb_dim, normalize=True)
-                         for et in edge_types}
-            self.convs.append(HeteroConv(conv_dict, aggr="sum"))
+    @torch.no_grad()
+    def score_fn(self):
+        hu, hi = self.encode()
+        hur = hu * self.r
+        return lambda uids: hur[uids] @ hi.T
 
-        self.dropout = nn.Dropout(p=0.1)
-
-    def get_init_embeddings(self, data):
-        """Khoi tao embedding cho tat ca node types tu features."""
-        return {
-            "user":    self.user_emb.weight,
-            "item":    self.item_emb.weight + self.item_proj(data["item"].x.to(DEVICE)),
-            "mount":   self.mount_proj(data["mount"].x.to(DEVICE)),
-            "usecase": self.usecase_proj(data["usecase"].x.to(DEVICE)),
-        }
-
-    def forward_embeddings(self, data):
-        """Chay n_layers HeteroConv, tra ve dict {node_type: emb tensor}."""
-        x_dict = self.get_init_embeddings(data)
-        edge_index_dict = {et: data[et].edge_index.to(DEVICE)
-                           for et in data.edge_types}
-
-        for conv in self.convs:
-            x_dict = conv(x_dict, edge_index_dict)
-            x_dict = {k: self.dropout(F.relu(v)) for k, v in x_dict.items()}
-
-        return x_dict
-
-    def bpr_loss(self, data, users, pos_items, neg_items):
-        x_dict = self.forward_embeddings(data)
-        u   = x_dict["user"][users]
-        pos = x_dict["item"][pos_items]
-        neg = x_dict["item"][neg_items]
-
-        pos_score = (u * pos).sum(dim=1)
-        neg_score = (u * neg).sum(dim=1)
-        loss = -F.logsigmoid(pos_score - neg_score).mean()
-
-        # L2 tren initial embeddings (user + item)
-        l2 = (self.user_emb.weight[users].norm(2).pow(2)
-              + self.item_emb.weight[pos_items].norm(2).pow(2)
-              + self.item_emb.weight[neg_items].norm(2).pow(2)) / len(users)
-        return loss + L2_REG * l2
-
-
-# -- Training --------------------------------------------------------------
-
-def train_one_epoch(model, optimizer, data, train_pairs, sampler):
-    model.train()
-    rng = np.random.default_rng(SEED)
-    rng.shuffle(train_pairs)
-
-    total_loss = 0.0
-    n_batches  = 0
-
-    for start in range(0, len(train_pairs), BATCH_SIZE):
-        batch     = train_pairs[start:start + BATCH_SIZE]
-        users     = torch.tensor([x[0] for x in batch], dtype=torch.long, device=DEVICE)
-        pos_items = torch.tensor([x[1] for x in batch], dtype=torch.long, device=DEVICE)
-        neg_items = torch.tensor(
-            [sampler.sample(x[0]) for x in batch], dtype=torch.long, device=DEVICE
-        )
-
-        optimizer.zero_grad()
-        loss = model.bpr_loss(data, users, pos_items, neg_items)
-        loss.backward()
-        optimizer.step()
-
-        total_loss += loss.item()
-        n_batches  += 1
-
-    return total_loss / max(n_batches, 1)
-
-
-@torch.no_grad()
-def evaluate(model, data, pos_dict, neg_dict):
-    model.eval()
-    x_dict = model.forward_embeddings(data)
-    user_emb = x_dict["user"].cpu().numpy()
-    item_emb = x_dict["item"].cpu().numpy()
-    rng = np.random.default_rng(SEED)
-
-    def score_fn(uid, pos_iid, neg_iids):
-        candidates = [pos_iid] + list(neg_iids)
-        u = user_emb[uid]
-        i = item_emb[candidates]
-        return (u * i).sum(axis=1)
-
-    return C.sampled_eval(score_fn, pos_dict, neg_dict, rng=rng)
-
-
-# -- Main ------------------------------------------------------------------
 
 def main():
-    print("=" * 60, flush=True)
-    print("MUC 5c: R-GCN VARIANT TRAINING", flush=True)
-    print(f"Device: {DEVICE}", flush=True)
-    print("=" * 60, flush=True)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--lr", type=float, required=True, help="dò {0.01, 0.001}")
+    ap.add_argument("--seed", type=int, required=True)
+    ap.add_argument("--run-dir", required=True)
+    ap.add_argument("--max-epoch", type=int, default=100)
+    ap.add_argument("--eval-every", type=int, default=5)
+    ap.add_argument("--patience", type=int, default=5)
+    ap.add_argument("--stop-after", type=int, default=None, help="(kiểm thử) dừng sau N epoch như bị ngắt")
+    a = ap.parse_args()
+    cfg = {"dim": 64, "n_layers": 2, "num_bases": 2, "aggr": "mean", "root_weight": True, "edge_dropout": 0.4,
+           "decoder": "DistMult", "l2_decoder": 0.01, "loss": "BPR", "lr": a.lr, "batch": 2048,
+           "drop_ngam_khong_chac": True, "init": "xavier_uniform", "seed": a.seed, "max_epoch": a.max_epoch,
+           "eval_every": a.eval_every, "patience": a.patience, "select_metric": "val ndcg@20 full ranking"}
+    if a.stop_after:
+        cfg["_stop_after"] = a.stop_after
 
-    # Load data
-    print("\nLoading data...", flush=True)
-    train_dict     = C.load_train()
-    val_pos        = C.load_pos("val")
-    val_neg        = C.load_negatives("val")
-    test_pos       = C.load_pos("test")
-    test_neg       = C.load_negatives("test")
-    item_type      = C.load_item_type()
-    body_to_lenses = C.load_body_to_lenses()
-    cvr_users      = C.build_train_bodies(train_dict, body_to_lenses, item_type)
+    def build(train, log):
+        ei, et, names, n, offs = load_homogeneous(train, log)
+        m = RGCN(n, cfg["dim"], len(names), cfg["num_bases"], ei.to(E.DEVICE), et.to(E.DEVICE), offs["user"],
+                 offs["item"], cfg["edge_dropout"], cfg["l2_decoder"]).to(E.DEVICE)
+        log(f"R-GCN: {sum(p.numel() for p in m.parameters()):,} tham số")
+        return m, m.parameters()
 
-    # Load kg_hetero.pt
-    import torch as _torch
-    data = _torch.load(str(C.KG_PT), weights_only=False)
-    data = data.to(DEVICE)
-
-    print(f"  Edge types: {data.edge_types}", flush=True)
-    print(f"  train pairs: {sum(len(v) for v in train_dict.values()):,}", flush=True)
-    print(f"  CVR users:   {len(cvr_users):,}", flush=True)
-
-    train_pairs = [(uid, iid) for uid, items in train_dict.items() for iid in items]
-    sampler     = C.OnlineNegSampler(train_dict, C.N_ITEMS, np.random.default_rng(SEED))
-
-    # Model
-    model = RGCNVariant(
-        n_users=C.N_USERS, n_items=C.N_ITEMS,
-        emb_dim=EMB_DIM, n_layers=N_LAYERS,
-        edge_types=data.edge_types,
-    ).to(DEVICE)
-
-    optimizer = torch.optim.Adam(model.parameters(), lr=LR)
-
-    print(f"\nModel: R-GCN variant | n_layers={N_LAYERS} | emb_dim={EMB_DIM}", flush=True)
-    print(f"Config: lr={LR} | l2={L2_REG} | batch={BATCH_SIZE} | patience={PATIENCE} eval cycles", flush=True)
-    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print(f"Params: {total_params:,}", flush=True)
-
-    best_val_ndcg10 = -1.0
-    best_epoch      = 0
-    patience_cnt    = 0
-    best_state      = None
-
-    print("\nTraining...", flush=True)
-    t0 = time.time()
-
-    for epoch in range(1, MAX_EPOCH + 1):
-        ep_t0 = time.time()
-        loss = train_one_epoch(model, optimizer, data, train_pairs, sampler)
-        ep_time = time.time() - ep_t0
-
-        if epoch % EVAL_EVERY == 0:
-            eval_t0 = time.time()
-            val_metrics = evaluate(model, data, val_pos, val_neg)
-            eval_time = time.time() - eval_t0
-            ndcg10  = val_metrics["ndcg@10"]
-            elapsed = time.time() - t0
-
-            print(f"  Epoch {epoch:2d}/{MAX_EPOCH} | loss={loss:.4f} ({ep_time:.1f}s) | "
-                  f"val Hit@10={val_metrics['hit@10']:.4f} NDCG@10={ndcg10:.4f} "
-                  f"(eval {eval_time:.1f}s) | total {elapsed:.0f}s", flush=True)
-
-            if ndcg10 > best_val_ndcg10:
-                best_val_ndcg10 = ndcg10
-                best_epoch      = epoch
-                patience_cnt    = 0
-                best_state      = {k: v.clone() for k, v in model.state_dict().items()}
-                # Save checkpoint immediately
-                torch.save({
-                    "state_dict":      best_state,
-                    "config": {
-                        "n_layers": N_LAYERS, "emb_dim": EMB_DIM,
-                        "lr": LR, "l2": L2_REG, "batch_size": BATCH_SIZE,
-                    },
-                    "best_epoch":      best_epoch,
-                    "best_val_ndcg10": best_val_ndcg10,
-                    "seed":            SEED,
-                    "edge_types":      [str(et) for et in data.edge_types],
-                }, C.RESULTS_DIR / "rgcn_best.pt")
-            else:
-                patience_cnt += 1
-                if patience_cnt >= PATIENCE:
-                    print(f"\n  Early stopping at epoch {epoch} "
-                          f"(best: epoch {best_epoch}, val NDCG@10={best_val_ndcg10:.4f})", flush=True)
-                    break
-        else:
-            print(f"  Epoch {epoch:2d}/{MAX_EPOCH} | loss={loss:.4f} ({ep_time:.1f}s)", flush=True)
-
-    model.load_state_dict(best_state)
-    print(f"\nBest checkpoint: epoch {best_epoch}, val NDCG@10={best_val_ndcg10:.4f}", flush=True)
-
-    # Test — sampled 1+99
-    print("\nTest evaluation (sampled 1+99)...", flush=True)
-    test_hit_ndcg = evaluate(model, data, test_pos, test_neg)
-    C.print_results("R-GCN variant (sampled)", test_hit_ndcg)
-
-    # Test — CVR full-catalog
-    print("\nTest CVR (full-catalog)...", flush=True)
-    model.eval()
-
-    # Precompute embeddings ONCE with torch.no_grad() and detach()
-    with torch.no_grad():
-        x_dict = model.forward_embeddings(data)
-        user_emb_np = x_dict["user"].detach().cpu().numpy()
-        item_emb_T_np = x_dict["item"].detach().T.cpu().numpy()
-
-    def score_fn_full(uid):
-        return user_emb_np[uid] @ item_emb_T_np
-
-    cvr_results = C.full_catalog_cvr(
-        score_fn=score_fn_full,
-        cvr_users=cvr_users,
-        train_dict=train_dict,
-        body_to_lenses=body_to_lenses,
-        item_type=item_type,
-    )
-    C.print_results("R-GCN variant (CVR)", cvr_results)
-
-    all_results = {**test_hit_ndcg, **cvr_results}
-
-    # Save checkpoint
-    out_pt = C.RESULTS_DIR / "rgcn_best.pt"
-    torch.save({
-        "state_dict":      best_state,
-        "config": {
-            "n_layers": N_LAYERS, "emb_dim": EMB_DIM,
-            "lr": LR, "l2": L2_REG, "batch_size": BATCH_SIZE,
-        },
-        "best_epoch":      best_epoch,
-        "best_val_ndcg10": best_val_ndcg10,
-        "seed":            SEED,
-        "edge_types":      [str(et) for et in data.edge_types],
-    }, out_pt)
-    print(f"\nSaved: {out_pt}", flush=True)
-
-    out_json = C.RESULTS_DIR / "rgcn_results.json"
-    with open(out_json, "w") as f:
-        json.dump({
-            "model": "R-GCN variant (HeteroConv+SAGEConv)",
-            "note": "SAGEConv per-relation via HeteroConv. Not Schlichtkrull et al. exact formulation.",
-            "config": {"n_layers": N_LAYERS, "emb_dim": EMB_DIM,
-                       "lr": LR, "l2": L2_REG, "batch_size": BATCH_SIZE},
-            "best_epoch": best_epoch,
-            "best_val_ndcg10": best_val_ndcg10,
-            "results": all_results,
-        }, f, indent=2)
-    print(f"Saved: {out_json}", flush=True)
-
-    total_time = time.time() - t0
-    print(f"\n=== HOAN TAT 05c | {total_time/60:.1f} phut ===", flush=True)
+    T.run("R-GCN (RGCNConv)", cfg, build, a.run_dir, extra_argv=sys.argv)
 
 
 if __name__ == "__main__":

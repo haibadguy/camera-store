@@ -1,0 +1,3780 @@
+{
+  "meta": {
+    "split": "val",
+    "git": {
+      "commit": "595bc7072a81a3a73902d81e63afe35b4f55bcfb",
+      "dirty": false,
+      "untracked_required": [
+        "E:\\DATN\\camera-store\\ai\\config\\n5_final.toml",
+        "E:\\DATN\\camera-store\\ai\\pipeline\\05_test_final.py"
+      ]
+    },
+    "n5_final_toml_sha256": "edcd8ac8b771bd35e9bab9a55f7ed2518a0b935d29e183a516fb5ba6542944c6",
+    "script_sha256": "f3e52438fbed00ecf2ff6a4d4955f3ce6288d9764416e4141cc451550a8939c5",
+    "inputs_sha256": {
+      "ai/data/processed/train.txt": "ebd29b03a4866cfca243edc1ee31539f16be19b756bfbd4c388e3f20ca06a5c5",
+      "ai/data/processed/val.txt": "e8a47d06bd6e6977fe7eebc485cbf07eb75e7e9bdb651da955e8fd7f85a3a900",
+      "ai/data/processed/test.txt": "410fc46cea72cdc5115a3e0413036456d1d1d59b8bcb7c63da6edd026e4da8ea",
+      "ai/data/processed/val_negatives.json": "f6ad945f101c2c33c58f011bf437599c71d17faec4ef58fa05c040329e5a277f",
+      "ai/data/processed/test_negatives.json": "8c408f53b7fe62ef33c8b75114abab101ee59b9e62e25feaab8c05501293b205",
+      "ai/data/kg/item_attributes.csv": "3b05f535c5dad6e08cd99f2c360e34a95c20b816cd6cd8ce0ca9fbbd4cc7b621",
+      "ai/data/kg/kg_hetero.pt": "abf149b5a75b18926cf4c39f826e6d71e3e34f17b2943e891ef50203c69fce4b",
+      "ai/data/kg/kg_edges_compatible_with.csv": "77c8d5c86d824a028bef6838759499702952f537d891ae204610cac607c9bb60",
+      "ai/data/kg/kg_edges_crops_sensor.csv": "a2a052a5210f9e7f547da6db46ec91111dbf6138aa2989bafdc75240201c688e",
+      "ai/data/kg/kg_edges_requires_adapter.csv": "177447cd04689586eb099767bf5924782cec4c7a62306e6075024a4013364a94",
+      "ai/data/kg/unknown_mask.npz": "c9ae5c10e4fa80b60210049f6210828bbc4ff4b240ca67496d6b810db5d98b2d",
+      "ai/data/kg/body_index.json": "dfffbc204edfc945b09fb5e4b88c35b3499ac28747152bcf39d24375f18cda8d",
+      "ai/data/kg/lens_index.json": "f774c8e53d5679b952026e725daf74d1a85b4c66452239dad37c0baebc57862d",
+      "ai/pipeline/common_05.py": "dd79d6bcea8e07b53f0b8d82020b0534196acaa45acc1ffa1bbcb44b7315a020",
+      "ai/pipeline/eval_05.py": "bf81159cd940b3774c6c8dae647ee4649dfb94b90de118eda9822dbeec406e24"
+    },
+    "device": "cuda (NVIDIA GeForce GTX 1660 Ti)",
+    "torch": "2.14.1+cu126",
+    "started": "2026-10-09 12:40:47",
+    "finished": "2026-10-09 12:41:36",
+    "minutes": 0.8
+  },
+  "runs": {
+    "Popularity": [
+      "results/n5/finalcheck_val_20261009_lan2/pop"
+    ],
+    "Popularity-MountAware": [
+      "results/n5/finalcheck_val_20261009_lan2/popma"
+    ],
+    "LightGCN": [
+      "results/n5/finalcheck_val_20261009_lan2/lightgcn_s1",
+      "results/n5/finalcheck_val_20261009_lan2/lightgcn_s2",
+      "results/n5/finalcheck_val_20261009_lan2/lightgcn_s3"
+    ],
+    "R-GCN": [
+      "results/n5/finalcheck_val_20261009_lan2/rgcn_s1",
+      "results/n5/finalcheck_val_20261009_lan2/rgcn_s2",
+      "results/n5/finalcheck_val_20261009_lan2/rgcn_s3"
+    ]
+  },
+  "tables": {
+    "Popularity": {
+      "n_seeds": 1,
+      "full": {
+        "recall@5": {
+          "mean": 0.013552859106427631,
+          "sd": null,
+          "per_seed": [
+            0.013552859106427631
+          ]
+        },
+        "ndcg@5": {
+          "mean": 0.00839417746864366,
+          "sd": null,
+          "per_seed": [
+            0.00839417746864366
+          ]
+        },
+        "hit@5": {
+          "mean": 0.013552859106427631,
+          "sd": null,
+          "per_seed": [
+            0.013552859106427631
+          ]
+        },
+        "recall@10": {
+          "mean": 0.022804865432080518,
+          "sd": null,
+          "per_seed": [
+            0.022804865432080518
+          ]
+        },
+        "ndcg@10": {
+          "mean": 0.011353085675681683,
+          "sd": null,
+          "per_seed": [
+            0.011353085675681683
+          ]
+        },
+        "hit@10": {
+          "mean": 0.022804865432080518,
+          "sd": null,
+          "per_seed": [
+            0.022804865432080518
+          ]
+        },
+        "recall@20": {
+          "mean": 0.037983476448766644,
+          "sd": null,
+          "per_seed": [
+            0.037983476448766644
+          ]
+        },
+        "ndcg@20": {
+          "mean": 0.01519503688560122,
+          "sd": null,
+          "per_seed": [
+            0.01519503688560122
+          ]
+        },
+        "hit@20": {
+          "mean": 0.037983476448766644,
+          "sd": null,
+          "per_seed": [
+            0.037983476448766644
+          ]
+        }
+      },
+      "cvr": {
+        "cvr@5": {
+          "mean": 0.5625,
+          "sd": null,
+          "per_seed": [
+            0.5625
+          ]
+        },
+        "cvr@10": {
+          "mean": 0.6758586361373817,
+          "sd": null,
+          "per_seed": [
+            0.6758586361373817
+          ]
+        },
+        "cvr@20": {
+          "mean": 0.7002787178976707,
+          "sd": null,
+          "per_seed": [
+            0.7002787178976707
+          ]
+        },
+        "cvr_n_users@5": {
+          "mean": 16.0,
+          "sd": null,
+          "per_seed": [
+            16.0
+          ]
+        },
+        "cvr_n_lenses@5": {
+          "mean": 16.0,
+          "sd": null,
+          "per_seed": [
+            16.0
+          ]
+        },
+        "cvr_n_violations@5": {
+          "mean": 9.0,
+          "sd": null,
+          "per_seed": [
+            9.0
+          ]
+        },
+        "cvr_n_users@10": {
+          "mean": 10032.0,
+          "sd": null,
+          "per_seed": [
+            10032.0
+          ]
+        },
+        "cvr_n_lenses@10": {
+          "mean": 10045.0,
+          "sd": null,
+          "per_seed": [
+            10045.0
+          ]
+        },
+        "cvr_n_violations@10": {
+          "mean": 6789.0,
+          "sd": null,
+          "per_seed": [
+            6789.0
+          ]
+        },
+        "cvr_n_users@20": {
+          "mean": 10346.0,
+          "sd": null,
+          "per_seed": [
+            10346.0
+          ]
+        },
+        "cvr_n_lenses@20": {
+          "mean": 20092.0,
+          "sd": null,
+          "per_seed": [
+            20092.0
+          ]
+        },
+        "cvr_n_violations@20": {
+          "mean": 14070.0,
+          "sd": null,
+          "per_seed": [
+            14070.0
+          ]
+        },
+        "cvr_n_users_with_body": 10406
+      },
+      "top10_type_mix": {
+        "than": {
+          "mean": 0.0,
+          "sd": null,
+          "per_seed": [
+            0.0
+          ]
+        },
+        "ong": {
+          "mean": 0.9866392752102393,
+          "sd": null,
+          "per_seed": [
+            0.9866392752102393
+          ]
+        },
+        "phu_kien": {
+          "mean": 9.013360724789761,
+          "sd": null,
+          "per_seed": [
+            9.013360724789761
+          ]
+        },
+        "khac": {
+          "mean": 0.0,
+          "sd": null,
+          "per_seed": [
+            0.0
+          ]
+        }
+      },
+      "n_users_tie_at_target": {
+        "mean": 61465.0,
+        "sd": null,
+        "per_seed": [
+          61465.0
+        ]
+      },
+      "sampled_1_99": {
+        "hit@5": {
+          "mean": 0.3435213786376199,
+          "sd": null,
+          "per_seed": [
+            0.3435213786376199
+          ]
+        },
+        "ndcg@5": {
+          "mean": 0.24669605036736889,
+          "sd": null,
+          "per_seed": [
+            0.24669605036736889
+          ]
+        },
+        "hit@10": {
+          "mean": 0.4605459570505904,
+          "sd": null,
+          "per_seed": [
+            0.4605459570505904
+          ]
+        },
+        "ndcg@10": {
+          "mean": 0.2844929166547542,
+          "sd": null,
+          "per_seed": [
+            0.2844929166547542
+          ]
+        },
+        "hit@20": {
+          "mean": 0.5948330648379421,
+          "sd": null,
+          "per_seed": [
+            0.5948330648379421
+          ]
+        },
+        "ndcg@20": {
+          "mean": 0.31837527913965813,
+          "sd": null,
+          "per_seed": [
+            0.31837527913965813
+          ]
+        }
+      },
+      "scenario": {
+        "lap_duoc": {
+          "n_users": 904,
+          "n_with_adapter_pair": 0,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.0918141592920354,
+              "sd": null,
+              "per_seed": [
+                0.0918141592920354
+              ]
+            },
+            "recall@5": {
+              "mean": 0.0918141592920354,
+              "sd": null,
+              "per_seed": [
+                0.0918141592920354
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.05785775736292881,
+              "sd": null,
+              "per_seed": [
+                0.05785775736292881
+              ]
+            },
+            "hit@10": {
+              "mean": 0.14712389380530974,
+              "sd": null,
+              "per_seed": [
+                0.14712389380530974
+              ]
+            },
+            "recall@10": {
+              "mean": 0.14712389380530974,
+              "sd": null,
+              "per_seed": [
+                0.14712389380530974
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.07579422444038786,
+              "sd": null,
+              "per_seed": [
+                0.07579422444038786
+              ]
+            },
+            "hit@20": {
+              "mean": 0.206858407079646,
+              "sd": null,
+              "per_seed": [
+                0.206858407079646
+              ]
+            },
+            "recall@20": {
+              "mean": 0.206858407079646,
+              "sd": null,
+              "per_seed": [
+                0.206858407079646
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.09036966179102374,
+              "sd": null,
+              "per_seed": [
+                0.09036966179102374
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.6880673013061767,
+              "sd": null,
+              "per_seed": [
+                0.6880673013061767
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.6967342342342342,
+              "sd": null,
+              "per_seed": [
+                0.6967342342342342
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.7087016303280299,
+              "sd": null,
+              "per_seed": [
+                0.7087016303280299
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "hit@10": {
+              "mean": 0.022123893805309734,
+              "sd": null,
+              "per_seed": [
+                0.022123893805309734
+              ]
+            },
+            "recall@10": {
+              "mean": 0.022123893805309734,
+              "sd": null,
+              "per_seed": [
+                0.022123893805309734
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.007083678335928853,
+              "sd": null,
+              "per_seed": [
+                0.007083678335928853
+              ]
+            },
+            "hit@20": {
+              "mean": 0.04535398230088496,
+              "sd": null,
+              "per_seed": [
+                0.04535398230088496
+              ]
+            },
+            "recall@20": {
+              "mean": 0.04535398230088496,
+              "sd": null,
+              "per_seed": [
+                0.04535398230088496
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.013083405449782025,
+              "sd": null,
+              "per_seed": [
+                0.013083405449782025
+              ]
+            }
+          }
+        },
+        "khong_lap_duoc": {
+          "n_users": 236,
+          "n_with_adapter_pair": 18,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.029661016949152543,
+              "sd": null,
+              "per_seed": [
+                0.029661016949152543
+              ]
+            },
+            "recall@5": {
+              "mean": 0.029661016949152543,
+              "sd": null,
+              "per_seed": [
+                0.029661016949152543
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.01717749653119955,
+              "sd": null,
+              "per_seed": [
+                0.01717749653119955
+              ]
+            },
+            "hit@10": {
+              "mean": 0.05508474576271186,
+              "sd": null,
+              "per_seed": [
+                0.05508474576271186
+              ]
+            },
+            "recall@10": {
+              "mean": 0.05508474576271186,
+              "sd": null,
+              "per_seed": [
+                0.05508474576271186
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.0251970050828088,
+              "sd": null,
+              "per_seed": [
+                0.0251970050828088
+              ]
+            },
+            "hit@20": {
+              "mean": 0.07627118644067797,
+              "sd": null,
+              "per_seed": [
+                0.07627118644067797
+              ]
+            },
+            "recall@20": {
+              "mean": 0.07627118644067797,
+              "sd": null,
+              "per_seed": [
+                0.07627118644067797
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.030226801275919,
+              "sd": null,
+              "per_seed": [
+                0.030226801275919
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.7719148936170213,
+              "sd": null,
+              "per_seed": [
+                0.7719148936170213
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.7789291882556131,
+              "sd": null,
+              "per_seed": [
+                0.7789291882556131
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.785929648241206,
+              "sd": null,
+              "per_seed": [
+                0.785929648241206
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "hit@10": {
+              "mean": 0.00423728813559322,
+              "sd": null,
+              "per_seed": [
+                0.00423728813559322
+              ]
+            },
+            "recall@10": {
+              "mean": 0.00423728813559322,
+              "sd": null,
+              "per_seed": [
+                0.00423728813559322
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.0013367155796005455,
+              "sd": null,
+              "per_seed": [
+                0.0013367155796005455
+              ]
+            },
+            "hit@20": {
+              "mean": 0.012711864406779662,
+              "sd": null,
+              "per_seed": [
+                0.012711864406779662
+              ]
+            },
+            "recall@20": {
+              "mean": 0.012711864406779662,
+              "sd": null,
+              "per_seed": [
+                0.012711864406779662
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.0035342052399692284,
+              "sd": null,
+              "per_seed": [
+                0.0035342052399692284
+              ]
+            }
+          }
+        },
+        "khong_phan_duoc": {
+          "n_users": 12,
+          "n_with_adapter_pair": 0,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.25,
+              "sd": null,
+              "per_seed": [
+                0.25
+              ]
+            },
+            "recall@5": {
+              "mean": 0.25,
+              "sd": null,
+              "per_seed": [
+                0.25
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.13013385930373755,
+              "sd": null,
+              "per_seed": [
+                0.13013385930373755
+              ]
+            },
+            "hit@10": {
+              "mean": 0.4166666666666667,
+              "sd": null,
+              "per_seed": [
+                0.4166666666666667
+              ]
+            },
+            "recall@10": {
+              "mean": 0.4166666666666667,
+              "sd": null,
+              "per_seed": [
+                0.4166666666666667
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.18610653129488344,
+              "sd": null,
+              "per_seed": [
+                0.18610653129488344
+              ]
+            },
+            "hit@20": {
+              "mean": 0.4166666666666667,
+              "sd": null,
+              "per_seed": [
+                0.4166666666666667
+              ]
+            },
+            "recall@20": {
+              "mean": 0.4166666666666667,
+              "sd": null,
+              "per_seed": [
+                0.4166666666666667
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.18610653129488344,
+              "sd": null,
+              "per_seed": [
+                0.18610653129488344
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.7368421052631579,
+              "sd": null,
+              "per_seed": [
+                0.7368421052631579
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.775,
+              "sd": null,
+              "per_seed": [
+                0.775
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.8307692307692308,
+              "sd": null,
+              "per_seed": [
+                0.8307692307692308
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "hit@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "hit@20": {
+              "mean": 0.08333333333333333,
+              "sd": null,
+              "per_seed": [
+                0.08333333333333333
+              ]
+            },
+            "recall@20": {
+              "mean": 0.08333333333333333,
+              "sd": null,
+              "per_seed": [
+                0.08333333333333333
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.021887461253099465,
+              "sd": null,
+              "per_seed": [
+                0.021887461253099465
+              ]
+            }
+          }
+        }
+      }
+    },
+    "Popularity-MountAware": {
+      "n_seeds": 1,
+      "full": {
+        "recall@5": {
+          "mean": 0.013552859106427631,
+          "sd": null,
+          "per_seed": [
+            0.013552859106427631
+          ]
+        },
+        "ndcg@5": {
+          "mean": 0.00839417746864366,
+          "sd": null,
+          "per_seed": [
+            0.00839417746864366
+          ]
+        },
+        "hit@5": {
+          "mean": 0.013552859106427631,
+          "sd": null,
+          "per_seed": [
+            0.013552859106427631
+          ]
+        },
+        "recall@10": {
+          "mean": 0.022937881497465305,
+          "sd": null,
+          "per_seed": [
+            0.022937881497465305
+          ]
+        },
+        "ndcg@10": {
+          "mean": 0.011395309316370941,
+          "sd": null,
+          "per_seed": [
+            0.011395309316370941
+          ]
+        },
+        "hit@10": {
+          "mean": 0.022937881497465305,
+          "sd": null,
+          "per_seed": [
+            0.022937881497465305
+          ]
+        },
+        "recall@20": {
+          "mean": 0.03816083120261303,
+          "sd": null,
+          "per_seed": [
+            0.03816083120261303
+          ]
+        },
+        "ndcg@20": {
+          "mean": 0.015252894431172575,
+          "sd": null,
+          "per_seed": [
+            0.015252894431172575
+          ]
+        },
+        "hit@20": {
+          "mean": 0.03816083120261303,
+          "sd": null,
+          "per_seed": [
+            0.03816083120261303
+          ]
+        }
+      },
+      "cvr": {
+        "cvr@5": {
+          "mean": 0.0,
+          "sd": null,
+          "per_seed": [
+            0.0
+          ]
+        },
+        "cvr@10": {
+          "mean": 0.0,
+          "sd": null,
+          "per_seed": [
+            0.0
+          ]
+        },
+        "cvr@20": {
+          "mean": 0.0,
+          "sd": null,
+          "per_seed": [
+            0.0
+          ]
+        },
+        "cvr_n_users@5": {
+          "mean": 7.0,
+          "sd": null,
+          "per_seed": [
+            7.0
+          ]
+        },
+        "cvr_n_lenses@5": {
+          "mean": 7.0,
+          "sd": null,
+          "per_seed": [
+            7.0
+          ]
+        },
+        "cvr_n_violations@5": {
+          "mean": 0.0,
+          "sd": null,
+          "per_seed": [
+            0.0
+          ]
+        },
+        "cvr_n_users@10": {
+          "mean": 3268.0,
+          "sd": null,
+          "per_seed": [
+            3268.0
+          ]
+        },
+        "cvr_n_lenses@10": {
+          "mean": 3268.0,
+          "sd": null,
+          "per_seed": [
+            3268.0
+          ]
+        },
+        "cvr_n_violations@10": {
+          "mean": 0.0,
+          "sd": null,
+          "per_seed": [
+            0.0
+          ]
+        },
+        "cvr_n_users@20": {
+          "mean": 5922.0,
+          "sd": null,
+          "per_seed": [
+            5922.0
+          ]
+        },
+        "cvr_n_lenses@20": {
+          "mean": 6028.0,
+          "sd": null,
+          "per_seed": [
+            6028.0
+          ]
+        },
+        "cvr_n_violations@20": {
+          "mean": 0.0,
+          "sd": null,
+          "per_seed": [
+            0.0
+          ]
+        },
+        "cvr_n_users_with_body": 10406
+      },
+      "top10_type_mix": {
+        "than": {
+          "mean": 0.0,
+          "sd": null,
+          "per_seed": [
+            0.0
+          ]
+        },
+        "ong": {
+          "mean": 0.886492957538316,
+          "sd": null,
+          "per_seed": [
+            0.886492957538316
+          ]
+        },
+        "phu_kien": {
+          "mean": 9.113507042461684,
+          "sd": null,
+          "per_seed": [
+            9.113507042461684
+          ]
+        },
+        "khac": {
+          "mean": 0.0,
+          "sd": null,
+          "per_seed": [
+            0.0
+          ]
+        }
+      },
+      "n_users_tie_at_target": {
+        "mean": 61460.0,
+        "sd": null,
+        "per_seed": [
+          61460.0
+        ]
+      },
+      "sampled_1_99": {
+        "hit@5": {
+          "mean": 0.3438317494568511,
+          "sd": null,
+          "per_seed": [
+            0.3438317494568511
+          ]
+        },
+        "ndcg@5": {
+          "mean": 0.24710082409198603,
+          "sd": null,
+          "per_seed": [
+            0.24710082409198603
+          ]
+        },
+        "hit@10": {
+          "mean": 0.4603242636082825,
+          "sd": null,
+          "per_seed": [
+            0.4603242636082825
+          ]
+        },
+        "ndcg@10": {
+          "mean": 0.28472671200095206,
+          "sd": null,
+          "per_seed": [
+            0.28472671200095206
+          ]
+        },
+        "hit@20": {
+          "mean": 0.5938428341289664,
+          "sd": null,
+          "per_seed": [
+            0.5938428341289664
+          ]
+        },
+        "ndcg@20": {
+          "mean": 0.3184164248691674,
+          "sd": null,
+          "per_seed": [
+            0.3184164248691674
+          ]
+        }
+      },
+      "scenario": {
+        "lap_duoc": {
+          "n_users": 904,
+          "n_with_adapter_pair": 0,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.14380530973451328,
+              "sd": null,
+              "per_seed": [
+                0.14380530973451328
+              ]
+            },
+            "recall@5": {
+              "mean": 0.14380530973451328,
+              "sd": null,
+              "per_seed": [
+                0.14380530973451328
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.0959420466629528,
+              "sd": null,
+              "per_seed": [
+                0.0959420466629528
+              ]
+            },
+            "hit@10": {
+              "mean": 0.2179203539823009,
+              "sd": null,
+              "per_seed": [
+                0.2179203539823009
+              ]
+            },
+            "recall@10": {
+              "mean": 0.2179203539823009,
+              "sd": null,
+              "per_seed": [
+                0.2179203539823009
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.11953626218312045,
+              "sd": null,
+              "per_seed": [
+                0.11953626218312045
+              ]
+            },
+            "hit@20": {
+              "mean": 0.2809734513274336,
+              "sd": null,
+              "per_seed": [
+                0.2809734513274336
+              ]
+            },
+            "recall@20": {
+              "mean": 0.2809734513274336,
+              "sd": null,
+              "per_seed": [
+                0.2809734513274336
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.1355196730320966,
+              "sd": null,
+              "per_seed": [
+                0.1355196730320966
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "hit@10": {
+              "mean": 0.022123893805309734,
+              "sd": null,
+              "per_seed": [
+                0.022123893805309734
+              ]
+            },
+            "recall@10": {
+              "mean": 0.022123893805309734,
+              "sd": null,
+              "per_seed": [
+                0.022123893805309734
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.007083678335928853,
+              "sd": null,
+              "per_seed": [
+                0.007083678335928853
+              ]
+            },
+            "hit@20": {
+              "mean": 0.04535398230088496,
+              "sd": null,
+              "per_seed": [
+                0.04535398230088496
+              ]
+            },
+            "recall@20": {
+              "mean": 0.04535398230088496,
+              "sd": null,
+              "per_seed": [
+                0.04535398230088496
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.013246281118206858,
+              "sd": null,
+              "per_seed": [
+                0.013246281118206858
+              ]
+            }
+          }
+        },
+        "khong_lap_duoc": {
+          "n_users": 236,
+          "n_with_adapter_pair": 18,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "hit@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "hit@20": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@20": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "hit@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "hit@20": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@20": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            }
+          }
+        },
+        "khong_phan_duoc": {
+          "n_users": 12,
+          "n_with_adapter_pair": 0,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.3333333333333333,
+              "sd": null,
+              "per_seed": [
+                0.3333333333333333
+              ]
+            },
+            "recall@5": {
+              "mean": 0.3333333333333333,
+              "sd": null,
+              "per_seed": [
+                0.3333333333333333
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.1718005259704042,
+              "sd": null,
+              "per_seed": [
+                0.1718005259704042
+              ]
+            },
+            "hit@10": {
+              "mean": 0.4166666666666667,
+              "sd": null,
+              "per_seed": [
+                0.4166666666666667
+              ]
+            },
+            "recall@10": {
+              "mean": 0.4166666666666667,
+              "sd": null,
+              "per_seed": [
+                0.4166666666666667
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.19808926570254828,
+              "sd": null,
+              "per_seed": [
+                0.19808926570254828
+              ]
+            },
+            "hit@20": {
+              "mean": 0.4166666666666667,
+              "sd": null,
+              "per_seed": [
+                0.4166666666666667
+              ]
+            },
+            "recall@20": {
+              "mean": 0.4166666666666667,
+              "sd": null,
+              "per_seed": [
+                0.4166666666666667
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.19808926570254828,
+              "sd": null,
+              "per_seed": [
+                0.19808926570254828
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "hit@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "recall@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.0,
+              "sd": null,
+              "per_seed": [
+                0.0
+              ]
+            },
+            "hit@20": {
+              "mean": 0.08333333333333333,
+              "sd": null,
+              "per_seed": [
+                0.08333333333333333
+              ]
+            },
+            "recall@20": {
+              "mean": 0.08333333333333333,
+              "sd": null,
+              "per_seed": [
+                0.08333333333333333
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.021887461253099465,
+              "sd": null,
+              "per_seed": [
+                0.021887461253099465
+              ]
+            }
+          }
+        }
+      }
+    },
+    "LightGCN": {
+      "n_seeds": 3,
+      "full": {
+        "recall@5": {
+          "mean": 0.03942694708423858,
+          "sd": 0.00022624480874172052,
+          "per_seed": [
+            0.03956488967056355,
+            0.039165841474409185,
+            0.039550110107743015
+          ]
+        },
+        "ndcg@5": {
+          "mean": 0.026408784096309774,
+          "sd": 0.0002503231133156815,
+          "per_seed": [
+            0.026523362663929163,
+            0.0261216786360856,
+            0.026581310988914565
+          ]
+        },
+        "hit@5": {
+          "mean": 0.03942694708423858,
+          "sd": 0.00022624480874172052,
+          "per_seed": [
+            0.03956488967056355,
+            0.039165841474409185,
+            0.039550110107743015
+          ]
+        },
+        "recall@10": {
+          "mean": 0.06028091022400891,
+          "sd": 0.000296083498644059,
+          "per_seed": [
+            0.060389293684692806,
+            0.05994590680007685,
+            0.06050753018725706
+          ]
+        },
+        "ndcg@10": {
+          "mean": 0.03310540153237108,
+          "sd": 0.00028280409011074525,
+          "per_seed": [
+            0.03321374609481037,
+            0.03278444423428252,
+            0.03331801426802034
+          ]
+        },
+        "hit@10": {
+          "mean": 0.06028091022400891,
+          "sd": 0.000296083498644059,
+          "per_seed": [
+            0.060389293684692806,
+            0.05994590680007685,
+            0.06050753018725706
+          ]
+        },
+        "recall@20": {
+          "mean": 0.0895444446086618,
+          "sd": 0.0005713277646953572,
+          "per_seed": [
+            0.08915032293344763,
+            0.09019967189370538,
+            0.08928333899883241
+          ]
+        },
+        "ndcg@20": {
+          "mean": 0.04046422809345875,
+          "sd": 7.028061358273263e-05,
+          "per_seed": [
+            0.04044730812275842,
+            0.04040395198502122,
+            0.0405414241725966
+          ]
+        },
+        "hit@20": {
+          "mean": 0.0895444446086618,
+          "sd": 0.0005713277646953572,
+          "per_seed": [
+            0.08915032293344763,
+            0.09019967189370538,
+            0.08928333899883241
+          ]
+        }
+      },
+      "cvr": {
+        "cvr@5": {
+          "mean": 0.11606243125696232,
+          "sd": 0.0009738277824413719,
+          "per_seed": [
+            0.11498504643475524,
+            0.11632224733613174,
+            0.11688
+          ]
+        },
+        "cvr@10": {
+          "mean": 0.12933330017348832,
+          "sd": 0.0010594510433027012,
+          "per_seed": [
+            0.1281941896676763,
+            0.13028919330289193,
+            0.12951651754989676
+          ]
+        },
+        "cvr@20": {
+          "mean": 0.14572977669798615,
+          "sd": 0.0011579119738385055,
+          "per_seed": [
+            0.1449920359786377,
+            0.1451329534662868,
+            0.14706434064903395
+          ]
+        },
+        "cvr_n_users@5": {
+          "mean": 6782.666666666667,
+          "sd": 18.175074506954115,
+          "per_seed": [
+            6768.0,
+            6803.0,
+            6777.0
+          ]
+        },
+        "cvr_n_lenses@5": {
+          "mean": 12531.333333333334,
+          "sd": 161.29889439588027,
+          "per_seed": [
+            12706.0,
+            12388.0,
+            12500.0
+          ]
+        },
+        "cvr_n_violations@5": {
+          "mean": 1454.3333333333333,
+          "sd": 11.547005383792515,
+          "per_seed": [
+            1461.0,
+            1441.0,
+            1461.0
+          ]
+        },
+        "cvr_n_users@10": {
+          "mean": 8189.333333333333,
+          "sd": 9.237604307034013,
+          "per_seed": [
+            8184.0,
+            8200.0,
+            8184.0
+          ]
+        },
+        "cvr_n_lenses@10": {
+          "mean": 23228.0,
+          "sd": 223.6716343213864,
+          "per_seed": [
+            23441.0,
+            22995.0,
+            23248.0
+          ]
+        },
+        "cvr_n_violations@10": {
+          "mean": 3004.0,
+          "sd": 7.54983443527075,
+          "per_seed": [
+            3005.0,
+            2996.0,
+            3011.0
+          ]
+        },
+        "cvr_n_users@20": {
+          "mean": 9151.666666666666,
+          "sd": 11.590225767142472,
+          "per_seed": [
+            9146.0,
+            9144.0,
+            9165.0
+          ]
+        },
+        "cvr_n_lenses@20": {
+          "mean": 42486.666666666664,
+          "sd": 318.3038380750903,
+          "per_seed": [
+            42692.0,
+            42120.0,
+            42648.0
+          ]
+        },
+        "cvr_n_violations@20": {
+          "mean": 6191.666666666667,
+          "sd": 79.5131016457875,
+          "per_seed": [
+            6190.0,
+            6113.0,
+            6272.0
+          ]
+        },
+        "cvr_n_users_with_body": 10406
+      },
+      "top10_type_mix": {
+        "than": {
+          "mean": 0.3762531837641576,
+          "sd": 0.012572051905776585,
+          "per_seed": [
+            0.36381371839021004,
+            0.38895375474793453,
+            0.37599207815432817
+          ]
+        },
+        "ong": {
+          "mean": 1.1828823103412602,
+          "sd": 0.006255387763607765,
+          "per_seed": [
+            1.190079957434859,
+            1.1798081612745894,
+            1.1787588123143318
+          ]
+        },
+        "phu_kien": {
+          "mean": 7.99306345851623,
+          "sd": 0.006935259000208094,
+          "per_seed": [
+            7.995654808530763,
+            7.985205657616648,
+            7.99832990940128
+          ]
+        },
+        "khac": {
+          "mean": 0.44780104737835186,
+          "sd": 0.0023378041942216173,
+          "per_seed": [
+            0.45045151564416724,
+            0.44603242636082824,
+            0.44691920013006015
+          ]
+        }
+      },
+      "n_users_tie_at_target": {
+        "mean": 12.0,
+        "sd": 1.7320508075688772,
+        "per_seed": [
+          13.0,
+          13.0,
+          10.0
+        ]
+      },
+      "sampled_1_99": {
+        "hit@5": {
+          "mean": 0.4806806481330949,
+          "sd": 0.0005601304821522993,
+          "per_seed": [
+            0.4813260223762581,
+            0.4803949099185646,
+            0.48032101210446193
+          ]
+        },
+        "ndcg@5": {
+          "mean": 0.37234256322976195,
+          "sd": 0.0007181675538620489,
+          "per_seed": [
+            0.3731425678151351,
+            0.37213166179100426,
+            0.37175346008314647
+          ]
+        },
+        "hit@10": {
+          "mean": 0.5873841651763941,
+          "sd": 0.0020703524744422833,
+          "per_seed": [
+            0.588995137523832,
+            0.5881083637546002,
+            0.5850489942507501
+          ]
+        },
+        "ndcg@10": {
+          "mean": 0.40684824286697086,
+          "sd": 0.0011668006616688872,
+          "per_seed": [
+            0.4079660977109213,
+            0.4069406403984278,
+            0.4056379904915635
+          ]
+        },
+        "hit@20": {
+          "mean": 0.7034086598385088,
+          "sd": 0.0015766637377625558,
+          "per_seed": [
+            0.7041279318957745,
+            0.7044974209662879,
+            0.7016006266534636
+          ]
+        },
+        "ndcg@20": {
+          "mean": 0.43615510734900925,
+          "sd": 0.0010146317498222893,
+          "per_seed": [
+            0.43709116560344113,
+            0.43629726163354743,
+            0.4350768948100392
+          ]
+        }
+      },
+      "scenario": {
+        "lap_duoc": {
+          "n_users": 904,
+          "n_with_adapter_pair": 0,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.2588495575221239,
+              "sd": 0.008780148156187809,
+              "per_seed": [
+                0.26548672566371684,
+                0.2488938053097345,
+                0.26216814159292035
+              ]
+            },
+            "recall@5": {
+              "mean": 0.2588495575221239,
+              "sd": 0.008780148156187809,
+              "per_seed": [
+                0.26548672566371684,
+                0.2488938053097345,
+                0.26216814159292035
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.17376700951620536,
+              "sd": 0.003997438683323572,
+              "per_seed": [
+                0.17755224311083595,
+                0.16958670370976062,
+                0.17416208172801953
+              ]
+            },
+            "hit@10": {
+              "mean": 0.3561946902654867,
+              "sd": 0.009054593774195175,
+              "per_seed": [
+                0.34845132743362833,
+                0.3661504424778761,
+                0.35398230088495575
+              ]
+            },
+            "recall@10": {
+              "mean": 0.3561946902654867,
+              "sd": 0.009054593774195175,
+              "per_seed": [
+                0.34845132743362833,
+                0.3661504424778761,
+                0.35398230088495575
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.2051929539807987,
+              "sd": 0.002220085616233079,
+              "per_seed": [
+                0.204221029298251,
+                0.20773325367314124,
+                0.20362457897100386
+              ]
+            },
+            "hit@20": {
+              "mean": 0.4929941002949853,
+              "sd": 0.0012773236044018288,
+              "per_seed": [
+                0.4944690265486726,
+                0.4922566371681416,
+                0.4922566371681416
+              ]
+            },
+            "recall@20": {
+              "mean": 0.4929941002949853,
+              "sd": 0.0012773236044018288,
+              "per_seed": [
+                0.4944690265486726,
+                0.4922566371681416,
+                0.4922566371681416
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.23971949657352878,
+              "sd": 0.0012570518787563666,
+              "per_seed": [
+                0.24100920204319837,
+                0.2396514230659666,
+                0.2384978646114214
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.12558239949841954,
+              "sd": 0.002993376687763837,
+              "per_seed": [
+                0.12623031496062992,
+                0.12819875776397516,
+                0.12231812577065351
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.13925187485982018,
+              "sd": 0.0026943021352701167,
+              "per_seed": [
+                0.14204545454545456,
+                0.13904091738337243,
+                0.13666925265063357
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.15790693146487028,
+              "sd": 0.000830861533600108,
+              "per_seed": [
+                0.15801855088049468,
+                0.15867634095070185,
+                0.1570259025634143
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.1316371681415929,
+              "sd": 0.01013844180299965,
+              "per_seed": [
+                0.1404867256637168,
+                0.12057522123893805,
+                0.1338495575221239
+              ]
+            },
+            "recall@5": {
+              "mean": 0.1316371681415929,
+              "sd": 0.01013844180299965,
+              "per_seed": [
+                0.1404867256637168,
+                0.12057522123893805,
+                0.1338495575221239
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.09158108676567556,
+              "sd": 0.005004958108201904,
+              "per_seed": [
+                0.09729080212109541,
+                0.08795229848066408,
+                0.08950015969526723
+              ]
+            },
+            "hit@10": {
+              "mean": 0.196165191740413,
+              "sd": 0.008375971011504826,
+              "per_seed": [
+                0.20575221238938052,
+                0.1902654867256637,
+                0.19247787610619468
+              ]
+            },
+            "recall@10": {
+              "mean": 0.196165191740413,
+              "sd": 0.008375971011504826,
+              "per_seed": [
+                0.20575221238938052,
+                0.1902654867256637,
+                0.19247787610619468
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.1122452069887034,
+              "sd": 0.005107678634852782,
+              "per_seed": [
+                0.11807041592063142,
+                0.110131718729227,
+                0.10853348631625179
+              ]
+            },
+            "hit@20": {
+              "mean": 0.2865044247787611,
+              "sd": 0.005747956219808214,
+              "per_seed": [
+                0.29314159292035397,
+                0.2831858407079646,
+                0.2831858407079646
+              ]
+            },
+            "recall@20": {
+              "mean": 0.2865044247787611,
+              "sd": 0.005747956219808214,
+              "per_seed": [
+                0.29314159292035397,
+                0.2831858407079646,
+                0.2831858407079646
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.13500406572506252,
+              "sd": 0.004636318796610813,
+              "per_seed": [
+                0.1401991010025529,
+                0.13352644019408016,
+                0.13128665597855446
+              ]
+            }
+          }
+        },
+        "khong_lap_duoc": {
+          "n_users": 236,
+          "n_with_adapter_pair": 18,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.05649717514124294,
+              "sd": 0.008820618641805646,
+              "per_seed": [
+                0.046610169491525424,
+                0.059322033898305086,
+                0.0635593220338983
+              ]
+            },
+            "recall@5": {
+              "mean": 0.05649717514124294,
+              "sd": 0.008820618641805646,
+              "per_seed": [
+                0.046610169491525424,
+                0.059322033898305086,
+                0.0635593220338983
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.03454521069908758,
+              "sd": 0.006960444758800972,
+              "per_seed": [
+                0.026869696523702392,
+                0.03631834848823728,
+                0.04044758708532306
+              ]
+            },
+            "hit@10": {
+              "mean": 0.09322033898305086,
+              "sd": 0.004237288135593223,
+              "per_seed": [
+                0.09322033898305085,
+                0.08898305084745763,
+                0.09745762711864407
+              ]
+            },
+            "recall@10": {
+              "mean": 0.09322033898305086,
+              "sd": 0.004237288135593223,
+              "per_seed": [
+                0.09322033898305085,
+                0.08898305084745763,
+                0.09745762711864407
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.04616236616608423,
+              "sd": 0.004580975182241663,
+              "per_seed": [
+                0.04176444556088067,
+                0.04581592779989982,
+                0.0509067251374722
+              ]
+            },
+            "hit@20": {
+              "mean": 0.12853107344632766,
+              "sd": 0.009785597782875003,
+              "per_seed": [
+                0.13983050847457626,
+                0.1228813559322034,
+                0.1228813559322034
+              ]
+            },
+            "recall@20": {
+              "mean": 0.12853107344632766,
+              "sd": 0.009785597782875003,
+              "per_seed": [
+                0.13983050847457626,
+                0.1228813559322034,
+                0.1228813559322034
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.05533557350479706,
+              "sd": 0.0020438319931277227,
+              "per_seed": [
+                0.053925006900562976,
+                0.054402267289250475,
+                0.057679446324577714
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.4208008441922377,
+              "sd": 0.002797608462415317,
+              "per_seed": [
+                0.42153846153846153,
+                0.41770833333333335,
+                0.42315573770491804
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.42605841784169735,
+              "sd": 0.003942288227599104,
+              "per_seed": [
+                0.43057050592034446,
+                0.4243243243243243,
+                0.42328042328042326
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.4422349865115196,
+              "sd": 0.0052760367285447805,
+              "per_seed": [
+                0.4411764705882353,
+                0.4479600333055787,
+                0.4375684556407448
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.018361581920903956,
+              "sd": 0.002446399445718753,
+              "per_seed": [
+                0.01694915254237288,
+                0.01694915254237288,
+                0.0211864406779661
+              ]
+            },
+            "recall@5": {
+              "mean": 0.018361581920903956,
+              "sd": 0.002446399445718753,
+              "per_seed": [
+                0.01694915254237288,
+                0.01694915254237288,
+                0.0211864406779661
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.011770524363435042,
+              "sd": 0.0013203381734156279,
+              "per_seed": [
+                0.011409051123797916,
+                0.010668570172906776,
+                0.01323395179360043
+              ]
+            },
+            "hit@10": {
+              "mean": 0.03672316384180791,
+              "sd": 0.004892798891437506,
+              "per_seed": [
+                0.03389830508474576,
+                0.03389830508474576,
+                0.0423728813559322
+              ]
+            },
+            "recall@10": {
+              "mean": 0.03672316384180791,
+              "sd": 0.004892798891437506,
+              "per_seed": [
+                0.03389830508474576,
+                0.03389830508474576,
+                0.0423728813559322
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.01762636042473795,
+              "sd": 0.0020009760714328473,
+              "per_seed": [
+                0.016607897999877736,
+                0.016339496997315326,
+                0.019931686277020792
+              ]
+            },
+            "hit@20": {
+              "mean": 0.06497175141242938,
+              "sd": 0.00647256454089808,
+              "per_seed": [
+                0.0635593220338983,
+                0.059322033898305086,
+                0.07203389830508475
+              ]
+            },
+            "recall@20": {
+              "mean": 0.06497175141242938,
+              "sd": 0.00647256454089808,
+              "per_seed": [
+                0.0635593220338983,
+                0.059322033898305086,
+                0.07203389830508475
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.024839387291035842,
+              "sd": 0.0023042964896673856,
+              "per_seed": [
+                0.024026493369274603,
+                0.023051709160617846,
+                0.027439959343215078
+              ]
+            }
+          }
+        },
+        "khong_phan_duoc": {
+          "n_users": 12,
+          "n_with_adapter_pair": 0,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.3333333333333333,
+              "sd": 0.0,
+              "per_seed": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+              ]
+            },
+            "recall@5": {
+              "mean": 0.3333333333333333,
+              "sd": 0.0,
+              "per_seed": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.23533828147681177,
+              "sd": 0.01777990070937597,
+              "per_seed": [
+                0.23015495892857626,
+                0.22072602619812143,
+                0.25513385930373755
+              ]
+            },
+            "hit@10": {
+              "mean": 0.3888888888888889,
+              "sd": 0.048112522432468836,
+              "per_seed": [
+                0.3333333333333333,
+                0.4166666666666667,
+                0.4166666666666667
+              ]
+            },
+            "recall@10": {
+              "mean": 0.3888888888888889,
+              "sd": 0.048112522432468836,
+              "per_seed": [
+                0.3333333333333333,
+                0.4166666666666667,
+                0.4166666666666667
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.25449218482240493,
+              "sd": 0.027819091408055194,
+              "per_seed": [
+                0.23015495892857626,
+                0.2485038039758992,
+                0.2848177915627394
+              ]
+            },
+            "hit@20": {
+              "mean": 0.47222222222222227,
+              "sd": 0.0481125224324688,
+              "per_seed": [
+                0.4166666666666667,
+                0.5,
+                0.5
+              ]
+            },
+            "recall@20": {
+              "mean": 0.47222222222222227,
+              "sd": 0.0481125224324688,
+              "per_seed": [
+                0.4166666666666667,
+                0.5,
+                0.5
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.2762390650853081,
+              "sd": 0.027668570156942057,
+              "per_seed": [
+                0.2526748051308529,
+                0.26933713730923253,
+                0.3067052528158389
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.06666666666666667,
+              "sd": 0.11547005383792516,
+              "per_seed": [
+                0.0,
+                0.0,
+                0.2
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.2377450980392157,
+              "sd": 0.0976401190541279,
+              "per_seed": [
+                0.125,
+                0.29411764705882354,
+                0.29411764705882354
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.23571428571428568,
+              "sd": 0.031134992453861938,
+              "per_seed": [
+                0.25,
+                0.2,
+                0.2571428571428571
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.2222222222222222,
+              "sd": 0.04811252243246882,
+              "per_seed": [
+                0.25,
+                0.16666666666666666,
+                0.25
+              ]
+            },
+            "recall@5": {
+              "mean": 0.2222222222222222,
+              "sd": 0.04811252243246882,
+              "per_seed": [
+                0.25,
+                0.16666666666666666,
+                0.25
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.14979970168651036,
+              "sd": 0.024056261216234418,
+              "per_seed": [
+                0.13591081279762146,
+                0.13591081279762146,
+                0.17757747946428815
+              ]
+            },
+            "hit@10": {
+              "mean": 0.27777777777777773,
+              "sd": 0.0481125224324688,
+              "per_seed": [
+                0.3333333333333333,
+                0.25,
+                0.25
+              ]
+            },
+            "recall@10": {
+              "mean": 0.27777777777777773,
+              "sd": 0.0481125224324688,
+              "per_seed": [
+                0.3333333333333333,
+                0.25,
+                0.25
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.16845725901689232,
+              "sd": 0.008078715790918163,
+              "per_seed": [
+                0.1621995525297655,
+                0.1655947450566233,
+                0.17757747946428815
+              ]
+            },
+            "hit@20": {
+              "mean": 0.3333333333333333,
+              "sd": 0.08333333333333334,
+              "per_seed": [
+                0.3333333333333333,
+                0.4166666666666667,
+                0.25
+              ]
+            },
+            "recall@20": {
+              "mean": 0.3333333333333333,
+              "sd": 0.08333333333333334,
+              "per_seed": [
+                0.3333333333333333,
+                0.4166666666666667,
+                0.25
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.18189137772541367,
+              "sd": 0.0221658798204177,
+              "per_seed": [
+                0.1621995525297655,
+                0.20589710118218738,
+                0.17757747946428815
+              ]
+            }
+          }
+        }
+      }
+    },
+    "R-GCN": {
+      "n_seeds": 3,
+      "full": {
+        "recall@5": {
+          "mean": 0.021267790898745215,
+          "sd": 0.00026272725550362957,
+          "per_seed": [
+            0.02106087701925777,
+            0.02156338215515585,
+            0.021179113521822026
+          ]
+        },
+        "ndcg@5": {
+          "mean": 0.014071845957413858,
+          "sd": 0.0002277016536219084,
+          "per_seed": [
+            0.014045703598384064,
+            0.014311490471327178,
+            0.013858343802530333
+          ]
+        },
+        "hit@5": {
+          "mean": 0.021267790898745215,
+          "sd": 0.00026272725550362957,
+          "per_seed": [
+            0.02106087701925777,
+            0.02156338215515585,
+            0.021179113521822026
+          ]
+        },
+        "recall@10": {
+          "mean": 0.033968361882522176,
+          "sd": 0.0003377811879107497,
+          "per_seed": [
+            0.03357916672824818,
+            0.03418512880388998,
+            0.034140790115428386
+          ]
+        },
+        "ndcg@10": {
+          "mean": 0.018154394129568856,
+          "sd": 0.00019899158399285194,
+          "per_seed": [
+            0.01807640575756687,
+            0.018380567403275563,
+            0.01800620922786413
+          ]
+        },
+        "hit@10": {
+          "mean": 0.033968361882522176,
+          "sd": 0.0003377811879107497,
+          "per_seed": [
+            0.03357916672824818,
+            0.03418512880388998,
+            0.034140790115428386
+          ]
+        },
+        "recall@20": {
+          "mean": 0.05301921835818763,
+          "sd": 0.0004059226054421184,
+          "per_seed": [
+            0.05268914145519576,
+            0.05347245828468394,
+            0.0528960553346832
+          ]
+        },
+        "ndcg@20": {
+          "mean": 0.022940359881464267,
+          "sd": 0.00026923130061677907,
+          "per_seed": [
+            0.022866474314740273,
+            0.023238819749362264,
+            0.02271578558029027
+          ]
+        },
+        "hit@20": {
+          "mean": 0.05301921835818763,
+          "sd": 0.0004059226054421184,
+          "per_seed": [
+            0.05268914145519576,
+            0.05347245828468394,
+            0.0528960553346832
+          ]
+        }
+      },
+      "cvr": {
+        "cvr@5": {
+          "mean": 0.38192761510305356,
+          "sd": 0.10447943584215327,
+          "per_seed": [
+            0.4404410316991534,
+            0.44403877628100213,
+            0.26130303732900534
+          ]
+        },
+        "cvr@10": {
+          "mean": 0.4024813257078854,
+          "sd": 0.10864786449213948,
+          "per_seed": [
+            0.46223817655874255,
+            0.4681340341655716,
+            0.27707176639934195
+          ]
+        },
+        "cvr@20": {
+          "mean": 0.42417456758311173,
+          "sd": 0.11101692847638843,
+          "per_seed": [
+            0.4839283422263784,
+            0.4925161776041013,
+            0.29607918291885554
+          ]
+        },
+        "cvr_n_users@5": {
+          "mean": 6118.666666666667,
+          "sd": 577.8108110215085,
+          "per_seed": [
+            6154.0,
+            6678.0,
+            5524.0
+          ]
+        },
+        "cvr_n_lenses@5": {
+          "mean": 14687.333333333334,
+          "sd": 1548.4838821677586,
+          "per_seed": [
+            15237.0,
+            15886.0,
+            12939.0
+          ]
+        },
+        "cvr_n_violations@5": {
+          "mean": 5715.333333333333,
+          "sd": 2028.8534528973091,
+          "per_seed": [
+            6711.0,
+            7054.0,
+            3381.0
+          ]
+        },
+        "cvr_n_users@10": {
+          "mean": 7328.333333333333,
+          "sd": 539.8651066084317,
+          "per_seed": [
+            7416.0,
+            7819.0,
+            6750.0
+          ]
+        },
+        "cvr_n_lenses@10": {
+          "mean": 27816.0,
+          "sd": 3155.2738391461367,
+          "per_seed": [
+            28693.0,
+            30440.0,
+            24315.0
+          ]
+        },
+        "cvr_n_violations@10": {
+          "mean": 11416.666666666666,
+          "sd": 4082.6464864513227,
+          "per_seed": [
+            13263.0,
+            14250.0,
+            6737.0
+          ]
+        },
+        "cvr_n_users@20": {
+          "mean": 8322.333333333334,
+          "sd": 473.1514908920116,
+          "per_seed": [
+            8466.0,
+            8707.0,
+            7794.0
+          ]
+        },
+        "cvr_n_lenses@20": {
+          "mean": 51559.0,
+          "sd": 6271.798147262075,
+          "per_seed": [
+            54537.0,
+            55787.0,
+            44353.0
+          ]
+        },
+        "cvr_n_violations@20": {
+          "mean": 22333.333333333332,
+          "sd": 7986.999770460327,
+          "per_seed": [
+            26392.0,
+            27476.0,
+            13132.0
+          ]
+        },
+        "cvr_n_users_with_body": 10406
+      },
+      "top10_type_mix": {
+        "than": {
+          "mean": 0.45491494361596785,
+          "sd": 0.18293276399103614,
+          "per_seed": [
+            0.646664991649547,
+            0.2823044294349773,
+            0.4357754097633792
+          ]
+        },
+        "ong": {
+          "mean": 1.3545567855436171,
+          "sd": 0.23755540386777074,
+          "per_seed": [
+            1.3201105511298976,
+            1.6074548114866762,
+            1.1361049940142771
+          ]
+        },
+        "phu_kien": {
+          "mean": 7.8230886330382345,
+          "sd": 0.15841647716659168,
+          "per_seed": [
+            7.766719380440726,
+            7.700566057256026,
+            8.00198046141795
+          ]
+        },
+        "khac": {
+          "mean": 0.3674396378021805,
+          "sd": 0.08779868219362066,
+          "per_seed": [
+            0.2665050767798289,
+            0.4096747018223201,
+            0.42613913480439247
+          ]
+        }
+      },
+      "n_users_tie_at_target": {
+        "mean": 29.0,
+        "sd": 7.54983443527075,
+        "per_seed": [
+          21.0,
+          30.0,
+          36.0
+        ]
+      },
+      "sampled_1_99": {
+        "hit@5": {
+          "mean": 0.43803668287492054,
+          "sd": 0.009176299562310596,
+          "per_seed": [
+            0.42905070868003725,
+            0.4376671938044073,
+            0.4473921461403172
+          ]
+        },
+        "ndcg@5": {
+          "mean": 0.3213950607714839,
+          "sd": 0.007416177167713886,
+          "per_seed": [
+            0.31428194269945847,
+            0.32082217102430644,
+            0.32908106859068664
+          ]
+        },
+        "hit@10": {
+          "mean": 0.5700033992994488,
+          "sd": 0.008601857926827052,
+          "per_seed": [
+            0.5614312528635403,
+            0.5699442810481666,
+            0.5786346639866393
+          ]
+        },
+        "ndcg@10": {
+          "mean": 0.364024809272174,
+          "sd": 0.007278400530586146,
+          "per_seed": [
+            0.3570052452833149,
+            0.3635321663343441,
+            0.37153701619886287
+          ]
+        },
+        "hit@20": {
+          "mean": 0.7099165940004828,
+          "sd": 0.005648120363365492,
+          "per_seed": [
+            0.704364404900903,
+            0.7097293862047561,
+            0.7156559908957894
+          ]
+        },
+        "ndcg@20": {
+          "mean": 0.3993755567899757,
+          "sd": 0.006536420732283916,
+          "per_seed": [
+            0.3931061542732982,
+            0.39887078829952693,
+            0.40614972779710196
+          ]
+        }
+      },
+      "scenario": {
+        "lap_duoc": {
+          "n_users": 904,
+          "n_with_adapter_pair": 0,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.1556047197640118,
+              "sd": 0.010037358103846754,
+              "per_seed": [
+                0.14823008849557523,
+                0.1670353982300885,
+                0.1515486725663717
+              ]
+            },
+            "recall@5": {
+              "mean": 0.1556047197640118,
+              "sd": 0.010037358103846754,
+              "per_seed": [
+                0.14823008849557523,
+                0.1670353982300885,
+                0.1515486725663717
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.10276642588682589,
+              "sd": 0.00697912712120326,
+              "per_seed": [
+                0.09871806945799394,
+                0.11082519796021581,
+                0.09875601024226789
+              ]
+            },
+            "hit@10": {
+              "mean": 0.23119469026548675,
+              "sd": 0.019287163466994134,
+              "per_seed": [
+                0.20907079646017698,
+                0.24446902654867256,
+                0.24004424778761063
+              ]
+            },
+            "recall@10": {
+              "mean": 0.23119469026548675,
+              "sd": 0.019287163466994134,
+              "per_seed": [
+                0.20907079646017698,
+                0.24446902654867256,
+                0.24004424778761063
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.1271685313026991,
+              "sd": 0.008730106409471116,
+              "per_seed": [
+                0.1183943680354461,
+                0.13585390354311103,
+                0.12725732232954012
+              ]
+            },
+            "hit@20": {
+              "mean": 0.33517699115044247,
+              "sd": 0.013860579741307163,
+              "per_seed": [
+                0.32079646017699115,
+                0.336283185840708,
+                0.34845132743362833
+              ]
+            },
+            "recall@20": {
+              "mean": 0.33517699115044247,
+              "sd": 0.013860579741307163,
+              "per_seed": [
+                0.32079646017699115,
+                0.336283185840708,
+                0.34845132743362833
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.15319957993279718,
+              "sd": 0.006133485949409875,
+              "per_seed": [
+                0.14649768657873186,
+                0.15853373587631173,
+                0.15456731734334797
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.39047458900003496,
+              "sd": 0.09174759919168157,
+              "per_seed": [
+                0.4531621493105088,
+                0.4330924495389983,
+                0.2851691681505978
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.4055494180638817,
+              "sd": 0.09768309632274416,
+              "per_seed": [
+                0.4687958883994126,
+                0.4548081975827641,
+                0.2930441682094684
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.4283920229122146,
+              "sd": 0.10219710001706946,
+              "per_seed": [
+                0.48855894073788403,
+                0.4862244542093883,
+                0.31039267378937146
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.07817109144542772,
+              "sd": 0.0012773236044018288,
+              "per_seed": [
+                0.07964601769911504,
+                0.07743362831858407,
+                0.07743362831858407
+              ]
+            },
+            "recall@5": {
+              "mean": 0.07817109144542772,
+              "sd": 0.0012773236044018288,
+              "per_seed": [
+                0.07964601769911504,
+                0.07743362831858407,
+                0.07743362831858407
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.05035588724441031,
+              "sd": 0.004840959919390234,
+              "per_seed": [
+                0.053742887277086496,
+                0.05251349953818878,
+                0.044811274917955654
+              ]
+            },
+            "hit@10": {
+              "mean": 0.12057522123893805,
+              "sd": 0.007253803677325225,
+              "per_seed": [
+                0.11946902654867257,
+                0.12831858407079647,
+                0.11393805309734513
+              ]
+            },
+            "recall@10": {
+              "mean": 0.12057522123893805,
+              "sd": 0.007253803677325225,
+              "per_seed": [
+                0.11946902654867257,
+                0.12831858407079647,
+                0.11393805309734513
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.06395130429690346,
+              "sd": 0.0064889902349031855,
+              "per_seed": [
+                0.06651530074597954,
+                0.06876655429804172,
+                0.05657205784668912
+              ]
+            },
+            "hit@20": {
+              "mean": 0.18067846607669616,
+              "sd": 0.014437147456085462,
+              "per_seed": [
+                0.16924778761061948,
+                0.19690265486725664,
+                0.17588495575221239
+              ]
+            },
+            "recall@20": {
+              "mean": 0.18067846607669616,
+              "sd": 0.014437147456085462,
+              "per_seed": [
+                0.16924778761061948,
+                0.19690265486725664,
+                0.17588495575221239
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.0791297453833803,
+              "sd": 0.0071176646528622505,
+              "per_seed": [
+                0.07904602410095675,
+                0.08628890137962383,
+                0.0720543106695603
+              ]
+            }
+          }
+        },
+        "khong_lap_duoc": {
+          "n_users": 236,
+          "n_with_adapter_pair": 18,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.03389830508474576,
+              "sd": 0.00733919833715626,
+              "per_seed": [
+                0.038135593220338986,
+                0.038135593220338986,
+                0.025423728813559324
+              ]
+            },
+            "recall@5": {
+              "mean": 0.03389830508474576,
+              "sd": 0.00733919833715626,
+              "per_seed": [
+                0.038135593220338986,
+                0.038135593220338986,
+                0.025423728813559324
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.018448633384378976,
+              "sd": 0.0038405760672762706,
+              "per_seed": [
+                0.02130444064122984,
+                0.019958977228908083,
+                0.014082482282999008
+              ]
+            },
+            "hit@10": {
+              "mean": 0.06073446327683616,
+              "sd": 0.00647256454089808,
+              "per_seed": [
+                0.06779661016949153,
+                0.05508474576271186,
+                0.059322033898305086
+              ]
+            },
+            "recall@10": {
+              "mean": 0.06073446327683616,
+              "sd": 0.00647256454089808,
+              "per_seed": [
+                0.06779661016949153,
+                0.05508474576271186,
+                0.059322033898305086
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.027072472805808892,
+              "sd": 0.0032951264448465214,
+              "per_seed": [
+                0.030837498762117665,
+                0.025665662412015535,
+                0.02471425724329347
+              ]
+            },
+            "hit@20": {
+              "mean": 0.096045197740113,
+              "sd": 0.0024463994457187546,
+              "per_seed": [
+                0.09322033898305085,
+                0.09745762711864407,
+                0.09745762711864407
+              ]
+            },
+            "recall@20": {
+              "mean": 0.096045197740113,
+              "sd": 0.0024463994457187546,
+              "per_seed": [
+                0.09322033898305085,
+                0.09745762711864407,
+                0.09745762711864407
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.03597390696990058,
+              "sd": 0.0015159397392308295,
+              "per_seed": [
+                0.036940510725025626,
+                0.03675446077176229,
+                0.03422674941291384
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.6265857657675051,
+              "sd": 0.03515662156287936,
+              "per_seed": [
+                0.6473384030418251,
+                0.6464250734573947,
+                0.5859938208032955
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.6313056812103884,
+              "sd": 0.030675224311260314,
+              "per_seed": [
+                0.6521528785679729,
+                0.645681581685744,
+                0.5960825833774483
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.6465261906658416,
+              "sd": 0.030910566959748302,
+              "per_seed": [
+                0.6680798004987532,
+                0.6603876603876604,
+                0.6111111111111112
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.014124293785310734,
+              "sd": 0.0048927988914375066,
+              "per_seed": [
+                0.01694915254237288,
+                0.01694915254237288,
+                0.00847457627118644
+              ]
+            },
+            "recall@5": {
+              "mean": 0.014124293785310734,
+              "sd": 0.0048927988914375066,
+              "per_seed": [
+                0.01694915254237288,
+                0.01694915254237288,
+                0.00847457627118644
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.0071440934440784,
+              "sd": 0.0028799385718383304,
+              "per_seed": [
+                0.0095262962855141,
+                0.007962439309121973,
+                0.0039435447375991235
+              ]
+            },
+            "hit@10": {
+              "mean": 0.02401129943502825,
+              "sd": 0.008820618641805647,
+              "per_seed": [
+                0.0211864406779661,
+                0.03389830508474576,
+                0.01694915254237288
+              ]
+            },
+            "recall@10": {
+              "mean": 0.02401129943502825,
+              "sd": 0.008820618641805647,
+              "per_seed": [
+                0.0211864406779661,
+                0.03389830508474576,
+                0.01694915254237288
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.01033034146480454,
+              "sd": 0.0033748410137793405,
+              "per_seed": [
+                0.010938725664045175,
+                0.013359609034637706,
+                0.006692689695730742
+              ]
+            },
+            "hit@20": {
+              "mean": 0.03954802259887006,
+              "sd": 0.00647256454089808,
+              "per_seed": [
+                0.03389830508474576,
+                0.046610169491525424,
+                0.038135593220338986
+              ]
+            },
+            "recall@20": {
+              "mean": 0.03954802259887006,
+              "sd": 0.00647256454089808,
+              "per_seed": [
+                0.03389830508474576,
+                0.046610169491525424,
+                0.038135593220338986
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.014111666188635874,
+              "sd": 0.0022341311008407527,
+              "per_seed": [
+                0.014133074934952328,
+                0.016335015983337007,
+                0.011866907647618285
+              ]
+            }
+          }
+        },
+        "khong_phan_duoc": {
+          "n_users": 12,
+          "n_with_adapter_pair": 0,
+          "lens_only": {
+            "hit@5": {
+              "mean": 0.25,
+              "sd": 0.08333333333333333,
+              "per_seed": [
+                0.3333333333333333,
+                0.16666666666666666,
+                0.25
+              ]
+            },
+            "recall@5": {
+              "mean": 0.25,
+              "sd": 0.08333333333333333,
+              "per_seed": [
+                0.3333333333333333,
+                0.16666666666666666,
+                0.25
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.1966496909014125,
+              "sd": 0.027056257144381618,
+              "per_seed": [
+                0.20403825990661603,
+                0.16666666666666666,
+                0.2192441461309548
+              ]
+            },
+            "hit@10": {
+              "mean": 0.3333333333333333,
+              "sd": 0.0,
+              "per_seed": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+              ]
+            },
+            "recall@10": {
+              "mean": 0.3333333333333333,
+              "sd": 0.0,
+              "per_seed": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.22407016147584247,
+              "sd": 0.020784283395622535,
+              "per_seed": [
+                0.20403825990661603,
+                0.22263933865781257,
+                0.24553288586309885
+              ]
+            },
+            "hit@20": {
+              "mean": 0.4444444444444445,
+              "sd": 0.0481125224324688,
+              "per_seed": [
+                0.4166666666666667,
+                0.5,
+                0.4166666666666667
+              ]
+            },
+            "recall@20": {
+              "mean": 0.4444444444444445,
+              "sd": 0.0481125224324688,
+              "per_seed": [
+                0.4166666666666667,
+                0.5,
+                0.4166666666666667
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.25298918580313917,
+              "sd": 0.02289944188359829,
+              "per_seed": [
+                0.22655810610889268,
+                0.26554673003660806,
+                0.2668627212639168
+              ]
+            }
+          },
+          "lens_only_cvr": {
+            "cvr@5": {
+              "mean": 0.4166666666666667,
+              "sd": 0.08333333333333334,
+              "per_seed": [
+                0.4166666666666667,
+                0.5,
+                0.3333333333333333
+              ]
+            },
+            "cvr@10": {
+              "mean": 0.5595427963849017,
+              "sd": 0.12577538265555582,
+              "per_seed": [
+                0.6666666666666666,
+                0.5909090909090909,
+                0.42105263157894735
+              ]
+            },
+            "cvr@20": {
+              "mean": 0.5474847374847375,
+              "sd": 0.19673787846618465,
+              "per_seed": [
+                0.68,
+                0.6410256410256411,
+                0.32142857142857145
+              ]
+            }
+          },
+          "full_catalog": {
+            "hit@5": {
+              "mean": 0.08333333333333333,
+              "sd": 0.08333333333333333,
+              "per_seed": [
+                0.16666666666666666,
+                0.0,
+                0.08333333333333333
+              ]
+            },
+            "recall@5": {
+              "mean": 0.08333333333333333,
+              "sd": 0.08333333333333333,
+              "per_seed": [
+                0.16666666666666666,
+                0.0,
+                0.08333333333333333
+              ]
+            },
+            "ndcg@5": {
+              "mean": 0.048940541865080976,
+              "sd": 0.052953501226257166,
+              "per_seed": [
+                0.10515495892857625,
+                0.0,
+                0.041666666666666664
+              ]
+            },
+            "hit@10": {
+              "mean": 0.1111111111111111,
+              "sd": 0.09622504486493763,
+              "per_seed": [
+                0.16666666666666666,
+                0.0,
+                0.16666666666666666
+              ]
+            },
+            "recall@10": {
+              "mean": 0.1111111111111111,
+              "sd": 0.09622504486493763,
+              "per_seed": [
+                0.16666666666666666,
+                0.0,
+                0.16666666666666666
+              ]
+            },
+            "ndcg@10": {
+              "mean": 0.05697012037391119,
+              "sd": 0.05312510921683194,
+              "per_seed": [
+                0.10515495892857625,
+                0.0,
+                0.06575540219315733
+              ]
+            },
+            "hit@20": {
+              "mean": 0.13888888888888887,
+              "sd": 0.048112522432468816,
+              "per_seed": [
+                0.16666666666666666,
+                0.08333333333333333,
+                0.16666666666666666
+              ]
+            },
+            "recall@20": {
+              "mean": 0.13888888888888887,
+              "sd": 0.048112522432468816,
+              "per_seed": [
+                0.16666666666666666,
+                0.08333333333333333,
+                0.16666666666666666
+              ]
+            },
+            "ndcg@20": {
+              "mean": 0.06408006550751717,
+              "sd": 0.04193766682075522,
+              "per_seed": [
+                0.10515495892857625,
+                0.021329835400817957,
+                0.06575540219315733
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "bootstrap": {
+    "B": 2000,
+    "seed": 20261009,
+    "comparisons": [
+      {
+        "id": "S1",
+        "name": "LightGCN − Popularity",
+        "metric": "recall@10",
+        "set": "mọi người dùng (67,661)",
+        "diff": 0.037476044791928384,
+        "ci": [
+          0.0358255371139455,
+          0.039200696610060946
+        ]
+      },
+      {
+        "id": "S1",
+        "name": "LightGCN − Popularity",
+        "metric": "ndcg@10",
+        "set": "mọi người dùng (67,661)",
+        "diff": 0.021752315856689394,
+        "ci": [
+          0.020779026896296186,
+          0.022761510632045644
+        ]
+      },
+      {
+        "id": "S2",
+        "name": "R-GCN − LightGCN",
+        "metric": "recall@10",
+        "set": "mọi người dùng (67,661)",
+        "diff": -0.026312548341486726,
+        "ci": [
+          -0.027642955321381602,
+          -0.025006773966292747
+        ]
+      },
+      {
+        "id": "S2",
+        "name": "R-GCN − LightGCN",
+        "metric": "ndcg@10",
+        "set": "mọi người dùng (67,661)",
+        "diff": -0.014951007402802221,
+        "ci": [
+          -0.015707813927042444,
+          -0.014164425783972139
+        ]
+      },
+      {
+        "id": "S3",
+        "name": "Popularity-MountAware − Popularity",
+        "metric": "recall@10",
+        "set": "mọi người dùng (67,661)",
+        "diff": 0.00013301606538478755,
+        "ci": [
+          4.4338688461594694e-05,
+          0.00022206293137848814
+        ]
+      },
+      {
+        "id": "S3",
+        "name": "Popularity-MountAware − Popularity",
+        "metric": "cvr@10",
+        "set": "người có thân (10,406)",
+        "diff": -0.6758586361373817,
+        "ci": [
+          -0.6852450897852835,
+          -0.6671648782433957
+        ]
+      },
+      {
+        "id": "S4",
+        "name": "R-GCN − LightGCN",
+        "metric": "cvr@10",
+        "set": "người có thân (10,406)",
+        "diff": 0.28110856640529036,
+        "ci": [
+          0.27393654272199464,
+          0.28861448066716167
+        ]
+      },
+      {
+        "id": "S5",
+        "name": "Popularity-MountAware − Popularity",
+        "metric": "recall@10 (chỉ ống)",
+        "set": "kịch bản lap_duoc (904)",
+        "diff": 0.07079646017699115,
+        "ci": [
+          0.05530973451327431,
+          0.08741703539822995
+        ]
+      },
+      {
+        "id": "S5",
+        "name": "Popularity-MountAware − Popularity",
+        "metric": "recall@10 (chỉ ống)",
+        "set": "kịch bản khong_lap_duoc (236)",
+        "diff": -0.05508474576271186,
+        "ci": [
+          -0.0847457627118644,
+          -0.029661016949152543
+        ]
+      }
+    ],
+    "per_model": [
+      {
+        "set": "mọi người dùng",
+        "model": "Popularity",
+        "metric": "recall@10",
+        "value": 0.022804865432080518,
+        "ci": [
+          0.021696398220540637,
+          0.023928112206440935
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "Popularity",
+        "metric": "ndcg@10",
+        "value": 0.011353085675681683,
+        "ci": [
+          0.01072593204219124,
+          0.011978381739503618
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "Popularity",
+        "metric": "recall@20",
+        "value": 0.037983476448766644,
+        "ci": [
+          0.036505150677642956,
+          0.03938753491671716
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "Popularity",
+        "metric": "ndcg@20",
+        "value": 0.01519503688560122,
+        "ci": [
+          0.014511297033767148,
+          0.015842009324316106
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "Popularity-MountAware",
+        "metric": "recall@10",
+        "value": 0.022937881497465305,
+        "ci": [
+          0.021814265234034378,
+          0.024075907834646252
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "Popularity-MountAware",
+        "metric": "ndcg@10",
+        "value": 0.011395309316370941,
+        "ci": [
+          0.01076378099097345,
+          0.012024731517642596
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "Popularity-MountAware",
+        "metric": "recall@20",
+        "value": 0.03816083120261303,
+        "ci": [
+          0.036682505431489335,
+          0.03959444879620461
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "Popularity-MountAware",
+        "metric": "ndcg@20",
+        "value": 0.015252894431172575,
+        "ci": [
+          0.014568987046971056,
+          0.01590767297787184
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "LightGCN",
+        "metric": "recall@10",
+        "value": 0.0602809102240089,
+        "ci": [
+          0.05862030317809865,
+          0.061946197464812315
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "LightGCN",
+        "metric": "ndcg@10",
+        "value": 0.03310540153237108,
+        "ci": [
+          0.03208682996084484,
+          0.03411805500736788
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "LightGCN",
+        "metric": "recall@20",
+        "value": 0.0895444446086618,
+        "ci": [
+          0.0876376346787662,
+          0.09160878004561958
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "LightGCN",
+        "metric": "ndcg@20",
+        "value": 0.04046422809345875,
+        "ci": [
+          0.03940589149154346,
+          0.041537137084057686
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "R-GCN",
+        "metric": "recall@10",
+        "value": 0.033968361882522176,
+        "ci": [
+          0.032849425813984416,
+          0.03514087386628437
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "R-GCN",
+        "metric": "ndcg@10",
+        "value": 0.018154394129568856,
+        "ci": [
+          0.017469102248016618,
+          0.01881967216968709
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "R-GCN",
+        "metric": "recall@20",
+        "value": 0.053019218358187625,
+        "ci": [
+          0.05161023336929694,
+          0.0543887911795569
+        ]
+      },
+      {
+        "set": "mọi người dùng",
+        "model": "R-GCN",
+        "metric": "ndcg@20",
+        "value": 0.02294035988146427,
+        "ci": [
+          0.022190821236109184,
+          0.02365481839874455
+        ]
+      },
+      {
+        "set": "người có thân",
+        "model": "Popularity",
+        "metric": "cvr@10",
+        "value": 0.6758586361373817,
+        "ci": [
+          0.6671648782433957,
+          0.6852450897852835
+        ]
+      },
+      {
+        "set": "người có thân",
+        "model": "Popularity",
+        "metric": "cvr@20",
+        "value": 0.7002787178976707,
+        "ci": [
+          0.695394523147258,
+          0.7054289437185423
+        ]
+      },
+      {
+        "set": "người có thân",
+        "model": "Popularity-MountAware",
+        "metric": "cvr@10",
+        "value": 0.0,
+        "ci": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "set": "người có thân",
+        "model": "Popularity-MountAware",
+        "metric": "cvr@20",
+        "value": 0.0,
+        "ci": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "set": "người có thân",
+        "model": "LightGCN",
+        "metric": "cvr@10",
+        "value": 0.12932667470294473,
+        "ci": [
+          0.12274345240787785,
+          0.13588595063711742
+        ]
+      },
+      {
+        "set": "người có thân",
+        "model": "LightGCN",
+        "metric": "cvr@20",
+        "value": 0.145731994351169,
+        "ci": [
+          0.13949644128702776,
+          0.15210717122342038
+        ]
+      },
+      {
+        "set": "người có thân",
+        "model": "R-GCN",
+        "metric": "cvr@10",
+        "value": 0.4104352411082351,
+        "ci": [
+          0.4031656856648046,
+          0.4184074428161208
+        ]
+      },
+      {
+        "set": "người có thân",
+        "model": "R-GCN",
+        "metric": "cvr@20",
+        "value": 0.4331607155556418,
+        "ci": [
+          0.42608139248063875,
+          0.440559346313492
+        ]
+      },
+      {
+        "set": "kịch bản lap_duoc, chỉ ống",
+        "model": "Popularity",
+        "metric": "recall@10",
+        "value": 0.14712389380530974,
+        "ci": [
+          0.12389380530973451,
+          0.17035398230088494
+        ]
+      },
+      {
+        "set": "kịch bản lap_duoc, chỉ ống",
+        "model": "Popularity",
+        "metric": "ndcg@10",
+        "value": 0.07579422444038786,
+        "ci": [
+          0.06265257123170749,
+          0.08896249172082174
+        ]
+      },
+      {
+        "set": "kịch bản lap_duoc, chỉ ống",
+        "model": "Popularity-MountAware",
+        "metric": "recall@10",
+        "value": 0.2179203539823009,
+        "ci": [
+          0.1902654867256637,
+          0.24225663716814158
+        ]
+      },
+      {
+        "set": "kịch bản lap_duoc, chỉ ống",
+        "model": "Popularity-MountAware",
+        "metric": "ndcg@10",
+        "value": 0.11953626218312045,
+        "ci": [
+          0.10283950631430232,
+          0.13552745562064325
+        ]
+      },
+      {
+        "set": "kịch bản lap_duoc, chỉ ống",
+        "model": "LightGCN",
+        "metric": "recall@10",
+        "value": 0.3561946902654867,
+        "ci": [
+          0.32780235988200596,
+          0.3845870206489675
+        ]
+      },
+      {
+        "set": "kịch bản lap_duoc, chỉ ống",
+        "model": "LightGCN",
+        "metric": "ndcg@10",
+        "value": 0.20519295398079868,
+        "ci": [
+          0.18533065193811893,
+          0.22387938710812316
+        ]
+      },
+      {
+        "set": "kịch bản lap_duoc, chỉ ống",
+        "model": "R-GCN",
+        "metric": "recall@10",
+        "value": 0.23119469026548672,
+        "ci": [
+          0.2075866519174041,
+          0.25368731563421826
+        ]
+      },
+      {
+        "set": "kịch bản lap_duoc, chỉ ống",
+        "model": "R-GCN",
+        "metric": "ndcg@10",
+        "value": 0.1271685313026991,
+        "ci": [
+          0.11187096686640441,
+          0.1417338501884965
+        ]
+      },
+      {
+        "set": "kịch bản khong_lap_duoc, chỉ ống",
+        "model": "Popularity",
+        "metric": "recall@10",
+        "value": 0.05508474576271186,
+        "ci": [
+          0.029661016949152543,
+          0.0847457627118644
+        ]
+      },
+      {
+        "set": "kịch bản khong_lap_duoc, chỉ ống",
+        "model": "Popularity",
+        "metric": "ndcg@10",
+        "value": 0.0251970050828088,
+        "ci": [
+          0.012194913597902651,
+          0.040166289329272124
+        ]
+      },
+      {
+        "set": "kịch bản khong_lap_duoc, chỉ ống",
+        "model": "Popularity-MountAware",
+        "metric": "recall@10",
+        "value": 0.0,
+        "ci": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "set": "kịch bản khong_lap_duoc, chỉ ống",
+        "model": "Popularity-MountAware",
+        "metric": "ndcg@10",
+        "value": 0.0,
+        "ci": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "set": "kịch bản khong_lap_duoc, chỉ ống",
+        "model": "LightGCN",
+        "metric": "recall@10",
+        "value": 0.09322033898305085,
+        "ci": [
+          0.059322033898305086,
+          0.12853107344632766
+        ]
+      },
+      {
+        "set": "kịch bản khong_lap_duoc, chỉ ống",
+        "model": "LightGCN",
+        "metric": "ndcg@10",
+        "value": 0.04616236616608423,
+        "ci": [
+          0.027959122957793,
+          0.06642551399335452
+        ]
+      },
+      {
+        "set": "kịch bản khong_lap_duoc, chỉ ống",
+        "model": "R-GCN",
+        "metric": "recall@10",
+        "value": 0.060734463276836154,
+        "ci": [
+          0.03813559322033898,
+          0.0847457627118644
+        ]
+      },
+      {
+        "set": "kịch bản khong_lap_duoc, chỉ ống",
+        "model": "R-GCN",
+        "metric": "ndcg@10",
+        "value": 0.027072472805808885,
+        "ci": [
+          0.01633362276120393,
+          0.039208479369199245
+        ]
+      }
+    ]
+  }
+}

@@ -40,10 +40,31 @@ ai/data/processed/*.txt
 ai/data/processed/*.json
 ai/data/processed/*.jsonl
 ai/data/processed/*.csv
+ai/data/processed_*/
+ai/data/survey/
+ai/data/interim/
+ai/data/kg_new/
 ai/data/kg/*.pt
 ai/data/kg/*.npz
+# Ma trận nội dung 3 phải nộp (cô yêu cầu) -> đưa lên git
+!ai/data/kg/compatibility_matrix.npz
+!ai/data/kg/unknown_mask.npz
+# Đồ thị tri thức nội dung 4 phải nộp (19 MB) -> đưa lên git
+!ai/data/kg/kg_hetero.pt
 ai/data/kg/user_item_train_edges.csv
+# cạnh user -> item = đúng train.txt (train.txt không lên git; đã có trong kg_hetero.pt)
+ai/data/kg/kg_edges_interacted_with.csv
 ai/checkpoints/
 results/*.pt
+# nội dung 5 mới: giữ result.json / config.json; bỏ checkpoint, mảng từng người dùng (lớn) và các lần chạy thử
+results/n5/**/*.pt
+results/n5/**/*.pt.tmp
+results/n5/**/*.npy
+results/n5/smoke_*/
 *.gz
 *.parquet
+ai/data/kg_v62abf54/
+ai/data/kg_d339dda/
+# mọi thư mục sao lưu / nháp của ai/data/kg/ (kg_e8b39e6/, kg_draft_*/ ...)
+ai/data/kg_*/
+ai/data/external/

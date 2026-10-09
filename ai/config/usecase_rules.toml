@@ -1,0 +1,303 @@
+# =============================================================================
+# LUẬT MỤC ĐÍCH SỬ DỤNG (nội dung 4, quan hệ suitable_for: ống -> usecase)
+# =============================================================================
+# Đọc bởi: ai/survey/content4/count_usecase.py   (v0.2, 08/10/2026, Nam đã duyệt các quyết định ở QĐ 4-11 .. 4-15)
+#
+# ĐÂY LÀ QUY TẮC DO NHÓM TỰ ĐẶT, dựa trên khuyến nghị trong tài liệu của hãng (Canon, Nikon).
+# Không phải nhãn thật, nên không đo được độ chính xác (STATUS mục 4, hạn chế nội dung 4).
+#
+# PHẠM VI
+#   - Chỉ gắn cho ống kính (item_type = "ong") đọc được cả tiêu cự lẫn khẩu độ từ tiêu đề
+#     (ai/pipeline/lens_specs.read_title, bản v1; độ chính xác đo ở việc 2: docs/reviews/n4_focal_aperture_plan.md).
+#   - Thân máy không có nhãn mục đích.
+#   - Nhãn gắn theo KHỔ MÀ ỐNG ĐƯỢC THIẾT KẾ CHO, không theo thân của người dùng (QĐ 4-4).
+#   - 4 nhãn: chan_dung, phong_canh, the_thao_chim, macro. Nhãn vlog ĐÃ BỎ (QĐ 4-11).
+#
+# TIÊU CỰ QUY ĐỔI 35mm — chỉ dùng trong file này (QĐ 4-1)
+#   lo_eq = tiêu cự ngắn nhất x hệ số crop; hi_eq = tiêu cự dài nhất x hệ số crop (ống một tiêu cự: lo = hi).
+#   Ống không rõ khổ: tính với MỌI hệ số trong crop.khong_ro (1,0 và 1,6), chỉ gắn nhãn khi mọi cách tính
+#   cùng cho ra nhãn đó (giao) — đúng thiết kế (content4_design mục 3.2).
+#
+# BẢN SAO NGUỒN (thư mục gốc: ai/data/external/usecase_sources/, không đưa lên git)
+#   ban_sao      : bản HTML CHÍNH để kiểm câu trích; sha256 ghi ở sha256_html
+#   ban_sao_txt  : văn bản trích từ ban_sao bằng ai/survey/content4/html_to_text.py; sha256 ở sha256_txt
+#   ban_phu      : bản phụ công khai (Wayback), chỉ để đối chiếu, KHÔNG dùng để kiểm câu trích
+#   dau_hieu_bai : một câu có trong phần nội dung bài; script kiểm có trong ban_sao_txt để chắc bản sao
+#                  không phải trang rỗng / trang lỗi / chỉ có hộp cookie
+#
+# MỨC KIỂM CHỨNG CỦA MỖI CĂN CỨ (trong [[rules.*.can_cu]])
+#   "da_doc_trang"   : câu trích lấy từ bản sao đã lưu, script kiểm thấy có (OK)
+#   "quyet_dinh_nhom": nhóm tự chọn con số, nguồn chỉ nói định tính; ghi lý do
+# Mỗi luật phải có ít nhất 1 căn cứ "da_doc_trang" mà script báo OK.
+# =============================================================================
+
+[meta]
+version = "0.3"
+date = "2026-10-08"
+# v0.3: 3 câu trích có "..." thay bằng đoạn nguyên văn liền (chuẩn nội dung 3: không ghép đoạn); đọc tiêu đề bằng lens_specs v1
+
+# -----------------------------------------------------------------------------
+# HỆ SỐ CROP THEO KHỔ ỐNG (định nghĩa: đường chéo full-frame / đường chéo cảm biến)
+# -----------------------------------------------------------------------------
+[crop]
+ff = 1.0
+apsc_canon = 1.6        # canon_eu_beginner: "In Canon cameras, the "crop factor" is 1.6x"
+apsc_khac = 1.5         # Nikon DX, Sony, Fuji X, Pentax; nikon_85_f18g: 85mm trên DX ~ 127mm
+aps_h = 1.3             # ống khung "khac" ngàm canon_ef (APS-H)
+khong_ro = [1.0, 1.6]   # khổ không rõ: tính cả hai, giữ phần nhãn chung
+[crop.theo_ngam]        # khổ cố định theo ngàm, ưu tiên hơn cột khung
+mft = 2.0
+four_thirds = 2.0
+nikon_1 = 2.7
+pentax_q = 5.5
+fuji_g = 0.79
+
+# -----------------------------------------------------------------------------
+# NGUỒN
+# -----------------------------------------------------------------------------
+[sources.canon_eu_beginner]
+url = "https://www.canon-europe.com/get-inspired/tips-and-techniques/beginners-guide-lenses/"
+cach_luu = "Nam lưu bằng trình duyệt (Ctrl+S, trang web hoàn chỉnh) ngày 08/10/2026"
+ban_sao = "manual/canon_eu_beginner.html"
+sha256_html = "04cfcd58b25f25274f8164d9e8ba078441ecd20cf9aa21b0245edfb1053580b3"
+ban_sao_txt = "manual/canon_eu_beginner.txt"
+sha256_txt = "8c9bf6ff93f5a684a640f73a229d3b70181844015bd2d8b51e6307084c7bac6f"
+dau_hieu_bai = "A beginner's guide to choosing a lens"
+ban_phu = "https://web.archive.org/web/20261008062749/https://www.canon-europe.com/get-inspired/tips-and-techniques/beginners-guide-lenses/"
+
+[sources.canon_eu_landscape]
+url = "https://www.canon-europe.com/get-inspired/tips-and-techniques/landscape-photography-lenses/"
+cach_luu = "Nam lưu bằng trình duyệt (Ctrl+S, trang web hoàn chỉnh) ngày 08/10/2026"
+ban_sao = "manual/canon_eu_landscape.html"
+sha256_html = "b3ab8d9c36f33bc71b948d312ecea4c0b86d36b16db0f9a4740d9d5089f4c0d5"
+ban_sao_txt = "manual/canon_eu_landscape.txt"
+sha256_txt = "f0223eb25a8319f0aadf0d13c42f6f8c50d26cf428abb4030b061ec0411b10e5"
+dau_hieu_bai = "Best entry-level lenses for landscape photography"
+ban_phu = "https://web.archive.org/web/20261008062826/https://www.canon-europe.com/get-inspired/tips-and-techniques/landscape-photography-lenses/"
+ghi_chu = "Trang KHÔNG nêu mốc 35mm; chỉ nói phong cảnh rộng cần ống góc rộng."
+
+[sources.canon_eu_wildlife]
+url = "https://www.canon-europe.com/get-inspired/tips-and-techniques/best-wildlife-lenses/"
+cach_luu = "Nam lưu bằng trình duyệt (Ctrl+S, trang web hoàn chỉnh) ngày 08/10/2026"
+ban_sao = "manual/canon_eu_wildlife.html"
+sha256_html = "7c2c9c3791c8ea8f708fe5e4d732f720e303a0bf0b7ec991dfc19157dc2f90be"
+ban_sao_txt = "manual/canon_eu_wildlife.txt"
+sha256_txt = "f73bb748912edf2ac7f6727039f47a1baa08c186bfb5d42d15f4bdfbf060bbac"
+dau_hieu_bai = "Best entry-level lenses for wildlife photography"
+ban_phu = "https://web.archive.org/web/20261008062907/https://www.canon-europe.com/get-inspired/tips-and-techniques/best-wildlife-lenses/"
+
+[sources.canon_eu_portrait]
+url = "https://www.canon-europe.com/get-inspired/tips-and-techniques/portrait-lenses-tips-tricks/"
+cach_luu = "Nam lưu bằng trình duyệt (Ctrl+S, trang web hoàn chỉnh) ngày 08/10/2026"
+ban_sao = "manual/canon_eu_portrait.html"
+sha256_html = "61a0d724d9c9c430902ddba8484c722d44f5894dd7c520fde1410fcf454bd9e7"
+ban_sao_txt = "manual/canon_eu_portrait.txt"
+sha256_txt = "5a162824d6e442ca162f6aaf2e471b80d60b6aa3154072450302a69dd1e769f1"
+dau_hieu_bai = "The difference a portrait lens makes"
+ban_phu = "https://web.archive.org/web/20261008063012/https://www.canon-europe.com/get-inspired/tips-and-techniques/portrait-lenses-tips-tricks/"
+ghi_chu = "Hai phiên bản: bản lưu 08/10/2026 ghi 'around 85mm or longer'; bản Wayback 25/02/2024 (canon_eu_portrait_wb20240225.html) ghi 'a focal length over 85mm'. Trích theo bản 08/10/2026. Trang không nêu mốc trên và không nêu ngưỡng khẩu độ."
+
+[sources.canon_eu_vlogging]
+url = "https://www.canon-europe.com/get-inspired/tips-and-techniques/how-to-start-vlogging/"
+cach_luu = "Nam lưu bằng trình duyệt (Ctrl+S, trang web hoàn chỉnh) ngày 08/10/2026"
+ban_sao = "manual/canon_eu_vlogging.html"
+sha256_html = "35f4345f63495eb83d520d189a5dbaeea69ac6563ff668f78d142f849847dd88"
+ban_sao_txt = "manual/canon_eu_vlogging.txt"
+sha256_txt = "faf501d319bd18d97b94b8a495238daca0ab0a01bc4a97d44f21d800bbfc650f"
+dau_hieu_bai = "Vlogging how-to: eight tips for getting started"
+ban_phu = "https://web.archive.org/web/20261008063138/https://www.canon-europe.com/get-inspired/tips-and-techniques/how-to-start-vlogging/"
+
+[sources.canon_eu_best_vlogging]
+url = "https://www.canon-europe.com/get-inspired/tips-and-techniques/best-vlogging-cameras/"
+cach_luu = "Nam lưu bằng trình duyệt (Ctrl+S, trang web hoàn chỉnh) ngày 08/10/2026"
+ban_sao = "manual/canon_eu_best_vlogging.html"
+sha256_html = "14b779dab02f7d13309b582a1ceef64f9c7bbed8e1fbe9f75d43c473cf57ffca"
+ban_sao_txt = "manual/canon_eu_best_vlogging.txt"
+sha256_txt = "fae9c5843d93506b504f70be4af59cab602fc6422500725b41d0ab3f86cc6238"
+dau_hieu_bai = "The best Canon cameras and lenses for vlogging"
+ban_phu = "https://web.archive.org/web/20261008063223/https://www.canon-europe.com/get-inspired/tips-and-techniques/best-vlogging-cameras/"
+ghi_chu = "Danh sách ống vlog gồm cả RF-S 18-45mm (quy đổi ~29mm). Các tiêu chí khác (màn xoay, cổng mic, lấy nét theo mặt, IBIS) là của THÂN MÁY."
+
+[sources.canon_us_lens_guide]
+url = "https://www.usa.canon.com/lens-buying-guide"
+cach_luu = "Nam lưu bằng trình duyệt ngày 08/10/2026 (đã tắt VPN), bản Wayback https://web.archive.org/web/20260904221559/https://www.usa.canon.com/lens-buying-guide — đúng bản Claude đã đọc trong trình duyệt tích hợp. Trang hãng chặn truy cập từ Việt Nam"
+ban_sao = "manual/canon_us_lens_guide_wb20260904.html"
+sha256_html = "f40393a4ead024fea9d174b44d5c79da25d468b0d1a0e9b5684dcc75708f8060"
+ban_sao_txt = "manual/canon_us_lens_guide_wb20260904.txt"
+sha256_txt = "4cf5d2fc232963ff4cfb38fe9295989a156ba64e888e987abb34b85748dbb4bb"
+dau_hieu_bai = "We break down the different camera lenses"
+ghi_chu = "Bản thô (id_) tải bằng curl (canon_us_lens_buying_guide_wb20260904.html) không có phần nội dung do JavaScript sinh, nên không dùng."
+
+[sources.canon_us_wide_angle]
+url = "https://www.usa.canon.com/learning/training-articles/training-articles-list/visual-power-in-wide-angle-imagery"
+cach_luu = "curl bản Wayback thô (id_) ngày 08/10/2026; trang hãng chặn truy cập từ Việt Nam"
+ban_sao = "canon_us_wide_angle_wb20260306.html"
+sha256_html = "4134c1e83a1d81fbad0b3a190e681e3f8131c38149f31dd9f39f4ba2e56c70ef"
+ban_sao_txt = "canon_us_wide_angle_wb20260306.txt"
+sha256_txt = "184cbb3e0e2b47c7c8113fcf4243d3f51190b8a3df79e9420213749997b669d4"
+dau_hieu_bai = "Lenses of roughly 28mm or 35mm have long been considered the starting point for wide-angle coverage"
+ban_phu = "https://web.archive.org/web/20260306083607/https://www.usa.canon.com/learning/training-articles/training-articles-list/visual-power-in-wide-angle-imagery"
+ghi_chu = "content4_design mục 4 (bản cũ) ghi trang này nói 'quay selfie cầm tay cần 24mm hoặc rộng hơn' — SAI, trang không có câu đó. Trang chỉ nhắc vlog là một công dụng của ống góc rộng."
+
+[sources.canon_us_wildlife]
+url = "https://www.usa.canon.com/learning/training-articles/training-articles-list/canon-lenses-for-wildlife-photography"
+cach_luu = "curl bản Wayback thô (id_) ngày 08/10/2026; trang hãng chặn truy cập từ Việt Nam"
+ban_sao = "canon_us_wildlife_wb20260517.html"
+sha256_html = "cd2c3eed8ead8d41a2f9ebdc4b5e1c0696e86f92d3b358977babdf36013b0b4a"
+ban_sao_txt = "canon_us_wildlife_wb20260517.txt"
+sha256_txt = "d34cdbf4fde969175bf16d1490b0c977631532d5e6493bf5f98c1bbae33e0c8e"
+dau_hieu_bai = "Canon offers a wide array of excellent lenses that are especially useful for photographing animals"
+ban_phu = "https://web.archive.org/web/20260517124700/https://www.usa.canon.com/learning/training-articles/training-articles-list/canon-lenses-for-wildlife-photography"
+ghi_chu = "Bài năm 2017, tác giả dùng thân full-frame."
+
+[sources.nikon_85_f18g]
+url = "https://www.nikonusa.com/p/af-s-nikkor-85mm-f18g/2201/overview"
+cach_luu = "curl ngày 08/10/2026"
+ban_sao = "nikon_85_f18g.html"
+sha256_html = "3ff9c23c6453593d48b2d9626b9b289b68497fe795af20ba276e0c847061142f"
+ban_sao_txt = "nikon_85_f18g.txt"
+sha256_txt = "864b87dfd41e97994f803386143eae136b07c6008b903596fa6e7baeb256714f"
+dau_hieu_bai = "Designed for use on Nikon's FX-format D-SLR cameras"
+
+[sources.nikon_macro]
+url = "https://www.nikonusa.com/learn-and-explore/c/products-and-innovation/macro-lenses"
+cach_luu = "curl ngày 08/10/2026"
+ban_sao = "nikon_macro_lenses.html"
+sha256_html = "82a25232bcd0f07b8c77fe5e6bf5d5be9d435fc445aca33cdc77b57df005d4a7"
+ban_sao_txt = "nikon_macro_lenses.txt"
+sha256_txt = "f77153ac13dd941e817ba70bb9596cfdf4c0f8a5185a183d4fc369c69683c842"
+dau_hieu_bai = "Macro photography is one of the most interesting types of photography"
+ghi_chu = "Bảng 10 ống Micro-NIKKOR trên trang đều là ống một tiêu cự, tỉ lệ 1:2 hoặc 1:1."
+
+[sources.nikon_105_f2d]
+url = "https://www.nikonusa.com/p/af-dc-nikkor-105mm-f2d/1932/overview"
+cach_luu = "curl ngày 08/10/2026"
+ban_sao = "nikon_105_f2d.html"
+sha256_html = "9617d114a05cd571ef0437e84869b3e8421658a55ad3f4e0a5896595f03e3e0d"
+ban_sao_txt = "nikon_105_f2d.txt"
+sha256_txt = "6c50ba158cf29e80dc38fdd9f0b9b06677fbaa87b2d1d399cd3fc1af06d87596"
+dau_hieu_bai = "Maximum Reproduction Ratio"
+khong_dung = true
+ghi_chu = "BỎ: trang hiện chỉ còn thông số, KHÔNG có chữ 'portrait' (content4_design mục 4 bản cũ có dẫn trang này cho luật chân dung)."
+
+# =============================================================================
+# LUẬT
+# =============================================================================
+# Ký hiệu: lo_eq, hi_eq (tiêu cự quy đổi, mm); ap_tele = khẩu độ ở đầu tele (ống một tiêu cự: khẩu độ duy nhất).
+# Một ống có thể có nhiều nhãn hoặc không nhãn nào.
+
+[rules.phong_canh]
+ten = "phong cảnh"
+lo_eq_max = 35                       # lo_eq <= 35
+note = "Ống phủ được vùng góc rộng (<= ~35mm quy đổi)."
+[[rules.phong_canh.can_cu]]
+source = "canon_eu_beginner"
+kiem_chung = "da_doc_trang"
+trich = "Wide-angle lenses – those up to around 35mm – will include more of the scene you're photographing, making them ideal for landscape photography"
+[[rules.phong_canh.can_cu]]
+source = "canon_us_lens_guide"
+kiem_chung = "da_doc_trang"
+trich = "Wide-Angle 8-35mm Wide-angle lenses see a broad, wide field of view, and make it easy to get large subjects or areas into an image. Often used for interiors, landscapes"
+[[rules.phong_canh.can_cu]]
+source = "canon_eu_wildlife"
+kiem_chung = "da_doc_trang"
+trich = "a wide-angle lens – usually defined as one with a focal length of 35mm or less"
+[[rules.phong_canh.can_cu]]
+source = "canon_us_wide_angle"
+kiem_chung = "da_doc_trang"
+trich = "a wide-angle lens was considered a lens with a focal length of about 35mm, or lower"
+[[rules.phong_canh.can_cu]]
+source = "canon_eu_landscape"
+kiem_chung = "da_doc_trang"
+trich = "For classic expansive landscape images that capture a broad sweep of the vista, big dramatic skies and reflections in lakes, you'll need a wide-angle lens"
+
+[rules.the_thao_chim]
+ten = "thể thao / chim"
+hi_eq_min = 300                      # hi_eq >= 300
+note = "canon_eu_beginner nói 'above 300mm' (> 300), hai trang kia nói 'at least 300' / '300mm-plus' (>= 300); chọn >= 300. Chỉ canon_eu_beginner nhắc tới thể thao."
+[[rules.the_thao_chim.can_cu]]
+source = "canon_eu_beginner"
+kiem_chung = "da_doc_trang"
+trich = 'Lenses above 300mm are sometimes called "super-telephoto" and are typically used in genres such as wildlife and sports/action photography'
+[[rules.the_thao_chim.can_cu]]
+source = "canon_us_wildlife"
+kiem_chung = "da_doc_trang"
+trich = "At a minimum, select a lens with at least a 300mm focal length"
+[[rules.the_thao_chim.can_cu]]
+source = "canon_us_wildlife"
+kiem_chung = "da_doc_trang"
+trich = "It covers the same area that a 480mm lens would on a full-frame camera (300 x 1.6 = 480mm)."
+ghi_chu = "Căn cứ để so 300mm với tiêu cự QUY ĐỔI."
+[[rules.the_thao_chim.can_cu]]
+source = "canon_eu_wildlife"
+kiem_chung = "da_doc_trang"
+trich = "super-telephoto (300mm-plus) range"
+
+[rules.chan_dung]
+ten = "chân dung"
+eq_overlap = [85, 135]               # phủ ít nhất một tiêu cự quy đổi trong [85, 135]: lo_eq <= 135 và hi_eq >= 85
+                                     #   85 : theo nguồn (canon_eu_portrait)  |  135 : QUYẾT ĐỊNH NHÓM
+ap_tele_max = 2.8                    # khẩu độ ở đầu tele <= f/2.8  |  QUYẾT ĐỊNH NHÓM
+quyet_dinh_nhom = [
+  "Mốc trên 135mm (eq_overlap[1]): không có nguồn; canon_eu_portrait chỉ nói '85mm or longer', không giới hạn trên (QĐ 4-13).",
+  "Ngưỡng f/2.8 (ap_tele_max): nguồn chỉ nói định tính rằng khẩu độ lớn giúp xóa phông (QĐ 4-13).",
+]
+note = "Mốc dưới 85 theo nguồn (QĐ 4-12). Mốc trên 135 và ngưỡng f/2.8 là QUYẾT ĐỊNH NHÓM (QĐ 4-13): nguồn chỉ nói '85mm or longer' (không giới hạn trên) và chỉ nói định tính rằng khẩu độ lớn giúp xóa phông."
+[[rules.chan_dung.can_cu]]
+source = "canon_eu_portrait"
+kiem_chung = "da_doc_trang"
+trich = "Typically, a portrait lens refers to a lens with a focal length of around 85mm or longer"
+[[rules.chan_dung.can_cu]]
+source = "canon_eu_portrait"
+kiem_chung = "da_doc_trang"
+trich = "What primarily sets a portrait lens apart is the focal length and maximum aperture"
+[[rules.chan_dung.can_cu]]
+source = "nikon_85_f18g"
+kiem_chung = "da_doc_trang"
+trich = "Fast aperture, medium telephoto portrait lens"
+[[rules.chan_dung.can_cu]]
+source = "canon_eu_beginner"
+kiem_chung = "quyet_dinh_nhom"
+trich = "With zoom lenses, selecting a lens with a reasonably wide maximum aperture, such as f/2.8"
+ghi_chu = "Nguồn chỉ lấy f/2.8 làm ví dụ 'khẩu độ khá rộng' cho zoom, không nói về chân dung -> ngưỡng f/2.8 là quyết định nhóm. Mốc trên 135mm: không có nguồn."
+
+[rules.macro]
+ten = "macro"
+tu_khoa = '\b(?:macro|makro)\b|\bmicro[- ]?nikkor\b'      # tìm trong phần chủ thể tiêu đề (head_main), không phân biệt hoa thường
+chi_ong_mot_tieu_cu = true           # zoom ghi "Macro" KHÔNG tính
+note = """Định nghĩa theo nguồn: ống macro đạt độ phóng đại >= 0,5x (1:2). Tiêu đề Amazon không có độ phóng đại nên dùng dấu hiệu
+thay thế (QUYẾT ĐỊNH NHÓM, QĐ 4-14): ống một tiêu cự có chữ Macro / Makro / Micro-Nikkor trong phần chủ thể tiêu đề.
+'micro' chỉ tính khi đi với 'nikkor', để không bắt 'Micro Four Thirds'.
+Sai đã biết, THEO MÔ TẢ AMAZON, CHƯA KIỂM BẰNG TRANG HÃNG: Sigma 24mm f/1.8 và 28mm f/1.8 'Macro' chỉ khoảng 1:2,7 nhưng vẫn được gắn
+nhãn; Sigma 70-300mm DG Macro và Tamron 70-300mm Di LD Macro đạt 1:2 nhưng bị bỏ sót vì là zoom."""
+[[rules.macro.can_cu]]
+source = "canon_eu_beginner"
+kiem_chung = "da_doc_trang"
+trich = "a macro lens – one with MACRO in its name – will help with a close minimum focusing distance and a magnification of 0.5x or more"
+[[rules.macro.can_cu]]
+source = "nikon_macro"
+kiem_chung = "da_doc_trang"
+trich = "A true macro lens—Nikon's designation is Micro-NIKKOR—allows you to you take photographs that are 1:2 or 1:1 reproduction"
+
+# -----------------------------------------------------------------------------
+# NHÃN ĐÃ BỎ — chỉ đếm đối chiếu trong log, KHÔNG sinh cạnh
+# -----------------------------------------------------------------------------
+[rules.vlog]
+ten = "vlog"
+trang_thai = "da_bo"
+lo_eq_max_tham_khao = 24
+note = """BỎ (QĐ 4-11). Ở mức ống, nguồn chỉ yêu cầu góc rộng (<= 24mm quy đổi, thậm chí 18-45mm ~29mm cũng được gợi ý),
+nên trùng với luật phong cảnh (<= 35mm): mọi ống vlog đều là ống phong cảnh. Các tiêu chí vlog còn lại trong nguồn là của THÂN MÁY
+(màn hình xoay, cổng mic, lấy nét theo mặt/mắt, chống rung trong thân); chống rung thì 'ống có IS HOẶC thân có IS'."""
+[[rules.vlog.can_cu]]
+source = "canon_eu_vlogging"
+kiem_chung = "da_doc_trang"
+trich = "an ultra-wide lens – one with an effective focal length of less than 24mm – is even better"
+[[rules.vlog.can_cu]]
+source = "canon_eu_vlogging"
+kiem_chung = "da_doc_trang"
+trich = "use a lens with image stabilisation or a camera that features some form of IS"
+[[rules.vlog.can_cu]]
+source = "canon_eu_best_vlogging"
+kiem_chung = "da_doc_trang"
+trich = "many Canon lenses that are great for vlogging, combining wide fields of view with outstanding image quality"
