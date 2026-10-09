@@ -1,6 +1,6 @@
 # TRẠNG THÁI ĐỒ ÁN — Camera Recommender
 
-Cập nhật lần cuối: 09/10/2026 khuya (bản thử báo cáo gộp: mở đầu, chương 1–2, phụ lục A–B, 2 hình vẽ bằng script; cài pypandoc_binary, python-docx vào venv chỉ để xuất báo cáo; trước đó: điền sha256 bản sao điều khoản DPReview vào DATA_SOURCES 2.6 và chương 4, script `c4_dpreview_terms.py`; trước đó cùng tối: lấp các chỗ [CẦN …] của 4 chương báo cáo bằng script chỉ đọc `ai/survey/report/`; chạy lại 01→04 vào thư mục nháp, tái lập trùng sha256; thêm hạn chế nội dung 3 điểm 17, nội dung 4 điểm 15–18, nội dung 5 điểm 12–14; sửa câu "Wikidata không có ISO"; sửa ví dụ uid 47 ở `content4_design` và docstring script 04; trạng thái các nội dung không đổi; trước đó cùng ngày, chiều: nội dung 5: **đã chạy test một lần** — cấu hình chốt `ai/config/n5_final.toml`, script `05_test_final.py` commit `476f730`, kết quả commit `2aa2fd7`; nội dung 5 lên "Đã kiểm thử"; thêm hạn chế nội dung 5; trước đó cùng ngày: Nam chạy dò val + seed 2, 3; sửa code 05 theo kế hoạch, commit `f21ced4`; Popularity / MountAware chạy trên val; LightGCN / R-GCN chỉ chạy thử 1–3 epoch; script dò val chờ Nam chạy qua đêm; chưa chấm test; trước đó cùng ngày: kế hoạch đánh giá đăng ký trước `docs/reviews/n5_eval_plan.md`, Nam chốt 6 câu [HỎI]; trước đó 08/10 khuya, nội dung 4: thêm cờ `ngam_khong_chac`, dựng lại đồ thị, 6A ĐẠT; sửa ví dụ QĐ 4-9; trước đó: dựng đồ thị mới, sửa `common_05.py` theo QĐ 4-9; nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
+Cập nhật lần cuối: 10/10/2026 (giữ Spring Boot: React → Spring Boot → FastAPI; trước đó 09/10/2026 khuya: bản thử báo cáo gộp: mở đầu, chương 1–2, phụ lục A–B, 2 hình vẽ bằng script; cài pypandoc_binary, python-docx vào venv chỉ để xuất báo cáo; trước đó: điền sha256 bản sao điều khoản DPReview vào DATA_SOURCES 2.6 và chương 4, script `c4_dpreview_terms.py`; trước đó cùng tối: lấp các chỗ [CẦN …] của 4 chương báo cáo bằng script chỉ đọc `ai/survey/report/`; chạy lại 01→04 vào thư mục nháp, tái lập trùng sha256; thêm hạn chế nội dung 3 điểm 17, nội dung 4 điểm 15–18, nội dung 5 điểm 12–14; sửa câu "Wikidata không có ISO"; sửa ví dụ uid 47 ở `content4_design` và docstring script 04; trạng thái các nội dung không đổi; trước đó cùng ngày, chiều: nội dung 5: **đã chạy test một lần** — cấu hình chốt `ai/config/n5_final.toml`, script `05_test_final.py` commit `476f730`, kết quả commit `2aa2fd7`; nội dung 5 lên "Đã kiểm thử"; thêm hạn chế nội dung 5; trước đó cùng ngày: Nam chạy dò val + seed 2, 3; sửa code 05 theo kế hoạch, commit `f21ced4`; Popularity / MountAware chạy trên val; LightGCN / R-GCN chỉ chạy thử 1–3 epoch; script dò val chờ Nam chạy qua đêm; chưa chấm test; trước đó cùng ngày: kế hoạch đánh giá đăng ký trước `docs/reviews/n5_eval_plan.md`, Nam chốt 6 câu [HỎI]; trước đó 08/10 khuya, nội dung 4: thêm cờ `ngam_khong_chac`, dựng lại đồ thị, 6A ĐẠT; sửa ví dụ QĐ 4-9; trước đó: dựng đồ thị mới, sửa `common_05.py` theo QĐ 4-9; nhánh `nam/content4`) · Người cập nhật: Nam (Claude hỗ trợ kiểm định)
 
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
@@ -11,7 +11,7 @@ Cập nhật lần cuối: 09/10/2026 khuya (bản thử báo cáo gộp: mở �
 - **GVHD:** TS. Đỗ Thị Liên
 - **Nhóm:** Trần Phương Nam (nhóm trưởng, phải nắm toàn bộ), Nguyễn Hồng Hải (Data/AI), Lò Văn Quyền (Frontend)
 - **Lộ trình chính thức:** mail của cô ngày 22/09/2026, gồm 10 nội dung. Cô yêu cầu nộp nội dung 1–5 trong 1–2 tuần, kèm báo cáo chi tiết pipeline, công thức, ví dụ minh họa từng bước, code đẩy lên GitHub. Cô dặn: làm đến đâu phải hiểu đến đó, không lạm dụng AI mà không hiểu.
-- **Lưu ý:** bản đề xuất ngày 16/09 (Spring Boot, chấm điểm theo quy tắc, không học sâu) **không còn là hướng chính**. Chỉ tham khảo phần kiến thức tương thích thiết bị và cách ghi nguồn dữ liệu.
+- **Lưu ý:** bản đề xuất ngày 16/09 (chấm điểm theo quy tắc, không học sâu) **không còn là hướng chính**; chỉ tham khảo phần kiến thức tương thích thiết bị và cách ghi nguồn dữ liệu. **Spring Boot được giữ** cho lớp nghiệp vụ của demo (quyết định 10/10/2026, mục 7): React → Spring Boot → FastAPI (dịch vụ mô hình).
 - **Dữ liệu:** Amazon Reviews 2023, nhóm Electronics (https://amazon-reviews-2023.github.io/)
 - **Repo:** bản cuối của Hải là commit `62abf54a` (28/09/2026)
 - **Máy chạy:** Windows 11, GTX 1660 Ti 6 GB (CUDA 12.6), RAM 16 GB, Python 3.12.10. Dự án và dữ liệu đặt ở ổ E.
@@ -85,7 +85,7 @@ Trước 09/10: xem mục 4. `N_USERS`/`N_ITEMS` nay đọc từ `user_map.json`
 | 7 | Mô hình gợi ý theo bộ (GNN có quan hệ) | Chưa bắt đầu | |
 | 8 | Giải thích (path-based) | Chưa bắt đầu | |
 | 9 | Ablation, khảo sát người dùng | Chưa bắt đầu | Cần tìm 20–30 người hiểu nhiếp ảnh từ sớm |
-| 10 | API và web demo | Chưa bắt đầu | |
+| 10 | API và web demo | Chưa bắt đầu | Kiến trúc đã chốt 10/10: React (`frontend/`) → Spring Boot (`backend/`, nghiệp vụ) → FastAPI (dịch vụ mô hình, chưa viết). `backend/` và `frontend/` là khung có từ trước, chưa nối với mô hình |
 
 ## 4. Kết quả kiểm định bài của Hải (07/10/2026)
 
@@ -268,13 +268,13 @@ Nguồn số: `results/n5/val_sweep_20261010/summary_20261009_053905.json`, `res
 | 5–6 (4–17/11) | Nội dung 7. Bắt đầu tìm người cho khảo sát |
 | 7 (18–24/11) | Nội dung 8 |
 | 8 (25/11–1/12) | Nội dung 9 |
-| Song song từ tuần 3 | Nội dung 10 (FastAPI + React) |
+| Song song từ tuần 3 | Nội dung 10 (React → Spring Boot → FastAPI) |
 
 ## 6. Quyết định đang chờ
 
 - [ ] Chốt lộ trình 2 tháng ở mục 5
 - [ ] Chốt hướng sửa vấn đề cốt lõi ở mục 4
-- [ ] Giữ hay bỏ Spring Boot (đề xuất: bỏ, chỉ dùng FastAPI + React)
+- [x] Giữ hay bỏ Spring Boot → **đã chốt 10/10: giữ** (React → Spring Boot → FastAPI), xem nhật ký
 - [ ] Phân công lại vai trò sau khi đề tài chuyển hướng AI
 - [x] Nội dung 3: 6 câu [HỎI] của khảo sát → **đã chốt 07/10** (xem nhật ký và `docs/content3_survey.md` mục 4)
 - [x] Nội dung 3: 3 điểm chưa chắc trong `docs/labeling_guide.md` → **đã chốt 07/10** (xem nhật ký)
@@ -414,3 +414,4 @@ Nguồn số: `results/n5/val_sweep_20261010/summary_20261009_053905.json`, `res
 | 09/10/2026 | **Cài thêm vào `ai/.venv` (chỉ dùng xuất báo cáo):** `pypandoc_binary` 1.17 (kèm pandoc 3.9), `python-docx` 1.2.0, `lxml` 6.1.3; ghi vào `ai/requirements-lock.txt` kèm chú thích. Pipeline và kết quả không dùng các gói này | Nam cho phép. Commit `be1df8e` |
 | 09/10/2026 | **Bản thử báo cáo gộp** (`E:\DATN\baocao\ban_thu.md` → `ban_thu.docx`, 23 trang): bìa, mở đầu (ví dụ thật uid 2465, mục "khác lộ trình"), chương 1, chương 2 rút gọn, phụ lục A (phần mở đầu, ch.1, ch.2), phụ lục B. Hai hình vẽ bằng script (`hinh_pipeline.py`, `hinh_kcore.py`, số đọc từ file kết quả; log `run_hinh_*_20261009_lan1.log`). Xuất bằng `build_docx.py` + `word_finalize.ps1`: 54/54 công thức thành công thức Word. Kiểm code bản trước: `03_entity_linking_matrix.py` dùng Sentence-Transformers all-MiniLM-L6-v2 ở tầng 3 (so tiêu đề với 139 dòng bảng thông số, cosine ≥ 0,82), 44/257 sản phẩm qua tầng này (`kg_v62abf54/compatibility_stats.json`, khớp `linked_products.csv`) | Nam yêu cầu. Chưa làm chương 3–5, kết luận, phụ lục C–F. Trạng thái các nội dung không đổi |
 | 10/10/2026 | **Báo cáo gộp nội dung 1–5 hoàn chỉnh** (`E:\DATN\baocao\bao_cao_noidung1-5.docx` + `.pdf`, 71 trang: thân bài trang 5–46 = 42 trang, phụ lục 23 trang). Thêm chương 3–5, kết luận + kế hoạch 6–10, phụ lục C–F; 3 hình mới bằng `hinh_ch45.py` (log `run_hinh_ch45_20261010_lan1.log`); gộp và đánh số IEEE bằng `merge_report.py`; tự kiểm bằng `check_report.py` (log `run_check_report_20261010_lan4.log`: 632 số thân bài đều có trong 4 chương hoặc log, 0 từ / ký tự cấm, 103 đường dẫn phụ lục A tồn tại, tự thử ĐẠT; log `_lan1` ghi lần tự thử không đạt do script đọc cả log của chính nó, đã sửa). 139/139 công thức thành công thức Word | Nam yêu cầu. Nguồn phần viết: `E:\DATN\baocao\phan\`. Trạng thái các nội dung không đổi |
+| 10/10/2026 | **Khôi phục quyết định giữ Spring Boot.** Kiến trúc demo (nội dung 10): React → Spring Boot (backend nghiệp vụ) → FastAPI (dịch vụ mô hình). Sửa 4 chỗ trong STATUS ghi "bỏ Spring Boot" / "FastAPI + React" (mục 1, bảng nội dung 10, lộ trình, quyết định đang chờ); ghép lại hướng dẫn setup backend/frontend (lấy từ `README.md` trước commit `073bc5d`) vào `README.md` | Nam yêu cầu. Bản sửa README ở `073bc5d` đã bỏ hướng dẫn này theo đề xuất "bỏ Spring Boot" cũ, không phải quyết định của Nam. Phạm vi: chỉ tài liệu, không đổi code; `backend/`, `frontend/` chưa nối với mô hình; FastAPI chưa viết. **Còn lệch:** `CLAUDE.md` mục 1 vẫn ghi Spring Boot là hướng cũ đã bỏ; `AGENTS.md` chưa rà |
