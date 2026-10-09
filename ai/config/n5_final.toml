@@ -1,0 +1,109 @@
+# n5_final.toml — cấu hình chốt của nội dung 5 (docs/reviews/n5_eval_plan.md mục 7.2 bước 3).
+# Viết 09/10/2026, TRƯỚC khi chạy test. Chạy test bằng ai/pipeline/05_test_final.py (đọc file này, ghi sha256 của nó
+# vào log). Sau khi chạy test không sửa file này.
+#
+# Cách chọn: NDCG@20 full ranking trên val, seed 1 (QĐ 5-6), từ đợt dò
+# results/n5/val_sweep_20261010/summary_20261009_053905.json (commit 595bc70, cây sạch):
+#   LightGCN λ 1e-5 / 1e-4 / 1e-3 -> NDCG@20 val 0,03769 / 0,03803 / 0,04045  => λ = 1e-3
+#   R-GCN    lr 0,01 / 0,001      -> NDCG@20 val 0,01868 / 0,02287           => lr = 0,001
+# Seed 2, 3 Nam chạy cùng commit 595bc70 (results/n5/final_20261009/). Cả 6 lần chạy: cấu hình trùng nhau trừ seed,
+# cùng sha256 đầu vào, git dirty = False lúc bắt đầu và lúc kết thúc.
+#
+# Sai khác / cảnh báo (kế hoạch mục 13, hạn chế nội dung 5):
+#   - LightGCN λ = 1e-3: cả 3 seed chạy hết 300 epoch mà chưa dừng sớm -> "chưa chắc hội tụ";
+#   - λ = 1e-3 và lr = 0,001 đều nằm ở BIÊN của lưới dò (giá trị lớn nhất của {1e-5, 1e-4, 1e-3}; nhỏ nhất của
+#     {0,01; 0,001}): chưa biết giá trị ngoài lưới có tốt hơn không.
+
+[chung]
+ngay_chot = "2026-10-09"
+chi_so_chon = "val ndcg@20 full ranking"
+val_sweep_summary = "results/n5/val_sweep_20261010/summary_20261009_053905.json"
+val_sweep_summary_sha256 = "0c33e21a738530a664f8d23a83d40660501b26f49467084f08fcd473d0a26e79"
+commit_huan_luyen = "595bc7072a81a3a73902d81e63afe35b4f55bcfb"
+seeds = [1, 2, 3]
+popularity = "không có siêu tham số; đếm lượt trên train, hoán vị hòa π seed 20261009 (eval_05.TIE_SEED)"
+bootstrap_B = 2000
+bootstrap_seed = 20261009
+
+[lightgcn]
+script = "ai/pipeline/05b_lightgcn_train.py"
+chua_chac_hoi_tu = true          # cả 3 seed chạm 300 epoch
+bien_luoi = "lambda = 1e-3 là giá trị lớn nhất của lưới {1e-5, 1e-4, 1e-3}"
+
+[lightgcn.cfg]                   # đúng config.json["cfg"] của mỗi lần chạy, trừ seed
+dim = 64
+n_layers = 3
+lr = 0.001
+batch = 2048
+l2 = 0.001
+init = "xavier_uniform"
+max_epoch = 300
+eval_every = 10
+patience = 5
+select_metric = "val ndcg@20 full ranking"
+
+[[lightgcn.runs]]
+seed = 1
+dir = "results/n5/val_sweep_20261010/val_lightgcn_l2-1e-03_s1"
+best_pt_sha256 = "d857e24c3d7fff692c39627b54ee30fb1e62044d9ec6fd932642d892285f5fc2"
+best_epoch = 290
+val_ndcg20 = 0.04044730812275842
+
+[[lightgcn.runs]]
+seed = 2
+dir = "results/n5/final_20261009/lightgcn_l2-1e-03_s2"
+best_pt_sha256 = "a6edeaaee0e5946c3fe678130ecb2bf5a174bc61c3a34e6b93f24a17403bd682"
+best_epoch = 260
+val_ndcg20 = 0.04040395198502122
+
+[[lightgcn.runs]]
+seed = 3
+dir = "results/n5/final_20261009/lightgcn_l2-1e-03_s3"
+best_pt_sha256 = "9cc8a7922b522596d6fbb132986eb67e456733ea8ea3cab0f6b5a38a8cc2eb51"
+best_epoch = 300
+val_ndcg20 = 0.0405414241725966
+
+[rgcn]
+script = "ai/pipeline/05c_rgcn_train.py"
+chua_chac_hoi_tu = false         # cả 3 seed dừng sớm (45 / 40 / 60 epoch)
+bien_luoi = "lr = 0,001 là giá trị nhỏ nhất của lưới {0,01; 0,001}"
+
+[rgcn.cfg]
+dim = 64
+n_layers = 2
+num_bases = 2
+aggr = "mean"
+root_weight = true
+edge_dropout = 0.4
+decoder = "DistMult"
+l2_decoder = 0.01
+loss = "BPR"
+lr = 0.001
+batch = 2048
+drop_ngam_khong_chac = true
+init = "xavier_uniform"
+max_epoch = 100
+eval_every = 5
+patience = 5
+select_metric = "val ndcg@20 full ranking"
+
+[[rgcn.runs]]
+seed = 1
+dir = "results/n5/val_sweep_20261010/val_rgcn_lr-1e-03_s1"
+best_pt_sha256 = "946a4cbf638b7f298d8d947c7474b57749747bfa92feafbe1260ba146ff42b45"
+best_epoch = 20
+val_ndcg20 = 0.022866474314740273
+
+[[rgcn.runs]]
+seed = 2
+dir = "results/n5/final_20261009/rgcn_lr-1e-03_s2"
+best_pt_sha256 = "92152f6f8a1e72d967008e4ea3cf602f1f889c19b41918016e4b177a67801b77"
+best_epoch = 15
+val_ndcg20 = 0.023238819749362264
+
+[[rgcn.runs]]
+seed = 3
+dir = "results/n5/final_20261009/rgcn_lr-1e-03_s3"
+best_pt_sha256 = "8cb7cb85e53f57857fee66ea5c34da7f7b9a8116a95c6b79df54a96a6eb8abe5"
+best_epoch = 35
+val_ndcg20 = 0.02271578558029027
