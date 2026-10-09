@@ -6,7 +6,7 @@ Dữ liệu: Amazon Reviews 2023, nhóm Electronics. Trạng thái dự án, quy
 
 ## Kiến trúc demo
 
-React (`frontend/`) → Spring Boot (`backend/`, nghiệp vụ) → FastAPI (dịch vụ mô hình, nội dung 10, chưa viết). Quyết định giữ Spring Boot: `docs/STATUS.md`, nhật ký 10/10/2026. Hiện `backend/` và `frontend/` là khung có từ trước, chưa nối với mô hình.
+React (`frontend/`) → Spring Boot (`backend/`, nghiệp vụ) → FastAPI (dịch vụ mô hình, nội dung 10, chưa viết). Quyết định giữ Spring Boot: `docs/STATUS.md`, nhật ký 09/10/2026. Hiện `backend/` và `frontend/` là khung có từ trước, chưa nối với mô hình.
 
 ## Thư mục chính
 

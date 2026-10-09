@@ -11,7 +11,8 @@ Tóm tắt (tại 07/10/2026 — chi tiết và bản mới nhất xem STATUS.md
 - **Đề tài:** Hệ thống tư vấn cá nhân hóa lựa chọn thiết bị nhiếp ảnh trong TMĐT bằng mô hình gợi ý lai có ràng buộc và giải thích được. GVHD: TS. Đỗ Thị Liên.
 - **Nhóm:** Nam (nhóm trưởng, phải nắm toàn bộ), Hải (Data/AI), Quyền (Frontend). Người dùng Claude thường là Nam.
 - **Lộ trình:** 10 nội dung theo mail của cô ngày 22/09/2026. Cô dặn: làm đến đâu phải hiểu đến đó.
-- **Hướng cũ đã bỏ:** bản đề xuất 16/09 (Spring Boot, chấm điểm theo quy tắc). Phần Spring Boot/React trong `AGENTS.md` và `docs/` cũ không còn là hướng chính.
+- **Hướng cũ đã bỏ:** bản đề xuất 16/09 (chấm điểm theo quy tắc, không học sâu). Một số tài liệu cũ trong `docs/` (kế hoạch, mô tả nội dung-based) lỗi thời.
+- **Kiến trúc demo (nội dung 10), Spring Boot được giữ:** React (`frontend/`) → Spring Boot (`backend/`, backend nghiệp vụ) → FastAPI (dịch vụ mô hình). Code AI vẫn nằm trong `ai/pipeline/`.
 - **Dữ liệu:** Amazon Reviews 2023, nhóm Electronics. Code AI nằm trong `ai/pipeline/`.
 - **Thay đổi so với bản của Hải:** xem `docs/CHANGELOG.md`.
 - **Tình hình:** nội dung 1–5 đã có code (của Hải, commit `62abf54`) nhưng có lỗi phải sửa (R-GCN gọi sai tên, số liệu mâu thuẫn, cách đo sampled thay vì full ranking, độ phủ ngàm chỉ 0,9%...). Nội dung 6–10 chưa bắt đầu.
