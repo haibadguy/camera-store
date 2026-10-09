@@ -4,12 +4,16 @@
 
 Dữ liệu: Amazon Reviews 2023, nhóm Electronics. Trạng thái dự án, quyết định và hạn chế: **`docs/STATUS.md`** (nguồn sự thật). Lịch sử sửa so với bản của Hải: `docs/CHANGELOG.md`.
 
-> Phần `backend/` (Spring Boot) và `frontend/` (React) thuộc hướng cũ (bản đề xuất 16/09), không còn là hướng chính.
+## Kiến trúc demo
+
+React (`frontend/`) → Spring Boot (`backend/`, nghiệp vụ) → FastAPI (dịch vụ mô hình, nội dung 10, chưa viết). Quyết định giữ Spring Boot: `docs/STATUS.md`, nhật ký 10/10/2026. Hiện `backend/` và `frontend/` là khung có từ trước, chưa nối với mô hình.
 
 ## Thư mục chính
 
 | Thư mục | Nội dung |
 |---|---|
+| `backend/` | Spring Boot API, JPA entities, Flyway migrations |
+| `frontend/` | React + Vite (TypeScript, TailwindCSS) |
 | `ai/pipeline/` | Code nội dung 1–5 (script `01`…`05`, `common_05.py`, `eval_05.py`, ...) |
 | `ai/config/` | Luật và cấu hình: `mount_rules.toml`, `usecase_rules.toml`, `n5_final.toml` |
 | `ai/data/raw/` | Dữ liệu gốc (không sửa, không lên git) |
@@ -57,3 +61,31 @@ Huấn luyện từng mô hình riêng: `05b_lightgcn_train.py --l2 <λ> --seed 
 - Đồ thị và ma trận M: `ai/data/kg/` (`kg_stats.json`, `mount_compat_stats.json`, log kiểm tra `kg_validation_log_*.txt`).
 - Dữ liệu sau lọc: `ai/data/processed/` (`filtering_stats.json`, `train.txt`, `val.txt`, `test.txt`).
 - Log mỗi lần chạy ghi ra file tên mới kèm ngày/nhãn, không ghi đè.
+
+## Chạy backend và frontend (khung demo)
+
+Cần: Git, Node.js (LTS), JDK 17 hoặc 21, Maven (hoặc tích hợp trong IDE), Docker Desktop. Chỉ làm bước 1–2 một lần đầu.
+
+1. Clone: `git clone https://github.com/haibadguy/camera-store.git`, rồi `cd camera-store`.
+2. Cài thư viện frontend:
+   ```powershell
+   cd frontend
+   npm install
+   cd ..
+   ```
+3. Bật Docker Desktop (đợi *Engine Running*), rồi khởi động database mỗi lần bắt đầu làm việc, từ thư mục gốc repo:
+   ```powershell
+   docker compose up -d postgres redis
+   ```
+4. Terminal 1, backend Spring Boot (`http://localhost:8080`):
+   ```powershell
+   cd backend
+   mvn spring-boot:run
+   ```
+5. Terminal 2, frontend React + Vite (`http://localhost:5173`):
+   ```powershell
+   cd frontend
+   npm run dev
+   ```
+
+Cơ sở dữ liệu của demo: PostgreSQL 17, Redis 7 (Docker). Tài liệu cũ về kiến trúc, kế hoạch, setup: `docs/setup.md`, `docs/plan.md`, `docs/architecture.md` (một phần đã lỗi thời, xem `docs/STATUS.md`).
