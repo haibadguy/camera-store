@@ -1,0 +1,132 @@
+{
+  "git": {
+    "commit": "595bc7072a81a3a73902d81e63afe35b4f55bcfb",
+    "dirty": false
+  },
+  "runs": {
+    "val_lightgcn_l2-1e-05_s1": {
+      "model": "LightGCN",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 1e-05,
+        "init": "xavier_uniform",
+        "seed": 1,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking"
+      },
+      "val_ndcg@20": 0.03769210909623912,
+      "val_recall@20": 0.08353408906164556,
+      "best_epoch": 130,
+      "epochs_run": 180,
+      "chua_chac_hoi_tu": false,
+      "median_sec_per_epoch": 13.74
+    },
+    "val_lightgcn_l2-1e-04_s1": {
+      "model": "LightGCN",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.0001,
+        "init": "xavier_uniform",
+        "seed": 1,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking"
+      },
+      "val_ndcg@20": 0.03803342703797761,
+      "val_recall@20": 0.08424350807703108,
+      "best_epoch": 130,
+      "epochs_run": 180,
+      "chua_chac_hoi_tu": false,
+      "median_sec_per_epoch": 13.72
+    },
+    "val_lightgcn_l2-1e-03_s1": {
+      "model": "LightGCN",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.001,
+        "init": "xavier_uniform",
+        "seed": 1,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking"
+      },
+      "val_ndcg@20": 0.04044730812275842,
+      "val_recall@20": 0.08915032293344763,
+      "best_epoch": 290,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "median_sec_per_epoch": 13.73
+    },
+    "val_rgcn_lr-1e-02_s1": {
+      "model": "R-GCN (RGCNConv)",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 2,
+        "num_bases": 2,
+        "aggr": "mean",
+        "root_weight": true,
+        "edge_dropout": 0.4,
+        "decoder": "DistMult",
+        "l2_decoder": 0.01,
+        "loss": "BPR",
+        "lr": 0.01,
+        "batch": 2048,
+        "drop_ngam_khong_chac": true,
+        "init": "xavier_uniform",
+        "seed": 1,
+        "max_epoch": 100,
+        "eval_every": 5,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking"
+      },
+      "val_ndcg@20": 0.018684428699531574,
+      "val_recall@20": 0.04516634397954508,
+      "best_epoch": 5,
+      "epochs_run": 30,
+      "chua_chac_hoi_tu": false,
+      "median_sec_per_epoch": 28.244999999999997
+    },
+    "val_rgcn_lr-1e-03_s1": {
+      "model": "R-GCN (RGCNConv)",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 2,
+        "num_bases": 2,
+        "aggr": "mean",
+        "root_weight": true,
+        "edge_dropout": 0.4,
+        "decoder": "DistMult",
+        "l2_decoder": 0.01,
+        "loss": "BPR",
+        "lr": 0.001,
+        "batch": 2048,
+        "drop_ngam_khong_chac": true,
+        "init": "xavier_uniform",
+        "seed": 1,
+        "max_epoch": 100,
+        "eval_every": 5,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking"
+      },
+      "val_ndcg@20": 0.022866474314740273,
+      "val_recall@20": 0.05268914145519576,
+      "best_epoch": 20,
+      "epochs_run": 45,
+      "chua_chac_hoi_tu": false,
+      "median_sec_per_epoch": 28.21
+    }
+  }
+}
