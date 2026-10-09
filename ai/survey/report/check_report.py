@@ -85,7 +85,8 @@ class Corpus:
         n_logs = 0
         for g in LOG_GLOBS:
             for p in glob.glob(g, recursive=True):
-                if os.path.getsize(p) > MAX_BYTES:
+                # bỏ file quá lớn và log của chính script này (có số giả của phần tự thử)
+                if os.path.getsize(p) > MAX_BYTES or os.path.basename(p).startswith("run_check_report_"):
                     continue
                 n_logs += 1
                 t = open(p, encoding="utf-8", errors="replace").read()
