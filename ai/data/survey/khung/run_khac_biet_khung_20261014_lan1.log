@@ -1,0 +1,87 @@
+script: E:\DATN\camera-store\ai\survey\khung\khac_biet_khung.py (sha256 16664b4d8063dd0c35b3cbc0b3770e2bcf633a5df29d78438b16192b96ef4c7c)
+git HEAD: a38d4da267a035e8ab08b43adf4544fa5207e9fd, có thay đổi chưa commit (không tính file mới): False
+  sha256 ebd29b03a4866cfca243edc1ee31539f16be19b756bfbd4c388e3f20ca06a5c5  ai/data/processed/train.txt
+  sha256 410fc46cea72cdc5115a3e0413036456d1d1d59b8bcb7c63da6edd026e4da8ea  ai/data/processed/test.txt
+  sha256 3b05f535c5dad6e08cd99f2c360e34a95c20b816cd6cd8ce0ca9fbbd4cc7b621  ai/data/kg/item_attributes.csv
+  sha256 b93d9defff3b401f347fc950457e0ce6376efa8586431e792890da6409e6c317  ai/data/kg/compat_pairs.csv
+  sha256 c9ae5c10e4fa80b60210049f6210828bbc4ff4b240ca67496d6b810db5d98b2d  ai/data/kg/unknown_mask.npz
+  sha256 abf149b5a75b18926cf4c39f826e6d71e3e34f17b2943e891ef50203c69fce4b  ai/data/kg/kg_hetero.pt
+
+## (a) Mặt nạ cứng: khung (∃ thân M = 0 ∧ U = 0) so với QĐ 4-9 (mọi thân M = 0, không cặp nào 'không biết')
+  người có thân trong train: 10,406; có thân ngoài M: 71; có thân thuộc ≥ 2 ngàm khác nhau: 1,090
+  cặp (người, ống trong M) bị chặn: QĐ 4-9 8,557,447 | khung 8,904,038 | chỉ khung chặn 346,591 (trên 10,749,398 cặp)
+  số người có tập ống bị chặn khác nhau giữa hai cách: 1,107
+  người có ≥ 1 ống bị chặn: QĐ 4-9 10,335 | khung 10,359
+  kịch bản test (1,060 người, item test là ống trong M), item test bị chặn hay không:
+    nhóm lap_duoc (762): QĐ 4-9 chặn 0 | khung chặn 93
+    nhóm khong_lap_duoc (282): QĐ 4-9 chặn 282 | khung chặn 282
+    nhóm khong_phan_duoc (16): QĐ 4-9 chặn 0 | khung chặn 3
+    tổng người bị chặn mất item test: QĐ 4-9 282 | khung 378 -> khung chặn thêm 96 người (Recall@K của họ = 0 với mọi mô hình có mặt nạ khung)
+  ví dụ người dùng thật ở nhóm 'lắp được' bị khung chặn mất item test (93 người; in 3 người đầu):
+    uid 258: item test iid 24898 [ong, canon_rf, khung ff, phim False] Canon RF16mm F2.8 STM
+       thân iid 14260 [than, canon_efm, khung apsc, phim False] Canon 9694B031 24.2MP EOS M3 Mirrorless Digital Camera (Black) -> mức với item test: incompatible
+       thân iid 21129 [than, canon_rf, khung ff, phim False] Canon EOS RP Mirrorless Camera with RF 24-105mm F/4L is USM Lens, Black - 3380C012 -> mức với item test: compatible_with
+    uid 314: item test iid 18206 [ong, mft, khung khac, phim False] Olympus M.Zuiko Digital ED 14-150mm F4.0-5.6 II Lens, for Micro Four Thirds Cameras (Black
+       thân iid 8919 [than, mft, khung khac, phim False] Panasonic DMC-GF6KK 16MP Mirrorless Mirrorless Digital Camera with Lens Kit -> mức với item test: compatible_with
+       thân iid 17364 [than, canon_efs, khung apsc, phim False] Canon EOS 77D EF-S 18-55 is STM Kit -> mức với item test: incompatible
+       thân iid 26061 [than, mft, khung khac, phim False] Panasonic Lumix G7 4K Digital Mirrorless Camera Bundle with Lumix G Vario 14-42mm and 45-1 -> mức với item test: compatible_with
+    uid 378: item test iid 14832 [ong, nikon_f, khung ff, phim False] Nikon AF-S FX NIKKOR 200-500mm f/5.6E ED Vibration Reduction Zoom Lens with Auto Focus for
+       thân iid 12326 [than, sony_e, khung ff, phim False] Sony a7 Full-Frame Mirrorless Digital Camera with 28-70mm Lens -> mức với item test: incompatible
+       thân iid 12372 [than, nikon_f, khung ff, phim False] Nikon D750 FX-format Digital SLR Camera Body -> mức với item test: compatible_with
+  top-10 toàn catalog LightGCN seed 1, người có thân: 23,555 ống trong M; QĐ 4-9 chặn 3,003, khung chặn 5,269 (khung chặn thêm 2,266 ống)
+
+## (b) Quan hệ 'owns' trong đường giải thích
+  tên quan hệ trong kg_hetero.pt: ['compatible_with', 'crops_sensor', 'has_spec', 'interacted_with', 'requires_adapter', 'rev_compatible_with', 'rev_crops_sensor', 'rev_has_spec', 'rev_interacted_with', 'rev_requires_adapter', 'rev_suitable_for', 'suitable_for']
+  có quan hệ tên 'owns': False
+  gần nhất: cạnh ('user','interacted_with','item') tới sản phẩm loại thân: 13,495 cạnh, 10,406 người (cạnh = người dùng có viết đánh giá sản phẩm đó trong train, QĐ 3-5; không phải xác nhận đang sở hữu)
+  nút có cạnh tới usecase: ['item'] (đường 1.2.1 'l -> spec -> c' không có: nút thông số không nối tới usecase; suitable_for đi thẳng item -> usecase)
+  nhóm 'lắp được' (762): có thân nối item test bằng compatible_with 755, chỉ bằng crops_sensor 7; có đủ đường u -> b -compatible_with-> l -suitable_for-> c: 525
+  ống trong M có nhãn suitable_for: 787/1033
+
+## (c) Kênh phần cứng (Body – Mount – Lens – Sensor Format)
+  sản phẩm có ít nhất 1 cạnh tri thức (mọi loại): 2,974/27,940
+  thân / ống có cạnh compatible_with / crops_sensor / requires_adapter / has_spec(mount, sensor_format): 1,704
+    khac: không có cạnh tri thức: 1,757
+    ong: có cạnh phần cứng: 1,167
+    ong: có cạnh tri thức khác: 161
+    ong: không có cạnh tri thức: 11
+    phu_kien: chỉ có has_spec -> mount (phụ kiện / ngàm chuyển): 1,109
+    phu_kien: không có cạnh tri thức: 23,192
+    than: có cạnh phần cứng: 537
+    than: không có cạnh tri thức: 6
+  item test (67,661 người) theo nhóm:
+    khac: không có cạnh tri thức: 3,485 (5.15%)
+    ong: có cạnh phần cứng: 4,206 (6.22%)
+    ong: có cạnh tri thức khác: 393 (0.58%)
+    ong: không có cạnh tri thức: 19 (0.03%)
+    phu_kien: chỉ có has_spec -> mount (phụ kiện / ngàm chuyển): 2,767 (4.09%)
+    phu_kien: không có cạnh tri thức: 55,343 (81.79%)
+    than: có cạnh phần cứng: 1,443 (2.13%)
+    than: không có cạnh tri thức: 5 (0.01%)
+  tương tác train (460,193) theo nhóm:
+    khac: không có cạnh tri thức: 24,060 (5.23%)
+    ong: có cạnh phần cứng: 32,589 (7.08%)
+    ong: có cạnh tri thức khác: 2,988 (0.65%)
+    ong: không có cạnh tri thức: 298 (0.06%)
+    phu_kien: chỉ có has_spec -> mount (phụ kiện / ngàm chuyển): 20,338 (4.42%)
+    phu_kien: không có cạnh tri thức: 366,425 (79.62%)
+    than: có cạnh phần cứng: 13,424 (2.92%)
+    than: không có cạnh tri thức: 71 (0.02%)
+
+## (d) Quét repo: những gì khung cần (đếm file có từ khoá; bỏ .venv, data, node_modules, results)
+  KGAT: 2 file -> ['./docs/gvhd-roadmap.md', './docs/STATUS.md']
+  KGIN: 0 file
+  RGAT / GATConv: 0 file
+  CVR_relaxed / relaxed: 0 file
+  Path Coverage: 0 file
+  Faithfulness: 0 file
+  độ trễ suy luận / latency: 0 file
+  VRAM đỉnh (max_memory_allocated): 1 file -> ['./ai/survey/content5/probe_gpu.py']
+  contrastive / InfoNCE / L_comp: 0 file
+  Adaptive Channel Fusion / dual channel: 0 file
+  CaKG: 0 file
+  metapath: 0 file
+  UltraGCN / NGCF: 1 file -> ['./docs/reviews/n5_eval_plan.md']
+  Hit@5 trong số test: True
+  thời gian / epoch có ghi trong result.json huấn luyện (median_sec_per_epoch): True (LightGCN s2: 13.7 s)
+  VRAM đỉnh khi huấn luyện thật: result.json không có khoá bộ nhớ GPU: []
