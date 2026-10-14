@@ -5,6 +5,7 @@ mục 4.1, 4.2 bước 3). Viết 14/10/2026 theo khuôn 05_val_sweep.py. KHÔNG
 Nhóm lần chạy (--group):
   cakg: CaKG-Rec λ1 ∈ {0,01; 0,1; 1,0}  (06_cakg_train.py; tối đa 300 epoch, chấm val mỗi 10 epoch, dừng sau 5 lần
         chấm không tăng). Chỉ số chọn: NDCG@20 full ranking val TRƯỚC mặt nạ (QĐ 5-6).
+  kgat: KGAT lr ∈ {1e-3; 1e-4} (07_kgat_train.py; cùng ngân sách). Chỉ số chọn: NDCG@20 full ranking val.
 Mỗi lần chạy là một tiến trình con ghi vào results/cakg/val_sweep_<nhãn>/<tên lần chạy>/ với log riêng
 train_<thời điểm>.log. Log của chính script này: sweep_<nhóm>_<thời điểm>.log (tên mới mỗi lần gọi).
 
@@ -40,6 +41,10 @@ GROUPS = {  # nhóm -> (tên tham số dò, [(tên lần chạy, script, tham s�
         ("val_cakg_lam1-1e-02_s1", "06_cakg_train.py", ["--lam1", "0.01", "--seed", "1"], 0.01),
         ("val_cakg_lam1-1e-01_s1", "06_cakg_train.py", ["--lam1", "0.1", "--seed", "1"], 0.1),
         ("val_cakg_lam1-1e+00_s1", "06_cakg_train.py", ["--lam1", "1.0", "--seed", "1"], 1.0),
+    ]),
+    "kgat": ("lr", [
+        ("val_kgat_lr-1e-03_s1", "07_kgat_train.py", ["--lr", "1e-3", "--seed", "1"], 1e-3),
+        ("val_kgat_lr-1e-04_s1", "07_kgat_train.py", ["--lr", "1e-4", "--seed", "1"], 1e-4),
     ]),
 }
 
