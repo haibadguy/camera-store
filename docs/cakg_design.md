@@ -2,6 +2,7 @@
 
 - Viết 14/10/2026, nhánh `nam/cakg-rec` (tách từ `nam/khung-co`). **Chỉ là thiết kế: chưa cài mô hình, chưa huấn luyện.** Kế hoạch đánh giá đăng ký trước: `docs/reviews/cakg_eval_plan.md`.
 - Khung cô gửi (để ngoài repo) là hướng chính. Tài liệu này dùng ký hiệu của khung; chỗ khác khung ghi **[ĐỀ XUẤT CHO CÔ]**, chỗ cần Nam chốt ghi **[HỎI]**. Tổng hợp ở mục 11.
+- **Nam chốt 13 câu [HỎI] ngày 14/10/2026** (mục 11; các khối đã sửa theo). Các mục **[ĐỀ XUẤT CHO CÔ] là ghi chú nội bộ, không gửi cô**; các sửa câu chữ xử lý khi viết báo cáo.
 - Mỗi khối: (a) ví dụ nhỏ tính tay, (b) đầu vào / đầu ra, (c) công thức (đánh số), (d) siêu tham số và nguồn, (e) chỗ khác khung / bài gốc.
 
 **Số liệu** trong file chỉ lấy từ 3 script chỉ đọc (`ai/survey/cakg/`, commit `41395a4`, `08c053b`; log ở `ai/data/survey/cakg/`, chạy trên cây sạch):
@@ -108,9 +109,9 @@ Ký hiệu chung (theo khung 1.2.1): 𝒰 người dùng, ℐ sản phẩm, ℐ_
 | **7 quan hệ × 2 chiều = 14 quan hệ, 186.338 cạnh** | |
 
 **Xử lý cờ cạnh** (yêu cầu của hạn chế nội dung 4, điểm 17):
-- `ngam_khong_chac` (134 cạnh `has_spec → mount` của ống "không chắc"): **bỏ cạnh**, như QĐ 5-4 của R-GCN. Lý do: nếu giữ, đường thân → ngàm ← ống "không chắc" trông như "lắp được" (QĐ 3-4, 4-5). Ống vẫn giữ cạnh khổ / mục đích. **[HỎI 3]** (phương án khác: tách thành quan hệ riêng `has_spec_mount_khong_chac`).
+- `ngam_khong_chac` (134 cạnh `has_spec → mount` của ống "không chắc"): **bỏ cạnh** (Nam chốt 14/10, HỎI 3), như QĐ 5-4 của R-GCN. Lý do: nếu giữ, đường thân → ngàm ← ống "không chắc" trông như "lắp được" (QĐ 3-4, 4-5). Ống vẫn giữ cạnh khổ / mục đích.
 - `crop_unknown` (1.686 cạnh `compatible_with`): **tách thành quan hệ riêng**, để attention và W⁽ʳ⁾ phân biệt "lắp được, chưa rõ có cắt khung" với "lắp được chắc chắn". Vẫn là M = 1 trong L_comp.
-- `src_phu_kien`, `phia` (cạnh ngàm của 954 phụ kiện và 2 × 155 cạnh của ngàm chuyển): chỉ có ở **phương án H_pk** (20 quan hệ: thêm `has_spec_mount_phukien`, `has_spec_mount_phia_ong`, `has_spec_mount_phia_than`). H_lõi không có phụ kiện, theo khung ("Body – Mount – Lens – Sensor Format"). **[HỎI 2]**: H_pk cho thêm biểu diễn phần cứng cho 1.109 phụ kiện (item val có h: 9,30% → 13,47%), thời gian gần như bằng (97 ms so với 95 ms / bước).
+- `src_phu_kien`, `phia` (cạnh ngàm của 954 phụ kiện và 2 × 155 cạnh của ngàm chuyển): chỉ có ở **phương án H_pk** (20 quan hệ: thêm `has_spec_mount_phukien`, `has_spec_mount_phia_ong`, `has_spec_mount_phia_than`). H_lõi không có phụ kiện, theo khung ("Body – Mount – Lens – Sensor Format"). **Nam chốt 14/10 (HỎI 2): dùng H_lõi.** H_pk (thêm biểu diễn cho 1.109 phụ kiện; item val có h: 9,30% → 13,47%; 97 ms so với 95 ms / bước) chỉ là thăm dò nếu còn giờ GPU.
 - Không đưa tiêu cự / khẩu độ vào H (khung không nêu; thông tin đó đã nằm trong nhãn `suitable_for`).
 
 **(c) Công thức** (Busbridge et al. 2019, §2.1, Eq. 1, 3, 4, 6, 8; viết lại cho một đầu, D = 1). Với nút i, quan hệ r, hàng xóm 𝒩_i^r (nút j có cạnh j → i loại r):
@@ -125,7 +126,7 @@ Ký hiệu chung (theo khung 1.2.1): 𝒰 người dùng, ℐ sản phẩm, ℐ_
 
   h_v⁽⁰⁾ là embedding học được của nút v (mỗi nút một vector, như R-GCN baseline). Ra: h_v = h_v⁽²⁾.
 
-Ghi chú cài đặt: trong `RGATConv` của PyG, q và k dùng chung cho mọi quan hệ (q ∈ ℝ^{64×1}), chỉ W⁽ʳ⁾ riêng; bài gốc Eq. 3 cho Q⁽ʳ⁾, K⁽ʳ⁾ riêng từng quan hệ. Lớp tự cài (dưới) theo PyG để kiểm trùng được; **[HỎI 5]** có tách q⁽ʳ⁾, k⁽ʳ⁾ theo bài không (thêm khoảng 3.300 tham số cho 2 lớp, không đáng kể).
+Ghi chú cài đặt: trong `RGATConv` của PyG, q và k dùng chung cho mọi quan hệ (q ∈ ℝ^{64×1}), chỉ W⁽ʳ⁾ riêng; bài gốc Eq. 3 cho Q⁽ʳ⁾, K⁽ʳ⁾ riêng từng quan hệ. **Nam chốt 14/10 (HỎI 5): q⁽ʳ⁾, k⁽ʳ⁾ riêng từng quan hệ như bài** (thêm khoảng 3.300 tham số cho 2 lớp). Lớp tự cài trong probe dùng q, k chung để kiểm trùng PyG; bản cài thật kiểm trùng bằng cách đặt mọi q⁽ʳ⁾, k⁽ʳ⁾ bằng nhau.
 
 **Kiểm `RGATConv` trong PyG 2.8.0.post1:** **có** (`torch_geometric.nn.RGATConv`, có `attention_mechanism="within-relation"`, `return_attention_weights`). Nhưng nó nhân ma trận W⁽ʳ⁾ riêng cho **từng cạnh** (tạo tensor [số cạnh, 64, 64]): một lớp forward + backward trên H_lõi **đỉnh 8.985 MiB** (> 6 GB của GTX 1660 Ti, tràn sang bộ nhớ chung, 1.302 ms) (log `run_probe_cakg`). Vì vậy **cài lại lớp `RGATLayer`** cùng công thức: tính g⁽ʳ⁾ = W⁽ʳ⁾h cho mọi nút một lần ([14, 1.822, 64]) rồi mới lấy theo cạnh. Kiểm trùng với `RGATConv` (cùng trọng số, 20.000 cạnh ngẫu nhiên): lệch đầu ra tối đa **1,91e-06**, lệch α tối đa **3,58e-07**; tổng α theo (nút đích, quan hệ) = 1,0000 ở mọi nhóm. Cả mô hình một bước: 95 ms, đỉnh 600 MiB (khối 6).
 
@@ -156,7 +157,7 @@ Bài RGAT kết luận RGAT **không chắc hơn R-GCN** ("perform competitively
 **Số thật** (log `run_dem_cakg`, mục 1–2; số item test lấy từ `khung_co_doi_chieu.md` mục 3c):
 - H_lõi có 1.788 sản phẩm (6,4% catalog). **Item val có h: 6.291 / 67.661 = 9,30%**, tức **90,70% item val không có biểu diễn phần cứng**. (Khung nói ~87%: đó là 86,98% item test không có **bất kỳ** cạnh tri thức nào; tính theo H_lõi thì phần không có h còn lớn hơn.)
 - Người có h_u (có thân trong H): **10.359 / 67.661 = 15,3%**. 47 người còn lại trong 10.406 người có thân chỉ có thân ngoài M.
-- 14.249 người không có thân nhưng có ống trong H (dùng ở **[HỎI 4]**).
+- 14.249 người không có thân nhưng có ống trong H. **Nam chốt 14/10 (HỎI 4): h_u chỉ lấy từ thân**, nên những người này không có h_u.
 
 **Cách xử lý (phương án chính): kênh vắng mặt, không gán vector giả.**
 - Sản phẩm i không có nút trong H: **không có h_i** (cờ has_h(i) = 0). Không dùng vector 0 hay một vector "rỗng" học được, vì vector học được dùng chung sẽ cộng cùng một lượng cho mọi sản phẩm không có tri thức, không mang thông tin gì.
@@ -217,7 +218,7 @@ Attention theo từng nút (AM-GCN Eq. 8–9), tham số riêng cho phía ngư�
 - Âm mỗi thân (thân có dương): min 747, trung vị 843. Không cặp âm nào cùng chuỗi ngàm với thân (EF-S và EF là hai chuỗi khác nhau).
 - Dương lệch theo ngàm: `canon_efs` 27.742, `nikon_f` 17.301, `sony_e` 10.830, `mft` 7.313, `canon_ef` 4.300 (5 ngàm nhiều nhất).
 
-**`crops_sensor` và `requires_adapter` tính là gì:** `crops_sensor` (lắp trực tiếp, ảnh bị cắt) là **dương** vì M = 1 (QĐ 3-2). `requires_adapter` là **âm** vì M = 0 và không thuộc U. Hệ quả: L_comp đẩy xa (EOS M, ống EF) dù người có ngàm chuyển dùng được — khớp với CVR_strict, ngược với CVR_relaxed (khối 7). **[HỎI 6]** có bỏ `requires_adapter` khỏi tập âm không (đề xuất: giữ là âm, cho khớp M và mặt nạ).
+**`crops_sensor` và `requires_adapter` tính là gì:** `crops_sensor` (lắp trực tiếp, ảnh bị cắt) là **dương** vì M = 1 (QĐ 3-2). `requires_adapter` là **âm** vì M = 0 và không thuộc U (**Nam chốt 14/10, HỎI 6**). Hệ quả, **ghi vào hạn chế**: L_comp đẩy xa (EOS M, ống EF) dù người có ngàm chuyển dùng được — khớp với CVR_strict và mặt nạ, ngược với CVR_relaxed (khối 7).
 
 **(c) Công thức** (khung 1.2.1 / 2.4; SGL Eq. 10; CPC Eq. 4):
 
@@ -285,7 +286,7 @@ Attention theo từng nút (AM-GCN Eq. 8–9), tham số riêng cho phía ngư�
 | "không lắp được" (236): item val bị chặn | 236 | 236 |
 | "không phán được" (12) | 0 | 0 |
 
-(Trên test, cùng phép đếm ở `khung_co_doi_chieu.md`: 0 / 93 người nhóm lắp được.) **[ĐỀ XUẤT CHO CÔ]** dùng (15) làm cách chính, (16) chỉ là biến thể để đối chiếu; **[HỎI 1]** (đã treo trong STATUS từ 14/10).
+(Trên test, cùng phép đếm ở `khung_co_doi_chieu.md`: 0 / 93 người nhóm lắp được.) **Nam chốt 14/10 (HỎI 1): (15) là cách chính; (16) của khung chạy và báo song song** (mọi chỉ số, cùng lần chấm test; không thuộc so sánh đăng ký).
 
 **CVR trước và sau mặt nạ.** CVR_strict@K theo QĐ 4-9 (`eval_05.cvr_from_top`):
 
@@ -305,7 +306,7 @@ Attention theo từng nút (AM-GCN Eq. 8–9), tham số riêng cho phía ngư�
 
 - **Ca uid 2465** (STATUS hạn chế nội dung 5, điểm 12): hai thân EOS M (`canon_efm`), có "Canon EOS M Mount Adapter" (iid 7524) mà nội dung 3 xếp là phụ kiện **một ngàm** `canon_efm` (bỏ sót phía EF). Top-10 **val** của LightGCN s1 có ống iid 19161 (`canon_ef`): strict = vi phạm; R1 **không** nới được (không có dạng a>b); **R2 nới được** (cặp `requires_adapter`, phụ kiện "adapter" cùng ngàm thân).
 - **Số trên top-10 VAL của LightGCN s1** (log mục 5): 23.441 ống chấm được, 3.005 vi phạm → **CVR_strict@10 = 0,1282**; R1 nới 61 → **0,1256**; R2 nới 109 → **0,1235** (50 người được nới). 637 người có thân có ngàm chuyển a>b; 746 có phụ kiện một ngàm chữ "adapter".
-- **[HỎI 7]** R1 hay R2 làm số chính (đề xuất: R2 chính vì bắt được ca uid 2465 mà khung nêu; R1 báo kèm vì chặt hơn). Cả hai đều là **cận dưới** (chỉ biết ngàm chuyển người dùng có đánh giá).
+- **Nam chốt 14/10 (HỎI 7): CVR_strict là số chính. CVR_relaxed báo cả R1 lẫn R2: R1 là số relaxed chính** (hướng ngàm chuyển đọc được từ tiêu đề dạng a>b); **R2 là số phụ** vì dựa vào chữ "adapter" trong tiêu đề, chưa đo độ đúng. Ca uid 2465 chỉ R2 nới được → ghi rõ khi trình bày. Cả hai đều là **cận dưới** (chỉ biết ngàm chuyển người dùng có đánh giá).
 - CVR_relaxed sau mặt nạ (15) cũng = 0 (relaxed ≤ strict). Mặt nạ "mềm" (không chặn ống lắp được qua ngàm chuyển người đó có) là nội dung 6 (ràng buộc mềm), không làm ở đây.
 
 ---
@@ -330,7 +331,7 @@ Thêm nhánh `crops_sensor` (khung chỉ có `compatible_with`) → **[ĐỀ XU�
 
   Đây là phân rã **chính xác** của điểm (từ (7), (9)), không phải attention. Lý do không dùng attention của RGAT cho b*: Jain & Wallace (2019) cho thấy trọng số attention tương quan yếu với độ quan trọng thật, và attention khác hẳn vẫn cho cùng dự đoán.
 - **c\***: nhãn mục đích của l có hệ số attention α lớn nhất ở lớp RGAT thứ 2 trên quan hệ `rev_suitable_for` (tin từ nút mục đích về ống, công thức (5)). Phần lớn ống có 1 nhãn (980 ống có 1.080 cạnh `suitable_for`) nên α = 1. Đây là chỗ duy nhất dùng attention; kiểm bằng Faithfulness.
-- **[HỎI 8]** đồng ý cách chọn b*, c* này không.
+- Nam đồng ý cách chọn b*, c* này (14/10, HỎI 8).
 
 **Mẫu câu tiếng Việt** (mọi chỗ trong ngoặc nhọn đều lấy từ đồ thị, không sinh tự do → không có chi tiết ngoài đồ thị):
 - `compatible_with`: "Gợi ý **{l}** vì ống này lắp trực tiếp được trên **{b\*}** bạn đã mua (ngàm **{mount}**), và phù hợp chụp **{c\*}** (tiêu cự {f} mm, khẩu độ tối đa f/{a})."
@@ -387,18 +388,25 @@ Thêm nhánh `crops_sensor` (khung chỉ có `compatible_with`) → **[ĐỀ XU�
 | L2 | bài dò {1e-5 … 1e2}; README `regs [1e-5, 1e-5]` | 1e-5 | README |
 | message dropout | bài dò {0 … 0,8}; README 0,1 mỗi lớp | 0,1 | README |
 | node dropout | bài có dò; trong code dòng dùng nó bị chú thích (không dùng) | không | theo code |
-| attention | bài không nói cách cập nhật; code tác giả **tính lại một lần mỗi epoch, không có gradient** (`update_attentive_A`) | **như code: một lần / epoch** | (a) có gradient mỗi bước: 1,2 phút / epoch, 3.284 MiB; (b) một lần / epoch: 0,5 phút / epoch, 1.347 MiB (log `run_probe_cakg`). Ghi chú: người đọc code thấy ma trận attention mới **có thể không được đưa vào** bước lan truyền (nhận xét khi đọc code, **chưa kiểm chứng**) — ở đây cài cho nó được dùng thật |
+| attention | bài không nói cách cập nhật; code tác giả **tính lại một lần mỗi epoch, không có gradient** (`update_attentive_A`) | **như code: một lần / epoch** (Nam chốt 14/10, HỎI 9) | (a) có gradient mỗi bước: 1,2 phút / epoch, 3.284 MiB; (b) một lần / epoch: 0,5 phút / epoch, 1.347 MiB (log `run_probe_cakg`). Đã kiểm 14/10: trong code tác giả ma trận attention mới **không** được dùng trong lan truyền (mục "Kiểm code tác giả" dưới bảng) — ở đây cài cho nó được dùng thật |
 | ℒ_KG gồm gì | code: mọi cạnh kể cả Interact và chiều ngược, đuôi âm lấy đều trên mọi nút | như code (546 bước KG / epoch, 3,3 s) | — |
 | khởi tạo | Xavier (bài); README khuyên khởi tạo từ BPR-MF đã huấn luyện | Xavier, không pretrain | để so công bằng với LightGCN / CaKG-Rec (cũng từ đầu) → ghi sai khác |
 | cờ cạnh | — | bỏ 134 cạnh `ngam_khong_chac`; các cờ khác bỏ qua | như R-GCN (QĐ 5-4) |
 | dừng sớm | bài: recall@20 val không tăng 50 epoch; code: 10 lần chấm × 10 epoch | NDCG@20 val mỗi 10 epoch, dừng sau 5 lần không tăng, tối đa 300 epoch | như QĐ 5-5 / LightGCN; sai khác so với bài (README chạy 1000 epoch) |
 | tập đo | bài: 80/20 ngẫu nhiên, all-ranking | chia theo thời gian, full ranking (nội dung 2, 5) | — |
 
+**Kiểm code tác giả: ma trận attention mới có được dùng trong lan truyền không** (Nam yêu cầu trước khi cài, HỎI 9; đọc 14/10/2026 nhánh `master` của `xiangwang1223/knowledge_graph_attention_network`: `Model/KGAT.py`, `Model/Main.py`, `Model/utility/loader_kgat.py`, `Model/utility/batch_test.py`). **Kết quả: không.**
+- Lan truyền (`_create_bi_interaction_embed`, cùng `_create_gcn_embed`, `_create_graphsage_embed`) đọc `A = self.A_in`, cắt bằng `_split_A_hat`, đổi sang `tf.SparseTensor` bằng `_convert_sp_mat_to_sp_tensor` với giá trị là mảng numpy → **hằng số trong đồ thị TF**, tạo **một lần** khi dựng mô hình (`__init__` → `_build_model_phase_I`). Không dùng placeholder.
+- `update_attentive_A` tính điểm attention, chạy softmax (`self.A_out`, placeholder `A_values` chỉ dùng ở đây) rồi chỉ **gán lại thuộc tính Python** `self.A_in = sp.coo_matrix(...)`. Không có dòng nào dựng lại đồ thị hay tạo lại các tensor thưa.
+- Feed dict của bước CF (`generate_train_feed_dict`) và lúc chấm (`generate_test_feed_dict`) chỉ có người dùng, item, dropout — không có giá trị attention.
+- Hệ quả: trong code tác giả, mọi epoch lan truyền trên Laplacian **ban đầu** `sum(data_generator.lap_list)` (chuẩn hóa D⁻¹A, `adj_type = 'si'`); tri thức chỉ tác động qua embedding chung do bước TransR cập nhật. Attention tính mỗi epoch rồi bỏ.
+- **Cách cài ở đây** (đúng mô tả của bài §3.2 Eq. 4–5, theo lịch cập nhật của code): sau mỗi epoch tính lại π theo (28) **không gradient**, và **dùng π mới cho lan truyền ở epoch sau**; epoch đầu dùng π tính từ embedding khởi tạo. Đây là sai khác so với code tác giả (code không dùng π), ghi trong báo cáo. Nếu Nam muốn chép đúng hành vi code (bỏ attention khỏi lan truyền) thì phải đổi kế hoạch, hỏi lại trước.
+
 ---
 
 ## 11. Tổng hợp [ĐỀ XUẤT CHO CÔ] và [HỎI]
 
-**[ĐỀ XUẤT CHO CÔ]** (chỗ khác khung, kèm lý do và số):
+**[ĐỀ XUẤT CHO CÔ]** (chỗ khác khung, kèm lý do và số). **Ghi chú nội bộ, không gửi cô** (Nam chốt 14/10); các sửa câu chữ xử lý khi viết báo cáo:
 
 | # | Khung | Đề xuất | Số / lý do |
 |---|---|---|---|
@@ -414,10 +422,23 @@ Thêm nhánh `crops_sensor` (khung chỉ có `compatible_with`) → **[ĐỀ XU�
 | Đ10 | Baseline: không có "LightGCN + mặt nạ" | Thêm LightGCN + mặt nạ (15) (không huấn luyện thêm) | để tách tác dụng của kênh phần cứng khỏi tác dụng của mặt nạ (kế hoạch, so sánh C2) |
 | Đ11 | 2.3 "18 loại quan hệ" | Kênh phần cứng dùng 14 quan hệ (7 × 2 chiều), tách cờ `crop_unknown` | khối 2 |
 
-**[HỎI]** (Nam chốt; đề xuất của Claude đứng đầu):
+**Quyết định của Nam (14/10/2026)** cho các câu [HỎI] của thiết kế (HỎI 10–13 ở kế hoạch đánh giá, mục 13):
 
-| # | Câu hỏi | Đề xuất |
-|---|---|---|
+| # | Câu hỏi | Đề xuất của Claude | **Nam chốt 14/10/2026** |
+|---|---|---|---|
+| HỎI 1 | Mặt nạ chính: QĐ 4-9 hay ∃b? | QĐ 4-9 | **QĐ 4-9 là cách chính; ∃b của khung chạy và báo song song** |
+| HỎI 2 | H_lõi hay H_pk? | H_lõi | **H_lõi** |
+| HỎI 3 | 134 cạnh ngàm của ống "không chắc"? | Bỏ | **Bỏ** |
+| HỎI 4 | h_u chỉ từ thân hay cả ống? | Chỉ thân | **Chỉ thân** |
+| HỎI 5 | q, k của RGAT chung hay riêng từng quan hệ? | Riêng | **Riêng từng quan hệ, như bài** |
+| HỎI 6 | `requires_adapter` là cặp âm trong L_comp? | Có | **Có; ghi vào hạn chế** |
+| HỎI 7 | CVR_relaxed: R1 hay R2 làm số chính? | R2 | **CVR_strict vẫn là số chính. CVR_relaxed báo cả R1 lẫn R2; R1 là số relaxed chính, R2 là số phụ (dựa vào chữ "adapter", chưa đo)** |
+| HỎI 8 | b* theo đóng góp (24), c* theo attention RGAT? | Đồng ý | **Đồng ý** |
+| HỎI 9 | Attention KGAT một lần / epoch hay mỗi bước? | Một lần / epoch | **Như code tác giả (một lần / epoch). Trước khi cài, kiểm "ma trận attention mới có được dùng trong lan truyền không" và ghi kết quả** (khối 9, mục "Kiểm code tác giả") |
+
+**Hạn chế phát sinh từ các chốt** (đưa vào mục hạn chế khi viết báo cáo): `requires_adapter` là cặp âm của L_comp (HỎI 6); R2 dựa vào chữ "adapter" chưa đo độ đúng (HỎI 7); ablation chỉ 1 seed (kế hoạch HỎI 11).
+
+---|---|---|
 | HỎI 1 | Mặt nạ chính: QĐ 4-9 hay ∃b? (đã treo trong STATUS) | QĐ 4-9, báo cô (Đ1) |
 | HỎI 2 | Đồ thị con: H_lõi (thân, ống) hay H_pk (thêm 1.109 phụ kiện có ngàm)? | H_lõi (đúng khung); H_pk là thăm dò nếu còn giờ GPU |
 | HỎI 3 | 134 cạnh ngàm của ống "không chắc": bỏ (như QĐ 5-4) hay quan hệ riêng? | Bỏ |

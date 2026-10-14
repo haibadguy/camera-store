@@ -2,7 +2,7 @@
 
 - Viết 14/10/2026, nhánh `nam/cakg-rec`, **trước khi cài CaKG-Rec / KGAT và trước khi huấn luyện bất kỳ mô hình mới nào**. Thiết kế mô hình: `docs/cakg_design.md` (gọi tắt "thiết kế", công thức (1)–(30)).
 - Theo khuôn `docs/reviews/n5_eval_plan.md`. Mốc: commit chứa file này. Thay đổi trước khi chạy test ghi vào mục 13, commit riêng; sau khi chạy test không sửa kế hoạch.
-- Các câu [HỎI] của thiết kế (HỎI 1–9) và của file này (HỎI 10–13) **chưa được Nam chốt**; chốt xong mới cài code.
+- **Nam chốt 13 câu [HỎI] ngày 14/10/2026** (thiết kế mục 11; file này mục 13); các mục đã sửa theo, ghi ở mục 14. **Đây là bản đăng ký trước: sau commit này không đổi kế hoạch nếu chưa hỏi Nam.**
 - Số liệu trong file chỉ lấy từ log của `ai/survey/cakg/` (chỉ đọc; không huấn luyện) và từ kết quả nội dung 5 đã có:
 
 | Script | Log |
@@ -56,12 +56,12 @@ Dùng lại kết quả nội dung 5 là hợp lệ vì cùng train / val / test
 | Mô hình | Cố định (nguồn: thiết kế) | Dò trên val (seed 1) |
 |---|---|---|
 | CaKG-Rec | kênh hành vi như LightGCN chốt (d 64, L 3, lr 1e-3, batch 2048, λ2 = 1e-3); RGAT 2 lớp WIRGAT, 1 đầu, d 64, W_0, không dropout; gộp kênh h' = 64; τ = 0,2; H_lõi | **λ1 ∈ {0,01; 0,1; 1,0}** (3 lần chạy) |
-| KGAT | d 64, [64, 32, 16], Bi-Interaction, batch 1024 / 2048, L2 1e-5, message dropout 0,1, attention cập nhật 1 lần / epoch, Xavier | **lr ∈ {1e-3; 1e-4}** (2 lần chạy) |
+| KGAT | d 64, [64, 32, 16], Bi-Interaction, batch 1024 / 2048, L2 1e-5, message dropout 0,1, attention tính lại 1 lần / epoch (không gradient) **và dùng cho lan truyền epoch sau** (code tác giả không dùng, thiết kế khối 9), Xavier | **lr ∈ {1e-3; 1e-4}** (2 lần chạy) |
 
 - Ngân sách như QĐ 5-5: tối đa **300 epoch**, chấm NDCG@20 val **mỗi 10 epoch**, dừng sau **5 lần chấm** không tăng; chạm 300 epoch thì ghi **"chưa chắc hội tụ"**. Cùng ngân sách với LightGCN để so công bằng (LightGCN cũng chạm 300 epoch).
 - Chỉ số chọn: **NDCG@20 full ranking trên val, trước mặt nạ** (như QĐ 5-6; vòng huấn luyện `train_05.run` không đổi). Script in thêm NDCG@20 val sau mặt nạ để theo dõi, không dùng để chọn.
 - Giá trị tốt nhất nằm ở biên lưới thì ghi lại, **không mở rộng lưới** (như nội dung 5).
-- Khởi tạo từ đầu (Xavier) cho mọi mô hình mới, không lấy embedding của LightGCN đã huấn luyện **[HỎI 10]**.
+- Khởi tạo từ đầu (Xavier) cho mọi mô hình mới, không lấy embedding của LightGCN đã huấn luyện (**Nam chốt 14/10, HỎI 10**).
 
 ### 4.2. Quy trình (như `n5_eval_plan` mục 7.2)
 
@@ -69,21 +69,21 @@ Dùng lại kết quả nội dung 5 là hợp lệ vì cùng train / val / test
 2. Chạy thử 1–3 epoch (đo thời gian / VRAM thật), không chấm test.
 3. **Dò trên val, seed 1**: CaKG-Rec 3 lần, KGAT 2 lần.
 4. Ghi cấu hình chốt vào `ai/config/cakg_final.toml`, **commit trước khi chạy test**.
-5. Chạy cấu hình chốt với seed 2, 3; chạy ablation (mục 6) seed 1–3 (hoặc theo phương án cắt, mục 9).
+5. Chạy cấu hình chốt với seed 2, 3; chạy hai ablation (mục 6) **chỉ seed 1** (Nam chốt 14/10, HỎI 11).
 6. **Chạy test một lần** bằng một script (`06_test_final.py`, chưa viết) cho mọi mô hình ở mục 3 × mọi seed; script ghi commit và sha256 của `cakg_final.toml`, dừng nếu cây git không sạch.
 7. Ghi số vào CHANGELOG / STATUS và commit **trước** khi phân tích ca sai hay chạy thêm.
 8. Phát hiện lỗi script sau khi chạy test: sửa, chạy lại, **báo cả hai lần** và lý do.
 
 ### 4.3. Seed
 
-3 seed {1, 2, 3} cho mọi mô hình học. Báo trung bình ± độ lệch chuẩn mẫu (ddof = 1). GPU không tất định (đã thấy ở R-GCN): không cam kết trùng sha256 khi chạy lại.
+3 seed {1, 2, 3} cho CaKG-Rec chốt và KGAT chốt; **hai ablation chỉ seed 1** (HỎI 11, ghi hạn chế: không có độ lệch giữa seed cho ablation). Báo trung bình ± độ lệch chuẩn mẫu (ddof = 1) khi có 3 seed. GPU không tất định (đã thấy ở R-GCN): không cam kết trùng sha256 khi chạy lại.
 
 ## 5. Chỉ số
 
 - **Full ranking** (kết quả chính): Recall@K, NDCG@K, Hit@K, K ∈ {5, 10, 20}, trên 67.661 người dùng; cách tính như `n5_eval_plan` mục 3 (Recall@K = Hit@K vì mỗi người 1 item test; script kiểm).
-- **CVR_strict@K** (thiết kế (18)) **trước** và **sau** mặt nạ; **CVR_relaxed@K** theo R1 và R2 (thiết kế (19)–(22)), trước và sau mặt nạ. Báo kèm số người được tính, số ống chấm được, số vi phạm, số ống được nới.
+- **CVR_strict@K** (thiết kế (18)) **trước** và **sau** mặt nạ: **số chính**. **CVR_relaxed@K** báo cả hai: **R1 là số relaxed chính** (ngàm chuyển dạng a>b đọc từ tiêu đề), **R2 là số phụ** (dựa vào chữ "adapter", chưa đo độ đúng) (Nam chốt 14/10, HỎI 7); trước và sau mặt nạ. Báo kèm số người được tính, số ống chấm được, số vi phạm, số ống được nới.
 - **Kịch bản** "ống cho người đã có thân" (1.060 người test: 762 lắp được, 282 không lắp được, 16 không phán được): số chính chỉ ống (1.339), số phụ toàn catalog (QĐ 5-2); Recall / NDCG @K và CVR theo nhóm.
-- **Biến thể mặt nạ ∃b (thiết kế (16))**: chỉ báo số mô tả cho CaKG-Rec và LightGCN (Recall@10 mọi người, kịch bản theo nhóm; số người mất item test). Không thuộc so sánh đăng ký.
+- **Biến thể mặt nạ ∃b của khung (thiết kế (16))**: **chạy và báo song song** với mặt nạ chính (15) (Nam chốt 14/10, HỎI 1), trong cùng lần chấm test, cho mọi mô hình có mặt nạ (CaKG-Rec, LightGCN + mặt nạ) và mọi bảng chỉ số ở trên, kể cả kịch bản và số người mất item test. Là số mô tả: không thuộc so sánh đăng ký ở mục 8.
 - **Path Coverage**: PC@K, PC_ngắn@K, PC_mọi_sp@K (thiết kế (25)), K ∈ {5, 10}, sau mặt nạ, người có thân.
 - **Faithfulness**: FS_PN@10, ΔS và đối chứng ngẫu nhiên (thiết kế (26)), trên tối đa 2.000 cặp (u, l) có đường giải thích trong top-10 test, chọn bằng seed 20261014.
 - **Sampled 1+99** (số phụ, khung 2.6): Hit@K, NDCG@K như nội dung 5; báo thứ tự các mô hình theo full ranking và theo sampled ở K = 5, 10, 20; chỉ mô tả (không kiểm định).
@@ -95,17 +95,17 @@ Dùng lại kết quả nội dung 5 là hợp lệ vì cùng train / val / test
 | Ablation (khung) | Biến thể | Huấn luyện mới? | Đọc ở |
 |---|---|---|---|
 | Hai kênh / một kênh | CaKG-Rec so với **R-GCN** (một kênh: hành vi + tri thức trong một đồ thị) và **LightGCN** (một kênh hành vi) | không (baseline có sẵn) | C1, C5 |
-| Có / không L_comp | **CaKG-Rec, λ1 = 0** (giữ kênh phần cứng, bỏ L_comp) | có | C4 |
+| Có / không L_comp | **CaKG-Rec, λ1 = 0** (giữ kênh phần cứng, bỏ L_comp) | có, **seed 1** | C4 |
 | Có / không mặt nạ | cùng mô hình, chấm trước và sau mặt nạ | không | C3, C6, cột "trước mặt nạ" |
-| Có / không `suitable_for` | **CaKG-Rec bỏ quan hệ `suitable_for` khỏi H** (12 quan hệ, 4 nút mục đích không còn cạnh) | có | C8 |
+| Có / không `suitable_for` | **CaKG-Rec bỏ quan hệ `suitable_for` khỏi H** (12 quan hệ, 4 nút mục đích không còn cạnh) | có, **seed 1** | C8 |
 
-- Biến thể dùng **đúng cấu hình chốt** của CaKG-Rec (λ1 chốt, trừ biến thể λ1 = 0), không dò lại.
+- Biến thể dùng **đúng cấu hình chốt** của CaKG-Rec (λ1 chốt, trừ biến thể λ1 = 0), không dò lại, **chỉ seed 1**. So sánh C4, C8 ghép **CaKG-Rec seed 1 với biến thể seed 1** (cùng seed, chỉ khác thành phần bị bỏ); không dùng trung bình 3 seed của CaKG-Rec ở hai so sánh này.
 - Bỏ `suitable_for` làm đường giải thích đủ 3 bước không còn: PC của biến thể này chỉ báo PC_ngắn.
 - **Thăm dò, không đăng ký** (chỉ làm nếu còn giờ GPU, ghi rõ là thăm dò): H_pk (HỎI 2); h_u gồm cả ống (HỎI 4); kênh phần cứng dùng R-GCN thay RGAT (bài RGAT không chắc hơn R-GCN, thiết kế khối 2); gộp thẳng không cổng.
 
 ## 7. Khoảng tin cậy
 
-Như `n5_eval_plan` mục 8: bootstrap theo người dùng, **ghép cặp**, B = 2.000, seed 20261009, khoảng 95% theo phân vị; chỉ số từng người của mô hình học = trung bình 3 seed của người đó; CVR là tỷ số micro, khoảng tin cậy tính trên tổng vi phạm và tổng ống chấm được cộng qua 3 seed; kịch bản bootstrap riêng trong từng nhóm. FS: bootstrap trên các cặp (u, l) của 𝒮.
+Như `n5_eval_plan` mục 8: bootstrap theo người dùng, **ghép cặp**, B = 2.000, seed 20261009, khoảng 95% theo phân vị; chỉ số từng người của mô hình học = trung bình 3 seed của người đó (C4, C8: seed 1, mục 6); CVR là tỷ số micro, khoảng tin cậy tính trên tổng vi phạm và tổng ống chấm được cộng qua 3 seed; kịch bản bootstrap riêng trong từng nhóm. FS: bootstrap trên các cặp (u, l) của 𝒮.
 
 ## 8. So sánh đăng ký trước (K = 10)
 
@@ -114,14 +114,14 @@ Như `n5_eval_plan` mục 8: bootstrap theo người dùng, **ghép cặp**, B =
 | **C1** | CaKG-Rec (mặt nạ) − LightGCN | Recall@10, NDCG@10 | mọi người dùng | chính |
 | **C2** | CaKG-Rec (mặt nạ) − LightGCN + mặt nạ | Recall@10, NDCG@10 | người có thân; mọi người dùng | **chính** (tách tác dụng kênh phần cứng khỏi mặt nạ) |
 | **C3** | CaKG-Rec (trước mặt nạ) − LightGCN (trước mặt nạ) | CVR_strict@10 | người có thân | **chính** (mô hình có học ràng buộc không) |
-| C4 | CaKG-Rec − CaKG-Rec λ1 = 0 (cả hai trước mặt nạ) | CVR_strict@10; Recall@10 | người có thân; mọi người dùng | phụ (đóng góp L_comp) |
+| C4 | CaKG-Rec − CaKG-Rec λ1 = 0 (cả hai trước mặt nạ, seed 1) | CVR_strict@10; Recall@10 | người có thân; mọi người dùng | phụ (đóng góp L_comp) |
 | C5 | CaKG-Rec (mặt nạ) − R-GCN | Recall@10, NDCG@10 | mọi người dùng | phụ (hai kênh / một kênh) |
 | **C6** | kịch bản chỉ ống: CaKG-Rec (mặt nạ) − LightGCN + mặt nạ; CaKG-Rec (mặt nạ) − LightGCN | Recall@10 | nhóm lắp được (762); nhóm không lắp được (282) | **chính** (khung 2.6, "kịch bản người có thân") |
 | C7 | KGAT − LightGCN | Recall@10, NDCG@10 | mọi người dùng | phụ |
-| C8 | CaKG-Rec − CaKG-Rec bỏ `suitable_for` | Recall@10; PC_ngắn@10 | mọi người dùng; người có thân | phụ |
+| C8 | CaKG-Rec − CaKG-Rec bỏ `suitable_for` (seed 1) | Recall@10; PC_ngắn@10 | mọi người dùng; người có thân | phụ |
 | C9 | FS_PN@10: đường giải thích − đường ngẫu nhiên | FS_PN@10 | 𝒮 (có đối chứng) | phụ |
 
-- Hiệu được coi là khác 0 khi khoảng 95% không chứa 0. **Không giả định chiều** (CaKG-Rec có thể kém hơn); kết quả nào cũng báo.
+- Hiệu được coi là khác 0 khi khoảng 95% không chứa 0. **Không giả định chiều** (CaKG-Rec có thể kém hơn); kết quả nào cũng báo. Mọi so sánh dùng mặt nạ chính (15) và CVR_strict; bản ∃b và CVR_relaxed chỉ mô tả.
 - Không hiệu chỉnh đa so sánh (như nội dung 5); C1, C2, C3, C6 là **chính**, các so sánh khác là phụ; mọi so sánh ngoài bảng là "thăm dò". Số khoảng tin cậy: 20 (đếm theo chỉ số × tập × cặp so sánh).
 - Dự kiến (chưa kiểm chứng): vì CaKG-Rec chỉ khác LightGCN trên 15,3% người × 9,30% sản phẩm (thiết kế khối 3), **C1 có thể không khác 0**. Đây không phải lý do đổi so sánh sau khi xem số.
 - Nhóm "không lắp được" (282): với mặt nạ (15), Recall@10 chỉ ống **chắc chắn = 0** (item test bị chặn), giống MountAware ở S5. Báo số này để thấy cái giá của mặt nạ, không coi là kết quả học.
@@ -151,25 +151,23 @@ Hệ số thực tế / probe lấy từ LightGCN nội dung 5: 13,7 s thật (`
 
 | Việc | Lần chạy | Giờ / lần (xấu nhất) | Tổng |
 |---|---:|---:|---:|
-| CaKG-Rec dò λ1 (seed 1) | 3 | 2,0 | 6,0 |
+| CaKG-Rec dò λ1 ∈ {0,01; 0,1; 1,0} (seed 1) | 3 | 2,0 | 6,0 |
 | CaKG-Rec chốt, seed 2, 3 | 2 | 2,0 | 4,0 |
-| Ablation λ1 = 0, seed 1–3 | 3 | 2,0 | 6,0 |
-| Ablation bỏ `suitable_for`, seed 1–3 | 3 | 2,0 | 6,0 |
-| KGAT dò lr (seed 1) | 2 | 3,1 | 6,2 |
+| Ablation λ1 = 0, **seed 1** | 1 | 2,0 | 2,0 |
+| Ablation bỏ `suitable_for`, **seed 1** | 1 | 2,0 | 2,0 |
+| KGAT dò lr ∈ {1e-3; 1e-4} (seed 1) | 2 | 3,1 | 6,2 |
 | KGAT chốt, seed 2, 3 | 2 | 3,1 | 6,2 |
 | Chạy thử, chấm test, LightGCN + mặt nạ, Faithfulness (2.000 cặp × ~30 ms), độ trễ | — | — | < 1 |
-| **Tổng xấu nhất** | 15 | | **≈ 35 giờ** |
+| **Tổng xấu nhất** | 11 | | **26,4 + < 1 ≈ 27 giờ** |
+
+(Bản trước khi chốt: 15 lần chạy, ≈ 35 giờ; bớt 4 lần chạy ablation seed 2, 3 = 8 giờ.)
 
 Dừng sớm có thể làm giảm, nhưng LightGCN đã chạm 300 epoch nên lấy mức xấu nhất. **Chưa kiểm chứng** 300 epoch đủ hội tụ.
 
 ### 9.3. Có vừa 1–2 tuần không
 
-- GPU: ~35 giờ ≈ 4 đêm chạy (~9 giờ / đêm). Thời gian người (ước lượng, chưa kiểm chứng): cài code 3–4 ngày, kiểm thử dựng tay 1 ngày, phân tích + viết 2 ngày → **khoảng 9–10 ngày làm việc: vừa 2 tuần, không vừa 1 tuần**. Cô dặn xong chương 1–2 mới đi tiếp chương 3, nên chương 1 phải viết song song lúc GPU chạy.
-- **Đề xuất cắt nếu thiếu thời gian** (theo thứ tự) **[HỎI 11]**:
-  1. Hai ablation (λ1 = 0, bỏ `suitable_for`) chỉ **seed 1** → bớt 8 giờ (còn ~27 giờ). C4, C8 khi đó không có độ lệch giữa seed, ghi hạn chế.
-  2. KGAT **không dò lr** (dùng 1e-3, thuộc lưới của bài) → bớt 3,1 giờ.
-  3. λ1 chỉ dò {0,1; 1,0} → bớt 2 giờ.
-  Cắt cả 3: ≈ 22 giờ GPU (~2,5 đêm). Không cắt: số seed của CaKG-Rec chốt và KGAT chốt (cần 3 seed cho C1–C3, C7).
+- GPU: ~27 giờ ≈ 3 đêm chạy (~9 giờ / đêm). Thời gian người (ước lượng, chưa kiểm chứng): cài code 3–4 ngày, kiểm thử dựng tay 1 ngày, phân tích + viết 2 ngày → **khoảng 9–10 ngày làm việc: vừa 2 tuần, không vừa 1 tuần**. Chương 1 viết song song lúc GPU chạy (cô dặn xong chương 1–2 mới đi tiếp chương 3).
+- **Đã cắt** (Nam chốt 14/10, HỎI 11): hai ablation chỉ seed 1 (ghi hạn chế). **Giữ** dò lr của KGAT và 3 giá trị λ1. Nếu vẫn thiếu thời gian thì phải hỏi Nam trước khi cắt thêm.
 
 ## 10. Đo độ trễ và VRAM
 
@@ -201,17 +199,26 @@ Dừng sớm có thể làm giảm, nhưng LightGCN đã chạm 300 epoch nên l
 - Kết quả ghi `results/cakg/<nhãn lần chạy>/`; log tên mới kèm ngày và nhãn; không ghi đè `results/n5/`.
 - Mỗi lần chạy lưu: cấu hình, commit, sha256 đầu vào, đường học, checkpoint tốt nhất, VRAM đỉnh, và mảng theo người (hạng item test trước / sau mặt nạ, top-20 trước / sau mặt nạ, số ống chấm được / vi phạm / được nới theo K) để bootstrap không cần chạy lại.
 
-## 13. Câu hỏi của kế hoạch (chưa chốt)
+## 13. Quyết định của Nam (14/10/2026)
 
-| # | Câu hỏi | Đề xuất |
-|---|---|---|
-| HỎI 10 | Khởi tạo CaKG-Rec từ đầu hay từ embedding LightGCN đã huấn luyện (nhanh hơn, nhưng CaKG-Rec được hơn 300 epoch)? | Từ đầu, cùng ngân sách 300 epoch |
-| HỎI 11 | Cắt phần nào nếu thiếu thời gian (mục 9.3)? | Chạy đủ nếu có 2 tuần; thiếu thì cắt theo thứ tự 1 → 3 |
-| HỎI 12 | So sánh chính là C1, C2, C3, C6? | Đồng ý |
-| HỎI 13 | Faithfulness chọn 2.000 cặp có đường giải thích (không phải mọi cặp)? | Đồng ý (chi phí ~1 phút GPU; mọi cặp là ~10.000 người × tới 10 ống) |
+| # | Câu hỏi | Đề xuất của Claude | **Nam chốt 14/10/2026** |
+|---|---|---|---|
+| HỎI 10 | Khởi tạo CaKG-Rec từ đầu hay từ embedding LightGCN? | Từ đầu | **Từ đầu** |
+| HỎI 11 | Cắt phần nào nếu thiếu thời gian? | Đủ nếu có 2 tuần | **Ablation chỉ 1 seed (ghi hạn chế); giữ dò lr KGAT và 3 giá trị λ1** |
+| HỎI 12 | So sánh chính là C1, C2, C3, C6? | Đồng ý | **Đồng ý** |
+| HỎI 13 | Faithfulness trên 2.000 cặp? | Đồng ý | **Đồng ý** |
+
+Thiết kế HỎI 1–9: xem `docs/cakg_design.md` mục 11.
+
+**Hạn chế đã biết từ khâu kế hoạch** (đưa vào báo cáo):
+1. `requires_adapter` là cặp âm của L_comp (HỎI 6): mô hình bị đẩy xa khỏi ống lắp được qua ngàm chuyển chính hãng, kể cả với người có ngàm chuyển.
+2. CVR_relaxed R2 dựa vào chữ "adapter" trong tiêu đề, chưa đo độ đúng; R1 bỏ sót ngàm chuyển một ngàm (ca uid 2465). Cả hai là cận dưới.
+3. Hai ablation chỉ 1 seed: không có độ lệch giữa seed; C4, C8 có thể bị dao động seed chi phối (R-GCN ở nội dung 5: CVR@10 test từ 0,2780 đến 0,4695 giữa 3 seed).
+4. KGAT khác code tác giả ở chỗ dùng attention cho lan truyền (code tác giả tính rồi không dùng, thiết kế khối 9), không pretrain MF, tối đa 300 epoch.
+5. Ngân sách 300 epoch có thể chưa đủ hội tụ (như LightGCN ở nội dung 5).
 
 ## 14. Sửa đổi kế hoạch
 
 | Ngày | Sửa | Lý do |
 |---|---|---|
-| | | |
+| 14/10/2026 | Ghi 13 quyết định của Nam vào thiết kế và các mục 4–9, 13: mặt nạ ∃b chạy song song; CVR_strict chính, R1 relaxed chính, R2 phụ; ablation 1 seed (C4, C8 ghép seed 1); giờ GPU 35 → 27 giờ. Ghi kết quả kiểm code KGAT (attention mới không được dùng trong lan truyền) và cách cài ở đây | Nam chốt, trước khi cài code và trước khi huấn luyện; đây là bản đăng ký trước |
