@@ -95,7 +95,13 @@ def main():
     s2 = dot(Z["người u2 (không có thân)"], Z["thẻ nhớ C (không có h)"])
     log(f"  ŷ(u2, C) = {s2:.5f} = e_u2 · e_C = {dot((0.1, 0.3), (0.3, 0.2)):.5f} (đúng bằng LightGCN)")
     s3 = dot(Z["người u1 (có thân b)"], Z["thẻ nhớ C (không có h)"])
-    log(f"  ŷ(u1, C) = {s3:.5f} = β_e(u1) · e_u1 · e_C (phần phần cứng = 0)")
+    log(f"  cách gộp thẳng z_u · z_i: ŷ(u1, C) = {s3:.5f} = β_e(u1) · e_u1 · e_C (phần phần cứng = 0)")
+    s4 = dot(Z["người u2 (không có thân)"], Z["ống l2"])
+    log(f"  cách gộp thẳng z_u · z_i: ŷ(u2, l2) = {s4:.5f} = β_e(l2) · e_u2 · e_l2 (điểm hành vi của ống bị co lại)")
+    g3 = dot((0.5, 0.1), (0.3, 0.2))
+    g4 = dot((0.1, 0.3), (0.2, 0.4))
+    log(f"  cách có cổng (chỉ gộp khi CẢ HAI phía có h): ŷ(u1, C) = e_u1 · e_C = {g3:.5f}; "
+        f"ŷ(u2, l2) = e_u2 · e_l2 = {g4:.5f}; ŷ(u1, l2) = {s1:.5f} (cả hai có h, dùng z)")
 
     # ── Khối 5: L_comp ──
     log("\nKhối 5 — L_comp cho một cặp dương, τ = 0,2")
