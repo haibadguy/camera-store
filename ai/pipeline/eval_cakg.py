@@ -391,71 +391,86 @@ def counterfactual_score_row(model, Hd, bodies_h, u, drop_body, cut_edges, eU, e
     return S
 
 
+C9_MIN_PAIRS = 30              # dưới số này cặp có đối chứng thân: C9 chỉ báo mô tả (Nam chốt 15/10/2026)
+
+
 def faithfulness(model, Hd, bodies_h, ev, sp, masks_t, pctx, pairs, K=10, rng=None, log=print):
-    """(26) FS_PN@K và ΔS cho các cặp (u, l) có đường đủ 3 bước trong top-K' (pairs: list Explainer.explain), kèm đối chứng
-    ngẫu nhiên cùng dạng: thân khác b' ∈ B_u^H có M_b'l = 1 (nếu có) và nhãn mục đích ngẫu nhiên (đều) trong các nhãn
-    của l (có thể trùng c*).
+    """(26) FS_PN@K và ΔS cho các cặp (u, l) có đường ĐỦ 3 bước (u, b*, l, c*) trong top-K' (pairs: Explainer.explain).
+    Phản thực tế của lời giải thích: bỏ b* khỏi B_u^H, bỏ cạnh (b*, l) loại ρ và (l, c*) suitable_for, cả hai chiều.
+    Hai đối chứng ngẫu nhiên cùng dạng, mỗi đối chứng thay MỘT thành phần của đường (làm rõ 15/10/2026, kế hoạch mục 14):
+      - đối chứng thân (dùng cho C9): (b', l, c*), b' lấy đều trong các thân khác b* của u có M_b'l = 1; không có b'
+        thì cặp không có đối chứng thân;
+      - đối chứng nhãn: (b*, l, c'), c' lấy đều trong các nhãn mục đích KHÁC c* của l; ống chỉ có một nhãn thì cặp
+        không có đối chứng nhãn (đếm và báo).
     Xếp lại bằng eval_05.full_rank (cùng quy tắc hòa π) trên MỘT người, ứng viên như sp, áp mặt nạ masks_t.
-    Trả về dict mảng theo cặp: drop (bỏ đường giải thích -> l rơi khỏi top-K'), dS, has_ctrl, drop_ctrl, dS_ctrl."""
+    Trả về dict mảng theo cặp: drop (l rơi khỏi top-K' khi bỏ đường giải thích), dS, và với x ∈ {body, label}:
+    has_ctrl_x, drop_ctrl_x, dS_ctrl_x."""
     rng = np.random.default_rng(FAITH_SEED) if rng is None else rng
     row_of = {int(u): r for r, u in enumerate(sp.users.tolist())}
     lens_t, cmask_t = masks_t
     comps = model.components()
     sf_full = mask_scorer(model.make_scorer(comps, model.hidx), lens_t, cmask_t)
     eU, eI = comps["eU"], comps["eI"]
-    out = {k: [] for k in ("u", "l", "drop", "dS", "has_ctrl", "drop_ctrl", "dS_ctrl")}
+    keys = ["u", "l", "drop", "dS"] + [f"{a}_{x}" for x in ("body", "label")
+                                       for a in ("has_ctrl", "drop_ctrl", "dS_ctrl")]
+    out = {k: [] for k in keys}
 
-    def rank_with(u, S_row):
+    def score_and_drop(u, l, b, rho, c, drop_body):
+        S = counterfactual_score_row(model, Hd, bodies_h, u, drop_body, path_edges(Hd, b, l, rho, c), eU, eI)
         r = row_of[u]
         sub = E.Split(sp.name, sp.users[r:r + 1], sp.pos[r:r + 1], np.array([0, sp.excl_ptr[r + 1] - sp.excl_ptr[r]]),
                       sp.excl_col[sp.excl_ptr[r]:sp.excl_ptr[r + 1]])
-        f = mask_scorer(lambda uids: S_row.clone(), lens_t, cmask_t)        # uids = [u] (một người)
-        return E.full_rank(f, sub, ev.pi, k_max=K, k_list=[K])["top"][0]
+        f = mask_scorer(lambda uids: S.clone(), lens_t, cmask_t)              # uids = [u] (một người)
+        top = E.full_rank(f, sub, ev.pi, k_max=K, k_list=[K])["top"][0]
+        return int(l not in top.tolist()), float(f(torch.as_tensor([u], device=E.DEVICE))[0, l])
+
+    def put(x, has, d=0, ds=0.0):
+        out[f"has_ctrl_{x}"].append(int(has))
+        out[f"drop_ctrl_{x}"].append(d)
+        out[f"dS_ctrl_{x}"].append(ds)
 
     for ex in pairs:
-        u, l = ex["u"], ex["l"]
+        u, l, b, c = ex["u"], ex["l"], ex["b_star"], ex["c_star"]
+        assert c is not None, "Faithfulness chỉ đo đường đủ 3 bước (công thức 26)"
         s0 = float(sf_full(torch.as_tensor([u], device=E.DEVICE))[0, l])
-        S_cf = counterfactual_score_row(model, Hd, bodies_h, u, ex["b_star"], path_edges(Hd, ex["b_star"], l, ex["rho"],
-                                                                               ex["c_star"]), eU, eI)
-        s_cf = float(mask_scorer(lambda uids: S_cf.clone(), lens_t, cmask_t)(torch.as_tensor([u], device=E.DEVICE))[0, l])
-        top_cf = rank_with(u, S_cf)
+        d, s = score_and_drop(u, l, b, ex["rho"], c, b)
         out["u"].append(u)
         out["l"].append(l)
-        out["drop"].append(int(l not in top_cf.tolist()))
-        out["dS"].append(s0 - s_cf)
-        others = [b for b in ex["cand_bodies"] if b != ex["b_star"]]
+        out["drop"].append(d)
+        out["dS"].append(s0 - s)
+        others = [x for x in ex["cand_bodies"] if x != b]
         if others:
             b2 = int(rng.choice(others))
-            c2 = str(rng.choice(pctx.suit[l])) if ex["c_star"] is not None else None
-            S2 = counterfactual_score_row(model, Hd, bodies_h, u, b2, path_edges(Hd, b2, l, pctx.rho[(b2, l)], c2),
-                                          eU, eI)
-            s2 = float(mask_scorer(lambda uids: S2.clone(), lens_t, cmask_t)(torch.as_tensor([u], device=E.DEVICE))[0, l])
-            out["has_ctrl"].append(1)
-            out["drop_ctrl"].append(int(l not in rank_with(u, S2).tolist()))
-            out["dS_ctrl"].append(s0 - s2)
+            d2, s2 = score_and_drop(u, l, b2, pctx.rho[(b2, l)], c, b2)
+            put("body", True, d2, s0 - s2)
         else:
-            out["has_ctrl"].append(0)
-            out["drop_ctrl"].append(0)
-            out["dS_ctrl"].append(0.0)
+            put("body", False)
+        labels = [x for x in pctx.suit[l] if x != c]
+        if labels:
+            c2 = str(rng.choice(labels))
+            d3, s3 = score_and_drop(u, l, b, ex["rho"], c2, b)
+            put("label", True, d3, s0 - s3)
+        else:
+            put("label", False)
     return {k: np.asarray(v) for k, v in out.items()}
 
 
-def faithfulness_summary(fs, B=2000, seed=E.BOOT_SEED):
-    """FS_PN@K, ΔS trên mọi cặp; so với đối chứng trên các cặp có đối chứng (bootstrap ghép cặp theo cặp (u, l))."""
+def faithfulness_summary(fs, B=2000, seed=E.BOOT_SEED, min_pairs=C9_MIN_PAIRS):
+    """FS_PN@K, ΔS trên mọi cặp; so với từng đối chứng trên các cặp có đối chứng đó (bootstrap ghép cặp theo (u, l)).
+    C9 (đăng ký) = đối chứng thân; dưới min_pairs cặp có đối chứng thân thì C9 chỉ là số mô tả (c9_chi_mo_ta)."""
     n = len(fs["drop"])
     res = {"n_pairs": int(n), "fs_pn": float(fs["drop"].mean()) if n else float("nan"),
            "dS_mean": float(fs["dS"].mean()) if n else float("nan")}
-    m = fs["has_ctrl"] == 1
-    res["n_pairs_with_ctrl"] = int(m.sum())
-    res["n_pairs_no_ctrl"] = int((~m).sum())
-    if (~m).any():
-        res["fs_pn_no_ctrl"] = float(fs["drop"][~m].mean())
-    if m.any():
-        bs = E.bootstrap_paired({"expl": (fs["drop"][m].astype(float), None),
-                                 "ctrl": (fs["drop_ctrl"][m].astype(float), None),
-                                 "dS_expl": (fs["dS"][m], None), "dS_ctrl": (fs["dS_ctrl"][m], None)},
-                                pairs=[("expl", "ctrl"), ("dS_expl", "dS_ctrl")], B=B, seed=seed)
-        res["bootstrap_with_ctrl"] = bs
+    for x in ("body", "label"):
+        m = fs[f"has_ctrl_{x}"] == 1
+        res[f"n_pairs_with_ctrl_{x}"] = int(m.sum())
+        res[f"n_pairs_no_ctrl_{x}"] = int((~m).sum())
+        if m.any():
+            res[f"bootstrap_ctrl_{x}"] = E.bootstrap_paired(
+                {"expl": (fs["drop"][m].astype(float), None), "ctrl": (fs[f"drop_ctrl_{x}"][m].astype(float), None),
+                 "dS_expl": (fs["dS"][m], None), "dS_ctrl": (fs[f"dS_ctrl_{x}"][m], None)},
+                pairs=[("expl", "ctrl"), ("dS_expl", "dS_ctrl")], B=B, seed=seed)
+    res["c9_chi_mo_ta"] = res["n_pairs_with_ctrl_body"] < min_pairs
     return res
 
 

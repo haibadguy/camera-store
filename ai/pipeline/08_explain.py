@@ -116,11 +116,14 @@ def main():
     t = time.time()
     fs = EC.faithfulness(model, Hd, bodies_h, ev, ev.split, masks["qd49"], pctx, pairs, K=10)
     summ = EC.faithfulness_summary(fs)
-    log(f"  {time.time() - t:.1f}s | FS_PN@10 = {summ['fs_pn']:.4f}, ΔS = {summ['dS_mean']:.5f} trên {summ['n_pairs']:,} "
-        f"cặp; có đối chứng {summ['n_pairs_with_ctrl']:,}, không có {summ['n_pairs_no_ctrl']:,}")
-    if "bootstrap_with_ctrl" in summ:
-        for k_, v in summ["bootstrap_with_ctrl"].items():
+    log(f"  {time.time() - t:.1f}s | FS_PN@10 = {summ['fs_pn']:.4f}, ΔS = {summ['dS_mean']:.5f} trên {summ['n_pairs']:,} cặp")
+    for x, lab in (("body", "đối chứng thân (C9)"), ("label", "đối chứng nhãn")):
+        log(f"  {lab}: có {summ[f'n_pairs_with_ctrl_{x}']:,} cặp, không có {summ[f'n_pairs_no_ctrl_{x}']:,} cặp"
+            + (" (ống chỉ có một nhãn)" if x == "label" else " (người chỉ có một thân M = 1 với ống)"))
+        for k_, v in summ.get(f"bootstrap_ctrl_{x}", {}).items():
             log(f"    {k_}: {v[0]:.4f} [{v[1]:.4f}; {v[2]:.4f}]")
+    if summ["c9_chi_mo_ta"]:
+        log(f"  C9: dưới {EC.C9_MIN_PAIRS} cặp có đối chứng thân -> CHỈ BÁO MÔ TẢ")
     with open(out_dir / "explanations.jsonl", "x", encoding="utf-8") as f:
         for e in expls:
             f.write(json.dumps({k: (v if not isinstance(v, dict) else {str(b): c for b, c in v.items()})

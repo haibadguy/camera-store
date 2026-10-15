@@ -53,6 +53,10 @@ dữ liệu Amazon (01–02) → M, U (03) → đồ thị G (04)
 
 Hình cho chương 2 cô yêu cầu vẽ bằng công cụ vector (draw.io / TikZ); làm khi viết chương, không ở đây.
 
+**Ràng buộc cứng và mềm (nội dung 6; Nam chốt 15/10/2026).** Không làm module ràng buộc mềm riêng:
+- **ràng buộc mềm = L_comp** (khối 5): phạt khi biểu diễn thân và ống không lắp được nằm gần nhau, lúc huấn luyện; mô hình vẫn có thể xếp ống vi phạm lên cao (đo bằng CVR trước mặt nạ);
+- **ràng buộc cứng = mặt nạ** (khối 7, công thức 15; biến thể ∃b công thức 16): lúc suy luận, gán −∞ cho ống chắc chắn vi phạm, nên CVR sau mặt nạ = 0 do cách dựng.
+
 Ký hiệu chung (theo khung 1.2.1): 𝒰 người dùng, ℐ sản phẩm, ℐ_body / ℐ_lens / ℐ_acc; **B_u** = tập thân trong train của u (khung viết b ∈ ℋ_u); M, U ∈ {0,1}^{537×1.033}; số lớp LightGCN ký hiệu **L** (khung dùng K, trùng với K của top-K — [ĐỀ XUẤT CHO CÔ] đổi ký hiệu, đã nêu ở `khung_co_doi_chieu.md`).
 
 ---
@@ -307,7 +311,7 @@ Attention theo từng nút (AM-GCN Eq. 8–9), tham số riêng cho phía ngư�
 - **Ca uid 2465** (STATUS hạn chế nội dung 5, điểm 12): hai thân EOS M (`canon_efm`), có "Canon EOS M Mount Adapter" (iid 7524) mà nội dung 3 xếp là phụ kiện **một ngàm** `canon_efm` (bỏ sót phía EF). Top-10 **val** của LightGCN s1 có ống iid 19161 (`canon_ef`): strict = vi phạm; R1 **không** nới được (không có dạng a>b); **R2 nới được** (cặp `requires_adapter`, phụ kiện "adapter" cùng ngàm thân).
 - **Số trên top-10 VAL của LightGCN s1** (log mục 5): 23.441 ống chấm được, 3.005 vi phạm → **CVR_strict@10 = 0,1282**; R1 nới 61 → **0,1256**; R2 nới 109 → **0,1235** (50 người được nới). 637 người có thân có ngàm chuyển a>b; 746 có phụ kiện một ngàm chữ "adapter".
 - **Nam chốt 14/10 (HỎI 7): CVR_strict là số chính. CVR_relaxed báo cả R1 lẫn R2: R1 là số relaxed chính** (hướng ngàm chuyển đọc được từ tiêu đề dạng a>b); **R2 là số phụ** vì dựa vào chữ "adapter" trong tiêu đề, chưa đo độ đúng. Ca uid 2465 chỉ R2 nới được → ghi rõ khi trình bày. Cả hai đều là **cận dưới** (chỉ biết ngàm chuyển người dùng có đánh giá).
-- CVR_relaxed sau mặt nạ (15) cũng = 0 (relaxed ≤ strict). Mặt nạ "mềm" (không chặn ống lắp được qua ngàm chuyển người đó có) là nội dung 6 (ràng buộc mềm), không làm ở đây.
+- CVR_relaxed sau mặt nạ (15) cũng = 0 (relaxed ≤ strict). Mặt nạ "mềm" (không chặn ống lắp được qua ngàm chuyển người đó có) **không làm** (Nam chốt 15/10: ràng buộc mềm là L_comp, xem mục 1).
 
 ---
 
@@ -355,6 +359,7 @@ Thêm nhánh `crops_sensor` (khung chỉ có `compatible_with`) → **[ĐỀ XU�
 
   𝒮 = các cặp có đường giải thích trong top-K' trên test (mẫu ngẫu nhiên tối đa 2.000 cặp, seed cố định, vì mỗi cặp phải chạy lại RGAT: 28 ms một lần tính biểu diễn, log `run_probe_cakg`).
 - **Đối chứng:** cùng phép bỏ nhưng với một đường **ngẫu nhiên** cùng dạng (thân khác của u có M = 1 với l nếu có; nhãn mục đích ngẫu nhiên của l). Lời giải thích được coi là trung thực hơn ngẫu nhiên khi FS_PN(giải thích) − FS_PN(ngẫu nhiên) có khoảng 95% không chứa 0. Với người chỉ có 1 thân phù hợp, không có đối chứng thân → báo riêng.
+- **Làm rõ 15/10/2026 (Nam xác nhận; kế hoạch mục 14):** bỏ cạnh là bỏ cả hai chiều (r, rev_r); 𝒮 chỉ gồm đường đủ 3 bước; nhãn đối chứng **khác c\*** (ống chỉ có một nhãn: không có đối chứng nhãn, đếm và báo). Cài thành hai đối chứng, mỗi cái thay một thành phần: đối chứng thân (b', l, c\*) cho C9; đối chứng nhãn (b\*, l, c'). Dưới 30 cặp có đối chứng thân trên test thì C9 chỉ báo mô tả.
 - Ý nghĩa và giới hạn: FS thấp không có nghĩa câu giải thích **sai sự kiện** (mọi cạnh đều có thật, script kiểm), mà nghĩa là gợi ý chủ yếu đến từ kênh hành vi; đó chính là thông tin cần báo. PS (Eq. 15 của Tan) không đo (phải bỏ mọi thứ **ngoài** đường, kể cả kênh hành vi: không có nghĩa với mô hình này) → ghi hạn chế.
 
 **[ĐỀ XUẤT CHO CÔ]**: khung viết "triệt tiêu hoàn toàn ảo giác", "độ trung thực cao". Chỉ cam kết được: (i) câu giải thích chỉ chứa sự kiện có trong đồ thị (đúng do cách dựng, có kiểm thử); (ii) Faithfulness là số đo được, chưa biết cao hay thấp.

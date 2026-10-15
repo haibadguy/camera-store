@@ -214,11 +214,25 @@ Thiết kế HỎI 1–9: xem `docs/cakg_design.md` mục 11.
 1. `requires_adapter` là cặp âm của L_comp (HỎI 6): mô hình bị đẩy xa khỏi ống lắp được qua ngàm chuyển chính hãng, kể cả với người có ngàm chuyển.
 2. CVR_relaxed R2 dựa vào chữ "adapter" trong tiêu đề, chưa đo độ đúng; R1 bỏ sót ngàm chuyển một ngàm (ca uid 2465). Cả hai là cận dưới.
 3. Hai ablation chỉ 1 seed: không có độ lệch giữa seed; C4, C8 có thể bị dao động seed chi phối (R-GCN ở nội dung 5: CVR@10 test từ 0,2780 đến 0,4695 giữa 3 seed).
-4. KGAT khác code tác giả ở chỗ dùng attention cho lan truyền (code tác giả tính rồi không dùng, thiết kế khối 9), không pretrain MF, tối đa 300 epoch.
+4. KGAT khác code tác giả ở chỗ dùng attention cho lan truyền (code tác giả tính rồi không dùng, thiết kế khối 9), không pretrain MF, tối đa 300 epoch; **pha CF lấy mẫu như LightGCN** (mỗi epoch duyệt mọi cặp train, 1 âm mẫu / cặp, vòng `train_05.run`), code tác giả lấy người dùng đều rồi một item dương (Nam đồng ý 15/10, ghi là sai khác); các sai khác nhỏ khác ở docstring `ai/pipeline/kgat_model.py`.
 5. Ngân sách 300 epoch có thể chưa đủ hội tụ (như LightGCN ở nội dung 5).
 
+**Hạn chế phát sinh sau khi dò val** (15/10/2026, `ai/config/cakg_final.toml`; log `results/cakg/val_sweep_20261014/sweep_*.log`):
+6. CaKG-Rec: cả 3 lần dò (λ1 0,01 / 0,1 / 1,0) chạm 300 epoch, epoch tốt nhất đều là 290 → **"chưa chắc hội tụ"**. Ba giá trị chênh nhau ≤ 0,00033 NDCG@20 val; phần chênh nằm ở người dùng mà kênh phần cứng không chạm tới (`ai/data/survey/cakg/run_chan_doan_lcomp_20261015_lan1.log`), nên việc chọn λ1 = 0,1 nằm trong mức dao động huấn luyện.
+7. KGAT: lr = 1e-3 **ở biên lưới**; đạt đỉnh NDCG@20 val ở epoch 30 (0,02629) rồi giảm, dừng sớm ở epoch 80. lr = 1e-4 chạm 300 epoch, NDCG@20 val còn tăng ở lần chấm cuối (0,02017 → 0,02099) → chưa hội tụ. Không mở rộng lưới (mục 4.1).
+8. L_comp của mọi lần dò dừng ở ~1,0597 = sàn của chính hàm mục tiêu trên dữ liệu này (tối ưu trực tiếp vector tự do cũng dừng ở 1,05965), không phải lỗi; L_comp đạt sàn sau vài epoch (λ1 = 1: epoch 2; 0,1: epoch 6; 0,01: epoch 70).
+
 ## 14. Sửa đổi kế hoạch
+
+**Làm rõ (Nam xác nhận 15/10/2026, sau khi cài và dò val, trước khi chạy test; không đổi phép đo chính).** Ở những chỗ kế hoạch / thiết kế chưa ghi rõ:
+- Ablation C8 (bỏ `suitable_for`): **giữ nguyên tập nút** của H_lõi (1.822 nút); 113 ống chỉ có `suitable_for` thành nút không có cạnh (vẫn có h), 4 nút mục đích không còn cạnh.
+- Faithfulness (thiết kế công thức 26): khi bỏ một cạnh của đường thì bỏ **cả hai chiều** (r và rev_r); tập 𝒮 chỉ gồm cặp có đường **đủ 3 bước** (u, b*, l, c*). Phép đo chính FS_PN@10, ΔS giữ nguyên.
+- Đối chứng ngẫu nhiên: **nhãn đối chứng phải khác c\*** (lấy đều trong các nhãn khác của ống); ống chỉ có một nhãn thì cặp **không có đối chứng nhãn** — đếm và báo số cặp này. Cách cài (`eval_cakg.faithfulness`): hai đối chứng, mỗi đối chứng thay **một** thành phần của đường — đối chứng thân (b', l, c\*) dùng cho C9, đối chứng nhãn (b\*, l, c') báo kèm.
+- C9: trên test, nếu số cặp có **đối chứng thân dưới 30** thì C9 **chỉ báo mô tả** (không kết luận theo khoảng tin cậy).
+- KGAT pha CF lấy mẫu như LightGCN: ghi là sai khác so với code tác giả (mục 13, hạn chế 4).
+- Ràng buộc mềm: không làm module riêng; **L_comp là ràng buộc mềm, mặt nạ là ràng buộc cứng** (thiết kế mục 1).
 
 | Ngày | Sửa | Lý do |
 |---|---|---|
 | 14/10/2026 | Ghi 13 quyết định của Nam vào thiết kế và các mục 4–9, 13: mặt nạ ∃b chạy song song; CVR_strict chính, R1 relaxed chính, R2 phụ; ablation 1 seed (C4, C8 ghép seed 1); giờ GPU 35 → 27 giờ. Ghi kết quả kiểm code KGAT (attention mới không được dùng trong lan truyền) và cách cài ở đây | Nam chốt, trước khi cài code và trước khi huấn luyện; đây là bản đăng ký trước |
+| 15/10/2026 | Thêm phần "Làm rõ" ở trên (C8 giữ tập nút; Faithfulness hai chiều cạnh, đường đủ 3 bước, nhãn đối chứng ≠ c\*, C9 mô tả khi < 30 cặp đối chứng thân; KGAT lấy mẫu CF; ràng buộc mềm = L_comp); thêm hạn chế 6–8 sau khi dò val; ghi `ai/config/cakg_final.toml` (λ1 = 0,1; lr KGAT = 1e-3) đúng quy tắc chọn đã đăng ký | Nam xác nhận sau khi cài và dò val; chưa chạy seed 2, 3, ablation, chưa chấm test |

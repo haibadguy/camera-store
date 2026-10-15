@@ -13,9 +13,10 @@ Viết 14/10/2026. CHỈ dùng tập VAL (không đọc nhãn test). Không hu�
      được (log dem).
  C7. LightGCN + mặt nạ trên val: CVR strict (và R1, R2) sau mặt nạ (15) và (16) = 0; trước mặt nạ = 0,1282.
  C8. Phân rã (24), ví dụ khối 8: c(D750) = 0,0740, c(D500) = 0,0340, b* = D750; trên mô hình thật: Σ_b c_u(b, l) = phần
-     phần cứng của điểm; mọi câu giải thích trên top-10 val (sau mặt nạ) của checkpoint chạy thử: 0 lỗi sự kiện.
- C9. Faithfulness: phản thực tế không bỏ gì -> đúng điểm score_fn; "mô hình" β_h = 0 -> FS_PN = 0, ΔS = 0; bootstrap
-     hai chuỗi giống hệt -> hiệu = 0.
+     phần cứng của điểm; mọi câu giải thích trên top-10 val (sau mặt nạ): 0 lỗi sự kiện.
+ C9. Faithfulness: phản thực tế không bỏ gì -> đúng điểm score_fn; có đối chứng thân / nhãn đúng khi có thân / nhãn
+     khác (nhãn đối chứng khác c*, làm rõ 15/10); C9 chỉ mô tả khi < 30 cặp; "mô hình" β_h = 0 -> FS_PN = 0, ΔS = 0;
+     bootstrap hai chuỗi giống hệt -> hiệu = 0. Thêm 15/10: dùng checkpoint chốt seed 1 (val) thay checkpoint chạy thử.
 
 Chạy: ai\\.venv\\Scripts\\python.exe ai/survey/cakg/test_eval_cakg.py --label 20261014_lan1 [--cakg-run <thư mục>]
 """
@@ -41,7 +42,7 @@ import eval_cakg as EC   # noqa: E402
 X08 = importlib.import_module("08_explain")
 DEV = E.DEVICE
 LGCN_S1 = "results/n5/val_sweep_20261010/val_lightgcn_l2-1e-03_s1"
-CAKG_SMOKE = "results/cakg/smoke_val_sweep_20261014/val_cakg_lam1-1e-01_s1"
+CAKG_RUN = "results/cakg/val_sweep_20261014/val_cakg_lam1-1e-01_s1"   # checkpoint chốt seed 1 (val)
 fails = 0
 log = None
 
@@ -197,7 +198,7 @@ def c8_hand():
 
 
 def cakg_checks(ev, train, masks, pctx, run_dir):
-    log(f"\n=== C8–C9. Checkpoint CaKG-Rec chạy thử ({run_dir}), VAL ===")
+    log(f"\n=== C8–C9. Checkpoint CaKG-Rec ({run_dir}), VAL ===")
     model, cfg, sha = X08.load_cakg(run_dir, train, log=lambda s: log("  " + s))
     comps = model.components()
     sf = EC.mask_scorer(model.score_fn(), *masks["qd49"])
@@ -232,30 +233,54 @@ def cakg_checks(ev, train, masks, pctx, run_dir):
     for u in users:
         S0 = raw(torch.as_tensor([u], device=DEV))[0]
         S1 = EC.counterfactual_score_row(model, Hd, bodies_h, u, None, [], comps["eU"], comps["eI"])[0]
-        d = max(d, float((S0 - S1).abs().max()))
-    check_le("phản thực tế không bỏ gì = score_fn (20 người có h_u)", d, 1e-5)
+        d = max(d, float((S0 - S1).abs().max() / S0.abs().max()))
+    log(f"  phản thực tế không bỏ gì, float32: lệch tương đối max|ΔS| / max|S| = {d:.2e} (làm tròn; xem bản float64 dưới)")
+    m64, _, _ = X08.load_cakg(run_dir, train, log=lambda s: None)
+    m64 = m64.double()
+    m64.adj, m64.A_ub = m64.adj.double(), m64.A_ub.double()
+    c64 = m64.components()
+    sf64 = m64.make_scorer(c64, m64.hidx)
+    d64 = 0.0
+    for u in users:
+        S0 = sf64(torch.as_tensor([u], device=DEV))[0]
+        S1 = EC.counterfactual_score_row(m64, Hd, bodies_h, u, None, [], c64["eU"], c64["eI"])[0]
+        d64 = max(d64, float((S0 - S1).abs().max() / S0.abs().max()))
+    check_le("phản thực tế không bỏ gì = score_fn (20 người có h_u), float64, lệch tương đối", d64, 1e-12)
+    del m64, c64
     pairs = EC.sample_faith_pairs(expls, 40)
     check("chọn cặp Faithfulness: chỉ đường đủ 3 bước, ≤ 40", [all(p["c_star"] for p in pairs), len(pairs) <= 40],
           [True, True])
     fs = EC.faithfulness(model, Hd, bodies_h, ev, ev.split, masks["qd49"], pctx2, pairs)
     sm = EC.faithfulness_summary(fs, B=200)
-    log(f"  checkpoint chạy thử (1 epoch, chỉ để chạy được): FS_PN@10 {sm['fs_pn']:.4f}, ΔS {sm['dS_mean']:.5f}, "
-        f"{sm['n_pairs']} cặp, có đối chứng {sm['n_pairs_with_ctrl']}")
-    check("ΔS ≥ 0 không bắt buộc; FS_PN ∈ [0, 1]", 0.0 <= sm["fs_pn"] <= 1.0, True)
+    log(f"  checkpoint {run_dir}: FS_PN@10 {sm['fs_pn']:.4f}, ΔS {sm['dS_mean']:.5f}, {sm['n_pairs']} cặp; đối chứng "
+        f"thân {sm['n_pairs_with_ctrl_body']}, đối chứng nhãn {sm['n_pairs_with_ctrl_label']} (số kiểm code, không phải kết quả)")
+    check("FS_PN ∈ [0, 1]", 0.0 <= sm["fs_pn"] <= 1.0, True)
+    check("có đối chứng nhãn ⇔ ống có ≥ 2 nhãn (nhãn đối chứng phải khác c*)",
+          all((len(pctx2.suit[p["l"]]) > 1) == bool(h) for p, h in zip(pairs, fs["has_ctrl_label"])), True)
+    check("có đối chứng thân ⇔ người có ≥ 2 thân M = 1 với ống",
+          all((len(p["cand_bodies"]) > 1) == bool(h) for p, h in zip(pairs, fs["has_ctrl_body"])), True)
+    check("C9 chỉ mô tả ⇔ < 30 cặp có đối chứng thân", sm["c9_chi_mo_ta"], sm["n_pairs_with_ctrl_body"] < 30)
+    multi = [p for p in expls if p["c_star"] is not None and len(pctx2.suit[p["l"]]) > 1][:20]
+    check("có cặp ống nhiều nhãn để kiểm đối chứng nhãn", len(multi) > 0, True)
+    if multi:
+        fsm = EC.faithfulness(model, Hd, bodies_h, ev, ev.split, masks["qd49"], pctx2, multi)
+        check(f"{len(multi)} cặp ống nhiều nhãn: đều có đối chứng nhãn", int(fsm["has_ctrl_label"].sum()), len(multi))
     model.beta_h_zero = True                              # "mô hình" chỉ có kênh hành vi: cặp lấy từ top-10' của chính nó
     fr0 = E.full_rank(EC.mask_scorer(model.score_fn(), *masks["qd49"]), ev.split, ev.pi)
     ex0, n_err0, _, _, _, _ = X08.explain_all(model, cfg, ev, train, fr0["top"], log=lambda s: log("  β_h = 0: " + s))
     check("β_h = 0: số lỗi sự kiện (top-10 gồm ống EF trên thân EF-S, khác nhãn ngàm)", n_err0, 0)
     pairs0 = EC.sample_faith_pairs(ex0, 40)
+    check("β_h = 0: có ≥ 20 cặp đường đủ 3 bước để kiểm", len(pairs0) >= 20, True)
     fs0 = EC.faithfulness(model, Hd, bodies_h, ev, ev.split, masks["qd49"], pctx2, pairs0)
     s0 = EC.faithfulness_summary(fs0, B=200)
-    check("β_h = 0: FS_PN = 0, ΔS = 0 (đúng 0), đối chứng cũng 0",
-          [s0["fs_pn"], float(np.abs(fs0["dS"]).max()), float(fs0["drop_ctrl"].sum()),
-           float(np.abs(fs0["dS_ctrl"]).max())], [0.0, 0.0, 0.0, 0.0])
+    check("β_h = 0: FS_PN = 0, ΔS = 0 (đúng 0), hai đối chứng cũng 0",
+          [s0["fs_pn"], float(np.abs(fs0["dS"]).max()),
+           float(fs0["drop_ctrl_body"].sum() + fs0["drop_ctrl_label"].sum()),
+           float(np.abs(fs0["dS_ctrl_body"]).max() + np.abs(fs0["dS_ctrl_label"]).max())], [0.0, 0.0, 0.0, 0.0])
     model.beta_h_zero = False
-    same = EC.faithfulness_summary({"drop": fs["drop"], "dS": fs["dS"], "has_ctrl": np.ones_like(fs["drop"]),
-                                    "drop_ctrl": fs["drop"], "dS_ctrl": fs["dS"]}, B=200)
-    bs = same["bootstrap_with_ctrl"]
+    same = EC.faithfulness_summary({**fs, "has_ctrl_body": np.ones_like(fs["drop"]), "drop_ctrl_body": fs["drop"],
+                                    "dS_ctrl_body": fs["dS"]}, B=200)
+    bs = same["bootstrap_ctrl_body"]
     check("bootstrap hai chuỗi giống hệt: hiệu và khoảng = 0", [bs["expl - ctrl"], bs["dS_expl - dS_ctrl"]],
           [(0.0, 0.0, 0.0), (0.0, 0.0, 0.0)])
 
@@ -264,7 +289,7 @@ def main():
     global log
     ap = argparse.ArgumentParser()
     ap.add_argument("--label", required=True)
-    ap.add_argument("--cakg-run", default=CAKG_SMOKE)
+    ap.add_argument("--cakg-run", default=CAKG_RUN)
     a = ap.parse_args()
     log = Log(os.path.join("ai/data/survey/cakg", f"run_test_eval_cakg_{a.label}.log"))
     header(log, __file__)

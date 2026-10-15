@@ -1,0 +1,156 @@
+{
+  "git": {
+    "commit": "be94597653c88e65c3d5bd645878f592cab332bb",
+    "dirty": false
+  },
+  "group": "cakg",
+  "best": "val_cakg_lam1-1e-01_s1",
+  "best_at_grid_edge": false,
+  "same_code_and_inputs": true,
+  "runs": {
+    "val_cakg_lam1-1e-02_s1": {
+      "model": "CaKG-Rec",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.001,
+        "init": "xavier_uniform",
+        "hw_graph": "H_loi",
+        "rgat_layers": 2,
+        "rgat_heads": 1,
+        "rgat_attention": "WIRGAT additive",
+        "rgat_qk": "per_relation",
+        "rgat_root_weight": true,
+        "rgat_dropout": 0.0,
+        "leaky_slope": 0.2,
+        "fusion_hidden": 64,
+        "fusion_gate": "pair",
+        "h_u": "mean of train bodies in H",
+        "tau": 0.2,
+        "lam1": 0.01,
+        "drop_suitable_for": false,
+        "seed": 1,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking (truoc mat na)"
+      },
+      "lam1": 0.01,
+      "val_ndcg@20": 0.03947676332925973,
+      "val_ndcg@20_mask": 0.03946766115143546,
+      "val_recall@20": 0.08789406009370243,
+      "best_epoch": 290,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "median_sec_per_epoch": 22.045,
+      "peak_vram_allocated_mib": 542.5,
+      "peak_vram_eval_allocated_mib": 1944.2,
+      "git_start": {
+        "commit": "be94597653c88e65c3d5bd645878f592cab332bb",
+        "dirty": false
+      },
+      "git_at_finish": {
+        "commit": "be94597653c88e65c3d5bd645878f592cab332bb",
+        "dirty": false
+      }
+    },
+    "val_cakg_lam1-1e-01_s1": {
+      "model": "CaKG-Rec",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.001,
+        "init": "xavier_uniform",
+        "hw_graph": "H_loi",
+        "rgat_layers": 2,
+        "rgat_heads": 1,
+        "rgat_attention": "WIRGAT additive",
+        "rgat_qk": "per_relation",
+        "rgat_root_weight": true,
+        "rgat_dropout": 0.0,
+        "leaky_slope": 0.2,
+        "fusion_hidden": 64,
+        "fusion_gate": "pair",
+        "h_u": "mean of train bodies in H",
+        "tau": 0.2,
+        "lam1": 0.1,
+        "drop_suitable_for": false,
+        "seed": 1,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking (truoc mat na)"
+      },
+      "lam1": 0.1,
+      "val_ndcg@20": 0.03973100336223118,
+      "val_ndcg@20_mask": 0.039731998267336276,
+      "val_recall@20": 0.08873649517447274,
+      "best_epoch": 290,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "median_sec_per_epoch": 22.02,
+      "peak_vram_allocated_mib": 542.5,
+      "peak_vram_eval_allocated_mib": 1944.2,
+      "git_start": {
+        "commit": "be94597653c88e65c3d5bd645878f592cab332bb",
+        "dirty": false
+      },
+      "git_at_finish": {
+        "commit": "be94597653c88e65c3d5bd645878f592cab332bb",
+        "dirty": false
+      }
+    },
+    "val_cakg_lam1-1e+00_s1": {
+      "model": "CaKG-Rec",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.001,
+        "init": "xavier_uniform",
+        "hw_graph": "H_loi",
+        "rgat_layers": 2,
+        "rgat_heads": 1,
+        "rgat_attention": "WIRGAT additive",
+        "rgat_qk": "per_relation",
+        "rgat_root_weight": true,
+        "rgat_dropout": 0.0,
+        "leaky_slope": 0.2,
+        "fusion_hidden": 64,
+        "fusion_gate": "pair",
+        "h_u": "mean of train bodies in H",
+        "tau": 0.2,
+        "lam1": 1.0,
+        "drop_suitable_for": false,
+        "seed": 1,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking (truoc mat na)"
+      },
+      "lam1": 1.0,
+      "val_ndcg@20": 0.03939909685504859,
+      "val_ndcg@20_mask": 0.03938211361974363,
+      "val_recall@20": 0.08807141484754881,
+      "best_epoch": 290,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "median_sec_per_epoch": 22.22,
+      "peak_vram_allocated_mib": 542.5,
+      "peak_vram_eval_allocated_mib": 1944.2,
+      "git_start": {
+        "commit": "be94597653c88e65c3d5bd645878f592cab332bb",
+        "dirty": false
+      },
+      "git_at_finish": {
+        "commit": "be94597653c88e65c3d5bd645878f592cab332bb",
+        "dirty": false
+      }
+    }
+  }
+}

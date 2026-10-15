@@ -6,6 +6,11 @@ Nhóm lần chạy (--group):
   cakg: CaKG-Rec λ1 ∈ {0,01; 0,1; 1,0}  (06_cakg_train.py; tối đa 300 epoch, chấm val mỗi 10 epoch, dừng sau 5 lần
         chấm không tăng). Chỉ số chọn: NDCG@20 full ranking val TRƯỚC mặt nạ (QĐ 5-6).
   kgat: KGAT lr ∈ {1e-3; 1e-4} (07_kgat_train.py; cùng ngân sách). Chỉ số chọn: NDCG@20 full ranking val.
+Thêm 15/10/2026 (kế hoạch mục 4.2 bước 5), tham số đọc từ ai/config/cakg_final.toml (đã commit trước khi chạy):
+  final:    CaKG-Rec và KGAT cấu hình chốt, seed 2, 3 (4 lần chạy);
+  ablation: CaKG-Rec λ1 = 0 và CaKG-Rec bỏ suitable_for, seed 1 (2 lần chạy; kế hoạch mục 6).
+  Hai nhóm này ghi vào results/cakg/final_<nhãn>/ (nhãn phải khớp final_dir của toml); cuối cùng kiểm cfg = cfg chốt
+  (trừ seed và phần ablation) và sha256 code + đầu vào = lần chạy seed 1 cùng mô hình. Không chọn "tốt nhất".
 Mỗi lần chạy là một tiến trình con ghi vào results/cakg/val_sweep_<nhãn>/<tên lần chạy>/ với log riêng
 train_<thời điểm>.log. Log của chính script này: sweep_<nhóm>_<thời điểm>.log (tên mới mỗi lần gọi).
 
@@ -22,6 +27,7 @@ Lệnh (PowerShell, từ thư mục camera-store):
 
 import argparse
 import json
+import tomllib
 import subprocess
 import sys
 import time
@@ -49,19 +55,55 @@ GROUPS = {  # nhóm -> (tên tham số dò, [(tên lần chạy, script, tham s�
 }
 
 
+FINAL_TOML = C.ROOT / "ai" / "config" / "cakg_final.toml"
+
+
+def final_groups():
+    """(nhóm -> danh sách lần chạy) cho final / ablation, đọc cakg_final.toml. Mỗi lần chạy:
+    (tên, script, tham số, None, (khóa mô hình trong toml, cfg mong đợi trừ seed))."""
+    t = tomllib.loads(FINAL_TOML.read_text(encoding="utf-8"))
+    ck, kg = t["cakg"]["cfg"], t["kgat"]["cfg"]
+    fin = []
+    for r in t["cakg"]["runs"]:
+        if r["seed"] != 1:
+            fin.append((Path(r["dir"]).name, "06_cakg_train.py", ["--lam1", repr(ck["lam1"]), "--seed", str(r["seed"])],
+                        None, ("cakg", dict(ck))))
+    for r in t["kgat"]["runs"]:
+        if r["seed"] != 1:
+            fin.append((Path(r["dir"]).name, "07_kgat_train.py", ["--lr", repr(kg["lr"]), "--seed", str(r["seed"])],
+                        None, ("kgat", dict(kg))))
+    abl = []
+    for r in t["ablation"]:
+        args = ["--lam1", repr(r["lam1"]), "--seed", str(r["seed"])] + (["--drop-suitable-for"] if r["drop_suitable_for"]
+                                                                         else [])
+        abl.append((Path(r["dir"]).name, "06_cakg_train.py", args, None,
+                    ("cakg", {**ck, "lam1": r["lam1"], "drop_suitable_for": r["drop_suitable_for"]})))
+    return t, {"final": fin, "ablation": abl}
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--group", required=True, choices=sorted(GROUPS))
+    ap.add_argument("--group", required=True, choices=sorted(GROUPS) + ["final", "ablation"])
     ap.add_argument("--label", required=True, help="nhãn của đợt dò, vd 20261014 (giữ nguyên khi chạy tiếp)")
     ap.add_argument("--allow-dirty", action="store_true", help="cho chạy khi file đã theo dõi trong git bị sửa")
     ap.add_argument("--smoke", action="store_true", help="(kiểm thử) mỗi lần chạy chỉ 1 epoch")
     a = ap.parse_args()
-    pname, runs = GROUPS[a.group]
-    root = OUT_DIR / f"{'smoke_' if a.smoke else ''}val_sweep_{a.label}"
+    is_final = a.group in ("final", "ablation")
+    if is_final:
+        toml_, fg = final_groups()
+        pname, runs = None, fg[a.group]
+        root = OUT_DIR / f"{'smoke_' if a.smoke else ''}final_{a.label}"
+        if not a.smoke:
+            rel = str(root.relative_to(C.ROOT)).replace(chr(92), "/")
+            assert rel == toml_["chung"]["final_dir"], f"nhãn phải khớp final_dir của cakg_final.toml: {rel}"
+    else:
+        pname, runs = GROUPS[a.group]
+        root = OUT_DIR / f"{'smoke_' if a.smoke else ''}val_sweep_{a.label}"
     root.mkdir(parents=True, exist_ok=True)
     log = E.Log(root / f"sweep_{a.group}_{E.now_tag()}.log")
     git = E.git_state()
-    log(f"Dò val | nhóm {a.group} | {root} | git {git} | {len(runs)} lần chạy" + (" | SMOKE: 1 epoch" if a.smoke else ""))
+    log(f"{'Chạy cấu hình chốt' if is_final else 'Dò val'} | nhóm {a.group} | {root} | git {git} | {len(runs)} lần chạy"
+        + (f" | cakg_final.toml sha256 {E.sha256(FINAL_TOML)}" if is_final else "") + (" | SMOKE: 1 epoch" if a.smoke else ""))
     if git["dirty"] and not a.allow_dirty:
         log("DỪNG: có file đã theo dõi trong git bị sửa mà chưa commit. Commit trước (hoặc --allow-dirty).")
         sys.exit(2)
@@ -70,7 +112,7 @@ def main():
         sys.exit(2)
 
     t_all = time.time()
-    for k, (name, script, args, _) in enumerate(runs, 1):
+    for k, (name, script, args, *_) in enumerate(runs, 1):
         rd = root / name
         if (rd / "result.json").exists():
             log(f"[{k}/{len(runs)}] {name}: đã xong, bỏ qua")
@@ -95,7 +137,7 @@ def main():
     log(f"{'lần chạy':<26} {'NDCG@20 val':>11} {'sau mặt nạ':>10} {'R@20 val':>9} {'epoch tốt':>9} {'đã chạy':>7} "
         f"{'s/epoch':>7} {'VRAM MiB':>8}  ghi chú")
     summary, shas = {}, {}
-    for name, _, _, val in runs:
+    for name, _, _, val, *_ in runs:
         r = json.loads((root / name / "result.json").read_text(encoding="utf-8"))
         c = json.loads((root / name / "config.json").read_text(encoding="utf-8"))
         shas[name] = (c.get("code_sha256"), c["inputs_sha256"])
@@ -114,10 +156,32 @@ def main():
             f"{(s['peak_vram_allocated_mib'] or 0):>8.0f}  "
             f"{'chưa chắc hội tụ' if r['chua_chac_hoi_tu'] else 'dừng sớm'}; git đầu {c['git']['commit'][:7]}"
             f"{' (dirty)' if c['git']['dirty'] else ''}")
+    if is_final:
+        t_ = tomllib.loads(FINAL_TOML.read_text(encoding="utf-8"))
+        ok_all = True
+        for name, _, _, _, (mk, want) in runs:
+            r = json.loads((root / name / "result.json").read_text(encoding="utf-8"))
+            c = json.loads((root / name / "config.json").read_text(encoding="utf-8"))
+            s1 = json.loads((C.ROOT / next(x["dir"] for x in t_[mk]["runs"] if x["seed"] == 1) / "config.json")
+                            .read_text(encoding="utf-8"))
+            got = {k: v for k, v in r["cfg"].items() if k != "seed"}
+            w = {k: (list(v) if isinstance(v, (list, tuple)) else v) for k, v in want.items()}
+            ok_cfg = got == w or a.smoke
+            ok_sha = (c.get("code_sha256") == s1.get("code_sha256") and c["inputs_sha256"] == s1["inputs_sha256"])
+            ok_all &= ok_cfg and ok_sha
+            log(f"  {name}: cfg = cfg chốt (trừ seed / phần ablation): {'CÓ' if ok_cfg else 'KHÔNG'}; sha256 code + đầu vào "
+                f"= lần chạy seed 1 ({mk}): {'CÓ' if ok_sha else 'KHÔNG — xem config.json'}")
+        out = root / f"summary_{a.group}_{E.now_tag()}.json"
+        out.write_text(json.dumps({"git": git, "group": a.group, "cakg_final_toml_sha256": E.sha256(FINAL_TOML),
+                                   "cfg_and_code_match_seed1": bool(ok_all), "runs": summary}, indent=2,
+                                  ensure_ascii=False), encoding="utf-8")
+        log(f"-> {out}")
+        log.close()
+        return
     same = len({json.dumps(v, sort_keys=True) for v in shas.values()}) == 1
     log(f"Mọi lần chạy cùng sha256 code + đầu vào (config.json): {'CÓ' if same else 'KHÔNG — xem config.json'}")
     best = max(summary, key=lambda n: summary[n]["val_ndcg@20"])
-    vals = sorted(v for *_, v in runs)
+    vals = sorted(x[3] for x in runs)
     edge = summary[best][pname] in (vals[0], vals[-1])
     log(f"Tốt nhất theo NDCG@20 val (trước mặt nạ): {best} ({pname} = {summary[best][pname]})"
         + (" — Ở BIÊN LƯỚI (ghi lại, không mở rộng lưới: kế hoạch mục 4.1)" if edge else ""))
