@@ -6,6 +6,18 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 15/10/2026 (tối): nội dung 6–8 — chấm test một lần. Nhánh `nam/cakg-rec`; script commit `e661ea1`, kết quả `3e830aa`, phân tích `1325f5c`
+
+Không sửa code của Hải, không sửa code dùng chung của nội dung 5 (trừ `.gitignore`: thêm `results/cakg/**/explanations.jsonl`, `results/cakg/**/*.npz`). File mới: `ai/pipeline/06_test_final.py`, `06_test_compare.py`; `eval_cakg.py` (của nhóm) thêm tham số `branches`, `masks` cho `evaluate_with_masks` và hai đối chứng Faithfulness (làm rõ 15/10).
+
+**Bằng chứng / log** (log ngoài git):
+- `results/cakg/test_final_20261015/run_test_20261015_183330.log` sha256 `053b54e1…3f2f`; `summary_test_20261015_183745.json` sha256 `6550d7a7…8985`; `compare_test_20261015_183817.json` sha256 `af2d0123…bfad`.
+- Thử trên val trước khi chấm (`results/cakg/finalcheck_val_20261015_nhap1/`): mọi nhánh chấm lại trùng `result.json` lúc huấn luyện, lệch tuyệt đối 0.
+
+**Ảnh hưởng (số test, TB ± ĐLC 3 seed):** xem STATUS mục 3, dòng nội dung 6–8, và mục 4 "Hạn chế (nội dung 6–8) — sau khi chạy test". LightGCN chấm lại trùng bảng nội dung 5 (Recall@10 0,0448 ± 0,0002; CVR@10 0,1297), hạng item test khác 09/10 ở 14 / 21 / 11 người (seed 1 / 2 / 3).
+
+---
+
 ## 14/10/2026 (khuya): cài CaKG-Rec, KGAT, phần đánh giá thêm của nội dung 6–8 (chưa dò val, chưa chấm test). Nhánh `nam/cakg-rec`, commit `55b0cd0` (A), `ecb0f27` (B), `ae5b4cb` (C)
 
 Theo `docs/cakg_design.md` và bản đăng ký trước `docs/reviews/cakg_eval_plan.md` (commit `3b6fd89`); **không đổi kế hoạch**. Không sửa code của Hải (`62abf54`). Đụng **code dùng chung của nội dung 5** (của nhóm): `ai/pipeline/train_05.py` và `.gitignore`; mọi file khác là file mới.
