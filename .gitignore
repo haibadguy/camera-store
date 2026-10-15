@@ -73,3 +73,5 @@ ai/data/kg_d339dda/
 # mọi thư mục sao lưu / nháp của ai/data/kg/ (kg_e8b39e6/, kg_draft_*/ ...)
 ai/data/kg_*/
 ai/data/external/
+results/cakg/**/explanations.jsonl
+results/cakg/**/*.npz
