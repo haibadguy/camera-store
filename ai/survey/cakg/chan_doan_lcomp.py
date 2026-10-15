@@ -229,8 +229,7 @@ def main():
             f"{neg[r_ex].sum()} âm; s/τ dương TB {sp.mean():.2f}; log Σ_âm e^(s/τ) = {lse:.2f}; "
             f"ℓ TB {np.mean(np.logaddexp(sp, lse) - sp):.4f}")
     # ── b5 ──
-    log("
-(b5) Ví dụ nhỏ: K ngàm, mỗi ngàm 1 thân + n ống (M = 1 chỉ trong cùng ngàm), τ = 0,2")
+    log("\n(b5) Ví dụ nhỏ: K ngàm, mỗi ngàm 1 thân + n ống (M = 1 chỉ trong cùng ngàm), τ = 0,2")
     for K, n in ((2, 5), (3, 5), (5, 5), (10, 5), (23, 5), (23, 45)):
         N = (K - 1) * n
         f = math.log1p(N * math.exp(-(1 + 1 / (K - 1)) / TAU))
