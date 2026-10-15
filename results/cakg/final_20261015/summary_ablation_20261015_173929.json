@@ -1,0 +1,107 @@
+{
+  "git": {
+    "commit": "1ec7c2ebaa97a2057fb9f41b4e171c1bb12e430e",
+    "dirty": false
+  },
+  "group": "ablation",
+  "cakg_final_toml_sha256": "a7cf150966283c41f3b4914971793b5dfb0d6f336982e94589e2a8df178b8f86",
+  "cfg_and_code_match_seed1": true,
+  "runs": {
+    "abl_cakg_lam1-0_s1": {
+      "model": "CaKG-Rec",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.001,
+        "init": "xavier_uniform",
+        "hw_graph": "H_loi",
+        "rgat_layers": 2,
+        "rgat_heads": 1,
+        "rgat_attention": "WIRGAT additive",
+        "rgat_qk": "per_relation",
+        "rgat_root_weight": true,
+        "rgat_dropout": 0.0,
+        "leaky_slope": 0.2,
+        "fusion_hidden": 64,
+        "fusion_gate": "pair",
+        "h_u": "mean of train bodies in H",
+        "tau": 0.2,
+        "lam1": 0.0,
+        "drop_suitable_for": false,
+        "seed": 1,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking (truoc mat na)"
+      },
+      "null": null,
+      "val_ndcg@20": 0.03977564912077041,
+      "val_ndcg@20_mask": 0.03978890324269215,
+      "val_recall@20": 0.08870693604883167,
+      "best_epoch": 290,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "median_sec_per_epoch": 21.035,
+      "peak_vram_allocated_mib": 542.5,
+      "peak_vram_eval_allocated_mib": 1944.2,
+      "git_start": {
+        "commit": "1ec7c2ebaa97a2057fb9f41b4e171c1bb12e430e",
+        "dirty": false
+      },
+      "git_at_finish": {
+        "commit": "1ec7c2ebaa97a2057fb9f41b4e171c1bb12e430e",
+        "dirty": false
+      }
+    },
+    "abl_cakg_lam1-1e-01_nosuit_s1": {
+      "model": "CaKG-Rec",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.001,
+        "init": "xavier_uniform",
+        "hw_graph": "H_loi",
+        "rgat_layers": 2,
+        "rgat_heads": 1,
+        "rgat_attention": "WIRGAT additive",
+        "rgat_qk": "per_relation",
+        "rgat_root_weight": true,
+        "rgat_dropout": 0.0,
+        "leaky_slope": 0.2,
+        "fusion_hidden": 64,
+        "fusion_gate": "pair",
+        "h_u": "mean of train bodies in H",
+        "tau": 0.2,
+        "lam1": 0.1,
+        "drop_suitable_for": true,
+        "seed": 1,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking (truoc mat na)"
+      },
+      "null": null,
+      "val_ndcg@20": 0.0396809851575683,
+      "val_ndcg@20_mask": 0.03967915349538049,
+      "val_recall@20": 0.08777582359113817,
+      "best_epoch": 300,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "median_sec_per_epoch": 22.29,
+      "peak_vram_allocated_mib": 533.6,
+      "peak_vram_eval_allocated_mib": 1943.9,
+      "git_start": {
+        "commit": "1ec7c2ebaa97a2057fb9f41b4e171c1bb12e430e",
+        "dirty": false
+      },
+      "git_at_finish": {
+        "commit": "1ec7c2ebaa97a2057fb9f41b4e171c1bb12e430e",
+        "dirty": false
+      }
+    }
+  }
+}

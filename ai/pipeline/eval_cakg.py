@@ -485,14 +485,19 @@ def sample_faith_pairs(expls, max_pairs=2000, seed=FAITH_SEED):
 
 # -- Chấm một mô hình trước / sau mặt nạ ---------------------------------------
 
-def evaluate_with_masks(score_batch, ev, rc, pctx, log=print, save_dir=None, tag=""):
-    """Chấm trước mặt nạ, sau mặt nạ (15) QĐ 4-9 (chính) và sau mặt nạ (16) ∃b (song song, mô tả). Mỗi nhánh: mọi chỉ số
-    của eval_05.evaluate (full ranking, CVR strict, kịch bản, sampled, loại sản phẩm), cộng CVR_relaxed R1 / R2,
-    Path Coverage @5 / @10, số người có item cần đoán bị mặt nạ chặn (tổng và theo nhóm kịch bản)."""
-    masks = masks_on_device(ev)
-    branches = {"truoc_mat_na": score_batch,
-                "mat_na_qd49": mask_scorer(score_batch, *masks["qd49"]),
-                "mat_na_exists": mask_scorer(score_batch, *masks["exists"])}
+ALL_BRANCHES = ("truoc_mat_na", "mat_na_qd49", "mat_na_exists")
+
+
+def evaluate_with_masks(score_batch, ev, rc, pctx, log=print, save_dir=None, tag="", branches=ALL_BRANCHES, masks=None):
+    """Chấm trước mặt nạ, sau mặt nạ (15) QĐ 4-9 (chính) và sau mặt nạ (16) ∃b (song song, mô tả) — mọi nhánh từ CÙNG
+    hàm điểm score_batch. Mỗi nhánh: mọi chỉ số của eval_05.evaluate (full ranking, CVR strict, kịch bản, sampled, loại
+    sản phẩm), cộng CVR_relaxed R1 / R2, Path Coverage @5 / @10, số người có item cần đoán bị mặt nạ chặn (tổng và theo
+    nhóm kịch bản). branches: tập con của ALL_BRANCHES; masks: kết quả masks_on_device(ev) (dựng một lần cho nhiều mô hình)."""
+    masks = masks_on_device(ev) if masks is None else masks
+    allb = {"truoc_mat_na": score_batch,
+            "mat_na_qd49": mask_scorer(score_batch, *masks["qd49"]),
+            "mat_na_exists": mask_scorer(score_batch, *masks["exists"])}
+    branches = {b: allb[b] for b in branches}
     sp = ev.split
     out = {}
     for name, sf in branches.items():
