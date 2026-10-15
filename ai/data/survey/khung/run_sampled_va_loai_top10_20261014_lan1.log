@@ -1,0 +1,25 @@
+script: E:\DATN\camera-store\ai\survey\khung\sampled_va_loai_top10.py (sha256 953cd5ced1cc6a1f0239fec9274cc413405249919deabc5ba9daed6fbea641ba)
+git HEAD: 3b0fd2ebcad50430f3a610d88293f53d5acf7396, có thay đổi chưa commit (không tính file mới): False
+  sha256 da273f7b3a244912df8e6c80ba54ba4213be9bf193d2d66b268ce98abbf95d4b  results/n5/test_final_20261009/pop/result.json
+  sha256 c4a0e008b5b2cb083d98aecb647f0c6100f3879e8cb75b1dcf525c0491d8d8d1  results/n5/test_final_20261009/popma/result.json
+  sha256 317e729ea4e27c1d383c213c39865b59414f04b37a215210015e52841a0659dc  results/n5/test_final_20261009/lightgcn_s1/result.json
+  sha256 53c658b1828691fd920df6991fc8898cf29ee184c932fbc5a965fe543a169ab0  results/n5/test_final_20261009/lightgcn_s2/result.json
+  sha256 28b2f9b857e16770fd5c0ccbbffd765ceb0d86b6b47c4716c078e2cee43caace  results/n5/test_final_20261009/lightgcn_s3/result.json
+  sha256 9b793cf3624ce52ec894b0409994f426848147e4ce8f381a37dae921ab7d49a5  results/n5/test_final_20261009/rgcn_s1/result.json
+  sha256 a83c21a62a575ad2b05843c29e95c6a8f7a82f768457025381b1fae46d0ccc52  results/n5/test_final_20261009/rgcn_s2/result.json
+  sha256 9cfd7bd54575bfe2cf45969eeeeca1980a43736db104638e08e5ae1116648996  results/n5/test_final_20261009/rgcn_s3/result.json
+
+## (1) Hit@K full ranking và sampled 1+99 (trung bình qua seed)
+  Popularity  @5: full 0.0128 sampled 0.3037 | @10: full 0.0218 sampled 0.4146 | @20: full 0.0358 sampled 0.5476
+  MountAware  @5: full 0.0128 sampled 0.3040 | @10: full 0.0220 sampled 0.4141 | @20: full 0.0359 sampled 0.5468
+  LightGCN    @5: full 0.0295 sampled 0.3919 | @10: full 0.0448 sampled 0.4969 | @20: full 0.0657 sampled 0.6161
+  R-GCN       @5: full 0.0169 sampled 0.3659 | @10: full 0.0274 sampled 0.4872 | @20: full 0.0425 sampled 0.6265
+  thứ tự @5: full ['LightGCN', 'R-GCN', 'Popularity', 'MountAware'] | sampled ['LightGCN', 'R-GCN', 'MountAware', 'Popularity'] | KHÁC
+  thứ tự @10: full ['LightGCN', 'R-GCN', 'MountAware', 'Popularity'] | sampled ['LightGCN', 'R-GCN', 'Popularity', 'MountAware'] | KHÁC
+  thứ tự @20: full ['LightGCN', 'R-GCN', 'MountAware', 'Popularity'] | sampled ['R-GCN', 'LightGCN', 'Popularity', 'MountAware'] | KHÁC
+
+## (2) Loại sản phẩm trung bình trong top-10 (full ranking, mọi người dùng)
+  Popularity  than 0.00, ong 0.99, phu_kien 9.01, khac 0.00
+  MountAware  than 0.00, ong 0.89, phu_kien 9.11, khac 0.00
+  LightGCN    than 0.38, ong 1.18, phu_kien 7.99, khac 0.45
+  R-GCN       than 0.46, ong 1.35, phu_kien 7.82, khac 0.37

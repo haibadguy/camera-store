@@ -61,6 +61,11 @@ results/n5/**/*.pt
 results/n5/**/*.pt.tmp
 results/n5/**/*.npy
 results/n5/smoke_*/
+# nội dung 6–8 (CaKG-Rec, KGAT): như nội dung 5
+results/cakg/**/*.pt
+results/cakg/**/*.pt.tmp
+results/cakg/**/*.npy
+results/cakg/smoke_*/
 *.gz
 *.parquet
 ai/data/kg_v62abf54/
@@ -68,3 +73,5 @@ ai/data/kg_d339dda/
 # mọi thư mục sao lưu / nháp của ai/data/kg/ (kg_e8b39e6/, kg_draft_*/ ...)
 ai/data/kg_*/
 ai/data/external/
+results/cakg/**/explanations.jsonl
+results/cakg/**/*.npz

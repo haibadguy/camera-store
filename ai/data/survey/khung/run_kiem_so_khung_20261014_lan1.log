@@ -1,0 +1,168 @@
+script: E:\DATN\camera-store\ai\survey\khung\kiem_so_khung.py (sha256 c21321710a29902da87e6c69ef1d11833a75d7fa80b94a61e51a495906020b31)
+git HEAD: a38d4da267a035e8ab08b43adf4544fa5207e9fd, có thay đổi chưa commit (không tính file mới): False
+  sha256 6cdefc6edde6e217103b604fc6ba6af395650eb5bc00c747b46a528bd6d51e77  ai/data/processed/camera_interactions_k5.csv
+  sha256 ebd29b03a4866cfca243edc1ee31539f16be19b756bfbd4c388e3f20ca06a5c5  ai/data/processed/train.txt
+  sha256 e8a47d06bd6e6977fe7eebc485cbf07eb75e7e9bdb651da955e8fd7f85a3a900  ai/data/processed/val.txt
+  sha256 410fc46cea72cdc5115a3e0413036456d1d1d59b8bcb7c63da6edd026e4da8ea  ai/data/processed/test.txt
+  sha256 3b05f535c5dad6e08cd99f2c360e34a95c20b816cd6cd8ce0ca9fbbd4cc7b621  ai/data/kg/item_attributes.csv
+  sha256 b93d9defff3b401f347fc950457e0ce6376efa8586431e792890da6409e6c317  ai/data/kg/compat_pairs.csv
+  sha256 912775b6f0ba3d0705489f341a0c21a3b850bd02801d77893d3cffbb4185cfcd  ai/data/kg/compatibility_matrix.npz
+  sha256 c9ae5c10e4fa80b60210049f6210828bbc4ff4b240ca67496d6b810db5d98b2d  ai/data/kg/unknown_mask.npz
+  sha256 abf149b5a75b18926cf4c39f826e6d71e3e34f17b2943e891ef50203c69fce4b  ai/data/kg/kg_hetero.pt
+  sha256 f13d241aba0696c046eaa98f448c366129dc3858866a1704080e6f4cc2e2c42a  ai/config/mount_rules.toml
+  sha256 f617285c6d14605bf54f9733794b8089490b785d02bc3e0746f1cb1905cbc985  results/n5/test_final_20261009/summary_test_20261009_125536.json
+  sha256 fed9748170418722c40285d7141107fa71fbba74b06991809acf27f2cc034b89  ai/data/survey/n3_lan3/holdout_lan2_20261008.csv
+
+## (1) Mất cân đối danh mục (khung 1.2.2)
+  loại sản phẩm (item_attributes.csv): {'phu_kien': 24301, 'than': 543, 'khac': 1757, 'ong': 1339} | tổng 27,940
+  [KHỚP] phụ kiện / catalog: khung 86,98% | tính lại 86,98% | 24,301/27,940
+  [KHỚP] tương tác với thân / ống thuộc M: khung 8,48% | tính lại 8,48% | 50,503/595,515; M = 537 thân + 1033 ống
+  (so sánh) tương tác với MỌI thân / ống (kể cả ngoài M): 61,960/595,515 = 10,40% -> câu khung 'tương tác thân – ống chỉ chiếm 8,48%' đúng khi hiểu là thân / ống thuộc M
+
+## (2) Số người dùng / sản phẩm / tương tác (khung 1.4, 2.2, 2.5)
+  [KHỚP] người dùng: khung 67.661 | tính lại 67.661
+  [KHỚP] sản phẩm: khung 27.940 | tính lại 27.940
+  [KHỚP] tương tác sau k-core: khung 595.515 | tính lại 595.515
+  [KHỚP] tương tác train (cặp khác nhau): khung 460.193 | tính lại 460.193
+  [KHỚP] val: khung 67.661 | tính lại 67.661
+  [KHỚP] test: khung 67.661 | tính lại 67.661
+  n_train + val + test = 595,515 (phải = 595,515)
+  rò rỉ: val = test 0, test ∈ train 0, val ∈ train 0
+  [KHỚP] số vòng k-core (run01_fix.log): khung 14 | tính lại 14 | vòng cuối: Vòng 14: 595,515 tương tác | 67,661 users | 27,940 items; vòng 13 và 14 cùng số (vòng 14 là vòng xác nhận không đổi)
+
+## (3) Ma trận M và bảng luật (khung 1.4, 2.3)
+  [KHỚP] kích thước M: khung 537 × 1.033 | tính lại 537 × 1.033 | body_index 537, lens_index 1033, U (537, 1033)
+  [KHỚP] số luật [[rule]] trong mount_rules.toml: khung 22 | tính lại 22 | version 0.5
+  mức kiểm chứng của 22 luật: {'quyet_dinh_nhom': 4, 'da_doc_trang': 16, 'dinh_nghia': 2}
+  luật có trường suy_rong (áp rộng hơn nguồn): 9 luật, 11 mục; có nhan_dinh_nhom: 4
+  16 trang nguồn:
+    canon_efs: https://asia.canon/en/support/8202262300
+    canon_ef_eos_r: https://www.canon-europe.com/lenses/eos-r-adapters/mount-adapter-ef-eos-r/
+    canon_rfs: https://snapshot.asia.canon/en/article/whats-the-difference-between-rf-s-and-rf-lenses
+    canon_ef_eos_m: https://www.canon-europe.com/lenses/mount-adapter-ef-eos-m-lens/
+    nikon_dx_fx: https://www.nikonusa.com/learn-and-explore/c/products-and-innovation/the-dx-and-fx-formats
+    nikon_z_area: https://onlinemanual.nikonimglib.com/zf/en/image_area_quality_and_size_31.html
+    nikon_ftz: https://imaging.nikon.com/imaging/lineup/accessory/camera/ftz_2/
+    nikon_ft1: https://www.nikon.com/company/news/2011/0921_acc_03/
+    sony_e_apsc: https://www.sony.ca/en/electronics/support/articles/00268906
+    sony_dt: https://www.sony.ca/en/electronics/support/articles/00029993
+    olympus_mmf: https://www.olympus-global.com/en/news/2009b/nr091112ep2e.html
+    pentax_k1_crop: https://www.ricoh-imaging.co.jp/english/products/k-1/feature/04.html
+    sigma_dc: https://www.sigma-global.com/en/lenses/17_50_28
+    pentax_adapter_q: https://www.ricoh-imaging.co.jp/english/news/2012/20120911_5.html
+    fuji_m_adapter: https://www.fujifilm-x.com/global/products/accessories/m-mount-adapter/
+    fuji_m_adapter_compat: https://www.fujifilm-x.com/en-us/support/compatibility/accessories/m-mount-adapter/
+  từng luật (id | body_mount -> lens_mount | mức | kiem_chung | nguồn căn cứ):
+    film_body_unknown | * -> * | unknown | quyet_dinh_nhom | ['sigma_dc']
+    canon_efs_on_ef_body | canon_ef -> canon_efs | incompatible | da_doc_trang | ['canon_efs']
+    canon_ef_apsc_on_ef_ff_body | canon_ef -> canon_ef | unknown | quyet_dinh_nhom | ['sigma_dc']
+    canon_ef_efs_on_efs_body | canon_efs -> ['canon_ef', 'canon_efs'] | compatible_with | da_doc_trang | ['canon_efs']
+    canon_rfs_on_rf_ff | canon_rf -> canon_rf | crops_sensor | da_doc_trang | ['canon_rfs']
+    canon_ef_efs_on_rf_adapter | canon_rf -> ['canon_ef', 'canon_efs'] | requires_adapter | da_doc_trang | ['canon_ef_eos_r']
+    canon_ef_efs_on_efm_adapter | canon_efm -> ['canon_ef', 'canon_efs'] | requires_adapter | da_doc_trang | ['canon_ef_eos_m', 'canon_efs']
+    nikon_dx_on_fx_f | nikon_f -> nikon_f | crops_sensor | da_doc_trang | ['nikon_dx_fx']
+    nikon_dx_on_fx_z | nikon_z -> nikon_z | crops_sensor | da_doc_trang | ['nikon_z_area']
+    nikon_f_on_z_adapter | nikon_z -> nikon_f | requires_adapter | da_doc_trang | ['nikon_ftz']
+    nikon_f_on_1_adapter | nikon_1 -> nikon_f | requires_adapter | da_doc_trang | ['nikon_ft1']
+    sony_e_apsc_on_ff | sony_e -> sony_e | crops_sensor | da_doc_trang | ['sony_e_apsc']
+    sony_dt_on_a_ff | sony_a -> sony_a | crops_sensor | da_doc_trang | ['sony_dt']
+    sony_a_on_e_adapter | sony_e -> sony_a | requires_adapter | da_doc_trang | ['sony_dt']
+    four_thirds_on_mft_adapter | mft -> four_thirds | requires_adapter | da_doc_trang | ['olympus_mmf']
+    pentax_da_on_k_ff | pentax_k -> pentax_k | crops_sensor | da_doc_trang | ['pentax_k1_crop']
+    pentax_k_on_q_adapter | pentax_q -> pentax_k | requires_adapter | da_doc_trang | ['pentax_adapter_q']
+    leica_m_on_fuji_x_adapter | fuji_x -> leica_m | requires_adapter | da_doc_trang | ['fuji_m_adapter', 'fuji_m_adapter_compat']
+    same_mount_lens_covers_body | * -> = | compatible_with | dinh_nghia | []
+    same_mount_body_apsc_lens_unknown_khung | * -> = | compatible_with | dinh_nghia | []
+    same_mount_ff_body_lens_khung_unknown_autocrop | ['nikon_f', 'nikon_z', 'sony_e', 'sony_a', 'canon_rf', 'pentax_k'] -> = | compatible_with | quyet_dinh_nhom | ['canon_rfs', 'nikon_dx_fx', 'nikon_z_area', 'pentax_k1_crop', 'sony_dt', 'sony_e_apsc']
+    same_mount_other | * -> = | unknown | quyet_dinh_nhom | []
+  tiền tố nguồn căn cứ theo số luật dùng: {'sigma': 2, 'canon': 7, 'nikon': 6, 'sony': 5, 'olympus': 1, 'pentax': 3, 'fuji': 2}
+  khung ghi 5 hãng: Canon, Nikon, Sony, Pentax, Olympus. Tiền tố nguồn ở trên cho thấy thêm sigma (1 trang ống Sigma) và fuji (2 trang Fujifilm, luật leica_m_on_fuji_x_adapter); luật same_mount_* là 'dinh_nghia', không theo tài liệu hãng nào
+
+## (4) Độ chính xác phân loại / ngàm (khung 2.3), tính lại từ CSV của lần đo 3
+  holdout 747, mẫu dev trong holdout 14, H733 = 733
+  [KHỚP] phân loại đúng theo sản phẩm (mọi nguồn có đáp án): khung 97,8% | tính lại 97,8% | 585/598
+  [KHỚP] ngàm đúng (lensfun): khung 97,2% | tính lại 97,2% | 383/394
+  [THÔNG TIN] ngàm đúng (wikidata): khung None | tính lại 100,0% | 266/266
+  ghi chú: 97,8% là phân loại THEO SẢN PHẨM; theo nguồn là 99,1% (Lensfun) / 97,1% (Wikidata). 97,2% là ngàm theo Lensfun; Wikidata 100%. Tập đo là sản phẩm khớp được TÊN với Lensfun / Wikidata / openMVG, không phải 'tập có bằng chứng text rõ ràng'; holdout không sạch (STATUS hạn chế nội dung 3, điểm 10)
+
+## (5) Đồ thị tri thức (khung 2.3)
+  loại nút (7): {'user': 67661, 'item': 27940, 'mount': 23, 'sensor_format': 7, 'focal_range': 6, 'aperture_class': 5, 'usecase': 4}
+  [KHỚP] tổng nút: khung 95.646 | tính lại 95.646
+  [KHỚP] số loại nút: khung 7 | tính lại 7
+  [KHỚP] nút mount: khung 23 | tính lại 23
+  [KHỚP] nút sensor_format: khung 7 | tính lại 7
+  [KHỚP] nút focal_range: khung 6 | tính lại 6
+  [KHỚP] nút aperture_class: khung 5 | tính lại 5
+  [KHỚP] nút usecase: khung 4 | tính lại 4
+  [KHỚP] số loại cạnh (edge type, kể cả rev_): khung 18 | tính lại 18
+  [KHỚP] tổng cạnh (kể cả rev_): khung 1.116.950 | tính lại 1.116.950
+  cạnh xuôi: 9 loại, 558,475 cạnh; tên quan hệ khác nhau: ['compatible_with', 'crops_sensor', 'has_spec', 'interacted_with', 'requires_adapter', 'suitable_for']
+    ('user', 'interacted_with', 'item'): 460,193
+    ('item', 'compatible_with', 'item'): 70,472
+    ('item', 'crops_sensor', 'item'): 2,248
+    ('item', 'requires_adapter', 'item'): 16,301
+    ('item', 'has_spec', 'mount'): 2,968
+    ('item', 'has_spec', 'sensor_format'): 1,498
+    ('item', 'has_spec', 'focal_range'): 2,427
+    ('item', 'has_spec', 'aperture_class'): 1,288
+    ('item', 'suitable_for', 'usecase'): 1,080
+    ('item', 'rev_interacted_with', 'user'): 460,193
+    ('item', 'rev_compatible_with', 'item'): 70,472
+    ('item', 'rev_crops_sensor', 'item'): 2,248
+    ('item', 'rev_requires_adapter', 'item'): 16,301
+    ('mount', 'rev_has_spec', 'item'): 2,968
+    ('sensor_format', 'rev_has_spec', 'item'): 1,498
+    ('focal_range', 'rev_has_spec', 'item'): 2,427
+    ('aperture_class', 'rev_has_spec', 'item'): 1,288
+    ('usecase', 'rev_suitable_for', 'item'): 1,080
+  ghi chú: 18 = 9 loại cạnh xuôi + 9 loại cạnh ngược (rev_). Theo tên quan hệ chỉ có 6 (interacted_with, compatible_with, crops_sensor, requires_adapter, has_spec, suitable_for); has_spec tách 4 loại theo nút đích
+
+## (6) Các mức của cặp (thân, ống) trong M (khung 2.3)
+  compat_pairs.csv (bỏ ống 'không chắc'): 94,867 dòng, 94,867 cặp khác nhau, dòng lặp 0; CSV không ghi cặp mức incompatible (mức mặc định), nên incompatible = 537 × 1.033 − số cặp có trong CSV
+  [KHỚP] mức compatible_with: khung 70.472 | tính lại 70.472
+  [KHỚP] mức crops_sensor: khung 2.248 | tính lại 2.248
+  [KHỚP] mức requires_adapter: khung 16.301 | tính lại 16.301
+  [KHỚP] mức incompatible: khung 459.854 | tính lại 459.854
+  [KHỚP] mức unknown: khung 5.846 | tính lại 5.846
+  [KHỚP] tổng 5 mức: khung 554.721 | tính lại 554.721 | 537 × 1.033 = 554.721
+  đối chiếu mount_compat_stats.json (đếm độc lập lúc chạy 03, kể cả incompatible): {'incompatible': 459854, 'unknown': 5846, 'compatible_with': 70472, 'crops_sensor': 2248, 'requires_adapter': 16301}
+  cặp có thân / ống ngoài M: 0
+  đối chiếu từng ô: M = 1 ⇔ mức compatible_with/crops_sensor lệch 0 ô; U = 1 ⇔ unknown lệch 0 ô; M ∧ U cùng = 1: 0 ô; M nnz 72,720, U nnz 5,846
+  -> mỗi cặp trong CSV có đúng 1 mức (dòng lặp 0); M nnz = compatible_with + crops_sensor và U nnz = unknown, lệch 0 ô, nên các ô ngoài CSV có M = 0, U = 0 (= incompatible); M ∧ U = 0: 5 mức rời nhau, tổng = 537 × 1.033
+  ghi chú: khung xếp requires_adapter thành 'cấp độ tương thích' riêng; trong M nó là M = 0 (QĐ 3-2), U = 0
+
+## (7) Người dùng có thân, kịch bản ống (khung 2.5)
+  [KHỚP] người có thân trong train: khung 10.406 | tính lại 10.406
+  [KHỚP] kịch bản test (có thân + item test là ống trong M): khung 1.060 | tính lại 1.060
+  [KHỚP] nhóm lắp được: khung 762 | tính lại 762
+  [KHỚP] nhóm không lắp được: khung 282 | tính lại 282
+  nhóm không phán được: 16 (khung không nêu; 762 + 282 + 16 = 1060); trong nhóm không lắp được có cặp requires_adapter: 11
+
+## (8) CVR@10 trên test (khung 1.1: LightGCN ~13%, R-GCN ~40%), tính lại từ mảng từng người đã lưu
+  pop: CVR@10 = 6,791/10,027 = 67,73%
+  popma: CVR@10 = 0/3,253 = 0,00%
+  lightgcn_s1: CVR@10 = 3,003/23,365 = 12,85%
+  lightgcn_s2: CVR@10 = 2,996/22,924 = 13,07%
+  lightgcn_s3: CVR@10 = 3,012/23,182 = 12,99%
+  rgcn_s1: CVR@10 = 13,304/28,677 = 46,39%
+  rgcn_s2: CVR@10 = 14,275/30,407 = 46,95%
+  rgcn_s3: CVR@10 = 6,752/24,285 = 27,80%
+  [KHỚP (xấp xỉ)] LightGCN CVR@10 (TB 3 seed, summary): khung ~13% | tính lại 12,97% ± 0,11 | theo seed 12,85% / 13,07% / 12,99%
+  [KHỚP (xấp xỉ)] R-GCN CVR@10 (TB 3 seed, summary): khung ~40% | tính lại 40,38% ± 10,90 | theo seed 46,39% / 46,95% / 27,80%
+  ghi chú: CVR@10 = số ống vi phạm / số ống CHẤM ĐƯỢC trong top-10 toàn catalog của người có thân (QĐ 4-9), không phải tỉ lệ trên mọi gợi ý. R-GCN dao động mạnh theo seed (28% – 47%)
+
+## (9) eval_05: K = 5? bootstrap bao nhiêu lần?
+  eval_05.K_LIST = [5, 10, 20]
+  summary test có recall@5 / ndcg@5 / hit@5: True; LightGCN hit@5 = 0.0295, recall@5 = 0.0295 (bằng nhau vì mỗi người 1 item test)
+  [KHỚP] số lần bootstrap (summary test): khung 2.000 | tính lại 2.000 | seed 20261009; n5_final.toml bootstrap_B = 2000; kiểu: ghép cặp theo người dùng
+  các so sánh bootstrap (id | so sánh | chỉ số | tập | hiệu | khoảng 95%):
+    S1 | LightGCN − Popularity | recall@10 | mọi người dùng (67,661) | +0.0230 | [+0.0215, +0.0245]
+    S1 | LightGCN − Popularity | ndcg@10 | mọi người dùng (67,661) | +0.0137 | [+0.0128, +0.0146]
+    S2 | R-GCN − LightGCN | recall@10 | mọi người dùng (67,661) | -0.0175 | [-0.0186, -0.0163]
+    S2 | R-GCN − LightGCN | ndcg@10 | mọi người dùng (67,661) | -0.0104 | [-0.0110, -0.0097]
+    S3 | Popularity-MountAware − Popularity | recall@10 | mọi người dùng (67,661) | +0.0001 | [+0.0000, +0.0002]
+    S3 | Popularity-MountAware − Popularity | cvr@10 | người có thân (10,406) | -0.6773 | [-0.6866, -0.6685]
+    S4 | R-GCN − LightGCN | cvr@10 | người có thân (10,406) | +0.2821 | [+0.2750, +0.2896]
+    S5 | Popularity-MountAware − Popularity | recall@10 (chỉ ống) | kịch bản lap_duoc (762) | +0.0486 | [+0.0341, +0.0643]
+    S5 | Popularity-MountAware − Popularity | recall@10 (chỉ ống) | kịch bản khong_lap_duoc (282) | -0.0390 | [-0.0638, -0.0177]
+  -> bootstrap chỉ làm ở K = 10 (các so sánh S1–S5 đăng ký trước); K = 5 và 20 có số điểm, không có khoảng tin cậy

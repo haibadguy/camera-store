@@ -1,0 +1,158 @@
+# cakg_final.toml — cấu hình chốt của nội dung 6–8 (docs/reviews/cakg_eval_plan.md mục 4.2 bước 4).
+# Viết 15/10/2026, TRƯỚC khi chạy seed 2, 3, các ablation và TRƯỚC khi chạy test. Chọn ĐÚNG theo quy tắc đã đăng ký:
+# NDCG@20 full ranking trên val, TRƯỚC mặt nạ, seed 1 (QĐ 5-6, kế hoạch mục 4.1); không mở rộng lưới.
+#
+# Đợt dò: results/cakg/val_sweep_20261014/ (commit be94597, cây sạch lúc bắt đầu và kết thúc mọi lần chạy; mọi lần chạy
+# cùng sha256 code + đầu vào):
+#   CaKG-Rec λ1 0,01 / 0,1 / 1,0 -> NDCG@20 val 0,03948 / 0,03973 / 0,03940  => λ1 = 0,1 (giữa lưới)
+#   KGAT     lr 1e-3 / 1e-4      -> NDCG@20 val 0,02629 / 0,02099            => lr = 1e-3 (BIÊN lưới)
+#
+# Hạn chế (ghi vào báo cáo; STATUS mục 4, hạn chế nội dung 6–8):
+#   - CaKG-Rec: cả 3 lần dò chạm 300 epoch, epoch tốt nhất đều 290 -> "chưa chắc hội tụ" (như LightGCN nội dung 5).
+#     Ba giá trị λ1 chênh nhau ≤ 0,00033 NDCG@20, phần chênh nằm ở người dùng mà kênh phần cứng không chạm tới (chẩn đoán
+#     ai/data/survey/cakg/run_chan_doan_lcomp_20261015_lan1.log): việc chọn λ1 = 0,1 nằm trong mức dao động huấn luyện.
+#   - KGAT: lr = 1e-3 ở biên lưới {1e-3, 1e-4}; đạt đỉnh ở epoch 30 rồi giảm, dừng sớm ở epoch 80. lr = 1e-4 chạm 300 epoch,
+#     NDCG@20 val còn tăng ở lần chấm cuối (0,02017 -> 0,02099) -> chưa hội tụ. Chưa biết giá trị ngoài / giữa lưới.
+#
+# Thêm 15/10/2026 tối, sau khi chạy seed 2, 3 và ablation (06_val_sweep.py --group final / ablation, commit 1ec7c2e, cây
+# sạch; summary_final_20261015_135421.json, summary_ablation_20261015_173929.json: mọi lần chạy cfg = cfg chốt trừ seed /
+# phần ablation, sha256 code + đầu vào = lần chạy seed 1), TRƯỚC khi chấm test: chỉ điền dir / best.pt sha256 / best_epoch /
+# NDCG@20 val của các lần chạy đó. Không đổi cấu hình. Seed 1 huấn luyện ở commit be94597, các lần khác ở 1ec7c2e (code
+# huấn luyện trùng sha256).
+
+[chung]
+ngay_chot = "2026-10-15"
+chi_so_chon = "val ndcg@20 full ranking, truoc mat na"
+commit_huan_luyen = "be94597653c88e65c3d5bd645878f592cab332bb"
+seeds = [1, 2, 3]
+final_dir = "results/cakg/final_20261015"          # seed 2, 3 và ablation (06_val_sweep.py --group final / ablation)
+mat_na_chinh = "QĐ 4-9 (công thức 15)"
+mat_na_song_song = "∃b (công thức 16), mô tả"
+bootstrap_B = 2000
+bootstrap_seed = 20261009
+faithfulness_max_pairs = 2000
+faithfulness_seed = 20261014
+c9_min_pairs_doi_chung_than = 30
+
+[cakg]
+script = "ai/pipeline/06_cakg_train.py"
+val_sweep_summary = "results/cakg/val_sweep_20261014/summary_cakg_20261015_041438.json"
+val_sweep_summary_sha256 = "296943a4024e9480e1abbe05c74cd9db5d7ccc1c99d324119275d79b0c7a1bc3"
+chua_chac_hoi_tu = true          # cả 3 lần dò chạm 300 epoch, epoch tốt nhất 290
+bien_luoi = false                # λ1 = 0,1 là giá trị giữa của {0,01; 0,1; 1,0}
+
+[cakg.cfg]                       # đúng config.json["cfg"] của lần chạy seed 1, trừ seed
+dim = 64
+n_layers = 3
+lr = 0.001
+batch = 2048
+l2 = 0.001
+init = "xavier_uniform"
+hw_graph = "H_loi"
+rgat_layers = 2
+rgat_heads = 1
+rgat_attention = "WIRGAT additive"
+rgat_qk = "per_relation"
+rgat_root_weight = true
+rgat_dropout = 0.0
+leaky_slope = 0.2
+fusion_hidden = 64
+fusion_gate = "pair"
+h_u = "mean of train bodies in H"
+tau = 0.2
+lam1 = 0.1
+drop_suitable_for = false
+max_epoch = 300
+eval_every = 10
+patience = 5
+select_metric = "val ndcg@20 full ranking (truoc mat na)"
+
+[[cakg.runs]]
+seed = 1
+dir = "results/cakg/val_sweep_20261014/val_cakg_lam1-1e-01_s1"
+best_pt_sha256 = "a51a61504711784ec50534141833982ab3a42d073c0c020ffd9bea95ce6a4d25"
+best_epoch = 290
+val_ndcg20 = 0.03973100336223118
+
+[[cakg.runs]]
+seed = 2
+dir = "results/cakg/final_20261015/cakg_lam1-1e-01_s2"
+best_pt_sha256 = "570e56d59769fed5a1f5de88b0a81aa783fd2c4d64e79fa710f12a1b6c805677"
+best_epoch = 280
+val_ndcg20 = 0.039772904730926505
+
+[[cakg.runs]]
+seed = 3
+dir = "results/cakg/final_20261015/cakg_lam1-1e-01_s3"
+best_pt_sha256 = "6a32e1102ad837345dd231484fe1afd91384abab497e8f71d48bb7329bcaaaec"
+best_epoch = 260
+val_ndcg20 = 0.03956859634169913
+
+[kgat]
+script = "ai/pipeline/07_kgat_train.py"
+val_sweep_summary = "results/cakg/val_sweep_20261014/summary_kgat_20261015_071123.json"
+val_sweep_summary_sha256 = "d928154939c70e88bb17aaba4cd5489b7c1b0dcd42c454c7de912bc802638681"
+chua_chac_hoi_tu = false         # lr 1e-3 dừng sớm ở epoch 80 (tốt nhất epoch 30)
+bien_luoi = "lr = 1e-3 là giá trị lớn nhất của lưới {1e-3, 1e-4}"
+
+[kgat.cfg]                       # đúng config.json["cfg"] của lần chạy seed 1, trừ seed
+dim = 64
+layers = [64, 32, 16]
+aggregator = "bi-interaction"
+lr = 0.001
+batch = 1024
+batch_kg = 2048
+l2_cf = 1e-05
+l2_kg = 1e-05
+mess_dropout = 0.1
+node_dropout = 0.0
+attention = "recomputed once per epoch, no grad, used for propagation next epoch"
+drop_ngam_khong_chac = true
+init = "xavier_uniform"
+pretrain = false
+max_epoch = 300
+eval_every = 10
+patience = 5
+select_metric = "val ndcg@20 full ranking"
+
+[[kgat.runs]]
+seed = 1
+dir = "results/cakg/val_sweep_20261014/val_kgat_lr-1e-03_s1"
+best_pt_sha256 = "001f31f69bf0c80adb398077de71e8c80f7243fdc9f0cf51584584b09cf24d04"
+best_epoch = 30
+val_ndcg20 = 0.026287846802568585
+
+[[kgat.runs]]
+seed = 2
+dir = "results/cakg/final_20261015/kgat_lr-1e-03_s2"
+best_pt_sha256 = "2cd69188a72a5766aefb6ff5f673fd4e7668bde7934ee21835060bf2c80a54c4"
+best_epoch = 30
+val_ndcg20 = 0.02617858170380849
+
+[[kgat.runs]]
+seed = 3
+dir = "results/cakg/final_20261015/kgat_lr-1e-03_s3"
+best_pt_sha256 = "b83c8744f338673ad593bb11d32e7d5b486977b4a1590cc8d459ea04cdd932c5"
+best_epoch = 40
+val_ndcg20 = 0.027073099596838988
+
+# Ablation (kế hoạch mục 6): đúng cấu hình chốt CaKG-Rec, chỉ seed 1 (HỎI 11), không dò lại.
+[[ablation]]
+ten = "lam1_0"                   # C4: giữ kênh phần cứng, bỏ L_comp (vẫn ghi giá trị L_comp để theo dõi)
+dir = "results/cakg/final_20261015/abl_cakg_lam1-0_s1"
+lam1 = 0.0
+drop_suitable_for = false
+seed = 1
+best_pt_sha256 = "1dff86bbfb7562ce0ce50c2fb83bf4410cc3668398c8ec24dd09822b5351c927"
+best_epoch = 290
+val_ndcg20 = 0.03977564912077041
+
+[[ablation]]
+ten = "bo_suitable_for"          # C8: bỏ quan hệ suitable_for / rev_suitable_for khỏi H, giữ nguyên tập nút (Nam xác nhận 15/10)
+dir = "results/cakg/final_20261015/abl_cakg_lam1-1e-01_nosuit_s1"
+lam1 = 0.1
+drop_suitable_for = true
+seed = 1
+best_pt_sha256 = "e0af0a5169798bcd2d1a70b262e0bc4953ba781cf122ed8bd2731951d9f6203c"
+best_epoch = 300
+val_ndcg20 = 0.0396809851575683

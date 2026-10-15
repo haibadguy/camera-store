@@ -6,6 +6,49 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 15/10/2026 (tối): nội dung 6–8 — chấm test một lần. Nhánh `nam/cakg-rec`; script commit `e661ea1`, kết quả `3e830aa`, phân tích `1325f5c`
+
+Không sửa code của Hải, không sửa code dùng chung của nội dung 5 (trừ `.gitignore`: thêm `results/cakg/**/explanations.jsonl`, `results/cakg/**/*.npz`). File mới: `ai/pipeline/06_test_final.py`, `06_test_compare.py`; `eval_cakg.py` (của nhóm) thêm tham số `branches`, `masks` cho `evaluate_with_masks` và hai đối chứng Faithfulness (làm rõ 15/10).
+
+**Bằng chứng / log** (log ngoài git):
+- `results/cakg/test_final_20261015/run_test_20261015_183330.log` sha256 `053b54e1…3f2f`; `summary_test_20261015_183745.json` sha256 `6550d7a7…8985`; `compare_test_20261015_183817.json` sha256 `af2d0123…bfad`.
+- Thử trên val trước khi chấm (`results/cakg/finalcheck_val_20261015_nhap1/`): mọi nhánh chấm lại trùng `result.json` lúc huấn luyện, lệch tuyệt đối 0.
+
+**Ảnh hưởng (số test, TB ± ĐLC 3 seed):** xem STATUS mục 3, dòng nội dung 6–8, và mục 4 "Hạn chế (nội dung 6–8) — sau khi chạy test". LightGCN chấm lại trùng bảng nội dung 5 (Recall@10 0,0448 ± 0,0002; CVR@10 0,1297), hạng item test khác 09/10 ở 14 / 21 / 11 người (seed 1 / 2 / 3).
+
+---
+
+## 14/10/2026 (khuya): cài CaKG-Rec, KGAT, phần đánh giá thêm của nội dung 6–8 (chưa dò val, chưa chấm test). Nhánh `nam/cakg-rec`, commit `55b0cd0` (A), `ecb0f27` (B), `ae5b4cb` (C)
+
+Theo `docs/cakg_design.md` và bản đăng ký trước `docs/reviews/cakg_eval_plan.md` (commit `3b6fd89`); **không đổi kế hoạch**. Không sửa code của Hải (`62abf54`). Đụng **code dùng chung của nội dung 5** (của nhóm): `ai/pipeline/train_05.py` và `.gitignore`; mọi file khác là file mới.
+
+**Sửa gì (code dùng chung)**
+- `train_05.py` (`run`): thêm các phần **tùy chọn** — mô hình không có thì chạy y như trước:
+  - ghi VRAM mỗi epoch: đỉnh `max_memory_allocated` / `max_memory_reserved` lúc huấn luyện (`vram_*`) và lúc chấm val (`vram_eval_*`); `result.json` thêm `peak_vram_*` (kế hoạch mục 10 yêu cầu, trước đây chưa ghi);
+  - hook `model.after_epoch` (KGAT: pha TransR + tính lại attention), `model.epoch_stats` (CaKG-Rec: BPR, L_comp), `model.aux_state_dict` (Adam thứ hai của KGAT, lưu trong `last.pt`), `monitor` (NDCG@20 val sau mặt nạ, chỉ theo dõi), `final_evals` (chấm val thêm với điểm sau mặt nạ), `code_files` (sha256 code vào `config.json`).
+- `.gitignore`: `results/cakg/**` bỏ `*.pt`, `*.npy`, `smoke_*/` như `results/n5/`.
+
+**File mới:** `rgat_layer.py`, `cakg_model.py`, `06_cakg_train.py`, `06_val_sweep.py`, `kgat_model.py`, `07_kgat_train.py`, `eval_cakg.py`, `08_explain.py`, `08b_latency.py`; kiểm thử `ai/survey/cakg/test_cakg.py`, `test_kgat.py`, `test_eval_cakg.py`.
+
+**Vì sao / bằng chứng**
+- Hồi quy `train_05` với LightGCN (05b, λ = 1e-3, seed 1, 1 epoch, `results/cakg/smoke_20261014/regress_lightgcn_l2-1e-03_s1`): loss epoch 1 = **0,571939164797** (lần chạy 09/10 trong `results/n5/val_sweep_20261010/val_lightgcn_l2-1e-03_s1/result.json`: 0,571939164268; lệch 5e-10, do GPU). Không chạy lại 05c.
+- Kiểm thử dựng tay, chạy trên cây sạch (log ở `ai/data/survey/cakg/`):
+
+| Script | Log | Commit | Kết quả |
+|---|---|---|---|
+| `test_cakg.py` | `run_test_cakg_20261014_lan1.log` | `55b0cd0` | ĐẠT CẢ |
+| `test_kgat.py` | `run_test_kgat_20261014_lan1.log` | `ecb0f27` | ĐẠT CẢ |
+| `test_eval_cakg.py` | `run_test_eval_cakg_20261014_lan1.log` | `ae5b4cb` | ĐẠT CẢ |
+
+- Một số đáng nhớ từ các log trên: RGATLayer so với `RGATConv` (cùng trọng số, H thật, 20.000 cạnh) lệch đầu ra 1,67e-06; q^(r), k^(r) riêng so với tổng các `RGATConv` chạy riêng từng quan hệ lệch 5,4e-07; số tham số thêm so với probe (q, k chung) = 3.328 (251.648 − 248.320, khớp "khoảng 3.300" ở thiết kế). CVR_relaxed trên top-10 val LightGCN s1: 3.005 / 61 / 109, 50 người (khớp `run_dem_cakg_20261014_lan1.log`); PC: 20.436 / 9.095 trên 23.441 (khớp).
+
+**Ảnh hưởng**
+- Số của nội dung 5 không đổi (không chạy lại gì, `results/n5/` không ghi thêm).
+- **Phát hiện:** chấm lại checkpoint LightGCN s1 của nội dung 5 trong một tiến trình mới cho top-20 val khác mảng đã lưu ở **2–3 / 67.661** hàng (hai sản phẩm điểm chênh < 1e-6 đổi chỗ) và hạng item val khác ở 9–14 người (phép nhân thưa trên GPU không tất định). Câu "chấm lại cùng checkpoint thì trùng (lệch 0 trên val)" ở hạn chế nội dung 5 điểm 9 chỉ đúng ở mức chỉ số trung bình. Hệ quả cho chấm test sau này: "LightGCN + mặt nạ" phải lấy số trước và sau mặt nạ trong **cùng một lần chấm**, không ghép với mảng test đã lưu 09/10.
+- Việc phía sau: dò λ1 (Nam chạy `06_val_sweep.py --group cakg`), dò lr KGAT (`--group kgat`), chốt `ai/config/cakg_final.toml`, viết `06_test_final.py` (chưa có).
+
+---
+
 ## 09/10/2026 (tối): kiểm số cho 4 chương báo cáo, tái lập 01→04, sửa ví dụ ở script 04 và `content4_design`. Nhánh `nam/content4`
 
 **Sửa gì**
