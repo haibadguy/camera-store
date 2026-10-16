@@ -6,6 +6,30 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 16/10/2026 (chiều): CaKG-Rec v2 — kết quả bước 1 trên val (chọn `lens_gate`); viết bước 2 (seed 2, 3 + DỪNG 2), chưa chạy. Nhánh `nam/cakg-v2`
+
+Không sửa code mô hình / huấn luyện (`cakg_model.py`, `06_cakg_train.py`, `train_05.py` giữ nguyên, nên sha256 code của seed 2, 3 phải trùng seed 1).
+
+**Sửa gì**
+- `06_val_sweep.py`: nhóm `v2seeds` + `--select-dir` — seed 2, 3 của biến thể trong `select.json["decision"]["chosen"]`, đúng tham số dòng lệnh của lần chạy seed 1, chỉ đổi `--seed`; cuối cùng kiểm cfg = cfg seed 1 trừ seed và sha256 code + đầu vào = seed 1. Bị `06v2_select.py` cho DỪNG thì không chạy.
+- Mới `06v2_dung2.py`: DỪNG 2 (kế hoạch v2 mục 4.3) chỉ đọc mảng val đã lưu: 3 seed của v2, và mảng LightGCN + mặt nạ đã chấm lại ở bước 1 (kiểm NDCG@20 tính lại = `select.json`).
+
+**Kết quả bước 1** (`results/cakg/val_sweep_v2_20261016/`, seed 1, commit `61921d5`, cây sạch đầu và cuối mọi lần chạy, cùng sha256 code + đầu vào; `sweep_v2_20261016_074929.log` sha256 `e2f9ebcb…42139`; `select_20261016_134128/select.json` sha256 `76ad860d…bbdd7`, `select.log` `faa90fc4…c86e6`; log ngoài git):
+
+| Biến thể | NDCG@20 val trước / sau mặt nạ | (a) R@10 nhóm lắp được − LightGCN + mặt nạ s1 [95%] | (b) > 0,04053 | thời gian |
+|---|---|---|---|---|
+| A `lens_gate` | 0,04063 / 0,04062 | +0,0077 [−0,0100; +0,0265] đạt | đạt | 113,4 phút |
+| B `loo_hu` | 0,04049 / 0,04051 | +0,0055 [−0,0122; +0,0222] đạt | không | 118,2 phút |
+| C `body_hardneg` | 0,03909 / 0,03912 | −0,0885 [−0,1139; −0,0619] không | không | 120,2 phút |
+
+LightGCN + mặt nạ (chấm lại) 0,04044 / 0,04040 / 0,04053; v1 s1 0,03973. **Chọn A** theo quy tắc. Cả 3 chạm 300 epoch (best epoch 280): chưa chắc hội tụ. Mô tả: top-10 người có thân của A có 0,82 thân (v1 3,40; LightGCN 0,87–0,92).
+
+**Kiểm thử bước 2** (cây chưa commit, `--allow-dirty`, thư mục `results/cakg/smoke_val_sweep_v2seeds_20261016/`, ngoài git): `--group v2seeds --smoke` chạy seed 2, 3 mỗi seed 1 epoch (19,8 / 19,9 s), kiểm cfg trừ seed và sha256 code = seed 1: CÓ; `06v2_dung2.py --smoke` chạy hết, LightGCN tính lại khớp `select.json`. Kết luận DỪNG ở lần thử này vô nghĩa (1 epoch).
+
+**Ảnh hưởng:** chưa có số cuối; chưa chấm test lần 2. Số test lần 1 không đổi.
+
+---
+
 ## 16/10/2026: CaKG-Rec v2 — thiết kế, đăng ký trước, cài 3 biến thể (chưa huấn luyện dài, chưa chấm test lần 2). Nhánh `nam/cakg-v2` (từ `main` `98e5100`), code `921f6c6`, kế hoạch `a90a6a2`
 
 Theo hướng dẫn của cô 16/10. Kế hoạch đăng ký trước: `docs/reviews/cakg_v2_plan.md`. Không sửa code của Hải (`62abf54`), không sửa code dùng chung của nội dung 5. **Kết quả test lần 1 giữ nguyên** (`results/cakg/test_final_20261015/`).

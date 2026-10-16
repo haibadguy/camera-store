@@ -201,3 +201,4 @@ Chạy thử 1 epoch / biến thể (cây chưa commit, `--allow-dirty`; chỉ �
 | Ngày | Sửa | Lý do |
 |---|---|---|
 | 16/10/2026 | Sau commit `a90a6a2` (bản đăng ký): điền sha256 log, số chạy thử 1 epoch và giờ ước tính (nguồn, mục 5, 7). **Không đổi quy tắc chọn, điều kiện DỪNG hay so sánh** | Log chính thức chạy trên cây sạch `a90a6a2`, sau khi commit kế hoạch |
+| 16/10/2026 chiều | Sau bước 1 (chọn `lens_gate`): cài bước 2 như mục 4.3 đã ghi — nhóm `v2seeds` (`06_val_sweep.py`) và `06v2_dung2.py`; DỪNG 2 tính trên mảng LightGCN + mặt nạ đã chấm lại ở bước 1 (`select_20261016_134128/lightgcn_s*`). **Không đổi quy tắc (a'), (b')** | Kế hoạch 4.3: script bước 2 viết sau bước 1, commit trước khi chạy |
