@@ -1,0 +1,264 @@
+{
+  "split": "test",
+  "git": {
+    "commit": "4166de48deb545753a4b3e2ed43da4933c3727a8",
+    "dirty": false
+  },
+  "plan": "docs/reviews/final_system_explain_plan.md",
+  "seeds": {
+    "1": {
+      "run_dir": "results/n5/val_sweep_20261010/val_lightgcn_l2-1e-03_s1",
+      "best_pt_sha256": "d857e24c3d7fff692c39627b54ee30fb1e62044d9ec6fd932642d892285f5fc2",
+      "saved_dir": "results\\cakg\\test_final_20261015\\lightgcn_s1",
+      "n_lenses_body_users_top10": 22983,
+      "n_explanations": 20548,
+      "n_full_path": 9167,
+      "n_fact_errors": 0,
+      "n_bstar_tie_broken": 0,
+      "path_coverage_recomputed": {
+        "pc@5": 0.30915967768459135,
+        "pc_ngan@5": 0.9269856931425753,
+        "pc_moi_sp@5": 0.07226600038439362,
+        "n_items@5": 52030,
+        "n_lenses@5": 12162,
+        "n_judgable@5": 11274,
+        "n_short@5": 11274,
+        "n_full@5": 3760,
+        "pc@10": 0.39886002697646084,
+        "pc_ngan@10": 0.8940521254840534,
+        "pc_moi_sp@10": 0.08809340764943302,
+        "n_items@10": 104060,
+        "n_lenses@10": 22983,
+        "n_judgable@10": 20548,
+        "n_short@10": 20548,
+        "n_full@10": 9167
+      },
+      "pc_matches_saved": true,
+      "faithfulness": {
+        "n_pairs_sampled": 2000,
+        "n_excluded_base_not_in_top10": 0,
+        "n_pairs": 2000,
+        "fs_pn": 0.1315,
+        "dS_mean": 0.3627273970842361,
+        "n_pairs_mot_than": 1618,
+        "fs_pn_mot_than": 0.13906056860321384,
+        "n_pairs_tu_hai_than": 382,
+        "fs_pn_tu_hai_than": 0.09947643979057591,
+        "n_pairs_with_ctrl_body": 382,
+        "c9_lg": {
+          "expl": [
+            0.09947643979057591,
+            0.07068062827225131,
+            0.13089005235602094
+          ],
+          "ctrl": [
+            0.08900523560209424,
+            0.06282722513089005,
+            0.12041884816753927
+          ],
+          "dS_expl": [
+            0.2532476367750717,
+            0.23839169094699839,
+            0.26869834898654077
+          ],
+          "dS_ctrl": [
+            0.3134506235572056,
+            0.2953845305904668,
+            0.33175435421978616
+          ],
+          "expl - ctrl": [
+            0.010471204188481673,
+            -0.018324607329842924,
+            0.03926701570680628
+          ],
+          "dS_expl - dS_ctrl": [
+            -0.06020298678213387,
+            -0.07874846932775688,
+            -0.042180195840865554
+          ]
+        },
+        "c9_chi_mo_ta": false
+      },
+      "explanations_sha256": "b19478f9896b5e857b07835f240d789e2236b82f0de5d2edc096d95ad1cd274e"
+    },
+    "2": {
+      "run_dir": "results/n5/final_20261009/lightgcn_l2-1e-03_s2",
+      "best_pt_sha256": "a6edeaaee0e5946c3fe678130ecb2bf5a174bc61c3a34e6b93f24a17403bd682",
+      "saved_dir": "results\\cakg\\test_final_20261015\\lightgcn_s2",
+      "n_lenses_body_users_top10": 22678,
+      "n_explanations": 20138,
+      "n_full_path": 8635,
+      "n_fact_errors": 0,
+      "n_bstar_tie_broken": 0,
+      "path_coverage_recomputed": {
+        "pc@5": 0.2830981182795699,
+        "pc_ngan@5": 0.922883064516129,
+        "pc_moi_sp@5": 0.06477032481260811,
+        "n_items@5": 52030,
+        "n_lenses@5": 11904,
+        "n_judgable@5": 10986,
+        "n_short@5": 10986,
+        "n_full@5": 3370,
+        "pc@10": 0.3807654996031396,
+        "pc_ngan@10": 0.8879971778816474,
+        "pc_moi_sp@10": 0.08298097251585623,
+        "n_items@10": 104060,
+        "n_lenses@10": 22678,
+        "n_judgable@10": 20138,
+        "n_short@10": 20138,
+        "n_full@10": 8635
+      },
+      "pc_matches_saved": true,
+      "faithfulness": {
+        "n_pairs_sampled": 2000,
+        "n_excluded_base_not_in_top10": 0,
+        "n_pairs": 2000,
+        "fs_pn": 0.1415,
+        "dS_mean": 0.36561998748779295,
+        "n_pairs_mot_than": 1616,
+        "fs_pn_mot_than": 0.15594059405940594,
+        "n_pairs_tu_hai_than": 384,
+        "fs_pn_tu_hai_than": 0.08072916666666667,
+        "n_pairs_with_ctrl_body": 384,
+        "c9_lg": {
+          "expl": [
+            0.08072916666666667,
+            0.0546875,
+            0.109375
+          ],
+          "ctrl": [
+            0.06510416666666667,
+            0.0390625,
+            0.09114583333333333
+          ],
+          "dS_expl": [
+            0.26302381480733555,
+            0.24829342206940055,
+            0.2781615751174589
+          ],
+          "dS_ctrl": [
+            0.32554042898118496,
+            0.30642194889175395,
+            0.3462345686585953
+          ],
+          "expl - ctrl": [
+            0.015625,
+            -0.010416666666666671,
+            0.044270833333333336
+          ],
+          "dS_expl - dS_ctrl": [
+            -0.0625166141738494,
+            -0.08175669211583834,
+            -0.044999893521890065
+          ]
+        },
+        "c9_chi_mo_ta": false
+      },
+      "explanations_sha256": "8dc49841478447ebd3d9f747a76b82084ea8be9d4f8bdf2f4d63398477464c6e"
+    },
+    "3": {
+      "run_dir": "results/n5/final_20261009/lightgcn_l2-1e-03_s3",
+      "best_pt_sha256": "9cc8a7922b522596d6fbb132986eb67e456733ea8ea3cab0f6b5a38a8cc2eb51",
+      "saved_dir": "results\\cakg\\test_final_20261015\\lightgcn_s3",
+      "n_lenses_body_users_top10": 22901,
+      "n_explanations": 20393,
+      "n_full_path": 9168,
+      "n_fact_errors": 0,
+      "n_bstar_tie_broken": 0,
+      "path_coverage_recomputed": {
+        "pc@5": 0.30767306088407004,
+        "pc_ngan@5": 0.9237698081734779,
+        "pc_moi_sp@5": 0.0709014030367096,
+        "n_items@5": 52030,
+        "n_lenses@5": 11990,
+        "n_judgable@5": 11076,
+        "n_short@5": 11076,
+        "n_full@5": 3689,
+        "pc@10": 0.4003318632374132,
+        "pc_ngan@10": 0.8904851316536396,
+        "pc_moi_sp@10": 0.08810301748990967,
+        "n_items@10": 104060,
+        "n_lenses@10": 22901,
+        "n_judgable@10": 20393,
+        "n_short@10": 20393,
+        "n_full@10": 9168
+      },
+      "pc_matches_saved": true,
+      "faithfulness": {
+        "n_pairs_sampled": 2000,
+        "n_excluded_base_not_in_top10": 0,
+        "n_pairs": 2000,
+        "fs_pn": 0.128,
+        "dS_mean": 0.35050938951969146,
+        "n_pairs_mot_than": 1645,
+        "fs_pn_mot_than": 0.14042553191489363,
+        "n_pairs_tu_hai_than": 355,
+        "fs_pn_tu_hai_than": 0.07042253521126761,
+        "n_pairs_with_ctrl_body": 355,
+        "c9_lg": {
+          "expl": [
+            0.07042253521126761,
+            0.04507042253521127,
+            0.09859154929577464
+          ],
+          "ctrl": [
+            0.07887323943661972,
+            0.05070422535211268,
+            0.10704225352112676
+          ],
+          "dS_expl": [
+            0.2515864788646429,
+            0.23703861414546698,
+            0.2672179896394971
+          ],
+          "dS_ctrl": [
+            0.3216576535936812,
+            0.30178564598862556,
+            0.3421275051546768
+          ],
+          "expl - ctrl": [
+            -0.008450704225352115,
+            -0.033802816901408454,
+            0.016901408450704217
+          ],
+          "dS_expl - dS_ctrl": [
+            -0.07007117472903829,
+            -0.08845631327427607,
+            -0.050866478060332815
+          ]
+        },
+        "c9_chi_mo_ta": false
+      },
+      "explanations_sha256": "22b94d2f2b5c9d38f7107f52c6f79a64b244084b550c7c34703ad63b9427f938"
+    }
+  },
+  "latency": {
+    "machine": {
+      "torch": "2.14.1+cu126",
+      "cuda": "12.6",
+      "ram_free_mib": 4812,
+      "gpu": "NVIDIA GeForce GTX 1660 Ti",
+      "driver": "561.03"
+    },
+    "precompute_ms_gpu": 93.96049997303635,
+    "n_users": 1000,
+    "warmup": 50,
+    "cuda": {
+      "p50": 0.6209499551914632,
+      "p95": 0.8048899588175117,
+      "p99": 0.9264039527624846,
+      "max": 1.1233999393880367,
+      "mean": 0.644318199949339,
+      "n_sentences": 278,
+      "peak_vram_allocated_mib": 304.55517578125
+    },
+    "cpu": {
+      "p50": 0.39664999349042773,
+      "p95": 0.7856949348933994,
+      "p99": 1.1554210644681004,
+      "max": 2.3596000391989946,
+      "mean": 0.4559191025327891,
+      "n_sentences": 278
+    }
+  }
+}
