@@ -14,7 +14,7 @@ Theo `docs/reviews/final_system_explain_plan.md` (Nam duyệt). Không sửa cod
 - Mới `ai/pipeline/09_explain_lightgcn.py`: b* = argmax e_bᵀe_l (hòa: iid nhỏ), c* = nhãn đầu theo thứ tự nút usecase; câu + `eval_cakg.verify_explanation`; PC tính lại từ top-10 **đã lưu** và phải trùng `pc_counts` đã lưu; Faithfulness: bỏ cạnh (u, b*) khỏi đồ thị train (chuẩn hóa lại bậc), lan truyền lại, chấm lại riêng u; đối chứng bỏ (u, b'); C9-LG bootstrap B = 2.000; độ trễ như `08b_latency.py`.
 - Mới `ai/survey/final_system/test_explain_lightgcn.py`: 15 kiểm, **ĐẠT CẢ** (`ai/data/survey/final_system/run_test_explain_lg_20261016_lan1.log`, sha256 `7885c68e…14c52636`, cây sạch `fbf994a`): ví dụ tay b* (1,2 > 0,4 → D750), phá hòa, c*; ma trận kề bỏ cạnh trùng `build_norm_adj` của train đã bỏ cạnh từng phần tử; điểm sau khi bỏ cạnh trùng LightGCN dựng lại (lệch 1,9e-6); "không bỏ gì" → 0 / 200 cặp rơi khỏi top-10; người không có thân → 0 đường; đổi b* sai → `verify_explanation` báo lỗi.
 
-**Kết quả trên test đã lưu** (một lần; log `explain_lg_20261016_214737.log` sha256 `9aa9aee6…881ea3` ngoài git; `summary.json` sha256 `a31596f8…b881ea3`):
+**Kết quả trên test đã lưu** (một lần; log `explain_lg_20261016_214737.log` sha256 `9aa9aee6…2f24efb6` ngoài git; `summary.json` sha256 `a31596f8…4eb881ea3`):
 
 | seed | câu (ống người có thân, top-10) | lỗi sự kiện | PC@10 | FS_PN@10 (2.000 cặp) | 1 thân / ≥ 2 thân | C9-LG: b* − b' [95%] (cặp) | ΔS b* − b' [95%] |
 |---|---|---|---|---|---|---|---|
