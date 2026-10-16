@@ -21,6 +21,14 @@ Chạy tiếp: bị ngắt (Ctrl+C, mất điện, máy ngủ...) thì gõ lại
 Cuối cùng in bảng NDCG@20 val (trước / sau mặt nạ), cấu hình tốt nhất, cờ "ở biên lưới", và kiểm mọi lần chạy cùng
 sha256 code + đầu vào (config.json). KHÔNG ghi cakg_final.toml (bước 4 của kế hoạch do Nam chốt và commit).
 
+Thêm 16/10/2026 (docs/reviews/cakg_v2_plan.md): nhóm v2 = CaKG-Rec v2, 3 biến thể (A lens_gate, B loo_hu,
+C body_hardneg), λ1 = 0,1, seed 1, ghi vào results/cakg/val_sweep_<nhãn>/ (nhãn nên bắt đầu bằng "v2_"). Chọn biến thể
+và điều kiện DỪNG ở 06v2_select.py.
+
+Thêm 16/10/2026 chiều (kế hoạch v2 mục 4.3): nhóm v2seeds = seed 2, 3 của biến thể 06v2_select.py đã chọn
+(--select-dir <thư mục select_...>), đúng tham số của lần chạy seed 1; cuối cùng kiểm cfg trừ seed và sha256 code +
+đầu vào = lần chạy seed 1. Kiểm DỪNG 2: 06v2_dung2.py.
+
 Lệnh (PowerShell, từ thư mục camera-store):
   ai\\.venv\\Scripts\\python.exe ai/pipeline/06_val_sweep.py --group cakg --label 20261014
 """
@@ -52,10 +60,35 @@ GROUPS = {  # nhóm -> (tên tham số dò, [(tên lần chạy, script, tham s�
         ("val_kgat_lr-1e-03_s1", "07_kgat_train.py", ["--lr", "1e-3", "--seed", "1"], 1e-3),
         ("val_kgat_lr-1e-04_s1", "07_kgat_train.py", ["--lr", "1e-4", "--seed", "1"], 1e-4),
     ]),
+    # CaKG-Rec v2 (docs/reviews/cakg_v2_plan.md, thêm 16/10/2026): 3 biến thể, λ1 = 0,1 (cấu hình chốt v1), seed 1.
+    # Chọn biến thể / điều kiện DỪNG: 06v2_select.py (KHÔNG theo dòng "tốt nhất" của script này).
+    "v2": ("variant", [
+        ("val_v2_A_lens_gate_s1", "06_cakg_train.py", ["--lam1", "0.1", "--seed", "1", "--variant", "lens_gate"],
+         "lens_gate"),
+        ("val_v2_B_loo_hu_s1", "06_cakg_train.py", ["--lam1", "0.1", "--seed", "1", "--variant", "loo_hu"], "loo_hu"),
+        ("val_v2_C_body_hardneg_s1", "06_cakg_train.py", ["--lam1", "0.1", "--seed", "1", "--variant", "body_hardneg"],
+         "body_hardneg"),
+    ]),
 }
 
 
 FINAL_TOML = C.ROOT / "ai" / "config" / "cakg_final.toml"
+
+
+def v2seeds_runs(select_dir):
+    """CaKG-Rec v2, kế hoạch mục 4.3 (thêm 16/10/2026): seed 2, 3 của biến thể mà 06v2_select.py đã chọn
+    (select.json["decision"]["chosen"]), ĐÚNG tham số của lần chạy seed 1 trong nhóm v2, chỉ đổi --seed.
+    Trả về (select.json, thư mục lần chạy seed 1, [(tên, script, tham số, biến thể)])."""
+    sel = json.loads((Path(select_dir) / "select.json").read_text(encoding="utf-8"))
+    v = sel["decision"]["chosen"]
+    assert v is not None and not sel["decision"]["dung"], "06v2_select.py ra DỪNG: không chạy seed 2, 3 (kế hoạch 4.2)"
+    name1, script, args1, _ = next(r for r in GROUPS["v2"][1] if r[3] == v)
+    d1 = C.ROOT / sel["variants"][v]["dir"]
+    assert d1.name == name1 and (d1 / "result.json").exists(), d1
+    k = args1.index("--seed")
+    assert args1[k + 1] == "1"
+    runs = [(name1[:-len("_s1")] + f"_s{s}", script, args1[:k + 1] + [str(s)] + args1[k + 2:], v) for s in (2, 3)]
+    return sel, d1, runs
 
 
 def final_groups():
@@ -83,7 +116,8 @@ def final_groups():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--group", required=True, choices=sorted(GROUPS) + ["final", "ablation"])
+    ap.add_argument("--group", required=True, choices=sorted(GROUPS) + ["final", "ablation", "v2seeds"])
+    ap.add_argument("--select-dir", help="nhóm v2seeds: thư mục select_<thời điểm> của 06v2_select.py")
     ap.add_argument("--label", required=True, help="nhãn của đợt dò, vd 20261014 (giữ nguyên khi chạy tiếp)")
     ap.add_argument("--allow-dirty", action="store_true", help="cho chạy khi file đã theo dõi trong git bị sửa")
     ap.add_argument("--smoke", action="store_true", help="(kiểm thử) mỗi lần chạy chỉ 1 epoch")
@@ -96,6 +130,10 @@ def main():
         if not a.smoke:
             rel = str(root.relative_to(C.ROOT)).replace(chr(92), "/")
             assert rel == toml_["chung"]["final_dir"], f"nhãn phải khớp final_dir của cakg_final.toml: {rel}"
+    elif a.group == "v2seeds":
+        sel_, d_s1, runs = v2seeds_runs(a.select_dir)
+        pname = "variant"
+        root = OUT_DIR / f"{'smoke_' if a.smoke else ''}val_sweep_{a.label}"
     else:
         pname, runs = GROUPS[a.group]
         root = OUT_DIR / f"{'smoke_' if a.smoke else ''}val_sweep_{a.label}"
@@ -178,13 +216,36 @@ def main():
         log(f"-> {out}")
         log.close()
         return
+    if a.group == "v2seeds":
+        c1 = json.loads((d_s1 / "config.json").read_text(encoding="utf-8"))
+        ok_all = True
+        for name, *_ in runs:
+            c = json.loads((root / name / "config.json").read_text(encoding="utf-8"))
+            ign = ("seed", "max_epoch", "eval_every")
+            ok_cfg = ({k: v for k, v in c["cfg"].items() if k not in ign}
+                      == {k: v for k, v in c1["cfg"].items() if k not in ign}
+                      and (a.smoke or c["cfg"] == {**c1["cfg"], "seed": c["cfg"]["seed"]}))
+            ok_sha = c.get("code_sha256") == c1.get("code_sha256") and c["inputs_sha256"] == c1["inputs_sha256"]
+            ok_all &= ok_cfg and ok_sha
+            log(f"  {name}: cfg = cfg seed 1 ({d_s1.name}) trừ seed: {'CÓ' if ok_cfg else 'KHÔNG'}; sha256 code + đầu vào "
+                f"= seed 1: {'CÓ' if ok_sha else 'KHÔNG — xem config.json'}")
+        out = root / f"summary_{a.group}_{E.now_tag()}.json"
+        out.write_text(json.dumps({"git": git, "group": a.group, "select_dir": str(Path(a.select_dir)),
+                                   "seed1_dir": str(d_s1.relative_to(C.ROOT)), "cfg_and_code_match_seed1": bool(ok_all),
+                                   "runs": summary}, indent=2, ensure_ascii=False), encoding="utf-8")
+        log(f"-> {out}")
+        log("Bước tiếp: 06v2_dung2.py (kiểm DỪNG 2 trên trung bình 3 seed, kế hoạch 4.3).")
+        log.close()
+        return
     same = len({json.dumps(v, sort_keys=True) for v in shas.values()}) == 1
     log(f"Mọi lần chạy cùng sha256 code + đầu vào (config.json): {'CÓ' if same else 'KHÔNG — xem config.json'}")
     best = max(summary, key=lambda n: summary[n]["val_ndcg@20"])
     vals = sorted(x[3] for x in runs)
-    edge = summary[best][pname] in (vals[0], vals[-1])
+    edge = all(isinstance(v, float) for v in vals) and summary[best][pname] in (vals[0], vals[-1])
     log(f"Tốt nhất theo NDCG@20 val (trước mặt nạ): {best} ({pname} = {summary[best][pname]})"
-        + (" — Ở BIÊN LƯỚI (ghi lại, không mở rộng lưới: kế hoạch mục 4.1)" if edge else ""))
+        + (" — Ở BIÊN LƯỚI (ghi lại, không mở rộng lưới: kế hoạch mục 4.1)" if edge else "")
+        + (" — CHỈ ĐỂ XEM: chọn biến thể v2 theo 06v2_select.py (điều kiện phụ + điều kiện DỪNG)"
+           if a.group == "v2" else ""))
     out = root / f"summary_{a.group}_{E.now_tag()}.json"
     out.write_text(json.dumps({"git": git, "group": a.group, "best": best, "best_at_grid_edge": edge,
                                "same_code_and_inputs": same, "runs": summary}, indent=2, ensure_ascii=False),

@@ -1,0 +1,104 @@
+{
+  "git": {
+    "commit": "b789393e167937ac1b308eabf9d54bfaf8d95ec6",
+    "dirty": false
+  },
+  "variant": "lens_gate",
+  "select_dir": "results\\cakg\\val_sweep_v2_20261016\\select_20261016_134128",
+  "seeds_dir": "results\\cakg\\val_sweep_v2seeds_20261016",
+  "runs": {
+    "1": "results\\cakg\\val_sweep_v2_20261016\\val_v2_A_lens_gate_s1",
+    "2": "results\\cakg\\val_sweep_v2seeds_20261016\\val_v2_A_lens_gate_s2",
+    "3": "results\\cakg\\val_sweep_v2seeds_20261016\\val_v2_A_lens_gate_s3"
+  },
+  "per_seed": {
+    "1": {
+      "ndcg@20_truoc_mat_na": 0.040632539170702406,
+      "ndcg@20_mat_na": 0.04061849730713635,
+      "lap_duoc_R@10_chi_ong_mat_na": 0.38495575221238937,
+      "co_che": {
+        "n_users_body": 10406,
+        "top10_mix_body_users": {
+          "than": 0.8202959830866807,
+          "ong": 2.693446088794926,
+          "phu_kien": 6.132904093792043,
+          "khac": 0.3533538343263502
+        },
+        "frac_same_mount_bodies": 0.7662839737582006,
+        "recall@10_body_users": 0.05573707476455891,
+        "recall@10_body_users_item_has_h": 0.12784398699891658,
+        "n_item_has_h": 1846,
+        "recall@10_body_users_item_no_h": 0.04018691588785047,
+        "n_item_no_h": 8560
+      }
+    },
+    "2": {
+      "ndcg@20_truoc_mat_na": 0.0402478904943894,
+      "ndcg@20_mat_na": 0.04025551119098491,
+      "lap_duoc_R@10_chi_ong_mat_na": 0.3893805309734513,
+      "co_che": {
+        "n_users_body": 10406,
+        "top10_mix_body_users": {
+          "than": 0.8478762252546608,
+          "ong": 2.61195464155295,
+          "phu_kien": 6.1997885835095135,
+          "khac": 0.3403805496828753
+        },
+        "frac_same_mount_bodies": 0.7541652499149949,
+        "recall@10_body_users": 0.05717855083605612,
+        "recall@10_body_users_item_has_h": 0.13163596966413868,
+        "n_item_has_h": 1846,
+        "recall@10_body_users_item_no_h": 0.041121495327102804,
+        "n_item_no_h": 8560
+      }
+    },
+    "3": {
+      "ndcg@20_truoc_mat_na": 0.040503093909632394,
+      "ndcg@20_mat_na": 0.040449860988999116,
+      "lap_duoc_R@10_chi_ong_mat_na": 0.3926991150442478,
+      "co_che": {
+        "n_users_body": 10406,
+        "top10_mix_body_users": {
+          "than": 0.8596002306361714,
+          "ong": 2.5963866999807803,
+          "phu_kien": 6.21708629636748,
+          "khac": 0.32692677301556794
+        },
+        "frac_same_mount_bodies": 0.7641140301844606,
+        "recall@10_body_users": 0.05410340188352873,
+        "recall@10_body_users_item_has_h": 0.12296858071505959,
+        "n_item_has_h": 1846,
+        "recall@10_body_users_item_no_h": 0.03925233644859813,
+        "n_item_no_h": 8560
+      }
+    }
+  },
+  "lightgcn_mask_ndcg20": {
+    "1": 0.04044118190824908,
+    "2": 0.04040493866148492,
+    "3": 0.040527745157908995
+  },
+  "lightgcn_mask_lap_duoc_R@10": {
+    "1": 0.377212389380531,
+    "2": 0.3926991150442478,
+    "3": 0.3827433628318584
+  },
+  "mean_ndcg20_mask": {
+    "v2": 0.04044128982904013,
+    "lightgcn_mask": 0.040457955242547666
+  },
+  "a_lap_duoc_hieu": [
+    0.0047935103244837185,
+    -0.0036873156342183146,
+    0.013643067846607682
+  ],
+  "ndcg20_mask_hieu_theo_nguoi": [
+    -1.666541350753975e-05,
+    -0.00028571887629002813,
+    0.0002584765376482254
+  ],
+  "dieu_kien_a": true,
+  "dieu_kien_b": false,
+  "dat_dung2": false,
+  "ket_luan": "DỪNG 2: không đạt. Không chấm test lần 2. Hệ thống cuối = LightGCN + mặt nạ QĐ 4-9."
+}

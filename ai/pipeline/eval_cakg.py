@@ -387,7 +387,8 @@ def counterfactual_score_row(model, Hd, bodies_h, u, drop_body, cut_edges, eU, e
     zI, _ = model.fi(eI, hI, has_hi)
     S = eU[u:u + 1] @ eI.T
     if bool(has_u[0]):
-        S = torch.where(has_hi[None, :], zu @ zI.T, S)
+        gate = has_hi & getattr(model, "gate_i", has_hi)     # v1: = has_hi; biến thể A (v2): chỉ ống có h
+        S = torch.where(gate[None, :], zu @ zI.T, S)
     return S
 
 

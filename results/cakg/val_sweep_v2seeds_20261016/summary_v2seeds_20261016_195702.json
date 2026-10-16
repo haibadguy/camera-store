@@ -1,0 +1,110 @@
+{
+  "git": {
+    "commit": "b789393e167937ac1b308eabf9d54bfaf8d95ec6",
+    "dirty": false
+  },
+  "group": "v2seeds",
+  "select_dir": "results\\cakg\\val_sweep_v2_20261016\\select_20261016_134128",
+  "seed1_dir": "results\\cakg\\val_sweep_v2_20261016\\val_v2_A_lens_gate_s1",
+  "cfg_and_code_match_seed1": true,
+  "runs": {
+    "val_v2_A_lens_gate_s2": {
+      "model": "CaKG-Rec",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.001,
+        "init": "xavier_uniform",
+        "hw_graph": "H_loi",
+        "rgat_layers": 2,
+        "rgat_heads": 1,
+        "rgat_attention": "WIRGAT additive",
+        "rgat_qk": "per_relation",
+        "rgat_root_weight": true,
+        "rgat_dropout": 0.0,
+        "leaky_slope": 0.2,
+        "fusion_hidden": 64,
+        "fusion_gate": "pair",
+        "h_u": "mean of train bodies in H",
+        "tau": 0.2,
+        "lam1": 0.1,
+        "drop_suitable_for": false,
+        "seed": 2,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking (truoc mat na)",
+        "variant": "lens_gate"
+      },
+      "variant": "lens_gate",
+      "val_ndcg@20": 0.0402478904943894,
+      "val_ndcg@20_mask": 0.04025551119098491,
+      "val_recall@20": 0.0891798820590887,
+      "best_epoch": 280,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "median_sec_per_epoch": 22.38,
+      "peak_vram_allocated_mib": 542.9,
+      "peak_vram_eval_allocated_mib": 1944.4,
+      "git_start": {
+        "commit": "b789393e167937ac1b308eabf9d54bfaf8d95ec6",
+        "dirty": false
+      },
+      "git_at_finish": {
+        "commit": "b789393e167937ac1b308eabf9d54bfaf8d95ec6",
+        "dirty": false
+      }
+    },
+    "val_v2_A_lens_gate_s3": {
+      "model": "CaKG-Rec",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.001,
+        "init": "xavier_uniform",
+        "hw_graph": "H_loi",
+        "rgat_layers": 2,
+        "rgat_heads": 1,
+        "rgat_attention": "WIRGAT additive",
+        "rgat_qk": "per_relation",
+        "rgat_root_weight": true,
+        "rgat_dropout": 0.0,
+        "leaky_slope": 0.2,
+        "fusion_hidden": 64,
+        "fusion_gate": "pair",
+        "h_u": "mean of train bodies in H",
+        "tau": 0.2,
+        "lam1": 0.1,
+        "drop_suitable_for": false,
+        "seed": 3,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking (truoc mat na)",
+        "variant": "lens_gate"
+      },
+      "variant": "lens_gate",
+      "val_ndcg@20": 0.040503093909632394,
+      "val_ndcg@20_mask": 0.040449860988999116,
+      "val_recall@20": 0.08990408063729474,
+      "best_epoch": 300,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "median_sec_per_epoch": 21.33,
+      "peak_vram_allocated_mib": 542.9,
+      "peak_vram_eval_allocated_mib": 1944.4,
+      "git_start": {
+        "commit": "b789393e167937ac1b308eabf9d54bfaf8d95ec6",
+        "dirty": false
+      },
+      "git_at_finish": {
+        "commit": "b789393e167937ac1b308eabf9d54bfaf8d95ec6",
+        "dirty": false
+      }
+    }
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "git": {
+    "commit": "61921d5a14c5accd38f521f19290e30ffba07d2a",
+    "dirty": false
+  },
+  "sweep_dir": "results\\cakg\\val_sweep_v2_20261016",
+  "nguong_b": 0.040527745157908995,
+  "lightgcn_mask_ndcg20": {
+    "1": 0.04044118190824908,
+    "2": 0.04040493866148492,
+    "3": 0.040527745157908995
+  },
+  "variants": {
+    "lens_gate": {
+      "dir": "results\\cakg\\val_sweep_v2_20261016\\val_v2_A_lens_gate_s1",
+      "ndcg@20_truoc_mat_na": 0.040632539170702406,
+      "ndcg@20_mat_na": 0.04061849730713635,
+      "lap_duoc_R@10_chi_ong_mat_na": 0.38495575221238937,
+      "lap_duoc_R@10_LightGCN_mat_na_s1": 0.377212389380531,
+      "lap_duoc_hieu_vs_LightGCN_mat_na_s1": [
+        0.007743362831858391,
+        -0.009955752212389368,
+        0.026548672566371667
+      ],
+      "ndcg@20_mat_na_hieu_vs_LightGCN_mat_na_s1": [
+        0.00017731539888726777,
+        -0.0002704247548625355,
+        0.0006290643441397854
+      ],
+      "dieu_kien_phu_a": true,
+      "hon_LightGCN_mat_na_b": true,
+      "best_epoch": 280,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "co_che": {
+        "n_users_body": 10406,
+        "top10_mix_body_users": {
+          "than": 0.8202959830866807,
+          "ong": 2.693446088794926,
+          "phu_kien": 6.132904093792043,
+          "khac": 0.3533538343263502
+        },
+        "frac_same_mount_bodies": 0.7662839737582006,
+        "recall@10_body_users": 0.05573707476455891,
+        "recall@10_body_users_item_has_h": 0.12784398699891658,
+        "n_item_has_h": 1846,
+        "recall@10_body_users_item_no_h": 0.04018691588785047,
+        "n_item_no_h": 8560
+      }
+    },
+    "loo_hu": {
+      "dir": "results\\cakg\\val_sweep_v2_20261016\\val_v2_B_loo_hu_s1",
+      "ndcg@20_truoc_mat_na": 0.040487224305029774,
+      "ndcg@20_mat_na": 0.04051488740369924,
+      "lap_duoc_R@10_chi_ong_mat_na": 0.3827433628318584,
+      "lap_duoc_R@10_LightGCN_mat_na_s1": 0.377212389380531,
+      "lap_duoc_hieu_vs_LightGCN_mat_na_s1": [
+        0.0055309734513274145,
+        -0.012168141592920345,
+        0.022151548672566256
+      ],
+      "ndcg@20_mat_na_hieu_vs_LightGCN_mat_na_s1": [
+        7.370549545016036e-05,
+        -0.00038852136057323464,
+        0.0005450200206532204
+      ],
+      "dieu_kien_phu_a": true,
+      "hon_LightGCN_mat_na_b": false,
+      "best_epoch": 280,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "co_che": {
+        "n_users_body": 10406,
+        "top10_mix_body_users": {
+          "than": 0.9184124543532577,
+          "ong": 2.6263694022679225,
+          "phu_kien": 6.1142610032673455,
+          "khac": 0.34095714011147416
+        },
+        "frac_same_mount_bodies": 0.785078999686094,
+        "recall@10_body_users": 0.056121468383624834,
+        "recall@10_body_users_item_has_h": 0.13001083423618634,
+        "n_item_has_h": 1846,
+        "recall@10_body_users_item_no_h": 0.04018691588785047,
+        "n_item_no_h": 8560
+      }
+    },
+    "body_hardneg": {
+      "dir": "results\\cakg\\val_sweep_v2_20261016\\val_v2_C_body_hardneg_s1",
+      "ndcg@20_truoc_mat_na": 0.039090114085436556,
+      "ndcg@20_mat_na": 0.03911560121305613,
+      "lap_duoc_R@10_chi_ong_mat_na": 0.288716814159292,
+      "lap_duoc_R@10_LightGCN_mat_na_s1": 0.377212389380531,
+      "lap_duoc_hieu_vs_LightGCN_mat_na_s1": [
+        -0.08849557522123896,
+        -0.11393805309734517,
+        -0.06194690265486724
+      ],
+      "ndcg@20_mat_na_hieu_vs_LightGCN_mat_na_s1": [
+        -0.0013255806951929516,
+        -0.0019134577190912034,
+        -0.000710919528218377
+      ],
+      "dieu_kien_phu_a": false,
+      "hon_LightGCN_mat_na_b": false,
+      "best_epoch": 280,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "co_che": {
+        "n_users_body": 10406,
+        "top10_mix_body_users": {
+          "than": 0.33538343263501824,
+          "ong": 2.1897943494137997,
+          "phu_kien": 6.92052661925812,
+          "khac": 0.5542955986930617
+        },
+        "frac_same_mount_bodies": 0.043839541547277934,
+        "recall@10_body_users": 0.045262348645012496,
+        "recall@10_body_users_item_has_h": 0.07475622968580715,
+        "n_item_has_h": 1846,
+        "recall@10_body_users_item_no_h": 0.038901869158878506,
+        "n_item_no_h": 8560
+      }
+    }
+  },
+  "refs": {
+    "LightGCN s1": {
+      "ndcg@20_truoc_mat_na": 0.04044730812275842,
+      "ndcg@20_mat_na": 0.04044118190824908,
+      "co_che": {
+        "n_users_body": 10406,
+        "top10_mix_body_users": {
+          "than": 0.872093023255814,
+          "ong": 2.466846050355564,
+          "phu_kien": 6.302517778204882,
+          "khac": 0.35854314818374017
+        },
+        "frac_same_mount_bodies": 0.771900826446281,
+        "recall@10_body_users": 0.056601960407457234,
+        "recall@10_body_users_item_has_h": 0.1267605633802817,
+        "n_item_has_h": 1846,
+        "recall@10_body_users_item_no_h": 0.04147196261682243,
+        "n_item_no_h": 8560
+      }
+    },
+    "LightGCN s2": {
+      "ndcg@20_truoc_mat_na": 0.04040395198502122,
+      "ndcg@20_mat_na": 0.04040493866148492,
+      "co_che": {
+        "n_users_body": 10406,
+        "top10_mix_body_users": {
+          "than": 0.9228329809725159,
+          "ong": 2.431866231020565,
+          "phu_kien": 6.312704209110128,
+          "khac": 0.33259657889679034
+        },
+        "frac_same_mount_bodies": 0.7801728626470894,
+        "recall@10_body_users": 0.05592927157409187,
+        "recall@10_body_users_item_has_h": 0.11917659804983749,
+        "n_item_has_h": 1846,
+        "recall@10_body_users_item_no_h": 0.042289719626168225,
+        "n_item_no_h": 8560
+      }
+    },
+    "LightGCN s3": {
+      "ndcg@20_truoc_mat_na": 0.0405414241725966,
+      "ndcg@20_mat_na": 0.040527745157908995,
+      "co_che": {
+        "n_users_body": 10406,
+        "top10_mix_body_users": {
+          "than": 0.8748798769940419,
+          "ong": 2.4546415529502212,
+          "phu_kien": 6.335575629444551,
+          "khac": 0.33490294061118586
+        },
+        "frac_same_mount_bodies": 0.7774604569420035,
+        "recall@10_body_users": 0.05487218912166058,
+        "recall@10_body_users_item_has_h": 0.12026002166847237,
+        "n_item_has_h": 1846,
+        "recall@10_body_users_item_no_h": 0.04077102803738318,
+        "n_item_no_h": 8560
+      }
+    },
+    "CaKG-Rec v1 s1": {
+      "ndcg@20_truoc_mat_na": 0.03973100336223118,
+      "ndcg@20_mat_na": 0.039731998267336276,
+      "co_che": {
+        "n_users_body": 10406,
+        "top10_mix_body_users": {
+          "than": 3.3965020180665,
+          "ong": 1.8172208341341534,
+          "phu_kien": 4.580626561599077,
+          "khac": 0.20565058620026908
+        },
+        "frac_same_mount_bodies": 0.9348404255319149,
+        "recall@10_body_users": 0.04737651354987507,
+        "recall@10_body_users_item_has_h": 0.12405200433369447,
+        "n_item_has_h": 1846,
+        "recall@10_body_users_item_no_h": 0.0308411214953271,
+        "n_item_no_h": 8560
+      },
+      "lap_duoc_R@10_chi_ong_mat_na": 0.39491150442477874
+    }
+  },
+  "decision": {
+    "eligible": [
+      "lens_gate"
+    ],
+    "chosen": "lens_gate",
+    "dung": false,
+    "ket_luan": "chọn biến thể lens_gate; bước tiếp: chạy seed 2, 3 (kế hoạch mục 4.3), kiểm điều kiện DỪNG 2"
+  }
+}

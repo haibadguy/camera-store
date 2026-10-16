@@ -1,0 +1,159 @@
+{
+  "git": {
+    "commit": "61921d5a14c5accd38f521f19290e30ffba07d2a",
+    "dirty": false
+  },
+  "group": "v2",
+  "best": "val_v2_A_lens_gate_s1",
+  "best_at_grid_edge": false,
+  "same_code_and_inputs": true,
+  "runs": {
+    "val_v2_A_lens_gate_s1": {
+      "model": "CaKG-Rec",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.001,
+        "init": "xavier_uniform",
+        "hw_graph": "H_loi",
+        "rgat_layers": 2,
+        "rgat_heads": 1,
+        "rgat_attention": "WIRGAT additive",
+        "rgat_qk": "per_relation",
+        "rgat_root_weight": true,
+        "rgat_dropout": 0.0,
+        "leaky_slope": 0.2,
+        "fusion_hidden": 64,
+        "fusion_gate": "pair",
+        "h_u": "mean of train bodies in H",
+        "tau": 0.2,
+        "lam1": 0.1,
+        "drop_suitable_for": false,
+        "seed": 1,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking (truoc mat na)",
+        "variant": "lens_gate"
+      },
+      "variant": "lens_gate",
+      "val_ndcg@20": 0.040632539170702406,
+      "val_ndcg@20_mask": 0.04061849730713635,
+      "val_recall@20": 0.08985974194883316,
+      "best_epoch": 280,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "median_sec_per_epoch": 21.9,
+      "peak_vram_allocated_mib": 542.9,
+      "peak_vram_eval_allocated_mib": 1944.4,
+      "git_start": {
+        "commit": "61921d5a14c5accd38f521f19290e30ffba07d2a",
+        "dirty": false
+      },
+      "git_at_finish": {
+        "commit": "61921d5a14c5accd38f521f19290e30ffba07d2a",
+        "dirty": false
+      }
+    },
+    "val_v2_B_loo_hu_s1": {
+      "model": "CaKG-Rec",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.001,
+        "init": "xavier_uniform",
+        "hw_graph": "H_loi",
+        "rgat_layers": 2,
+        "rgat_heads": 1,
+        "rgat_attention": "WIRGAT additive",
+        "rgat_qk": "per_relation",
+        "rgat_root_weight": true,
+        "rgat_dropout": 0.0,
+        "leaky_slope": 0.2,
+        "fusion_hidden": 64,
+        "fusion_gate": "pair",
+        "h_u": "mean of train bodies in H",
+        "tau": 0.2,
+        "lam1": 0.1,
+        "drop_suitable_for": false,
+        "seed": 1,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking (truoc mat na)",
+        "variant": "loo_hu"
+      },
+      "variant": "loo_hu",
+      "val_ndcg@20": 0.040487224305029774,
+      "val_ndcg@20_mask": 0.04051488740369924,
+      "val_recall@20": 0.08962326894370465,
+      "best_epoch": 280,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "median_sec_per_epoch": 22.92,
+      "peak_vram_allocated_mib": 542.9,
+      "peak_vram_eval_allocated_mib": 1944.6,
+      "git_start": {
+        "commit": "61921d5a14c5accd38f521f19290e30ffba07d2a",
+        "dirty": false
+      },
+      "git_at_finish": {
+        "commit": "61921d5a14c5accd38f521f19290e30ffba07d2a",
+        "dirty": false
+      }
+    },
+    "val_v2_C_body_hardneg_s1": {
+      "model": "CaKG-Rec",
+      "cfg": {
+        "dim": 64,
+        "n_layers": 3,
+        "lr": 0.001,
+        "batch": 2048,
+        "l2": 0.001,
+        "init": "xavier_uniform",
+        "hw_graph": "H_loi",
+        "rgat_layers": 2,
+        "rgat_heads": 1,
+        "rgat_attention": "WIRGAT additive",
+        "rgat_qk": "per_relation",
+        "rgat_root_weight": true,
+        "rgat_dropout": 0.0,
+        "leaky_slope": 0.2,
+        "fusion_hidden": 64,
+        "fusion_gate": "pair",
+        "h_u": "mean of train bodies in H",
+        "tau": 0.2,
+        "lam1": 0.1,
+        "drop_suitable_for": false,
+        "seed": 1,
+        "max_epoch": 300,
+        "eval_every": 10,
+        "patience": 5,
+        "select_metric": "val ndcg@20 full ranking (truoc mat na)",
+        "variant": "body_hardneg"
+      },
+      "variant": "body_hardneg",
+      "val_ndcg@20": 0.039090114085436556,
+      "val_ndcg@20_mask": 0.03911560121305613,
+      "val_recall@20": 0.0860170556154949,
+      "best_epoch": 280,
+      "epochs_run": 300,
+      "chua_chac_hoi_tu": true,
+      "median_sec_per_epoch": 23.275,
+      "peak_vram_allocated_mib": 549.4,
+      "peak_vram_eval_allocated_mib": 1951.5,
+      "git_start": {
+        "commit": "61921d5a14c5accd38f521f19290e30ffba07d2a",
+        "dirty": false
+      },
+      "git_at_finish": {
+        "commit": "61921d5a14c5accd38f521f19290e30ffba07d2a",
+        "dirty": false
+      }
+    }
+  }
+}
