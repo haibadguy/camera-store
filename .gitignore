@@ -75,3 +75,8 @@ ai/data/kg_*/
 ai/data/external/
 results/cakg/**/explanations.jsonl
 results/cakg/**/*.npz
+
+# Kết quả giải thích hệ thống cuối (09_explain_lightgcn.py): bỏ mảng / tệp lớn
+results/final_system/**/*.npy
+results/final_system/**/*.npz
+results/final_system/**/explanations.jsonl

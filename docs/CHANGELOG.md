@@ -6,6 +6,28 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 16/10/2026 (khuya): giải thích và độ trễ cho hệ thống cuối (LightGCN + mặt nạ QĐ 4-9). Nhánh `nam/cakg-v2`, code `fbf994a`, thử val `4166de4`, kết quả test `8ea1edc`
+
+Theo `docs/reviews/final_system_explain_plan.md` (Nam duyệt). Không sửa code của Hải, không sửa code dùng chung; chỉ thêm file và `.gitignore` (bỏ `*.npy`, `*.npz`, `explanations.jsonl` trong `results/final_system/`).
+
+**Sửa gì / thêm gì**
+- Mới `ai/pipeline/09_explain_lightgcn.py`: b* = argmax e_bᵀe_l (hòa: iid nhỏ), c* = nhãn đầu theo thứ tự nút usecase; câu + `eval_cakg.verify_explanation`; PC tính lại từ top-10 **đã lưu** và phải trùng `pc_counts` đã lưu; Faithfulness: bỏ cạnh (u, b*) khỏi đồ thị train (chuẩn hóa lại bậc), lan truyền lại, chấm lại riêng u; đối chứng bỏ (u, b'); C9-LG bootstrap B = 2.000; độ trễ như `08b_latency.py`.
+- Mới `ai/survey/final_system/test_explain_lightgcn.py`: 15 kiểm, **ĐẠT CẢ** (`ai/data/survey/final_system/run_test_explain_lg_20261016_lan1.log`, sha256 `7885c68e…14c52636`, cây sạch `fbf994a`): ví dụ tay b* (1,2 > 0,4 → D750), phá hòa, c*; ma trận kề bỏ cạnh trùng `build_norm_adj` của train đã bỏ cạnh từng phần tử; điểm sau khi bỏ cạnh trùng LightGCN dựng lại (lệch 1,9e-6); "không bỏ gì" → 0 / 200 cặp rơi khỏi top-10; người không có thân → 0 đường; đổi b* sai → `verify_explanation` báo lỗi.
+
+**Kết quả trên test đã lưu** (một lần; log `explain_lg_20261016_214737.log` sha256 `9aa9aee6…2f24efb6` ngoài git; `summary.json` sha256 `a31596f8…4eb881ea3`):
+
+| seed | câu (ống người có thân, top-10) | lỗi sự kiện | PC@10 | FS_PN@10 (2.000 cặp) | 1 thân / ≥ 2 thân | C9-LG: b* − b' [95%] (cặp) | ΔS b* − b' [95%] |
+|---|---|---|---|---|---|---|---|
+| 1 | 20.548 / 22.983 | 0 | 0,3989 | 0,1315 | 0,1391 / 0,0995 | +0,0105 [−0,0183; +0,0393] (382) | −0,0602 [−0,0787; −0,0422] |
+| 2 | 20.138 / 22.678 | 0 | 0,3808 | 0,1415 | 0,1559 / 0,0807 | +0,0156 [−0,0104; +0,0443] (384) | −0,0625 [−0,0818; −0,0450] |
+| 3 | 20.393 / 22.901 | 0 | 0,4003 | 0,1280 | 0,1404 / 0,0704 | −0,0085 [−0,0338; +0,0169] (355) | −0,0701 [−0,0885; −0,0509] |
+
+PC@10 TB 0,3933 ± 0,0109 (trùng số test lần 1). Chấm lại "không bỏ gì": 0 cặp bị loại. Độ trễ (seed 1, GTX 1660 Ti, driver 561.03, torch 2.14.1+cu126, RAM trống 4.812 MiB): GPU p50 0,62 / p95 0,80 / p99 0,93 / max 1,12 ms; CPU 0,40 / 0,79 / 1,16 / 2,36 ms; tính sẵn embedding 94 ms; đỉnh VRAM 354 MiB. (Lần thử val cùng máy: CPU 0,23 / 0,35 / 0,41 ms — dao động giữa hai lần đo lớn so với giá trị.)
+
+**Ảnh hưởng:** không đổi số độ chính xác nào. C9-LG chứa 0 ở cả 3 seed: không có bằng chứng b* (theo e_bᵀe_l) cần thiết hơn một thân phù hợp khác. ΔS của b* nhỏ hơn đối chứng ở cả 3 seed — chưa giải thích được (giả thuyết, chưa kiểm: thân có e_bᵀe_l lớn là thân bậc cao, bỏ cạnh tới nút bậc cao làm e_u đổi ít hơn vì hệ số 1/√(|N_u||N_b|)).
+
+---
+
 ## 16/10/2026 (tối): CaKG-Rec v2 — DỪNG 2 không đạt; không chấm test lần 2; hệ thống cuối = LightGCN + mặt nạ QĐ 4-9
 
 Không sửa code. Chạy `06_val_sweep.py --group v2seeds` (seed 2, 3 của `lens_gate`, cây sạch `b789393`; 115,6 / 111,3 phút; `sweep_v2seeds_20261016_161005.log` sha256 `2ad995e1…f6b167`) rồi `06v2_dung2.py` (`results/cakg/val_sweep_v2seeds_20261016/dung2_20261016_195736/`; `dung2.json` sha256 `129aba1f…03a2cd`, `dung2.log` `b237d1ad…78f6`; log ngoài git).
