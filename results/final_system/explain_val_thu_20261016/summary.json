@@ -1,0 +1,264 @@
+{
+  "split": "val",
+  "git": {
+    "commit": "fbf994aabdaee13966e765f25f64e139407cfcf7",
+    "dirty": false
+  },
+  "plan": "docs/reviews/final_system_explain_plan.md",
+  "seeds": {
+    "1": {
+      "run_dir": "results/n5/val_sweep_20261010/val_lightgcn_l2-1e-03_s1",
+      "best_pt_sha256": "d857e24c3d7fff692c39627b54ee30fb1e62044d9ec6fd932642d892285f5fc2",
+      "saved_dir": "results\\cakg\\finalcheck_val_20261015_nhap1\\lightgcn_s1",
+      "n_lenses_body_users_top10": 23045,
+      "n_explanations": 20621,
+      "n_full_path": 9172,
+      "n_fact_errors": 0,
+      "n_bstar_tie_broken": 0,
+      "path_coverage_recomputed": {
+        "pc@5": 0.3081019087408864,
+        "pc_ngan@5": 0.9275006144015728,
+        "pc_moi_sp@5": 0.07228522006534692,
+        "n_items@5": 52030,
+        "n_lenses@5": 12207,
+        "n_judgable@5": 11322,
+        "n_short@5": 11322,
+        "n_full@5": 3761,
+        "pc@10": 0.39800390540247343,
+        "pc_ngan@10": 0.8948144933825125,
+        "pc_moi_sp@10": 0.08814145685181626,
+        "n_items@10": 104060,
+        "n_lenses@10": 23045,
+        "n_judgable@10": 20621,
+        "n_short@10": 20621,
+        "n_full@10": 9172
+      },
+      "pc_matches_saved": true,
+      "faithfulness": {
+        "n_pairs_sampled": 2000,
+        "n_excluded_base_not_in_top10": 0,
+        "n_pairs": 2000,
+        "fs_pn": 0.1365,
+        "dS_mean": 0.35874077534675597,
+        "n_pairs_mot_than": 1614,
+        "fs_pn_mot_than": 0.15179677819083023,
+        "n_pairs_tu_hai_than": 386,
+        "fs_pn_tu_hai_than": 0.07253886010362694,
+        "n_pairs_with_ctrl_body": 386,
+        "c9_lg": {
+          "expl": [
+            0.07253886010362694,
+            0.046632124352331605,
+            0.09844559585492228
+          ],
+          "ctrl": [
+            0.07512953367875648,
+            0.04922279792746114,
+            0.10362694300518134
+          ],
+          "dS_expl": [
+            0.2573362286226737,
+            0.24278207412037825,
+            0.2717554494198122
+          ],
+          "dS_ctrl": [
+            0.3198098531041121,
+            0.30134509675243354,
+            0.33876587924561974
+          ],
+          "expl - ctrl": [
+            -0.002590673575129543,
+            -0.023316062176165803,
+            0.018134715025906738
+          ],
+          "dS_expl - dS_ctrl": [
+            -0.062473624481438395,
+            -0.08127884914220301,
+            -0.04367181603154988
+          ]
+        },
+        "c9_chi_mo_ta": false
+      },
+      "explanations_sha256": "218b22a470a475ff78ea2d10ad054fdb9749fd8ebc6342a49bcb80c16daa5037"
+    },
+    "2": {
+      "run_dir": "results/n5/final_20261009/lightgcn_l2-1e-03_s2",
+      "best_pt_sha256": "a6edeaaee0e5946c3fe678130ecb2bf5a174bc61c3a34e6b93f24a17403bd682",
+      "saved_dir": "results\\cakg\\finalcheck_val_20261015_nhap1\\lightgcn_s2",
+      "n_lenses_body_users_top10": 22741,
+      "n_explanations": 20210,
+      "n_full_path": 8644,
+      "n_fact_errors": 0,
+      "n_bstar_tie_broken": 0,
+      "path_coverage_recomputed": {
+        "pc@5": 0.28156396517079707,
+        "pc_ngan@5": 0.9231413261888815,
+        "pc_moi_sp@5": 0.06463578704593503,
+        "n_items@5": 52030,
+        "n_lenses@5": 11944,
+        "n_judgable@5": 11026,
+        "n_short@5": 11026,
+        "n_full@5": 3363,
+        "pc@10": 0.38010641572490217,
+        "pc_ngan@10": 0.8887032232531551,
+        "pc_moi_sp@10": 0.08306746108014607,
+        "n_items@10": 104060,
+        "n_lenses@10": 22741,
+        "n_judgable@10": 20210,
+        "n_short@10": 20210,
+        "n_full@10": 8644
+      },
+      "pc_matches_saved": true,
+      "faithfulness": {
+        "n_pairs_sampled": 2000,
+        "n_excluded_base_not_in_top10": 0,
+        "n_pairs": 2000,
+        "fs_pn": 0.1405,
+        "dS_mean": 0.35838738691806793,
+        "n_pairs_mot_than": 1617,
+        "fs_pn_mot_than": 0.15460729746444032,
+        "n_pairs_tu_hai_than": 383,
+        "fs_pn_tu_hai_than": 0.08093994778067885,
+        "n_pairs_with_ctrl_body": 383,
+        "c9_lg": {
+          "expl": [
+            0.08093994778067885,
+            0.05483028720626632,
+            0.10966057441253264
+          ],
+          "ctrl": [
+            0.05221932114882506,
+            0.031331592689295036,
+            0.07571801566579635
+          ],
+          "dS_expl": [
+            0.25667582977533965,
+            0.24275679908906822,
+            0.2709529207207204
+          ],
+          "dS_ctrl": [
+            0.31564848230028275,
+            0.29681544350581757,
+            0.3339752966367856
+          ],
+          "expl - ctrl": [
+            0.02872062663185379,
+            0.0026109660574412455,
+            0.05483028720626632
+          ],
+          "dS_expl - dS_ctrl": [
+            -0.0589726525249431,
+            -0.07591381820001426,
+            -0.04159914177329365
+          ]
+        },
+        "c9_chi_mo_ta": false
+      },
+      "explanations_sha256": "77482a2d8eeebd85a0a184a826e3c2a1d7f2a57626f91e1c06c7c3de4378e28c"
+    },
+    "3": {
+      "run_dir": "results/n5/final_20261009/lightgcn_l2-1e-03_s3",
+      "best_pt_sha256": "9cc8a7922b522596d6fbb132986eb67e456733ea8ea3cab0f6b5a38a8cc2eb51",
+      "saved_dir": "results\\cakg\\finalcheck_val_20261015_nhap1\\lightgcn_s3",
+      "n_lenses_body_users_top10": 22968,
+      "n_explanations": 20470,
+      "n_full_path": 9183,
+      "n_fact_errors": 0,
+      "n_bstar_tie_broken": 0,
+      "path_coverage_recomputed": {
+        "pc@5": 0.3057933671349015,
+        "pc_ngan@5": 0.9241127088355082,
+        "pc_moi_sp@5": 0.07070920622717664,
+        "n_items@5": 52030,
+        "n_lenses@5": 12031,
+        "n_judgable@5": 11118,
+        "n_short@5": 11118,
+        "n_full@5": 3679,
+        "pc@10": 0.39981713688610243,
+        "pc_ngan@10": 0.8912399860675723,
+        "pc_moi_sp@10": 0.08824716509705939,
+        "n_items@10": 104060,
+        "n_lenses@10": 22968,
+        "n_judgable@10": 20470,
+        "n_short@10": 20470,
+        "n_full@10": 9183
+      },
+      "pc_matches_saved": true,
+      "faithfulness": {
+        "n_pairs_sampled": 2000,
+        "n_excluded_base_not_in_top10": 0,
+        "n_pairs": 2000,
+        "fs_pn": 0.1465,
+        "dS_mean": 0.356324898481369,
+        "n_pairs_mot_than": 1617,
+        "fs_pn_mot_than": 0.16202844774273345,
+        "n_pairs_tu_hai_than": 383,
+        "fs_pn_tu_hai_than": 0.08093994778067885,
+        "n_pairs_with_ctrl_body": 383,
+        "c9_lg": {
+          "expl": [
+            0.08093994778067885,
+            0.05483028720626632,
+            0.10966057441253264
+          ],
+          "ctrl": [
+            0.0783289817232376,
+            0.05221932114882506,
+            0.10443864229765012
+          ],
+          "dS_expl": [
+            0.24231042500886843,
+            0.2292380507403192,
+            0.25668508257940603
+          ],
+          "dS_ctrl": [
+            0.29887111379957076,
+            0.2799447346916398,
+            0.3184644090288924
+          ],
+          "expl - ctrl": [
+            0.0026109660574412524,
+            -0.023498694516971286,
+            0.02872062663185379
+          ],
+          "dS_expl - dS_ctrl": [
+            -0.056560688790702335,
+            -0.07369844952389093,
+            -0.039747456502042935
+          ]
+        },
+        "c9_chi_mo_ta": false
+      },
+      "explanations_sha256": "e02127721dce38a40173dd8d91116c672c00b244c1cebc544e74e06c9240c120"
+    }
+  },
+  "latency": {
+    "machine": {
+      "torch": "2.14.1+cu126",
+      "cuda": "12.6",
+      "ram_free_mib": 4876,
+      "gpu": "NVIDIA GeForce GTX 1660 Ti",
+      "driver": "561.03"
+    },
+    "precompute_ms_gpu": 109.68069999944419,
+    "n_users": 1000,
+    "warmup": 50,
+    "cuda": {
+      "p50": 0.5315500311553478,
+      "p95": 0.671899993903935,
+      "p99": 0.7630169892217964,
+      "max": 0.9442000882700086,
+      "mean": 0.5493804981233552,
+      "n_sentences": 278,
+      "peak_vram_allocated_mib": 304.55517578125
+    },
+    "cpu": {
+      "p50": 0.2261999761685729,
+      "p95": 0.3499249869491905,
+      "p99": 0.41481601539999247,
+      "max": 0.4833000712096691,
+      "mean": 0.24186039820779115,
+      "n_sentences": 278
+    }
+  }
+}
