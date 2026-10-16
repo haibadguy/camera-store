@@ -9,8 +9,8 @@
 
 | Nguồn | Nội dung |
 |---|---|
-| `ai/survey/cakg_v2/chan_doan_v2.py` → `ai/data/survey/cakg_v2/run_chan_doan_v2_20261016_lan1.log` | chẩn đoán trên **train** + checkpoint v1 seed 1 (không đọc val / test) |
-| `ai/survey/cakg_v2/test_cakg_v2.py` → `run_test_cakg_v2_20261016_lan1.log` | kiểm thử dựng tay, mọi ví dụ tính tay ở mục 3 |
+| `ai/survey/cakg_v2/chan_doan_v2.py` → `ai/data/survey/cakg_v2/run_chan_doan_v2_20261016_lan1.log` (sha256 `78b3f256…296f24`, commit `a90a6a2`, cây sạch) | chẩn đoán trên **train** + checkpoint v1 seed 1 (không đọc val / test) |
+| `ai/survey/cakg_v2/test_cakg_v2.py` → `run_test_cakg_v2_20261016_lan1.log` (sha256 `e1a494fb…62dca`, commit `a90a6a2`, cây sạch) | kiểm thử dựng tay, mọi ví dụ tính tay ở mục 3 |
 | `results/cakg/finalcheck_val_20261015_nhap1/*/result.json` (commit `e661ea1`) | NDCG@20 **val** của LightGCN, LightGCN + mặt nạ, CaKG-Rec v1 |
 | `results/cakg/smoke_val_sweep_v2_20261016/` | chạy thử 1 epoch (thời gian, VRAM) |
 | `docs/reviews/redteam_cakg_lan1.md` | số đã có từ Red Team lần 1 (không tính lại) |
@@ -139,7 +139,7 @@ Người có thân (val, top-10 trước mặt nạ): số thân / ống / phụ
 
 | Việc | Lần chạy | Giờ / lần | Tổng |
 |---|---:|---:|---:|
-| Bước 1: A, B, C × seed 1 | 3 | ~1,9 (v1: 22,0–22,5 s / epoch, 300 epoch; chạy thử v2 ở mục 7) | **~6** |
+| Bước 1: A, B, C × seed 1 | 3 | A ~1,7; B ~1,9; C ~1,9 (chạy thử: 20,1 / 21,7 / 22,5 s / epoch + chấm val 7,3 s mỗi 10 epoch; 300 epoch) | **~5,5–6** (xấu nhất) |
 | `06v2_select.py` (chấm lại LightGCN 3 seed × 2 nhánh trên val) | — | — | vài phút |
 | Bước 2 (nếu không DỪNG 1): seed 2, 3 | 2 | ~1,9 | ~4 |
 | Chấm test lần 2 + so sánh (nếu không DỪNG 2) | — | — | < 0,5 |
@@ -170,10 +170,10 @@ Chấm test **một lần** bằng script mới (`06v2_test_final.py`, viết v�
 
 `ai/survey/cakg_v2/test_cakg_v2.py`, log `ai/data/survey/cakg_v2/run_test_cakg_v2_20261016_lan1.log` (cây sạch):
 - V0: các ví dụ tính tay ở mục 3 chạy qua code thật ra đúng số (A: 3,5 / 3,3 / 3,0 → 1,1 / 3,3 / 3,0; B: 0,90 → 0,80, |B| = 1 cổng đóng; C: 0,12693 + 0,97408; lấy mẫu chỉ trong tập ứng viên, đều).
-- V1: `variant = "v1"` không đổi mô hình test lần 1: `make_cfg(0,1; 1)` trùng cfg đã lưu; nạp `best.pt` v1 seed 1 vào code cũ (`98e5100`) và code mới: cùng biểu diễn → điểm trùng từng bit; tính lại biểu diễn → lệch tương đối 5,7e-7 (nhỏ hơn lệch do GPU không tất định khi code cũ tự tính 2 lần, 2,2e-5 tuyệt đối), top-20 trùng, loss trùng.
+- V1: `variant = "v1"` không đổi mô hình test lần 1: `make_cfg(0,1; 1)` trùng cfg đã lưu; nạp `best.pt` v1 seed 1 vào code cũ (`98e5100`) và code mới: cùng biểu diễn → điểm trùng từng bit; tính lại biểu diễn → lệch tương đối 4,6e-7 so với |điểm| lớn nhất 26,9 (cùng cỡ lệch do GPU không tất định khi code cũ tự tính 2 lần: 1,8e-5 tuyệt đối), top-20 trùng, loss trùng. 33 kiểm, ĐẠT CẢ.
 - V2–V4 (dữ liệu thật): A mở cổng đúng 1.251 ống có h, 0 thân; thân / sản phẩm không có h = e_uᵀe_i đúng từng bit. B: h_u bỏ thân dương khớp tính độc lập từ danh sách thân. C: tập ứng viên của 500 người trùng tính tay. Ở cả ba, `loss()` = tính độc lập từ điểm của bộ chấm (lệch 0).
 
-Chạy thử 1 epoch / biến thể: `06_val_sweep.py --group v2 --label v2_20261016 --smoke` → `results/cakg/smoke_val_sweep_v2_20261016/` (số ở CHANGELOG 16/10). Kiểm chạy tiếp sau khi bị ngắt: biến thể C (có RNG lấy âm mẫu), `--stop-after 1` rồi chạy lại.
+Chạy thử 1 epoch / biến thể (cây chưa commit, `--allow-dirty`; chỉ để đo thời gian và chạy hết đường code): `06_val_sweep.py --group v2 --label v2_20261016 --smoke` → `results/cakg/smoke_val_sweep_v2_20261016/` (ngoài git): 20,1 / 21,7 / 22,5 s / epoch, đỉnh VRAM 475 / 475 / 483 MiB, chấm val 7,2–7,5 s; 10.359 / 10.359 người có h_u có ứng viên âm thân (trung vị 85, max 373). `06v2_select.py` chạy hết trên thư mục thử này (ra DỪNG, đúng vì mới 1 epoch; không phải kết quả). Kiểm chạy tiếp sau khi bị ngắt (biến thể C, có RNG lấy âm mẫu; `results/cakg/smoke_v2_resume_20261016/`): ngắt sau epoch 1 rồi chạy lại → loss epoch 1 trùng (0,82159), epoch 2 0,61065 so với 0,61063 khi chạy liền (lệch do GPU).
 
 ---
 
@@ -200,4 +200,4 @@ Chạy thử 1 epoch / biến thể: `06_val_sweep.py --group v2 --label v2_2026
 
 | Ngày | Sửa | Lý do |
 |---|---|---|
-| | | |
+| 16/10/2026 | Sau commit `a90a6a2` (bản đăng ký): điền sha256 log, số chạy thử 1 epoch và giờ ước tính (nguồn, mục 5, 7). **Không đổi quy tắc chọn, điều kiện DỪNG hay so sánh** | Log chính thức chạy trên cây sạch `a90a6a2`, sau khi commit kế hoạch |

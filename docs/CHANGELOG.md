@@ -6,6 +6,26 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 16/10/2026: CaKG-Rec v2 — thiết kế, đăng ký trước, cài 3 biến thể (chưa huấn luyện dài, chưa chấm test lần 2). Nhánh `nam/cakg-v2` (từ `main` `98e5100`), code `921f6c6`, kế hoạch `a90a6a2`
+
+Theo hướng dẫn của cô 16/10. Kế hoạch đăng ký trước: `docs/reviews/cakg_v2_plan.md`. Không sửa code của Hải (`62abf54`), không sửa code dùng chung của nội dung 5. **Kết quả test lần 1 giữ nguyên** (`results/cakg/test_final_20261015/`).
+
+**Sửa gì (code của nhóm, nội dung 6–8)**
+- `cakg_model.py`: tham số `variant` của `CaKGRec` ∈ {`v1`, `lens_gate`, `loo_hu`, `body_hardneg`}; `gate_i` (cổng phía sản phẩm), `pos_user_side` (B: h_u bỏ chính thân dương), `sample_hardneg` + `same_mount_body_candidates`, `body_mounts` (C); `components()` thêm `gate_i`, `make_scorer` dùng `gate_i`. `variant = "v1"` chạy đúng đường code cũ.
+- `06_cakg_train.py`: `--variant`; `make_cfg` chỉ thêm khóa `variant` khi khác v1 (cfg v1 không đổi).
+- `06_val_sweep.py`: nhóm `v2` (3 lần chạy seed 1, λ1 = 0,1); dòng "tốt nhất" của nhóm này chỉ để xem.
+- `eval_cakg.counterfactual_score_row`: cổng dùng `model.gate_i` (v1: trùng `has_hi`, không đổi số).
+- Mới: `06v2_select.py` (chọn trên val + DỪNG 1, kế hoạch mục 4.2); `ai/survey/cakg_v2/chan_doan_v2.py` (chỉ train), `test_cakg_v2.py`.
+
+**Vì sao / bằng chứng** (log ngoài git, `ai/data/survey/cakg_v2/`)
+- Chẩn đoán chỉ trên **train** + checkpoint v1 seed 1 (`run_chan_doan_v2_20261016_lan1.log`, sha256 `78b3f256…296f24`; trùng bản nháp trừ 2 dòng đầu): cos(h) giữa hai thân cùng ngàm TB 0,957 (trung vị 1,000), khác ngàm −0,101; phần phần cứng (đã nhân β) của thân cùng ngàm u chưa có TB 2,40 (điểm hành vi 1,13), của ống dương TB 0,56; cặp dương là thân với người 1 thân (h_u = h_b) TB 3,01; người ≥ 2 thân: h_u gồm b 2,64, bỏ b 1,36. Giải thích vì sao Red Team thấy 2,4–3,4 thân / top-10.
+- Kiểm thử dựng tay `run_test_cakg_v2_20261016_lan1.log` (sha256 `e1a494fb…62dca`, cây sạch `a90a6a2`): 33 kiểm, **ĐẠT CẢ**. Gồm: ví dụ tính tay của kế hoạch qua code thật; v1 code mới so với code `98e5100` (cùng `best.pt`): cùng biểu diễn → điểm trùng từng bit, tính lại → lệch tương đối 4,6e-7 (GPU không tất định: 1,8e-5 tuyệt đối khi code cũ tự tính 2 lần), top-20 trùng, loss trùng; A mở cổng 1.251 ống / 0 thân; B, C khớp tính độc lập; `loss()` của cả 3 biến thể = tính lại từ điểm của bộ chấm (lệch 0).
+- Chạy thử 1 epoch (`results/cakg/smoke_val_sweep_v2_20261016/`, cây chưa commit, ngoài git): A / B / C 20,1 / 21,7 / 22,5 s / epoch, VRAM 475 / 475 / 483 MiB, NDCG@20 val epoch 1 0,01606 / 0,01562 / 0,01556 (chỉ để biết chạy được). Chạy tiếp sau khi ngắt (C): loss epoch 1 trùng, epoch 2 lệch 2e-5 (GPU). `06v2_select.py` chạy hết trên thư mục thử.
+
+**Ảnh hưởng:** chưa có số mới (chưa huấn luyện dài). Số v1 / test lần 1 không đổi. Việc tiếp: Nam chạy dò 3 biến thể (~5,5–6 giờ) rồi `06v2_select.py`.
+
+---
+
 ## 15/10/2026 (tối): nội dung 6–8 — chấm test một lần. Nhánh `nam/cakg-rec`; script commit `e661ea1`, kết quả `3e830aa`, phân tích `1325f5c`
 
 Không sửa code của Hải, không sửa code dùng chung của nội dung 5 (trừ `.gitignore`: thêm `results/cakg/**/explanations.jsonl`, `results/cakg/**/*.npz`). File mới: `ai/pipeline/06_test_final.py`, `06_test_compare.py`; `eval_cakg.py` (của nhóm) thêm tham số `branches`, `masks` cho `evaluate_with_masks` và hai đối chứng Faithfulness (làm rõ 15/10).
