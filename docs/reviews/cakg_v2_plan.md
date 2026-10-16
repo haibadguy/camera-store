@@ -202,3 +202,31 @@ Chạy thử 1 epoch / biến thể (cây chưa commit, `--allow-dirty`; chỉ �
 |---|---|---|
 | 16/10/2026 | Sau commit `a90a6a2` (bản đăng ký): điền sha256 log, số chạy thử 1 epoch và giờ ước tính (nguồn, mục 5, 7). **Không đổi quy tắc chọn, điều kiện DỪNG hay so sánh** | Log chính thức chạy trên cây sạch `a90a6a2`, sau khi commit kế hoạch |
 | 16/10/2026 chiều | Sau bước 1 (chọn `lens_gate`): cài bước 2 như mục 4.3 đã ghi — nhóm `v2seeds` (`06_val_sweep.py`) và `06v2_dung2.py`; DỪNG 2 tính trên mảng LightGCN + mặt nạ đã chấm lại ở bước 1 (`select_20261016_134128/lightgcn_s*`). **Không đổi quy tắc (a'), (b')** | Kế hoạch 4.3: script bước 2 viết sau bước 1, commit trước khi chạy |
+
+---
+
+## 11. Kết quả (ghi 16/10/2026 tối, sau DỪNG 2; quy tắc không đổi)
+
+**Bước 1** (seed 1, `results/cakg/val_sweep_v2_20261016/`, cây sạch `61921d5`; `select_20261016_134128/select.md`): ngưỡng (b) = 0,04053.
+
+| Biến thể | NDCG@20 val trước / sau mặt nạ | (a) R@10 nhóm lắp được − LightGCN + mặt nạ s1 [95%] | (b) |
+|---|---|---|---|
+| A `lens_gate` | 0,04063 / 0,04062 | +0,0077 [−0,0100; +0,0265] đạt | đạt |
+| B `loo_hu` | 0,04049 / 0,04051 | +0,0055 [−0,0122; +0,0222] đạt | không |
+| C `body_hardneg` | 0,03909 / 0,03912 | −0,0885 [−0,1139; −0,0619] không | không |
+
+→ chọn A.
+
+**Bước 2** (seed 2, 3 của A, `results/cakg/val_sweep_v2seeds_20261016/`, cây sạch `b789393`; cfg trừ seed và sha256 code + đầu vào = seed 1; `dung2_20261016_195736/dung2.md`, sha256 `dung2.json` `129aba1f…03a2cd`):
+
+| | seed 1 / 2 / 3 | TB 3 seed |
+|---|---|---|
+| A: NDCG@20 val sau mặt nạ | 0,04062 / 0,04026 / 0,04045 | **0,04044** |
+| LightGCN + mặt nạ | 0,04044 / 0,04040 / 0,04053 | **0,04046** |
+
+- (b') 0,04044 > 0,04046? **Không đạt** (hiệu theo người, mô tả: −0,00002 [−0,00029; +0,00026]).
+- (a') nhóm lắp được, R@10 chỉ ống sau mặt nạ, TB 3 seed: 0,3890 so với 0,3842, hiệu +0,0048 [−0,0037; +0,0136]: đạt.
+- Mô tả: top-10 người có thân của A có 0,82 / 0,85 / 0,86 thân (v1 2,39–3,41 trên test; LightGCN 0,87–0,92 trên val) — biến thể A **sửa được hiện tượng chèn thân**, nhưng phần còn lại của kênh phần cứng không làm NDCG@20 val hơn LightGCN + mặt nạ. Seed 1 (seed dùng để chọn) cao nhất trong 3 seed của A: đúng điều mục 9.2 đã lường trước.
+- Cả 6 lần chạy chạm 300 epoch (chưa chắc hội tụ).
+
+**Kết luận theo quy tắc:** DỪNG 2 → **không chấm test lần 2; hệ thống cuối = LightGCN + mặt nạ QĐ 4-9.** Số test lần 1 giữ nguyên là số của nội dung 6–8. Không có số test nào của v2.

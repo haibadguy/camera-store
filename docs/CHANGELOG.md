@@ -6,6 +6,19 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 16/10/2026 (tối): CaKG-Rec v2 — DỪNG 2 không đạt; không chấm test lần 2; hệ thống cuối = LightGCN + mặt nạ QĐ 4-9
+
+Không sửa code. Chạy `06_val_sweep.py --group v2seeds` (seed 2, 3 của `lens_gate`, cây sạch `b789393`; 115,6 / 111,3 phút; `sweep_v2seeds_20261016_161005.log` sha256 `2ad995e1…f6b167`) rồi `06v2_dung2.py` (`results/cakg/val_sweep_v2seeds_20261016/dung2_20261016_195736/`; `dung2.json` sha256 `129aba1f…03a2cd`, `dung2.log` `b237d1ad…78f6`; log ngoài git).
+
+| NDCG@20 val sau mặt nạ | seed 1 | seed 2 | seed 3 | TB |
+|---|---|---|---|---|
+| CaKG-Rec v2 `lens_gate` | 0,04062 | 0,04026 | 0,04045 | 0,04044 |
+| LightGCN + mặt nạ (chấm lại ở bước 1) | 0,04044 | 0,04040 | 0,04053 | 0,04046 |
+
+(b') không đạt; (a') nhóm lắp được +0,0048 [−0,0037; +0,0136] đạt. Theo kế hoạch v2 mục 4.3: **không chấm test lần 2**, hệ thống cuối = LightGCN + mặt nạ QĐ 4-9. Số test lần 1 (C1–C9) giữ nguyên. Xóa `results/cakg/smoke_val_sweep_v2seeds_20261016/` (ngoài git, Nam yêu cầu).
+
+---
+
 ## 16/10/2026 (chiều): CaKG-Rec v2 — kết quả bước 1 trên val (chọn `lens_gate`); viết bước 2 (seed 2, 3 + DỪNG 2), chưa chạy. Nhánh `nam/cakg-v2`
 
 Không sửa code mô hình / huấn luyện (`cakg_model.py`, `06_cakg_train.py`, `train_05.py` giữ nguyên, nên sha256 code của seed 2, 3 phải trùng seed 1).
