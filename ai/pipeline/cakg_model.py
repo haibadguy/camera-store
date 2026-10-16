@@ -15,6 +15,15 @@ Các khối:
   5. L_comp: InfoNCE trên MỌI cặp dương M = 1 (72.720), âm = mọi ống M = 0 ∧ U = 0 của cùng thân, cosine, τ = 0,2,
      lấy trung bình trên cặp dương                                                           — (10)–(12)
   6. L_total = L_BPR + λ1 L_comp + λ2 · ½(‖e_u⁰‖² + ‖e_i⁰‖² + ‖e_j⁰‖²)/|B|                  — (13), (14)
+
+Biến thể v2 (docs/reviews/cakg_v2_plan.md; thêm 16/10/2026; variant = "v1" giữ ĐÚNG mô hình đã chấm test lần 1):
+  A "lens_gate":    cổng chỉ mở cho ỐNG có h: ŷ = z_uᵀz_i nếu u có h_u và i là ống có h; mọi sản phẩm khác (kể cả thân)
+                    ŷ = e_uᵀe_i. Thân vẫn là nút của H (dựng h_u, L_comp) nhưng không được cộng điểm phần cứng.
+  B "loo_hu":       cổng như v1, nhưng lúc HUẤN LUYỆN, cặp dương (u, b) với b là thân của u: h_u tính BỎ chính b
+                    (h_u⁻ᵇ = (|B| h_u − h_b)/(|B| − 1)); |B| = 1 thì cổng đóng cho cặp đó. Lúc chấm không đổi (thân của u
+                    là item train, đã bị bỏ khỏi ứng viên).
+  C "body_hardneg": cổng như v1; mỗi bộ ba (u, i, j) của người có h_u thêm một âm mẫu j2 = thân CÙNG NGÀM với một thân
+                    của u mà u chưa có trong train (lấy đều): L_BPR thêm −ln σ(ŷ_ui − ŷ_uj2).
 """
 
 import csv
@@ -146,6 +155,35 @@ def user_body_matrix(train, item_type, loc, n_nodes):
     return A, has, bodies_h
 
 
+VARIANTS = ("v1", "lens_gate", "loo_hu", "body_hardneg")
+
+
+def body_mounts():
+    """iid thân -> ngàm, từ has_spec_mount (thân, không phụ kiện, không cờ ngam_khong_chac)."""
+    out = {}
+    for r in _rows("kg_edges_has_spec_mount.csv"):
+        if r["item_type"] == "than" and r["src_phu_kien"] == "0" and r["ngam_khong_chac"] == "0":
+            out[int(r["iid"])] = r["mount"]
+    return out
+
+
+def same_mount_body_candidates(bodies_h, train, loc):
+    """Biến thể C: với mỗi u có h_u, tập thân có nút trong H, CÙNG NGÀM với ít nhất một thân trong B_u^H, KHÔNG có trong
+    train của u. Trả về CSR (ptr [N_USERS + 1], idx) theo iid tăng dần; người không có h_u: tập rỗng."""
+    mt = body_mounts()
+    by_mount = {}
+    for b, m in mt.items():
+        if b in loc:
+            by_mount.setdefault(m, []).append(b)
+    ptr, idx = [0], []
+    for u in range(C.N_USERS):
+        bs = bodies_h.get(u, [])
+        cand = sorted({c for b in bs if b in mt for c in by_mount[mt[b]]} - set(train.get(u, ())))
+        idx += cand
+        ptr.append(len(idx))
+    return torch.tensor(ptr, dtype=torch.long), torch.tensor(idx, dtype=torch.long)
+
+
 def lcomp_tensors(loc):
     """M, U ∈ {0,1}^{537×1033} và chỉ số nút cục bộ của từng hàng (thân) / cột (ống) của M.
     M = 1: cạnh compatible_with + crops_sensor (= common_05.load_body_to_lenses); U: unknown_mask.npz."""
@@ -215,10 +253,15 @@ def lightgcn_propagate(adj, E0, n_layers):
 
 
 class CaKGRec(nn.Module):
-    def __init__(self, adj, H: HwGraph, A_ub, has_hu, lc, dim=64, n_layers=3, l2=1e-3, lam1=0.1, tau=0.2):
+    def __init__(self, adj, H: HwGraph, A_ub, has_hu, lc, dim=64, n_layers=3, l2=1e-3, lam1=0.1, tau=0.2,
+                 variant="v1", item_type=None, hardneg=None):
         """adj: ma trận kề chuẩn hóa user–item train (05b.build_norm_adj); H: build_h(); A_ub, has_hu:
-        user_body_matrix(); lc: lcomp_tensors() (M, U, bl, ll, ...). Mọi tensor đặt trên cùng thiết bị trước."""
+        user_body_matrix(); lc: lcomp_tensors() (M, U, bl, ll, ...). Mọi tensor đặt trên cùng thiết bị trước.
+        variant (VARIANTS): "v1" = mô hình test lần 1; item_type (np [N_ITEMS]) bắt buộc với biến thể khác v1;
+        hardneg = same_mount_body_candidates() (ptr, idx), bắt buộc với "body_hardneg"."""
         super().__init__()
+        assert variant in VARIANTS, variant
+        self.variant = variant
         self.adj, self.n_layers, self.l2, self.lam1, self.tau = adj, n_layers, l2, lam1, tau
         self.n_users = C.N_USERS
         self.user_emb = nn.Embedding(C.N_USERS, dim)
@@ -236,6 +279,19 @@ class CaKGRec(nn.Module):
         self.has_hi = self.item_loc >= 0
         self.hidx = torch.nonzero(self.has_hi).view(-1)       # các item có h (tăng dần theo iid)
         self.A_ub, self.has_hu = A_ub.to(dev), has_hu.to(dev)
+        # gate_i: sản phẩm mà phần phần cứng được cộng vào điểm (v1, B, C: mọi item có h; A: chỉ ống có h)
+        self.gate_i = self.has_hi.clone()
+        if variant != "v1":
+            it = torch.as_tensor(item_type, device=dev)
+            if variant == "lens_gate":
+                self.gate_i = self.has_hi & (it == 1)
+            self.is_body_h = self.has_hi & (it == 0)
+            Ac = self.A_ub.coalesce()
+            self.n_bu = torch.bincount(Ac.indices()[0], minlength=C.N_USERS).to(torch.float32)   # |B_u^H|
+            self.ub_keys = Ac.indices()[0] * H.n_nodes + Ac.indices()[1]                       # cặp (u, thân ∈ B_u^H)
+            self.n_nodes_h = H.n_nodes
+        if variant == "body_hardneg":
+            self.hn_ptr, self.hn_idx = (t.to(dev) for t in hardneg)
         self.M, self.U, self.bl, self.ll = (t.to(dev) for t in lc[:4])
         self.beta_h_zero = False                               # chỉ để kiểm thử Faithfulness (β_h = 0)
         self._acc = torch.zeros(3, device=dev)                 # tổng BPR, L_comp, số bước trong epoch
@@ -264,22 +320,59 @@ class CaKGRec(nn.Module):
         return zU, zI, bU, bI, has_hu, has_hi
 
     # -- huấn luyện ----------------------------------------------------------
+    def pos_user_side(self, u, i, eU, h, hU):
+        """Phía người dùng của cặp DƯƠNG (u, i) lúc huấn luyện -> (z_u, cổng phía người). v1, A, C: như lúc chấm.
+        B "loo_hu": nếu i là thân của u (i ∈ B_u^H; với cặp dương thật luôn đúng khi i là thân có h) thì h_u bỏ chính i:
+        h_u⁻ⁱ = (|B| h_u − h_i)/(|B| − 1); |B| = 1 thì cổng phía người đóng (không còn thân nào)."""
+        hu, has_u = hU[u], self.has_hu[u]
+        if self.variant == "loo_hu":
+            selfb = self.is_body_h[i] & has_u & torch.isin(u * self.n_nodes_h + self.item_loc[i].clamp(min=0),
+                                                            self.ub_keys)     # i ∈ B_u^H (kiểm thẳng, không giả định)
+            nb = self.n_bu[u]
+            hu_loo = (nb[:, None] * hu - h[self.item_loc[i].clamp(min=0)]) / (nb - 1).clamp(min=1)[:, None]
+            hu = torch.where(selfb[:, None], hu_loo, hu)
+            has_u = has_u & ~(selfb & (nb == 1))
+        zu, _ = self.fu(eU[u], hu, has_u)
+        return zu, has_u
+
+    def sample_hardneg(self, u):
+        """C: j2 lấy đều trong same_mount_body_candidates của u (RNG torch trên thiết bị của mô hình).
+        Trả về (j2 [số người có ứng viên], ok [len(u)] bool)."""
+        lo, cnt = self.hn_ptr[u], self.hn_ptr[u + 1] - self.hn_ptr[u]
+        r = torch.rand(len(u), device=u.device)
+        pos = lo + torch.minimum((r * cnt).long(), (cnt - 1).clamp(min=0))
+        ok = cnt > 0
+        return self.hn_idx[pos[ok]], ok
+
     def loss(self, u, i, j):
+        j2, ok = self.sample_hardneg(u) if self.variant == "body_hardneg" else (None, None)
         eU, eI = self.behaviour()
         h, hU, _ = self.hardware()
         zu, _ = self.fu(eU[u], hU[u], self.has_hu[u])
+        if self.variant == "loo_hu":
+            zu_pos, has_pos = self.pos_user_side(u, i, eU, h, hU)
+        else:
+            zu_pos, has_pos = zu, self.has_hu[u]                                 # v1: đúng như code test lần 1
         zi, _ = self.fi(eI[i], h[self.item_loc[i].clamp(min=0)], self.has_hi[i])
         zj, _ = self.fi(eI[j], h[self.item_loc[j].clamp(min=0)], self.has_hi[j])
-        s_i = gated_score(eU[u], eI[i], zu, zi, self.has_hu[u] & self.has_hi[i])
-        s_j = gated_score(eU[u], eI[j], zu, zj, self.has_hu[u] & self.has_hi[j])
-        bpr = F.softplus(-(s_i - s_j)).mean()                                    # (13) = −ln σ(ŷ_ui − ŷ_uj)
+        s_i = gated_score(eU[u], eI[i], zu_pos, zi, has_pos & self.gate_i[i])
+        s_j = gated_score(eU[u], eI[j], zu, zj, self.has_hu[u] & self.gate_i[j])
+        bpr_t = F.softplus(-(s_i - s_j))                                         # (13) = −ln σ(ŷ_ui − ŷ_uj)
+        reg_hn = 0.0
+        if j2 is not None and bool(ok.any()):
+            uu = u[ok]
+            zj2, _ = self.fi(eI[j2], h[self.item_loc[j2].clamp(min=0)], self.has_hi[j2])
+            s_j2 = gated_score(eU[uu], eI[j2], zu[ok], zj2, self.has_hu[uu] & self.gate_i[j2])
+            bpr_t = bpr_t + torch.zeros_like(bpr_t).masked_scatter(ok, F.softplus(-(s_i[ok] - s_j2)))
+            reg_hn = self.item_emb(j2).pow(2).sum()
+        bpr = bpr_t.mean()
         if self.lam1 > 0:
             lc = l_comp(h, self.M, self.U, self.bl, self.ll, self.tau)
         else:
             with torch.no_grad():                                                 # ablation λ1 = 0: chỉ ghi lại
                 lc = l_comp(h, self.M, self.U, self.bl, self.ll, self.tau)
         reg = 0.5 * (self.user_emb(u).pow(2).sum() + self.item_emb(i).pow(2).sum()
-                     + self.item_emb(j).pow(2).sum()) / len(u)
+                     + self.item_emb(j).pow(2).sum() + reg_hn) / len(u)
         self._acc += torch.stack([bpr.detach(), lc.detach(), torch.ones((), device=bpr.device)])
         return bpr + self.lam1 * lc + self.l2 * reg                               # (14)
 
@@ -295,13 +388,14 @@ class CaKGRec(nn.Module):
         h, hU, alpha = self.hardware()
         zU, zI, bU, bI, has_hu, has_hi = self.fuse(eU, eI, h, hU)
         return {"eU": eU, "eI": eI, "h": h, "hU": hU, "alpha2": alpha, "zU": zU, "zI": zI, "betaU": bU,
-                "betaI": bI, "has_hu": has_hu, "has_hi": has_hi}
+                "betaI": bI, "has_hu": has_hu, "has_hi": has_hi, "gate_i": has_hi & self.gate_i}
 
     @staticmethod
     def make_scorer(c, hidx):
-        """score_batch(uids) -> [b, n_items] theo (9): e_uᵀe_i, thay bằng z_uᵀz_i ở các cặp có cổng mở."""
+        """score_batch(uids) -> [b, n_items] theo (9): e_uᵀe_i, thay bằng z_uᵀz_i ở các cặp có cổng mở
+        (cổng phía sản phẩm = c["gate_i"]: v1 mọi item có h; biến thể A chỉ ống có h)."""
         eU, eIT, zU = c["eU"], c["eI"].T, c["zU"]
-        hidx = hidx[c["has_hi"][hidx]]
+        hidx = hidx[c.get("gate_i", c["has_hi"])[hidx]]
         zIhT = c["zI"][hidx].T
         has_hu = c["has_hu"]
 

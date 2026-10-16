@@ -21,6 +21,10 @@ Chạy tiếp: bị ngắt (Ctrl+C, mất điện, máy ngủ...) thì gõ lại
 Cuối cùng in bảng NDCG@20 val (trước / sau mặt nạ), cấu hình tốt nhất, cờ "ở biên lưới", và kiểm mọi lần chạy cùng
 sha256 code + đầu vào (config.json). KHÔNG ghi cakg_final.toml (bước 4 của kế hoạch do Nam chốt và commit).
 
+Thêm 16/10/2026 (docs/reviews/cakg_v2_plan.md): nhóm v2 = CaKG-Rec v2, 3 biến thể (A lens_gate, B loo_hu,
+C body_hardneg), λ1 = 0,1, seed 1, ghi vào results/cakg/val_sweep_<nhãn>/ (nhãn nên bắt đầu bằng "v2_"). Chọn biến thể
+và điều kiện DỪNG ở 06v2_select.py.
+
 Lệnh (PowerShell, từ thư mục camera-store):
   ai\\.venv\\Scripts\\python.exe ai/pipeline/06_val_sweep.py --group cakg --label 20261014
 """
@@ -51,6 +55,15 @@ GROUPS = {  # nhóm -> (tên tham số dò, [(tên lần chạy, script, tham s�
     "kgat": ("lr", [
         ("val_kgat_lr-1e-03_s1", "07_kgat_train.py", ["--lr", "1e-3", "--seed", "1"], 1e-3),
         ("val_kgat_lr-1e-04_s1", "07_kgat_train.py", ["--lr", "1e-4", "--seed", "1"], 1e-4),
+    ]),
+    # CaKG-Rec v2 (docs/reviews/cakg_v2_plan.md, thêm 16/10/2026): 3 biến thể, λ1 = 0,1 (cấu hình chốt v1), seed 1.
+    # Chọn biến thể / điều kiện DỪNG: 06v2_select.py (KHÔNG theo dòng "tốt nhất" của script này).
+    "v2": ("variant", [
+        ("val_v2_A_lens_gate_s1", "06_cakg_train.py", ["--lam1", "0.1", "--seed", "1", "--variant", "lens_gate"],
+         "lens_gate"),
+        ("val_v2_B_loo_hu_s1", "06_cakg_train.py", ["--lam1", "0.1", "--seed", "1", "--variant", "loo_hu"], "loo_hu"),
+        ("val_v2_C_body_hardneg_s1", "06_cakg_train.py", ["--lam1", "0.1", "--seed", "1", "--variant", "body_hardneg"],
+         "body_hardneg"),
     ]),
 }
 
@@ -182,9 +195,11 @@ def main():
     log(f"Mọi lần chạy cùng sha256 code + đầu vào (config.json): {'CÓ' if same else 'KHÔNG — xem config.json'}")
     best = max(summary, key=lambda n: summary[n]["val_ndcg@20"])
     vals = sorted(x[3] for x in runs)
-    edge = summary[best][pname] in (vals[0], vals[-1])
+    edge = all(isinstance(v, float) for v in vals) and summary[best][pname] in (vals[0], vals[-1])
     log(f"Tốt nhất theo NDCG@20 val (trước mặt nạ): {best} ({pname} = {summary[best][pname]})"
-        + (" — Ở BIÊN LƯỚI (ghi lại, không mở rộng lưới: kế hoạch mục 4.1)" if edge else ""))
+        + (" — Ở BIÊN LƯỚI (ghi lại, không mở rộng lưới: kế hoạch mục 4.1)" if edge else "")
+        + (" — CHỈ ĐỂ XEM: chọn biến thể v2 theo 06v2_select.py (điều kiện phụ + điều kiện DỪNG)"
+           if a.group == "v2" else ""))
     out = root / f"summary_{a.group}_{E.now_tag()}.json"
     out.write_text(json.dumps({"git": git, "group": a.group, "best": best, "best_at_grid_edge": edge,
                                "same_code_and_inputs": same, "runs": summary}, indent=2, ensure_ascii=False),

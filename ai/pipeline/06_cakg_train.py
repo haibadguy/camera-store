@@ -12,6 +12,9 @@ Ngân sách như QĐ 5-5: tối đa 300 epoch, chấm NDCG@20 val (TRƯỚC mặ
 chấm không tăng. Mỗi lần chấm in thêm NDCG@20 val SAU mặt nạ QĐ 4-9 (theo dõi, không dùng để chọn). Cuối lần chạy:
 chấm đầy đủ val với best.pt, trước mặt nạ (val_*) và sau mặt nạ (val_mask_*).
 
+Thêm 16/10/2026 (CaKG-Rec v2, docs/reviews/cakg_v2_plan.md): --variant lens_gate | loo_hu | body_hardneg (cakg_model.py).
+Mặc định v1 = đúng mô hình đã chấm test lần 1 (cfg không đổi).
+
 Chạy (từ thư mục camera-store):
   ai\\.venv\\Scripts\\python.exe ai/pipeline/06_cakg_train.py --lam1 0.1 --seed 1 --run-dir results/cakg/<nhãn>/<tên>
 Chạy lại đúng lệnh đó sau khi bị ngắt -> chạy tiếp từ lần chấm val gần nhất (train_05.run).
@@ -70,26 +73,42 @@ def build_cakg(cfg, train, log=print, device=E.DEVICE):
         f"cạnh xuôi: {H.counts}")
     assert H.n_nodes == CK.H_LOI_N_NODES and len(H.item_loc) == CK.H_LOI_N_ITEMS
     assert H.counts == CK.H_LOI_EXPECTED, "số cạnh H khác log run_probe_cakg_20261014_lan1.log"
-    A_ub, has_hu, _ = CK.user_body_matrix(train, item_type, H.item_loc, H.n_nodes)
+    A_ub, has_hu, bodies_h = CK.user_body_matrix(train, item_type, H.item_loc, H.n_nodes)
     lc = CK.lcomp_tensors(H.item_loc)
     M, U = lc[0], lc[1]
     log(f"Người có h_u (có thân trong train có nút trong H): {int(has_hu.sum()):,}; item có h: {len(H.item_loc):,}; "
         f"L_comp: dương {int(M.sum()):,}, âm {int((~M & ~U).sum()):,}, bỏ (U) {int(U.sum()):,}")
+    variant = cfg.get("variant", "v1")          # cfg của v1 (test lần 1) không có khóa này
+    hardneg = None
+    if variant != "v1":
+        types = {t: sum(1 for g in H.item_loc if item_type[g] == t) for t in (0, 1, 2, 3)}
+        assert types[2] == types[3] == 0, f"H chỉ được có thân / ống: {types}"
+        log(f"Biến thể v2: {variant} | item của H: thân {types[0]:,}, ống {types[1]:,}")
+    if variant == "body_hardneg":
+        hardneg = CK.same_mount_body_candidates(bodies_h, train, H.item_loc)
+        cnt = (hardneg[0][1:] - hardneg[0][:-1]).numpy()
+        log(f"Âm mẫu thân cùng ngàm: {int((cnt > 0).sum()):,} người có ứng viên (trong {int(has_hu.sum()):,} người có "
+            f"h_u); số ứng viên / người: trung vị {int(np.median(cnt[cnt > 0]))}, max {int(cnt.max())}")
     adj = L05B.build_norm_adj(train, C.N_USERS, C.N_ITEMS).to(device)
     m = CK.CaKGRec(adj, H, A_ub, has_hu, lc, dim=cfg["dim"], n_layers=cfg["n_layers"], l2=cfg["l2"],
-                   lam1=cfg["lam1"], tau=cfg["tau"]).to(device)
+                   lam1=cfg["lam1"], tau=cfg["tau"], variant=variant, item_type=item_type,
+                   hardneg=hardneg).to(device)
     n_extra = sum(p.numel() for n_, p in m.named_parameters() if not n_.startswith(("user_emb", "item_emb")))
     log(f"CaKG-Rec: {sum(p.numel() for p in m.parameters()):,} tham số, trong đó RGAT + gộp kênh {n_extra:,}")
     return m
 
 
-def make_cfg(lam1, seed, drop_suitable_for=False, max_epoch=300, eval_every=10, patience=5):
-    return {"dim": 64, "n_layers": 3, "lr": 1e-3, "batch": 2048, "l2": 1e-3, "init": "xavier_uniform",
+def make_cfg(lam1, seed, drop_suitable_for=False, max_epoch=300, eval_every=10, patience=5, variant="v1"):
+    """variant = "v1": cfg giữ ĐÚNG như các lần chạy test lần 1 (không có khóa "variant"); biến thể v2 thêm khóa."""
+    cfg = {"dim": 64, "n_layers": 3, "lr": 1e-3, "batch": 2048, "l2": 1e-3, "init": "xavier_uniform",
             "hw_graph": "H_loi", "rgat_layers": 2, "rgat_heads": 1, "rgat_attention": "WIRGAT additive",
             "rgat_qk": "per_relation", "rgat_root_weight": True, "rgat_dropout": 0.0, "leaky_slope": 0.2,
             "fusion_hidden": 64, "fusion_gate": "pair", "h_u": "mean of train bodies in H", "tau": 0.2,
             "lam1": lam1, "drop_suitable_for": drop_suitable_for, "seed": seed, "max_epoch": max_epoch,
             "eval_every": eval_every, "patience": patience, "select_metric": "val ndcg@20 full ranking (truoc mat na)"}
+    if variant != "v1":
+        cfg["variant"] = variant
+    return cfg
 
 
 def main():
@@ -98,12 +117,15 @@ def main():
     ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--run-dir", required=True)
     ap.add_argument("--drop-suitable-for", action="store_true", help="ablation C8: bỏ quan hệ suitable_for khỏi H")
+    ap.add_argument("--variant", default="v1", choices=CK.VARIANTS,
+                    help="v1 = mô hình test lần 1; v2 (docs/reviews/cakg_v2_plan.md): lens_gate (A), loo_hu (B), "
+                         "body_hardneg (C)")
     ap.add_argument("--max-epoch", type=int, default=300)
     ap.add_argument("--eval-every", type=int, default=10)
     ap.add_argument("--patience", type=int, default=5)
     ap.add_argument("--stop-after", type=int, default=None, help="(kiểm thử) dừng sau N epoch như bị ngắt")
     a = ap.parse_args()
-    cfg = make_cfg(a.lam1, a.seed, a.drop_suitable_for, a.max_epoch, a.eval_every, a.patience)
+    cfg = make_cfg(a.lam1, a.seed, a.drop_suitable_for, a.max_epoch, a.eval_every, a.patience, a.variant)
     if a.stop_after:
         cfg["_stop_after"] = a.stop_after
     masks = MaskCache()
