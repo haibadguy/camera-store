@@ -184,13 +184,15 @@ def contract_checks(cl, log):
 
 def latency_http(cl, n, warmup, log):
     users = np.random.default_rng(LAT.SEED).choice(C.N_USERS, warmup + n, replace=False).tolist()
-    tc, ts, n_s = [], [], 0
+    train, val, test = C.load_train(), C.load_pos("val"), C.load_pos("test")
+    tc, ts, n_s, n_hist = [], [], 0, 0          # n_hist: sản phẩm trả về nằm trong train / val / test (phải = 0)
     for k, u in enumerate(users):
         t = time.perf_counter()
         r = cl.get("/recommend", params={"user_id": u, "k": 10})
         j = r.json()
         dt = time.perf_counter() - t
         assert r.status_code == 200, (u, r.status_code, j)
+        n_hist += sum(it["item_id"] in train[u] or it["item_id"] in (val[u], test[u]) for it in j["items"])
         if k >= warmup:
             tc.append(dt * 1000)
             ts.append(float(r.headers["X-Process-Time-Ms"]))
@@ -199,12 +201,14 @@ def latency_http(cl, n, warmup, log):
     for nm, v in (("client_ms", np.array(tc)), ("server_ms", np.array(ts))):
         out[nm] = {f"p{q}": float(np.percentile(v, q)) for q in (50, 95, 99)}
         out[nm].update(max=float(v.max()), mean=float(v.mean()))
-    out.update(n_requests=n, warmup=warmup, n_sentences=n_s, user_seed=LAT.SEED, k=10, exclude="all_history")
+    out.update(n_requests=n, warmup=warmup, n_sentences=n_s, n_items_in_history=n_hist, user_seed=LAT.SEED, k=10, exclude="all_history")
     for nm, lab in (("client_ms", "phía khách (HTTP + JSON)"), ("server_ms", "phía máy chủ")):
         s = out[nm]
         log(f"  {lab}: p50 {s['p50']:.2f} ms, p95 {s['p95']:.2f} ms, p99 {s['p99']:.2f} ms, max {s['max']:.2f} ms, "
             f"TB {s['mean']:.2f} ms")
     log(f"  ({n:,} yêu cầu sau {warmup} khởi động, gửi lần lượt; {n_s:,} câu giải thích)")
+    log(f"  sản phẩm trả về nằm trong lịch sử (train / val / test) của người đó, trên cả {warmup + n:,} yêu cầu: {n_hist} "
+        f"(phải = 0)")
     return out
 
 
