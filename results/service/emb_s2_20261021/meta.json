@@ -1,0 +1,30 @@
+{
+  "model": "LightGCN + mặt nạ QĐ 4-9",
+  "seed": 2,
+  "run_dir": "results/n5/final_20261009/lightgcn_l2-1e-03_s2",
+  "best_pt_sha256": "a6edeaaee0e5946c3fe678130ecb2bf5a174bc61c3a34e6b93f24a17403bd682",
+  "cfg": {
+    "dim": 64,
+    "n_layers": 3,
+    "lr": 0.001,
+    "batch": 2048,
+    "l2": 0.001,
+    "init": "xavier_uniform",
+    "seed": 2,
+    "max_epoch": 300,
+    "eval_every": 10,
+    "patience": 5,
+    "select_metric": "val ndcg@20 full ranking"
+  },
+  "device_propagate": "cuda",
+  "n_users": 67661,
+  "n_items": 27940,
+  "dim": 64,
+  "git": {
+    "commit": "a3b9f45ddb699f4cbe508fbcc4ea5d05c9a6b828",
+    "dirty": false
+  },
+  "torch": "2.14.1+cu126",
+  "created": "20261021_123637",
+  "embeddings_sha256": "a5e384f617b395b387497b3ae5d85c15c4be9c41c81f4b46f4597570e3f23337"
+}

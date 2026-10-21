@@ -1,0 +1,50 @@
+{
+  "stage": "all",
+  "git": {
+    "commit": "67328d5f2c39ab5d703c1e4a585435cc22bda30a",
+    "dirty": false
+  },
+  "emb_meta": {
+    "model": "LightGCN + mặt nạ QĐ 4-9",
+    "seed": 3,
+    "run_dir": "results/n5/final_20261009/lightgcn_l2-1e-03_s3",
+    "best_pt_sha256": "9cc8a7922b522596d6fbb132986eb67e456733ea8ea3cab0f6b5a38a8cc2eb51",
+    "cfg": {
+      "dim": 64,
+      "n_layers": 3,
+      "lr": 0.001,
+      "batch": 2048,
+      "l2": 0.001,
+      "init": "xavier_uniform",
+      "seed": 3,
+      "max_epoch": 300,
+      "eval_every": 10,
+      "patience": 5,
+      "select_metric": "val ndcg@20 full ranking"
+    },
+    "device_propagate": "cuda",
+    "n_users": 67661,
+    "n_items": 27940,
+    "dim": 64,
+    "git": {
+      "commit": "a3b9f45ddb699f4cbe508fbcc4ea5d05c9a6b828",
+      "dirty": false
+    },
+    "torch": "2.14.1+cu126",
+    "created": "20261021_123642",
+    "embeddings_sha256": "ef9b70afb4260ce3f39ea5c5efad4c36dc4d87bba88792762adccaaeafe0631e"
+  },
+  "parity_seed": 20261021,
+  "all": {
+    "n_users": 67661,
+    "n_top_match": 67661,
+    "n_scores_sorted": 67661,
+    "n_expl_saved": 20393,
+    "n_expl_api": 20393,
+    "n_expl_match": 20393,
+    "n_expl_mismatch": 0,
+    "n_unverified": 0,
+    "max_abs_bscore_diff": 3.814697265625e-06,
+    "mismatch_users": []
+  }
+}
