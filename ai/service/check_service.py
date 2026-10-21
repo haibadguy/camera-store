@@ -261,7 +261,7 @@ def main():
                                                                          "exclude": "train_val"}).json(), ref)
                             for u in us]
                     res[f"parity_{name}"] = {"users": us, **log_group(name, rows, log),
-                                             "n_users_with_bodies": sum(r["n_expl_api"] > 0 for r in rows),
+                                             "n_users_with_expl": sum(r["n_expl_api"] > 0 for r in rows),
                                              "per_user": rows}
                 log("\n2. Hợp đồng:")
                 res["contract"] = contract_checks(cl, log)

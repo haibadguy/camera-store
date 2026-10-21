@@ -56,12 +56,14 @@ def _single_mount(m):
     return m not in ("khong_co", "khong_ro", "nhieu", "") and ">" not in m
 
 
-def _range(v):
-    """(f1, f2) chuỗi của cạnh has_spec -> {"min", "max"} số; ống một tiêu cự / khẩu độ cố định: f2 rỗng -> max = min."""
+def _range(v, keys):
+    """(x1, x2) chuỗi của cạnh has_spec -> {keys[0]: x1, keys[1]: x2} số; x2 rỗng (ống một tiêu cự / khẩu độ không đổi)
+    -> x2 = x1. Vd ống 55-200mm f/4-5.6: tiêu cự {"min": 55, "max": 200}, khẩu độ tối đa {"at_min_focal": 4,
+    "at_max_focal": 5.6} (f/4 ở 55 mm, f/5.6 ở 200 mm)."""
     if v is None:
         return None
     lo = float(v[0])
-    return {"min": lo, "max": float(v[1]) if v[1] else lo}
+    return {keys[0]: lo, keys[1]: float(v[1]) if v[1] else lo}
 
 
 class RecommenderCore:
@@ -156,7 +158,8 @@ class RecommenderCore:
             "categories": a["categories"],
             "in_matrix": (i in self.ctx.bodies_in_m) if typ == "than" else (i in self.ctx.lenses_in_m) if typ == "ong"
             else False,
-            "focal_mm": _range(p.focal.get(i)), "aperture_f": _range(p.aperture.get(i)),
+            "focal_mm": _range(p.focal.get(i), ("min", "max")),
+            "max_aperture_f": _range(p.aperture.get(i), ("at_min_focal", "at_max_focal")),
             "usecases": list(p.suit.get(i, [])),
             "usecases_label": [EC.USECASE_VI[c] for c in p.suit.get(i, [])],
         })

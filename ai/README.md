@@ -65,3 +65,31 @@ python pipeline/05_build_knowledge_graph.py
 # 5. Bước 5: Chạy benchmark các baseline & xuất báo cáo
 python -m models.baselines.run_benchmark
 ```
+
+---
+
+## Dịch vụ mô hình (FastAPI, nội dung 10) — thêm 21/10/2026
+
+> Phần trên là cấu trúc cũ của bản 62abf54, nhiều đường dẫn không còn đúng; trạng thái thật xem `docs/STATUS.md`.
+
+Thư mục `ai/service/`: dịch vụ HTTP cho **hệ thống cuối = LightGCN + mặt nạ QĐ 4-9 + giải thích theo đường**.
+Hợp đồng API (cho Spring Boot / React): `docs/api_contract.md`. Kiến trúc demo: React → Spring Boot → FastAPI.
+
+| File | Việc |
+|---|---|
+| `export_embeddings.py` | chạy **một lần**: nạp `best.pt` đã chốt (`ai/config/n5_final.toml`, kiểm sha256), lan truyền LightGCN, ghi `results/service/emb_s<seed>_<nhãn>/embeddings.npz` + `meta.json` |
+| `core.py` | lõi: dùng lại `eval_05.full_rank`, `certain_violation_mask`, `eval_cakg.mask_scorer`, `09_explain_lightgcn.LGExplainer`, `eval_cakg.sentence`, `verify_explanation`, `03_mount_compat.Rules` (không viết lại logic) |
+| `app.py` | lớp HTTP (FastAPI): `/health`, `/recommend`, `/items/{id}`, `/users/{id}/bodies`, `/compat`, định dạng lỗi chung |
+| `run_service.py` | bật dịch vụ (uvicorn), mỗi lần chạy một log tên mới trong `results/service/logs/` |
+| `check_service.py` | kiểm khớp với kết quả đã lưu, kiểm hợp đồng, đo độ trễ qua HTTP |
+
+Chạy (từ thư mục `camera-store`, chỉ cần CPU; thư viện trong `ai/requirements-lock.txt`):
+
+```bash
+ai\.venv\Scripts\python.exe ai/service/export_embeddings.py --seed 1 --label 20261021
+ai\.venv\Scripts\python.exe ai/service/run_service.py --emb-dir results/service/emb_s1_20261021 --port 8001
+curl "http://127.0.0.1:8001/recommend?user_id=409&k=10"
+ai\.venv\Scripts\python.exe ai/service/check_service.py --emb-dir results/service/emb_s1_20261021 --label <nhãn>
+```
+
+`embeddings.npz` (~24 MB / seed) không lên git: chạy lại `export_embeddings.py` để tạo (cần `best.pt` của nội dung 5).
