@@ -11,7 +11,7 @@ Giai đoạn "http" (mặc định): tự bật run_service.py (tiến trình co
        nhóm B: 20 người lấy ngẫu nhiên trong những người CÓ câu giải thích đã lưu (cùng rng, không trùng A), để phép so
        câu không rỗng (đa số người không có thân nên không có câu).
   2. Hợp đồng: các mã lỗi / định dạng lỗi chung, /items, /users/{id}/bodies, /compat trả đúng trường.
-  3. Độ trễ qua HTTP: 1.000 yêu cầu /recommend?user_id=u&k=10 (chế độ mặc định exclude=train), người chọn như
+  3. Độ trễ qua HTTP: 1.000 yêu cầu /recommend?user_id=u&k=10 (chế độ mặc định exclude=all_history: bỏ train + val + test), người chọn như
      08b_latency.py (seed 20261014), 50 yêu cầu khởi động không tính, gửi lần lượt (một kết nối keep-alive);
      p50 / p95 / p99 / max của thời gian phía khách (gồm HTTP + JSON) và phía máy chủ (header X-Process-Time-Ms).
 Giai đoạn "all": không qua HTTP, gọi RecommenderCore trực tiếp cho MỌI người của tập test (exclude=train_val) và so như
@@ -153,7 +153,7 @@ def contract_checks(cl, log):
     cases = [("/recommend?user_id=67661", 404, "USER_NOT_FOUND"), ("/recommend?user_id=-1", 404, "USER_NOT_FOUND"),
              ("/recommend?user_id=11&k=0", 422, "INVALID_PARAM"), ("/recommend?user_id=11&k=51", 422, "INVALID_PARAM"),
              ("/recommend?user_id=x", 422, "INVALID_PARAM"), ("/recommend", 422, "INVALID_PARAM"),
-             ("/recommend?user_id=11&exclude=all", 422, "INVALID_PARAM"), ("/items/27940", 404, "ITEM_NOT_FOUND"),
+             ("/recommend?user_id=11&exclude=train", 422, "INVALID_PARAM"), ("/items/27940", 404, "ITEM_NOT_FOUND"),
              ("/users/67661/bodies", 404, "USER_NOT_FOUND"), ("/compat?body_id=9696&lens_id=19071", 400, "NOT_A_BODY"),
              ("/compat?body_id=19071&lens_id=19071", 400, "NOT_A_LENS"), ("/khong-co", 404, "NOT_FOUND")]
     ok = 0
@@ -199,7 +199,7 @@ def latency_http(cl, n, warmup, log):
     for nm, v in (("client_ms", np.array(tc)), ("server_ms", np.array(ts))):
         out[nm] = {f"p{q}": float(np.percentile(v, q)) for q in (50, 95, 99)}
         out[nm].update(max=float(v.max()), mean=float(v.mean()))
-    out.update(n_requests=n, warmup=warmup, n_sentences=n_s, user_seed=LAT.SEED, k=10, exclude="train")
+    out.update(n_requests=n, warmup=warmup, n_sentences=n_s, user_seed=LAT.SEED, k=10, exclude="all_history")
     for nm, lab in (("client_ms", "phía khách (HTTP + JSON)"), ("server_ms", "phía máy chủ")):
         s = out[nm]
         log(f"  {lab}: p50 {s['p50']:.2f} ms, p95 {s['p95']:.2f} ms, p99 {s['p99']:.2f} ms, max {s['max']:.2f} ms, "
@@ -265,7 +265,7 @@ def main():
                                              "per_user": rows}
                 log("\n2. Hợp đồng:")
                 res["contract"] = contract_checks(cl, log)
-                log("\n3. Độ trễ qua HTTP (/recommend k=10, exclude=train):")
+                log("\n3. Độ trễ qua HTTP (/recommend k=10, exclude=all_history):")
                 res["latency_http"] = latency_http(cl, a.n_latency, a.warmup, log)
                 res["latency_http"]["server_rss_mib"] = sum(x.memory_info().rss for x in tree(p)) / 2 ** 20
                 log(f"  bộ nhớ dịch vụ (RSS, cả tiến trình con) sau khi đo: {res['latency_http']['server_rss_mib']:.0f} MiB")

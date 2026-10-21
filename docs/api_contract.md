@@ -1,6 +1,7 @@
-# Hợp đồng API — dịch vụ mô hình (FastAPI), phiên bản 1.0
+# Hợp đồng API — dịch vụ mô hình (FastAPI), phiên bản 1.1
 
-- Viết 21/10/2026, nhánh `nam/api-fastapi`. Code: `ai/service/` (cách chạy: `ai/README.md`, mục "Dịch vụ mô hình").
+- Viết 21/10/2026, nhánh `nam/api-fastapi`. **1.1 (21/10, Nam chốt):** `/recommend` mặc định `exclude=all_history` (bỏ
+  toàn bộ lịch sử train + val + test); bỏ giá trị `exclude=train` của 1.0; demo dùng seed 1. Code: `ai/service/` (cách chạy: `ai/README.md`, mục "Dịch vụ mô hình").
 - Dùng cho: **Spring Boot** (`backend/`) gọi dịch vụ này; **React** (`frontend/`) chỉ gọi Spring Boot, không gọi thẳng FastAPI.
   Kiến trúc chốt 09/10/2026: React → Spring Boot → FastAPI.
 - Mô hình phía sau: **hệ thống cuối = LightGCN + mặt nạ QĐ 4-9 + giải thích theo đường** (STATUS 16/10). Checkpoint
@@ -26,11 +27,19 @@
 
 1. **Chỉ phục vụ người dùng có trong dữ liệu** (67.661 người). Chưa có người dùng mới (cold start): `user_id` ngoài
    0..67.660 trả `404 USER_NOT_FOUND`. Spring Boot phải tự ánh xạ tài khoản demo sang một `user_id` có sẵn.
-2. **Dữ liệu tĩnh**: "lịch sử" của người dùng là tập train (không phải giỏ hàng / đơn hàng của web demo). Mua thêm trên
-   web demo **không** làm đổi gợi ý; thân máy dùng cho mặt nạ và giải thích là thân trong train (`/users/{id}/bodies`).
+2. **Dữ liệu tĩnh**: lịch sử của người dùng là dữ liệu Amazon đã chia train / val / test, không phải giỏ hàng / đơn
+   hàng của web demo. Mua thêm trên web demo **không** làm đổi gợi ý. Mặc định (`exclude=all_history`) gợi ý là "sản
+   phẩm tiếp theo sau cả lịch sử": không bao giờ gợi ý sản phẩm người dùng đã có ở train, val hay test.
+   - **Thân máy dùng cho mặt nạ và giải thích vẫn là thân trong train** (`/users/{id}/bodies`; QĐ 4-9 định nghĩa trên
+     train, cạnh `owns` của đường giải thích là cạnh train). Thân máy ở item val / test **không** được tính: 2.909 người
+     có item val hoặc test là thân máy, 2.066 người trong số đó không có thân nào trong train nên demo coi như "chưa có
+     thân" (không ống nào bị chặn, không có câu giải thích) dù thân đó đã bị loại khỏi gợi ý (đếm bằng
+     `ai/service/count_history_bodies.py`, xem `docs/STATUS.md` 21/10). Chưa chốt có đổi không.
 3. **Mặt nạ chỉ chặn ống kính** "chắc chắn không lắp được" (QĐ 4-9): ống mà **mọi** thân của người dùng đều M = 0 và
    không có cặp "không biết". Thân máy, phụ kiện, máy "khác" **không** bị lọc; người không có thân thì không có ống nào
-   bị chặn. Ví dụ thật: người 409 chỉ có Nikon D3100 vẫn được gợi ý thân Canon (mục 4.2).
+   bị chặn. **Gợi ý thân máy khác hãng / khác ngàm không phải vi phạm** (Nam chốt 21/10): người dùng có thể chuyển hệ
+   máy; ràng buộc tương thích chỉ có nghĩa với cặp (thân đã có, ống). Ví dụ thật: người 409 chỉ có Nikon D3100 vẫn được
+   gợi ý thân Canon EOS 40D (mục 4.4); Spring Boot / React không được hiển thị đó là lỗi tương thích.
 4. `score` là tích vô hướng LightGCN eU[u]·eI[i], **chỉ dùng để xếp thứ tự trong cùng một người**; không phải xác suất,
    không so được giữa hai người.
 5. Giải thích chỉ có cho **ống kính** trong top-k của **người có thân** khi có đường u → b → l (thân b của u lắp được
@@ -39,7 +48,8 @@
    LightGCN. Vế mục đích c\* ("phù hợp chụp …") là **sự kiện của đồ thị, không phải lý do của gợi ý**: LightGCN không
    dùng cạnh `suitable_for` (`docs/reviews/final_system_explain_plan.md` mục 3, 6).
 7. Không có giá, tồn kho, ảnh sản phẩm: lấy từ cơ sở dữ liệu của Spring Boot (khóa nối: `asin`).
-8. Một tiến trình, một mô hình (một seed), chấm trên CPU. Độ trễ đo được: mục 9.
+8. Một tiến trình, một mô hình: **demo dùng seed 1** (Nam chốt 21/10; cùng seed với ví dụ và Hình 2.6 của chương 2; mặc
+   định của `run_service.py`). Chấm trên CPU. Độ trễ đo được: mục 9.
 
 ## 3. `GET /health`
 
@@ -52,7 +62,7 @@ Ví dụ (seed 1, `results/service/check_http_s1_20261021_lan1/summary.json`):
  "best_pt_sha256": "d857e24c3d7fff692c39627b54ee30fb1e62044d9ec6fd932642d892285f5fc2",
  "embeddings_sha256": "fbda48a1f84c9fd0047d2a8d06319e1e816dcf20cbe51817f5f86241f97200b4",
  "device": "cpu", "n_users": 67661, "n_items": 27940, "n_users_with_bodies": 10406,
- "startup_s": 2.24, "contract_version": "1.0"}
+ "startup_s": 2.24, "contract_version": "1.1"}
 ```
 
 ## 4. `GET /recommend?user_id=&k=&exclude=`
@@ -63,7 +73,7 @@ Ví dụ (seed 1, `results/service/check_http_s1_20261021_lan1/summary.json`):
 |---|---|---|---|
 | `user_id` | có | — | 0..67.660 |
 | `k` | không | 10 | số sản phẩm trả về, 1..50 |
-| `exclude` | không | `train` | `train`: bỏ sản phẩm người dùng có trong train (dùng cho demo). `train_val`: bỏ thêm item val — **giống lúc chấm test** (dùng để kiểm, mục 9) |
+| `exclude` | không | `all_history` | `all_history`: bỏ **mọi** sản phẩm người dùng đã có (train + val + test) — **dùng cho demo**. `train_val`: bỏ train + item val, item test vẫn là ứng viên — **giống lúc chấm test**, chỉ dùng để kiểm (mục 9) |
 
 ### 4.2. Trả về
 
@@ -105,12 +115,13 @@ Nếu có c\*: thêm ", và phù hợp chụp <nhãn> (tiêu cự …, khẩu đ
 
 ### 4.4. Ví dụ thật
 
-`GET /recommend?user_id=409&k=10` (seed 1, chạy `core.RecommenderCore` 21/10/2026; rút gọn: chỉ giữ hạng 1, 2, 5).
+`GET /recommend?user_id=409&k=10` (seed 1, `exclude` mặc định `all_history`, chạy `core.RecommenderCore` 21/10/2026;
+rút gọn: chỉ giữ hạng 1, 2, 5). Item val / test của người 409 không lọt top-10 nên kết quả giống bản 1.0.
 Người 409 có một thân (Nikon D3100). Không có mặt nạ thì ống Canon EF 24-70mm vào top-10; mặt nạ gỡ nó ra.
 
 ```json
 {
- "user_id": 409, "k": 10, "exclude": "train", "has_bodies": true, "n_bodies": 1,
+ "user_id": 409, "k": 10, "exclude": "all_history", "has_bodies": true, "n_bodies": 1,
  "items": [
   {"rank": 1, "item_id": 1154, "asin": "B000EVLS4C", "title": "Canon PSC-55 Deluxe Leather Compact Case for SD430, …",
    "type": "phu_kien", "type_label": "phụ kiện", "score": 7.377339839935303, "explanation": null},
@@ -218,7 +229,7 @@ Mọi lỗi trả cùng một dạng:
 | 404 | `ITEM_NOT_FOUND` | `item_id` / `body_id` / `lens_id` ngoài 0..27.939 |
 | 400 | `NOT_A_BODY` | `body_id` không phải thân máy (`details.type` cho biết loại thật) |
 | 400 | `NOT_A_LENS` | `lens_id` không phải ống kính |
-| 422 | `INVALID_PARAM` | thiếu tham số, sai kiểu, `k` ngoài 1..50, `exclude` khác `train` / `train_val` (`details.errors[]`: `loc`, `msg`) |
+| 422 | `INVALID_PARAM` | thiếu tham số, sai kiểu, `k` ngoài 1..50, `exclude` khác `all_history` / `train_val` (`details.errors[]`: `loc`, `msg`) |
 | 404 | `NOT_FOUND` | đường dẫn không tồn tại |
 | 500 | `INTERNAL_ERROR` | lỗi trong dịch vụ (Spring Boot nên báo "dịch vụ gợi ý tạm lỗi", không hiện chi tiết cho người dùng) |
 

@@ -8,8 +8,8 @@ Viết 21/10/2026. KHÔNG viết lại logic: mọi bước gọi đúng hàm đ
   - mức tương thích + luật           : 03_mount_compat.Rules trên ai/config/mount_rules.toml (tự kiểm với compat_pairs.csv)
 Embedding (eU, eI) đọc từ file do export_embeddings.py ghi (kiểm sha256), chấm trên CPU (hoặc thiết bị chọn).
 
-Ví dụ một yêu cầu /recommend (u có thân Sony a6000 trong train, k = 10, exclude = train):
-  điểm s_i = eU[u] · eI[i] cho 27.940 sản phẩm -> bỏ sản phẩm u đã có trong train -> ống ngàm khác mà mọi thân của u đều
+Ví dụ một yêu cầu /recommend (u có thân Sony a6000 trong train, k = 10, exclude = all_history):
+  điểm s_i = eU[u] · eI[i] cho 27.940 sản phẩm -> bỏ mọi sản phẩm u đã có (train + val + test) -> ống ngàm khác mà mọi thân của u đều
   M = 0 (không "không biết") được gán −∞ -> lấy 10 sản phẩm điểm cao nhất (hòa: π nhỏ hơn đứng trước) -> với mỗi ống
   trong top-10: b* = thân lắp được có e_bᵀe_l lớn nhất, câu "Gợi ý … vì ống này lắp trực tiếp được trên … (ngàm sony_e)".
 """
@@ -43,7 +43,7 @@ LEVEL_LABEL = {"compatible_with": "lắp trực tiếp, dùng đủ khung hình 
                "requires_adapter": "cần ngàm chuyển chính hãng (M = 0)",
                "incompatible": "không lắp được (M = 0)",
                "unknown": "không biết (M = 0, không dùng cho mặt nạ và CVR)"}
-EXCLUDE_MODES = ("train", "train_val")
+EXCLUDE_MODES = ("all_history", "train_val")   # mặc định: bỏ cả lịch sử (Nam chốt 21/10); train_val: như lúc chấm test
 
 
 class ApiError(Exception):
@@ -83,6 +83,7 @@ class RecommenderCore:
         self.train = C.load_train()
         assert len(self.train) == C.N_USERS, "mọi người dùng phải có sản phẩm trong train"
         self.val = C.load_pos("val")
+        self.test = C.load_pos("test")
         self.item_type = C.load_item_type()
         self.ctx = C.load_cvr_context()
         self.bodies = C.build_train_bodies(self.train, None, self.item_type)
@@ -215,8 +216,9 @@ class RecommenderCore:
     # -- gợi ý ----------------------------------------------------------------------
     def _split(self, u, exclude):
         ex = set(self.train[u])
-        if exclude == "train_val":
-            ex.add(self.val[u])
+        ex.add(self.val[u])                       # cả hai chế độ đều bỏ train + val
+        if exclude == "all_history":
+            ex.add(self.test[u])
         dummy = next(i for i in range(C.N_ITEMS) if i not in ex)
         ex = sorted(ex)
         # full_rank cần một "item cần đoán" để tính hạng; dịch vụ chỉ dùng top-k (không phụ thuộc item này),
@@ -243,7 +245,7 @@ class RecommenderCore:
                 "b_star_score": ex["e_score"][b], "candidate_bodies": ex["cand_bodies"],
                 "verified": not err, "errors": err}
 
-    def recommend(self, u, k=10, exclude="train"):
+    def recommend(self, u, k=10, exclude="all_history"):
         self.check_user(u)
         if exclude not in EXCLUDE_MODES:
             raise ApiError(422, "INVALID_PARAM", f"exclude phải là một trong {EXCLUDE_MODES}.", {"exclude": exclude})
