@@ -229,7 +229,31 @@ Mọi lỗi trả cùng một dạng:
 - Đặt thời gian chờ ~1 s cho `/recommend` (p99 đo được ~21 ms, mục 9); hết giờ hoặc 5xx thì hiện danh sách dự phòng.
 - Nối với bảng sản phẩm của Spring Boot bằng `asin`.
 
-## 9. Đã kiểm
+## 9. Đã kiểm (21/10/2026)
 
-Script `ai/service/check_service.py`; kết quả `results/service/check_http_s{1,2,3}_<nhãn>/summary.json` và
-`check_all_…`. Số liệu và nguồn: `docs/STATUS.md`, nhật ký quyết định 21/10/2026.
+Script `ai/service/check_service.py`, `ai/service/diag_mismatch.py`; kết quả trong `results/service/`.
+
+**Khớp với kết quả đã lưu qua HTTP** (`exclude=train_val`, k = 10; commit `37b7fd8`, `check_http_s{1,2,3}_20261021_lan2`;
+lần 1 trên `8f47897` cho cùng số): ở cả 3 seed, nhóm A (20 người ngẫu nhiên, seed 20261021) và nhóm B (20 người có câu
+giải thích đã lưu) đều **40/40 người trùng top-10 đúng thứ tự**; câu giải thích trùng hết (seed 1 / 2 / 3: 14 / 9 / 12
+câu ở nhóm A, chỉ 3 / 20 người nhóm A có câu; 61 / 65 / 67 câu ở nhóm B), b\*, ρ, c\* trùng; 0 câu không qua kiểm sự
+kiện. Hợp đồng: 16/16 trường hợp (mã lỗi, định dạng lỗi chung, trường chính) đúng.
+
+**Khớp trên mọi người, không qua HTTP** (`check_all_s{1,2,3}_20261021_lan1`): top-10 trùng 67.660 / 67.660 / 67.661 trên
+67.661 người; câu trùng 20.548 / 20.138 / 20.393 (tất cả). 2 người lệch (u 59388 seed 1, u 65200 seed 2) chỉ **đổi chỗ
+hai hạng kề nhau**, tập top-10 vẫn trùng: hai sản phẩm chênh 4,8e-7 và 9,5e-7 điểm, tức một bước làm tròn float32; lúc
+chấm test GPU nhân theo lô 1.024 người cho thứ tự ngược với nhân một hàng trên CPU (`diag_mismatch_20261021_lan1`).
+
+**Độ trễ qua HTTP** (1.000 yêu cầu `/recommend?k=10`, exclude mặc định, sau 50 khởi động, gửi lần lượt; máy của Nam,
+dịch vụ chạy CPU, không dùng GPU; `lan2`):
+
+| Seed | phía khách p50 / p95 / p99 / max (ms) | phía máy chủ p50 / p95 / p99 (ms) |
+|---|---|---|
+| 1 | 15,97 / 19,97 / 21,35 / 24,09 | 14,68 / 18,54 / 19,72 |
+| 2 | 15,93 / 20,12 / 20,88 / 23,53 | 14,59 / 18,65 / 19,45 |
+| 3 | 16,25 / 20,45 / 22,39 / 25,76 | 14,95 / 18,97 / 20,69 |
+
+Bộ nhớ dịch vụ ~927 MiB; nạp dữ liệu ~2,3 s, sẵn sàng sau ~12 s kể cả khởi động Python. Phần lớn thời gian xử lý là hai
+lần `eval_05.full_rank` (trước và sau mặt nạ, mỗi lần ~6,6 ms đo trong tiến trình): sắp xếp ổn định cả catalog để giữ
+đúng quy tắc hòa π. Số này **không so được** với độ trễ 0,40 ms (CPU) ở `09_explain_lightgcn.py`: phép đo đó dùng
+`torch.topk` một lần, không quy tắc hòa π, không HTTP.
