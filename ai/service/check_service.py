@@ -16,6 +16,11 @@ Giai đoạn "http" (mặc định): tự bật run_service.py (tiến trình co
      p50 / p95 / p99 / max của thời gian phía khách (gồm HTTP + JSON) và phía máy chủ (header X-Process-Time-Ms).
 Giai đoạn "all": không qua HTTP, gọi RecommenderCore trực tiếp cho MỌI người của tập test (exclude=train_val) và so như
   bước 1 (số phụ, để biết có lệch nào do chấm trên CPU so với lúc chấm test trên GPU không).
+Giai đoạn "history" (thêm 21/10, phiên sau): không qua HTTP, MỌI người, chế độ mặc định all_history (thân cho mặt nạ và
+  giải thích lấy từ train + val + test). Phải = 0: lỗi sự kiện (verify_explanation, "đã mua b*" kiểm bằng lịch sử), b*
+  không phải thân trong lịch sử (kiểm độc lập), ống trong top-10 vi phạm QĐ 4-9 với thân cả lịch sử (common_05.judge_lens),
+  sản phẩm trả về nằm trong lịch sử. Đếm so với khi chỉ dùng thân train (cùng chế độ all_history, recommend(view="train")):
+  số người đổi mặt nạ (tăng / giảm số ống bị chặn), đổi top-10, thêm / bớt câu giải thích.
 
 Chạy (từ thư mục camera-store):
   ai\\.venv\\Scripts\\python.exe ai/service/check_service.py --emb-dir results/service/emb_s1_20261021 --label <nhãn>
@@ -121,6 +126,67 @@ def log_group(name, rows, log):
     return t
 
 
+def history_stage(emb_dir, log):
+    from core import RecommenderCore
+    core = RecommenderCore(emb_dir, device="cpu", log=log)
+    vh, vt = core.views["history"], core.views["train"]
+    it, ctx = core.item_type, core.ctx
+    keys = ["n_fact_errors", "n_bstar_not_owned", "n_viol_qd49_hist", "n_items_in_history", "n_lens_top10",
+            "n_expl_hist", "n_expl_train", "n_expl_bstar_val_test", "users_mask_more", "users_mask_less",
+            "users_mask_new", "users_has_bodies_new", "users_top10_changed", "users_more_expl", "users_less_expl",
+            "users_expl_new"]
+    c = dict.fromkeys(keys, 0)
+    examples = []
+    t = time.time()
+    for u in range(C.N_USERS):
+        r = core.recommend(u, 10, "all_history")
+        r0 = core.recommend(u, 10, "all_history", view="train")
+        hb = vh.bodies.get(u, set())
+        nh, nt = int(vh.cmask[u].sum()), int(vt.cmask[u].sum())
+        c["users_mask_more"] += nh > nt
+        c["users_mask_less"] += nh < nt
+        c["users_mask_new"] += nt == 0 and nh > 0
+        c["users_has_bodies_new"] += u not in vt.bodies and u in vh.bodies
+        top, top0 = [x["item_id"] for x in r["items"]], [x["item_id"] for x in r0["items"]]
+        c["users_top10_changed"] += top != top0
+        c["n_items_in_history"] += sum(i in core.history[u] for i in top)
+        eh = [x["explanation"] for x in r["items"] if x["explanation"] is not None]
+        et = [x for x in r0["items"] if x["explanation"] is not None]
+        c["n_expl_hist"] += len(eh)
+        c["n_expl_train"] += len(et)
+        c["users_more_expl"] += len(eh) > len(et)
+        c["users_less_expl"] += len(eh) < len(et)
+        c["users_expl_new"] += len(et) == 0 and len(eh) > 0
+        for x in r["items"]:
+            if it[x["item_id"]] == 1:
+                c["n_lens_top10"] += 1
+                c["n_viol_qd49_hist"] += C.judge_lens(x["item_id"], hb, ctx) is True
+        for e in eh:
+            c["n_fact_errors"] += len(e["errors"])
+            b = e["b_star"]
+            c["n_bstar_not_owned"] += not (b in core.history[u] and it[b] == 0 and b in hb)
+            if e["b_star_source"] != "train":
+                c["n_expl_bstar_val_test"] += 1
+                if len(examples) < 3:
+                    examples.append({"u": u, "l": e["path"][2]["item_id"], "b_star": b, "source": e["b_star_source"],
+                                     "text": e["text"]})
+        if (u + 1) % 10000 == 0:
+            log(f"  {u + 1:,} người ({time.time() - t:.0f}s)")
+    log(f"  người có thân: train {len(vt.bodies):,}, cả lịch sử {len(vh.bodies):,} (thêm {c['users_has_bodies_new']:,})")
+    log(f"  PHẢI = 0: lỗi sự kiện {c['n_fact_errors']} | b* không phải thân trong lịch sử {c['n_bstar_not_owned']} | ống "
+        f"vi phạm QĐ 4-9 với thân cả lịch sử trong top-10 {c['n_viol_qd49_hist']} (trên {c['n_lens_top10']:,} ống) | "
+        f"sản phẩm trả về nằm trong lịch sử {c['n_items_in_history']}")
+    log(f"  mặt nạ so với chỉ thân train: tăng số ống bị chặn {c['users_mask_more']:,} người (trong đó trước 0 ống, nay > 0: "
+        f"{c['users_mask_new']:,}), giảm {c['users_mask_less']:,} người")
+    log(f"  top-10 đổi: {c['users_top10_changed']:,} người | câu giải thích: {c['n_expl_hist']:,} (chỉ thân train: "
+        f"{c['n_expl_train']:,}); b* ở val / test: {c['n_expl_bstar_val_test']:,} câu | thêm câu {c['users_more_expl']:,} "
+        f"người (trong đó trước 0 câu, nay > 0: {c['users_expl_new']:,}), bớt câu {c['users_less_expl']:,} người")
+    for e in examples:
+        log(f"  ví dụ: {e}")
+    return {**c, "n_users": C.N_USERS, "n_users_with_bodies_train": len(vt.bodies),
+            "n_users_with_bodies_history": len(vh.bodies), "examples": examples}
+
+
 # -- máy chủ ------------------------------------------------------------------------
 
 def start_server(emb_dir, port, log_file, log):
@@ -218,7 +284,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--emb-dir", required=True)
     ap.add_argument("--label", required=True)
-    ap.add_argument("--stage", default="http", choices=["http", "all"])
+    ap.add_argument("--stage", default="http", choices=["http", "all", "history"])
     ap.add_argument("--port", type=int, default=8021)
     ap.add_argument("--n-parity", type=int, default=20)
     ap.add_argument("--parity-seed", type=int, default=20261021)
@@ -237,7 +303,9 @@ def main():
     ref = load_reference(meta["seed"], log)
     res = {"stage": a.stage, "git": git, "emb_meta": meta, "parity_seed": a.parity_seed}
 
-    if a.stage == "all":
+    if a.stage == "history":
+        res["history"] = history_stage(C.ROOT / a.emb_dir, log)
+    elif a.stage == "all":
         from core import RecommenderCore
         core = RecommenderCore(C.ROOT / a.emb_dir, device="cpu", log=log)
         rows, t = [], time.time()

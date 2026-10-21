@@ -17,7 +17,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from core import ApiError, RecommenderCore
 
-CONTRACT_VERSION = "1.1"
+CONTRACT_VERSION = "1.2"
 STATE = {}
 
 
@@ -84,8 +84,8 @@ def item(item_id: int):
 
 
 @app.get("/users/{user_id}/bodies")
-def user_bodies(user_id: int):
-    return STATE["core"].user_bodies(user_id)
+def user_bodies(user_id: int, exclude: str = Query("all_history", pattern="^(all_history|train_val)$")):
+    return STATE["core"].user_bodies(user_id, exclude)
 
 
 @app.get("/compat")
