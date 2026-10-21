@@ -14,12 +14,14 @@ Ví dụ một yêu cầu /recommend (u có thân Sony a6000 trong train, k = 10
   trong top-10: b* = thân lắp được có e_bᵀe_l lớn nhất, câu "Gợi ý … vì ống này lắp trực tiếp được trên … (ngàm sony_e)".
 """
 
+import copy
 import csv
 import importlib
 import json
 import sys
 import time
 from collections import Counter
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -44,6 +46,21 @@ LEVEL_LABEL = {"compatible_with": "lắp trực tiếp, dùng đủ khung hình 
                "incompatible": "không lắp được (M = 0)",
                "unknown": "không biết (M = 0, không dùng cho mặt nạ và CVR)"}
 EXCLUDE_MODES = ("all_history", "train_val")   # mặc định: bỏ cả lịch sử (Nam chốt 21/10); train_val: như lúc chấm test
+# Thân máy dùng cho mặt nạ và giải thích (Nam chốt 21/10, phiên sau): all_history -> thân trong CẢ lịch sử (train + val +
+# test); train_val -> thân trong train, đúng như lúc chấm test.
+MODE_VIEW = {"all_history": "history", "train_val": "train"}
+
+
+@dataclass
+class BodyView:
+    """Một tập thân máy của mọi người dùng và những thứ dựng từ nó (cùng hàm, chỉ khác dict lịch sử truyền vào).
+    owned: dict lịch sử dùng để kiểm "bạn đã mua b*" (pctx.train của verify_explanation)."""
+    owned: dict
+    bodies: dict
+    cmask: np.ndarray
+    cmask_t: torch.Tensor
+    pctx: object
+    xp: object
 
 
 class ApiError(Exception):
@@ -86,20 +103,16 @@ class RecommenderCore:
         self.test = C.load_pos("test")
         self.item_type = C.load_item_type()
         self.ctx = C.load_cvr_context()
-        self.bodies = C.build_train_bodies(self.train, None, self.item_type)
-        lens, cmask = E.certain_violation_mask(self.bodies, self.ctx)
-        self.lens_t = torch.as_tensor(lens, device=self.device)
-        self.cmask_t = torch.as_tensor(cmask, device=self.device)
-        self.lens_col = {int(l): j for j, l in enumerate(lens.tolist())}
-        self.cmask = cmask
+        self.history = {u: self.train[u] | {self.val[u], self.test[u]} for u in range(C.N_USERS)}
         self.pi = E.tie_keys()
-
         self.pctx = EC.PathContext(self.train, self.item_type)
         H = CK.build_h()
         self.has_edge = EC.h_edge_checker(H)
         self.order = list(H.node_names["usecase"])
-        self.xp = X09.LGExplainer(self.eI.cpu(), self.bodies, self.pctx, self.order)
         self.attrs = self.pctx.attrs
+        self.lens_t = None
+        self.views = {"train": self._view(self.train, self.pctx), "history": self._view(self.history, None)}
+        self.bodies = self.views["train"].bodies            # thân trong train (QĐ 4-9 như lúc chấm)
         self.m1_per_body = Counter(b for (b, _) in self.ctx.m1)
 
         self.rules = M03.Rules(RULES_TOML)
@@ -108,7 +121,23 @@ class RecommenderCore:
         self.startup_s = time.perf_counter() - t0
         log(f"RecommenderCore: {self.meta['model']} seed {self.meta['seed']} | best.pt {self.meta['best_pt_sha256'][:12]}… | "
             f"embeddings {sha[:12]}… | thiết bị {self.device} | {C.N_USERS:,} người, {C.N_ITEMS:,} sản phẩm | "
-            f"người có thân {len(self.bodies):,} | nạp {self.startup_s:.1f}s")
+            f"người có thân: train {len(self.bodies):,}, cả lịch sử {len(self.views['history'].bodies):,} | "
+            f"nạp {self.startup_s:.1f}s")
+
+    def _view(self, owned, pctx):
+        """Dựng mặt nạ (15) QĐ 4-9 và bộ giải thích từ thân trong `owned` ({uid: tập sản phẩm}). pctx None: bản sao nông
+        của self.pctx với .train = owned (verify_explanation kiểm "đã mua b*" bằng owned; mọi cạnh khác vẫn của đồ thị)."""
+        bodies = C.build_train_bodies(owned, None, self.item_type)
+        lens, cmask = E.certain_violation_mask(bodies, self.ctx)
+        if self.lens_t is None:
+            self.lens_t = torch.as_tensor(lens, device=self.device)
+            self.lens_col = {int(l): j for j, l in enumerate(lens.tolist())}
+        assert np.array_equal(lens, self.lens_t.cpu().numpy())
+        if pctx is None:
+            pctx = copy.copy(self.pctx)
+            pctx.train = owned
+        return BodyView(owned, bodies, cmask, torch.as_tensor(cmask, device=self.device), pctx,
+                        X09.LGExplainer(self.eI.cpu(), bodies, pctx, self.order))
 
     # -- tự kiểm lúc khởi động ---------------------------------------------------
     def _level(self, b, l):
@@ -168,16 +197,26 @@ class RecommenderCore:
             d["n_lenses_m1"] = self.m1_per_body.get(i, 0)
         return d
 
-    def user_bodies(self, u):
+    def source(self, u, i):
+        """Sản phẩm i nằm ở phần nào của lịch sử người u: train / val / test."""
+        return "train" if i in self.train[u] else "val" if i == self.val[u] else "test" if i == self.test[u] else None
+
+    def check_mode(self, mode):
+        if mode not in EXCLUDE_MODES:
+            raise ApiError(422, "INVALID_PARAM", f"exclude phải là một trong {EXCLUDE_MODES}.", {"exclude": mode})
+        return self.views[MODE_VIEW[mode]]
+
+    def user_bodies(self, u, mode="all_history"):
         self.check_user(u)
-        bs = sorted(self.bodies.get(u, ()))
+        v = self.check_mode(mode)
+        bs = sorted(v.bodies.get(u, ()))
         out = []
         for b in bs:
             d = self.item_info(b)
-            out.append({k: d[k] for k in ("item_id", "asin", "title", "mount", "khung", "may_phim", "in_matrix",
-                                          "n_lenses_m1")})
-        return {"user_id": u, "n_train_items": len(self.train[u]), "n_bodies": len(bs), "bodies": out,
-                "n_lenses_blocked": int(self.cmask[u].sum())}
+            out.append({**{k: d[k] for k in ("item_id", "asin", "title", "mount", "khung", "may_phim", "in_matrix",
+                                             "n_lenses_m1")}, "source": self.source(u, b)})
+        return {"user_id": u, "exclude": mode, "n_history_items": len(v.owned[u]), "n_bodies": len(bs), "bodies": out,
+                "n_lenses_blocked": int(v.cmask[u].sum())}
 
     # -- tương thích một cặp --------------------------------------------------------
     def compat(self, b, l):
@@ -225,15 +264,16 @@ class RecommenderCore:
         # nên đặt một ứng viên bất kỳ (iid nhỏ nhất không bị loại).
         return E.Split("serve", np.array([u]), np.array([dummy]), np.array([0, len(ex)]), np.array(ex, dtype=np.int64))
 
-    def explain(self, u, l):
-        """Giải thích cho ống l trong top-k của u (người có thân), hoặc None nếu không có đường u → b → l."""
-        if self.item_type[l] != 1 or u not in self.bodies:
+    def explain(self, u, l, v):
+        """Giải thích cho ống l trong top-k của u (người có thân trong góc nhìn v), hoặc None nếu không có đường
+        u → b → l."""
+        if self.item_type[l] != 1 or u not in v.bodies:
             return None
-        ex = self.xp.explain(u, l)
+        ex = v.xp.explain(u, l)
         if ex is None:
             return None
-        s = EC.sentence(ex, self.pctx)
-        err = EC.verify_explanation(ex, s, self.pctx, self.has_edge)
+        s = EC.sentence(ex, v.pctx)
+        err = EC.verify_explanation(ex, s, v.pctx, self.has_edge)
         b, c = ex["b_star"], ex["c_star"]
         path = [{"kind": "user", "id": u}, {"kind": "item", "role": "body", **self.item_brief(b)},
                 {"kind": "item", "role": "lens", **self.item_brief(l)}]
@@ -242,30 +282,31 @@ class RecommenderCore:
             path.append({"kind": "usecase", "id": c, "label": EC.USECASE_VI[c]})
             edges.append("suitable_for")
         return {"text": s, "path": path, "edges": edges, "b_star": b, "rho": ex["rho"], "c_star": c,
-                "b_star_score": ex["e_score"][b], "candidate_bodies": ex["cand_bodies"],
+                "b_star_score": ex["e_score"][b], "b_star_source": self.source(u, b),
+                "candidate_bodies": ex["cand_bodies"],
                 "verified": not err, "errors": err}
 
-    def recommend(self, u, k=10, exclude="all_history"):
+    def recommend(self, u, k=10, exclude="all_history", view=None):
+        """view: chỉ để kiểm (check_service --stage history) — ép góc nhìn thân khác MODE_VIEW[exclude]."""
         self.check_user(u)
-        if exclude not in EXCLUDE_MODES:
-            raise ApiError(422, "INVALID_PARAM", f"exclude phải là một trong {EXCLUDE_MODES}.", {"exclude": exclude})
+        v = self.check_mode(exclude) if view is None else self.views[view]
         sp = self._split(u, exclude)
 
         def score(uids):
             return self.eU[uids] @ self.eI.T
 
-        masked = EC.mask_scorer(score, self.lens_t, self.cmask_t)
+        masked = EC.mask_scorer(score, self.lens_t, v.cmask_t)
         dev = self.device
         top0 = E.full_rank(score, sp, self.pi, k_max=k, k_list=[k], device=dev)["top"][0].tolist()
         top = E.full_rank(masked, sp, self.pi, k_max=k, k_list=[k], device=dev)["top"][0].tolist()
         S = score(torch.as_tensor([u], device=dev))[0]
-        blocked_top0 = [i for i in top0 if i in self.lens_col and self.cmask[u, self.lens_col[i]]]
+        blocked_top0 = [i for i in top0 if i in self.lens_col and v.cmask[u, self.lens_col[i]]]
         items = []
         for r, i in enumerate(top, 1):
-            items.append({"rank": r, **self.item_brief(i), "score": float(S[i]), "explanation": self.explain(u, i)})
-        return {"user_id": u, "k": k, "exclude": exclude, "has_bodies": u in self.bodies,
-                "n_bodies": len(self.bodies.get(u, ())), "items": items,
-                "mask": {"rule": "QĐ 4-9 (mặt nạ 15)", "n_lenses_blocked": int(self.cmask[u].sum()),
+            items.append({"rank": r, **self.item_brief(i), "score": float(S[i]), "explanation": self.explain(u, i, v)})
+        return {"user_id": u, "k": k, "exclude": exclude, "has_bodies": u in v.bodies,
+                "n_bodies": len(v.bodies.get(u, ())), "items": items,
+                "mask": {"rule": "QĐ 4-9 (mặt nạ 15)", "n_lenses_blocked": int(v.cmask[u].sum()),
                          "n_blocked_in_topk_before_mask": len(blocked_top0),
                          "blocked_in_topk_before_mask": [self.item_brief(i) for i in blocked_top0]}}
 
@@ -273,4 +314,4 @@ class RecommenderCore:
         return {"status": "ok", "model": self.meta["model"], "seed": self.meta["seed"],
                 "best_pt_sha256": self.meta["best_pt_sha256"], "embeddings_sha256": self.meta["embeddings_sha256"],
                 "device": str(self.device), "n_users": C.N_USERS, "n_items": C.N_ITEMS,
-                "n_users_with_bodies": len(self.bodies), "startup_s": round(self.startup_s, 2)}
+                "n_users_with_bodies": {"train": len(self.bodies), "all_history": len(self.views["history"].bodies)}, "startup_s": round(self.startup_s, 2)}
