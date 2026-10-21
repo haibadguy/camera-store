@@ -1,7 +1,10 @@
-# Hợp đồng API — dịch vụ mô hình (FastAPI), phiên bản 1.1
+# Hợp đồng API — dịch vụ mô hình (FastAPI), phiên bản 1.2
 
 - Viết 21/10/2026, nhánh `nam/api-fastapi`. **1.1 (21/10, Nam chốt):** `/recommend` mặc định `exclude=all_history` (bỏ
-  toàn bộ lịch sử train + val + test); bỏ giá trị `exclude=train` của 1.0; demo dùng seed 1. Code: `ai/service/` (cách chạy: `ai/README.md`, mục "Dịch vụ mô hình").
+  toàn bộ lịch sử train + val + test); bỏ giá trị `exclude=train` của 1.0; demo dùng seed 1. **1.2 (21/10, Nam chốt):**
+  ở `all_history`, thân máy dùng cho mặt nạ QĐ 4-9 và câu giải thích lấy từ **cả lịch sử** (train + val + test);
+  `train_val` giữ nguyên thân train như lúc chấm; thêm `b_star_source`, `/users/{id}/bodies?exclude=`, trường `source`;
+  `n_users_with_bodies` của `/health` thành object. Code: `ai/service/` (cách chạy: `ai/README.md`, mục "Dịch vụ mô hình").
 - Dùng cho: **Spring Boot** (`backend/`) gọi dịch vụ này; **React** (`frontend/`) chỉ gọi Spring Boot, không gọi thẳng FastAPI.
   Kiến trúc chốt 09/10/2026: React → Spring Boot → FastAPI.
 - Mô hình phía sau: **hệ thống cuối = LightGCN + mặt nạ QĐ 4-9 + giải thích theo đường** (STATUS 16/10). Checkpoint
@@ -30,11 +33,13 @@
 2. **Dữ liệu tĩnh**: lịch sử của người dùng là dữ liệu Amazon đã chia train / val / test, không phải giỏ hàng / đơn
    hàng của web demo. Mua thêm trên web demo **không** làm đổi gợi ý. Mặc định (`exclude=all_history`) gợi ý là "sản
    phẩm tiếp theo sau cả lịch sử": không bao giờ gợi ý sản phẩm người dùng đã có ở train, val hay test.
-   - **Thân máy dùng cho mặt nạ và giải thích vẫn là thân trong train** (`/users/{id}/bodies`; QĐ 4-9 định nghĩa trên
-     train, cạnh `owns` của đường giải thích là cạnh train). Thân máy ở item val / test **không** được tính: 2.909 người
-     có item val hoặc test là thân máy, 2.066 người trong số đó không có thân nào trong train nên demo coi như "chưa có
-     thân" (không ống nào bị chặn, không có câu giải thích) dù thân đó đã bị loại khỏi gợi ý (đếm bằng
-     `ai/service/count_history_bodies.py`, xem `docs/STATUS.md` 21/10). Chưa chốt có đổi không.
+   - **Thân máy dùng cho mặt nạ và giải thích theo chế độ** (từ 1.2, Nam chốt 21/10): `all_history` (mặc định, demo)
+     lấy thân trong **cả lịch sử** train + val + test; `train_val` lấy thân trong train, đúng như lúc chấm test (QĐ 4-9
+     định nghĩa trên train). Lý do: ở 1.1 có 2.909 người có item val hoặc test là thân máy (2.066 người không có thân nào
+     trong train) mà demo coi như "chưa có thân" dù thân đó đã bị loại khỏi gợi ý (`ai/service/count_history_bodies.py`).
+     Số chương 2 (chấm test) không đổi: chúng dùng thân train.
+   - **Thêm thân không chỉ làm tăng chặn**: QĐ 4-9 chặn ống mà **mọi** thân đều không lắp được, nên người có thêm thân
+     khác ngàm sẽ bị chặn **ít** ống hơn (vd người 178: 1.016 ống ở `train_val`, 772 ống ở `all_history`).
 3. **Mặt nạ chỉ chặn ống kính** "chắc chắn không lắp được" (QĐ 4-9): ống mà **mọi** thân của người dùng đều M = 0 và
    không có cặp "không biết". Thân máy, phụ kiện, máy "khác" **không** bị lọc; người không có thân thì không có ống nào
    bị chặn. **Gợi ý thân máy khác hãng / khác ngàm không phải vi phạm** (Nam chốt 21/10): người dùng có thể chuyển hệ
@@ -61,8 +66,9 @@ Ví dụ (seed 1, `results/service/check_http_s1_20261021_lan1/summary.json`):
 {"status": "ok", "model": "LightGCN + mặt nạ QĐ 4-9", "seed": 1,
  "best_pt_sha256": "d857e24c3d7fff692c39627b54ee30fb1e62044d9ec6fd932642d892285f5fc2",
  "embeddings_sha256": "fbda48a1f84c9fd0047d2a8d06319e1e816dcf20cbe51817f5f86241f97200b4",
- "device": "cpu", "n_users": 67661, "n_items": 27940, "n_users_with_bodies": 10406,
- "startup_s": 2.24, "contract_version": "1.1"}
+ "device": "cpu", "n_users": 67661, "n_items": 27940,
+ "n_users_with_bodies": {"train": 10406, "all_history": 12472},
+ "startup_s": 2.4, "contract_version": "1.2"}
 ```
 
 ## 4. `GET /recommend?user_id=&k=&exclude=`
@@ -80,7 +86,7 @@ Ví dụ (seed 1, `results/service/check_http_s1_20261021_lan1/summary.json`):
 | Trường | Kiểu | Ý nghĩa |
 |---|---|---|
 | `user_id`, `k`, `exclude` | | nhắc lại tham số |
-| `has_bodies`, `n_bodies` | bool, int | người dùng có thân máy trong train không, bao nhiêu thân |
+| `has_bodies`, `n_bodies` | bool, int | người dùng có thân máy không, bao nhiêu thân — theo chế độ: cả lịch sử ở `all_history`, train ở `train_val` |
 | `items[]` | mảng k phần tử | xếp theo `rank` 1..k |
 | `items[].rank` | int | thứ hạng (1 = cao nhất) |
 | `items[].item_id`, `asin`, `title`, `type`, `type_label` | | thông tin sản phẩm |
@@ -100,11 +106,20 @@ cố định seed 20261009, `eval_05.tie_keys`); ống bị mặt nạ chặn c�
 |---|---|---|
 | `text` | string | câu tiếng Việt (mẫu của `eval_cakg.sentence`; tên dài quá 70 ký tự được cắt, thêm "…") |
 | `path` | mảng 3 hoặc 4 nút | `[u, b*, l]` hoặc `[u, b*, l, c*]`: `{"kind": "user", "id"}`, `{"kind": "item", "role": "body" \| "lens", item_id, asin, title, type, type_label}`, `{"kind": "usecase", "id", "label"}` |
-| `edges` | mảng 2 hoặc 3 chuỗi | loại cạnh giữa hai nút liền nhau: `owns` (u có b* trong train), ρ (`compatible_with` / `compatible_with_crop_unknown` / `crops_sensor`), `suitable_for` |
+| `edges` | mảng 2 hoặc 3 chuỗi | loại cạnh giữa hai nút liền nhau: `owns` (u đã mua b\*: trong lịch sử ở `all_history`, trong train ở `train_val`), ρ (`compatible_with` / `compatible_with_crop_unknown` / `crops_sensor`), `suitable_for` |
 | `b_star`, `rho`, `c_star` | | b* (item_id thân), ρ, c* (`phong_canh` / `the_thao_chim` / `chan_dung` / `macro` hoặc `null`) |
 | `b_star_score` | float | e_{b\*}ᵀe_l (điểm dùng để chọn b\*) |
-| `candidate_bodies` | mảng int | mọi thân của u lắp được l (M = 1); b\* là một trong số đó |
-| `verified`, `errors` | bool, mảng | kết quả `verify_explanation`: mọi sự kiện trong câu có cạnh trong đồ thị. Luôn `true` / `[]` trong các lần kiểm (mục 9); nếu `false` thì Spring Boot không nên hiện câu |
+| `b_star_source` | string | b\* nằm ở phần nào của lịch sử: `train` / `val` / `test` (chỉ `all_history` mới có `val` / `test`) |
+| `candidate_bodies` | mảng int | mọi thân của u (theo chế độ) lắp được l (M = 1); b\* là một trong số đó |
+| `verified`, `errors` | bool, mảng | kết quả `eval_cakg.verify_explanation`: mọi sự kiện trong câu đều đúng. Luôn `true` / `[]` trong các lần kiểm (mục 9); nếu `false` thì Spring Boot không nên hiện câu |
+
+**Cách kiểm sự kiện của câu** (`verified`):
+- "bạn đã mua <thân>" (cạnh `owns`): b\* phải là thân máy trong **file lịch sử của người dùng** — `train.txt` ở
+  `train_val`; `train.txt` + `val.txt` + `test.txt` ở `all_history`. Đồ thị tri thức chỉ có cạnh `interacted_with` của
+  train, nên với thân ở val / test **không** kiểm bằng đồ thị được;
+- cạnh lắp được (b\*, l) loại ρ, ngàm của b\* (`has_spec_mount`), cạnh mục đích (l, c\*) `suitable_for`, tiêu cự, khẩu
+  độ: kiểm bằng **đồ thị** như cũ (cả hai chế độ);
+- b\* không được là máy phim; tên l và b\* trong câu đúng tên sản phẩm.
 
 Ba dạng câu theo ρ:
 - `compatible_with`: "… vì ống này lắp trực tiếp được trên … bạn đã mua (ngàm …)";
@@ -116,7 +131,8 @@ Nếu có c\*: thêm ", và phù hợp chụp <nhãn> (tiêu cự …, khẩu đ
 ### 4.4. Ví dụ thật
 
 `GET /recommend?user_id=409&k=10` (seed 1, `exclude` mặc định `all_history`, chạy `core.RecommenderCore` 21/10/2026;
-rút gọn: chỉ giữ hạng 1, 2, 5). Item val / test của người 409 không lọt top-10 nên kết quả giống bản 1.0.
+rút gọn: chỉ giữ hạng 1, 2, 5). Item val / test của người 409 (một máy ống liền, một bao da) không lọt top-10 và không phải thân máy, nên kết quả giống
+bản 1.0, 1.1 (đã chạy lại với bản 1.2).
 Người 409 có một thân (Nikon D3100). Không có mặt nạ thì ống Canon EF 24-70mm vào top-10; mặt nạ gỡ nó ra.
 
 ```json
@@ -137,6 +153,7 @@ Người 409 có một thân (Nikon D3100). Không có mặt nạ thì ống Can
      {"kind": "usecase", "id": "the_thao_chim", "label": "thể thao / chim"}],
     "edges": ["owns", "compatible_with", "suitable_for"],
     "b_star": 9022, "rho": "compatible_with", "c_star": "the_thao_chim", "b_star_score": 26.428340911865234,
+    "b_star_source": "train",
     "candidate_bodies": [9022], "verified": true, "errors": []}},
   {"rank": 5, "item_id": 1665, "asin": "B000V9CQJI", "title": "Canon EOS 40D 10.1MP Digital SLR Camera with EF 28-135mm …",
    "type": "than", "type_label": "thân máy", "score": 6.5257649421691895, "explanation": null}
@@ -173,13 +190,22 @@ Ví dụ `GET /items/15485`: `mount "nikon_f"`, `khung "apsc"`, `in_matrix true`
 
 ### 6.1. `/users/{user_id}/bodies`
 
-Thân máy người dùng có trong train (đúng tập dùng cho mặt nạ và giải thích).
+Tham số `exclude` (không bắt buộc, mặc định `all_history`): chọn tập thân như `/recommend` — cả lịch sử
+(`all_history`) hoặc chỉ train (`train_val`). Đây đúng là tập thân dùng cho mặt nạ và giải thích của `/recommend` cùng
+chế độ. `source` cho biết thân nằm ở train / val / test; `n_history_items` là số sản phẩm trong lịch sử của chế độ đó.
+
+Ví dụ `GET /users/47/bodies` (seed 1): người 47 có Nikon D4S trong train và Nikon D500 ở val. Ở `train_val` chỉ có 1 thân.
+Ở `/recommend?user_id=47`, ống hạng 1 (item 13466) được giải thích qua **D500** (`b_star_source "val"`,
+`candidate_bodies [12369, 14934]`, `verified true`).
 
 ```json
-{"user_id": 11, "n_train_items": 5, "n_bodies": 1,
- "bodies": [{"item_id": 19071, "asin": "B077PSDB4X", "title": "Sony Alpha a6000 Mirrorless Digital Camera with 16-50 mm Lens 24.3MP (Silver)",
-             "mount": "sony_e", "khung": "apsc", "may_phim": false, "in_matrix": true, "n_lenses_m1": 190}],
- "n_lenses_blocked": 843}
+{"user_id": 47, "exclude": "all_history", "n_history_items": 10, "n_bodies": 2,
+ "bodies": [
+  {"item_id": 12369, "asin": "B00PHRVRXU", "title": "Nikon D4S 16.2 MP CMOS FX Digital SLR with Full 1080p HD Video (Body Only)",
+   "mount": "nikon_f", "khung": "ff", "may_phim": false, "in_matrix": true, "n_lenses_m1": 219, "source": "train"},
+  {"item_id": 14934, "asin": "B01A7Q0J3Y", "title": "Nikon D500 DX-Format Digital SLR (Body Only), Base",
+   "mount": "nikon_f", "khung": "apsc", "may_phim": false, "in_matrix": true, "n_lenses_m1": 219, "source": "val"}],
+ "n_lenses_blocked": 814}
 ```
 
 ### 6.2. `/compat?body_id=&lens_id=` — mức tương thích (5 mức) và luật quyết định
@@ -229,7 +255,7 @@ Mọi lỗi trả cùng một dạng:
 | 404 | `ITEM_NOT_FOUND` | `item_id` / `body_id` / `lens_id` ngoài 0..27.939 |
 | 400 | `NOT_A_BODY` | `body_id` không phải thân máy (`details.type` cho biết loại thật) |
 | 400 | `NOT_A_LENS` | `lens_id` không phải ống kính |
-| 422 | `INVALID_PARAM` | thiếu tham số, sai kiểu, `k` ngoài 1..50, `exclude` khác `all_history` / `train_val` (`details.errors[]`: `loc`, `msg`) |
+| 422 | `INVALID_PARAM` | thiếu tham số, sai kiểu, `k` ngoài 1..50, `exclude` (của `/recommend` hoặc `/users/{id}/bodies`) khác `all_history` / `train_val` (`details.errors[]`: `loc`, `msg`) |
 | 404 | `NOT_FOUND` | đường dẫn không tồn tại |
 | 500 | `INTERNAL_ERROR` | lỗi trong dịch vụ (Spring Boot nên báo "dịch vụ gợi ý tạm lỗi", không hiện chi tiết cho người dùng) |
 
@@ -244,34 +270,44 @@ Mọi lỗi trả cùng một dạng:
 
 Script `ai/service/check_service.py`, `ai/service/diag_mismatch.py`; kết quả trong `results/service/`.
 
-**Khớp với kết quả đã lưu qua HTTP** (`exclude=train_val`, k = 10; bản 1.1: commit `ead4acd`,
-`check_http_s{1,2,3}_20261021_lan3`; bản 1.0: `lan1` trên `8f47897`, `lan2` trên `37b7fd8`, cùng số): ở cả 3 seed, nhóm A (20 người ngẫu nhiên, seed 20261021) và nhóm B (20 người có câu
+**Khớp với kết quả đã lưu qua HTTP** (`exclude=train_val`, k = 10; bản 1.2: commit `ea3a16a`,
+`check_http_s{1,2,3}_20261021_lan4`; bản 1.1: `lan3` trên `ead4acd`; bản 1.0: `lan1` trên `8f47897`, `lan2` trên `37b7fd8`;
+cả 4 lần cùng số): ở cả 3 seed, nhóm A (20 người ngẫu nhiên, seed 20261021) và nhóm B (20 người có câu
 giải thích đã lưu) đều **40/40 người trùng top-10 đúng thứ tự**; câu giải thích trùng hết (seed 1 / 2 / 3: 14 / 9 / 12
 câu ở nhóm A, chỉ 3 / 20 người nhóm A có câu; 61 / 65 / 67 câu ở nhóm B), b\*, ρ, c\* trùng; 0 câu không qua kiểm sự
 kiện. Hợp đồng: 16/16 trường hợp (mã lỗi, định dạng lỗi chung, trường chính) đúng.
 
 **Khớp trên mọi người, không qua HTTP** (`check_all_s{1,2,3}_20261021_lan1`, chạy trên bản 1.0; chế độ `train_val` ở bản
-1.1 bỏ đúng cùng tập sản phẩm (train + val) nên kết quả này vẫn áp dụng): top-10 trùng 67.660 / 67.660 / 67.661 trên
+1.1, 1.2 bỏ đúng cùng tập sản phẩm (train + val) và dùng cùng thân train nên kết quả này vẫn áp dụng): top-10 trùng 67.660 / 67.660 / 67.661 trên
 67.661 người; câu trùng 20.548 / 20.138 / 20.393 (tất cả). 2 người lệch (u 59388 seed 1, u 65200 seed 2) chỉ **đổi chỗ
 hai hạng kề nhau**, tập top-10 vẫn trùng: hai sản phẩm chênh 4,8e-7 và 9,5e-7 điểm, tức một bước làm tròn float32; lúc
 chấm test GPU nhân theo lô 1.024 người cho thứ tự ngược với nhân một hàng trên CPU (`diag_mismatch_20261021_lan1`).
 
-**Chế độ mặc định `all_history`** (`lan3`): trong 1.050 yêu cầu mỗi seed, **0** sản phẩm trả về nằm trong train, val
-hay test của người đó.
+**Chế độ mặc định `all_history`, thân cả lịch sử (bản 1.2), mọi 67.661 người, seed 1** (không qua HTTP,
+`check_history_s1_20261021_lan1`, commit `ea3a16a`):
+- phải bằng 0 và **đều bằng 0**: lỗi sự kiện của câu; b\* không phải thân trong lịch sử (kiểm độc lập với
+  `verify_explanation`); ống trong top-10 vi phạm QĐ 4-9 với thân cả lịch sử (trên 76.986 ống); sản phẩm trả về nằm
+  trong lịch sử;
+- so với dùng thân train (cùng `all_history`): người có thân 10.406 → 12.472 (thêm 2.066); **2.062 người được thêm mặt
+  nạ** (trước 0 ống bị chặn, nay > 0), **344 người bị chặn ít ống hơn** (có thêm thân khác ngàm); top-10 đổi ở 493
+  người; câu giải thích 20.503 → 22.739, trong đó 2.650 câu có b\* ở val / test; **902 người thêm câu** (890 người trước
+  không có câu nào), 0 người bớt câu.
+
+Qua HTTP (`lan4`): trong 1.050 yêu cầu `all_history` mỗi seed, **0** sản phẩm trả về nằm trong train, val hay test.
 
 **Độ trễ qua HTTP** (1.000 yêu cầu `/recommend?k=10`, `exclude` mặc định `all_history`, sau 50 khởi động, gửi lần lượt;
-máy của Nam, dịch vụ chạy CPU, không dùng GPU; `lan3`, commit `ead4acd`):
+máy của Nam, dịch vụ chạy CPU, không dùng GPU; `lan4`, commit `ea3a16a`, bản 1.2):
 
 | Seed | phía khách p50 / p95 / p99 / max (ms) | phía máy chủ p50 / p95 / p99 (ms) |
 |---|---|---|
-| **1 (demo)** | 15,04 / 18,59 / 20,48 / 22,54 | 13,80 / 17,18 / 18,88 |
-| 2 | 15,69 / 19,47 / 21,53 / 78,67 | 14,46 / 18,17 / 19,97 |
-| 3 | 15,57 / 19,21 / 20,74 / 22,43 | 14,28 / 17,89 / 19,34 |
+| **1 (demo)** | 14,77 / 18,71 / 20,41 / 22,86 | 13,53 / 17,42 / 18,72 |
+| 2 | 15,25 / 19,68 / 21,57 / 50,51 | 14,01 / 18,28 / 19,85 |
+| 3 | 15,44 / 19,22 / 20,51 / 21,28 | 14,18 / 17,89 / 19,08 |
 
-(Seed 2 có một yêu cầu chậm bất thường, max 78,67 ms; chưa tìm nguyên nhân, p99 không bị ảnh hưởng. Bản 1.0, `lan2`,
-`exclude=train`: p50 phía khách 15,93–16,25 ms, p99 20,88–22,39 ms.)
+(Seed 2 có một yêu cầu chậm bất thường ở cả `lan3` (78,67 ms) và `lan4` (50,51 ms); chưa tìm nguyên nhân, p99 không bị
+ảnh hưởng. Bản 1.1, `lan3`: p50 phía khách 15,04–15,69 ms; bản 1.0, `lan2`: 15,93–16,25 ms.)
 
-Bộ nhớ dịch vụ ~933 MiB; nạp dữ liệu ~2,3 s, sẵn sàng sau ~12 s kể cả khởi động Python. Phần lớn thời gian xử lý là hai
+Bộ nhớ dịch vụ ~1.017 MiB (bản 1.2 giữ thêm mặt nạ và lịch sử của chế độ `all_history`; bản 1.1 ~933 MiB); nạp dữ liệu ~2,3 s, sẵn sàng sau ~12 s kể cả khởi động Python. Phần lớn thời gian xử lý là hai
 lần `eval_05.full_rank` (trước và sau mặt nạ, mỗi lần ~6,6 ms đo trong tiến trình): sắp xếp ổn định cả catalog để giữ
 đúng quy tắc hòa π. Số này **không so được** với độ trễ 0,40 ms (CPU) ở `09_explain_lightgcn.py`: phép đo đó dùng
 `torch.topk` một lần, không quy tắc hòa π, không HTTP.
