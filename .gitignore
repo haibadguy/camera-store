@@ -80,3 +80,6 @@ results/cakg/**/*.npz
 results/final_system/**/*.npy
 results/final_system/**/*.npz
 results/final_system/**/explanations.jsonl
+
+# Dịch vụ mô hình (ai/service/): embedding tính sẵn (lớn); giữ meta.json, summary.json
+results/service/**/*.npz
