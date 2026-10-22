@@ -1192,3 +1192,79 @@ body {
   margin: 6px 0 18px 0;
   font-size: 0.88rem;
 }
+
+/* API contract recommendation demo */
+.api-demo-link { color: #f8fafc; }
+.demo-page { min-height: 100vh; background: #f8fafc; color: #172033; }
+.demo-shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+.demo-header { background: #0f172a; color: #e2e8f0; border-bottom: 1px solid #334155; }
+.demo-header-content { min-height: 72px; display: flex; align-items: center; gap: 20px; }
+.demo-header p { color: #94a3b8; font-size: .84rem; margin-right: auto; }
+.demo-brand, .demo-link-button, .demo-back-button { font: inherit; cursor: pointer; }
+.demo-brand { padding: 0; border: 0; background: transparent; color: #fff; font-weight: 900; letter-spacing: .02em; text-align: left; }
+.demo-brand span { display: block; color: #94a3b8; font-size: .62rem; font-weight: 700; }
+.demo-link-button { border: 1px solid #475569; border-radius: 6px; padding: 8px 11px; color: #e2e8f0; background: transparent; font-size: .8rem; font-weight: 700; }
+.demo-main { padding: 52px 0 64px; }
+.demo-eyebrow { color: #b91c1c; font-size: .76rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.demo-main h1 { margin: 8px 0 10px; font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.15; }
+.demo-lead { max-width: 720px; color: #526075; line-height: 1.65; }
+.demo-user-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 30px; }
+.demo-user-card, .demo-detail-card { background: #fff; border: 1px solid #dbe2ea; border-radius: 12px; padding: 24px; box-shadow: 0 1px 2px rgba(15, 23, 42, .04); }
+.demo-card-topline, .demo-type-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #64748b; font-size: .78rem; font-weight: 700; }
+.demo-card-topline strong { color: #b91c1c; font-size: 1.1rem; }
+.demo-user-card h2 { font-size: 1.1rem; margin: 20px 0 5px; }
+.demo-user-card > p { color: #64748b; font-size: .86rem; }
+.demo-body-list { list-style: none; margin: 18px 0; padding: 0; border-top: 1px solid #e2e8f0; }
+.demo-body-list li { padding: 12px 0; border-bottom: 1px solid #e2e8f0; }
+.demo-body-list strong, .demo-body-list span { display: block; }
+.demo-body-list strong { font-size: .84rem; line-height: 1.4; }
+.demo-body-list span { margin-top: 4px; color: #64748b; font-size: .75rem; }
+.demo-primary-button, .demo-secondary-button { border-radius: 6px; cursor: pointer; font: inherit; font-weight: 800; }
+.demo-primary-button { width: 100%; border: 1px solid #991b1b; background: #b91c1c; color: #fff; padding: 10px 14px; }
+.demo-secondary-button { border: 1px solid #cbd5e1; background: #fff; color: #172033; padding: 8px 11px; font-size: .82rem; }
+.demo-back-button { background: transparent; color: #334155; border: 0; padding: 0; margin-bottom: 26px; font-size: .88rem; font-weight: 700; }
+.demo-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 28px 0 18px; background: #dbe2ea; border: 1px solid #dbe2ea; border-radius: 10px; overflow: hidden; }
+.demo-summary-grid div { background: #fff; padding: 15px 18px; }
+.demo-summary-grid span, .demo-summary-grid strong { display: block; }
+.demo-summary-grid span { color: #64748b; font-size: .75rem; font-weight: 700; }
+.demo-summary-grid strong { margin-top: 3px; color: #172033; font-size: 1.2rem; }
+.demo-mask-note { margin-bottom: 18px; padding: 16px 18px; border: 1px solid #f2c8c5; background: #fff8f7; border-radius: 9px; }
+.demo-mask-note strong { color: #991b1b; font-size: .85rem; }
+.demo-mask-note p { margin: 5px 0 0; color: #6b3c3c; font-size: .84rem; line-height: 1.5; }
+.demo-recommendations { display: grid; gap: 14px; }
+.demo-recommendation-card { display: grid; grid-template-columns: 76px 1fr; overflow: hidden; background: #fff; border: 1px solid #dbe2ea; border-radius: 10px; }
+.demo-rank { display: grid; place-items: start center; padding-top: 23px; background: #f1f5f9; color: #334155; font-size: 1.05rem; font-weight: 900; }
+.demo-recommendation-content { padding: 20px; }
+.demo-type-row span:first-child { color: #b91c1c; text-transform: uppercase; letter-spacing: .06em; }
+.demo-recommendation-content h2 { margin: 7px 0 4px; color: #172033; font-size: 1rem; line-height: 1.45; }
+.demo-asin, .demo-score { margin: 4px 0; color: #64748b; font-size: .8rem; }
+.demo-score { color: #334155; font-weight: 700; }
+.demo-recommendation-content .demo-secondary-button { margin-top: 16px; }
+.demo-explanation { margin-top: 16px; padding: 14px; border-left: 3px solid #15803d; background: #f0fdf4; }
+.demo-explanation-title { color: #166534; font-size: .78rem; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; }
+.demo-explanation p { margin: 8px 0; color: #244532; font-size: .85rem; line-height: 1.6; }
+.demo-explanation dl { display: grid; gap: 5px; margin: 9px 0 0; }
+.demo-explanation dl div { display: grid; grid-template-columns: 130px 1fr; gap: 8px; font-size: .78rem; }
+.demo-explanation dt { color: #527260; }
+.demo-explanation dd { margin: 0; color: #244532; font-weight: 700; }
+.demo-detail-card { display: grid; grid-template-columns: 220px 1fr; gap: 32px; margin-top: 28px; }
+.demo-detail-visual { display: grid; place-items: center; min-height: 210px; background: #f1f5f9; border: 1px solid #dbe2ea; color: #475569; font-size: .85rem; font-weight: 800; text-transform: uppercase; }
+.demo-detail-content h1 { font-size: 1.55rem; }
+.demo-attributes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 24px 0; border: 1px solid #dbe2ea; background: #dbe2ea; }
+.demo-attributes div { padding: 12px; background: #fff; }
+.demo-attributes dt { color: #64748b; font-size: .74rem; font-weight: 700; }
+.demo-attributes dd { margin: 4px 0 0; color: #172033; font-size: .86rem; font-weight: 700; line-height: 1.4; }
+
+@media (max-width: 720px) {
+  .demo-shell { width: min(100% - 28px, 1120px); }
+  .demo-header-content { min-height: auto; padding: 14px 0; flex-wrap: wrap; }
+  .demo-header p { order: 3; width: 100%; margin: 0; }
+  .demo-main { padding: 34px 0 48px; }
+  .demo-user-grid, .demo-detail-card { grid-template-columns: 1fr; }
+  .demo-summary-grid { grid-template-columns: 1fr; }
+  .demo-recommendation-card { grid-template-columns: 56px 1fr; }
+  .demo-rank { padding-top: 20px; }
+  .demo-detail-visual { min-height: 90px; }
+  .demo-attributes { grid-template-columns: 1fr; }
+  .demo-explanation dl div { grid-template-columns: 1fr; gap: 1px; }
+}

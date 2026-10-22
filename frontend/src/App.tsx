@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import "./styles.css";
+import RecommendationDemo from "./RecommendationDemo";
 
 // SVG Icons for professional E-Commerce UI (No emojis!)
 const SearchIcon = () => (
@@ -209,6 +210,7 @@ const formatVND = (amount: number) => {
 };
 
 export default function App() {
+  const [activeView, setActiveView] = useState<"catalog" | "recommendation">("catalog");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -262,6 +264,10 @@ export default function App() {
     setSelectedUseCase("All");
     setSortBy("featured");
   };
+
+  if (activeView === "recommendation") {
+    return <RecommendationDemo onExit={() => setActiveView("catalog")} />;
+  }
 
   return (
     <div className="store-container">
@@ -349,6 +355,9 @@ export default function App() {
           </button>
           <button className="nav-item ai-recommend-link" onClick={() => setIsAiWizardOpen(true)}>
             <SparkleIcon /> Tư vấn AI theo nhu cầu
+          </button>
+          <button className="nav-item api-demo-link" onClick={() => setActiveView("recommendation")}>
+            Demo API 1.2
           </button>
         </div>
       </nav>
