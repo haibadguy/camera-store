@@ -5,6 +5,8 @@ Cập nhật lần cuối: 21/10/2026, phiên sau nữa (**demo dùng thân tron
 > File này là nguồn sự thật về trạng thái dự án. Khi file này mâu thuẫn với trí nhớ của một cuộc chat, tin file này.
 > Mỗi khi có thay đổi quan trọng, cập nhật file rồi thay bản mới vào Project.
 
+**Cập nhật 24/10/2026 — Nội dung 10, frontend (Quyền):** nhánh `quyen/fron-p1` đã có luồng demo React dùng dữ liệu tĩnh theo `docs/api_contract.md` v1.2, gồm ba màn hình: chọn người dùng 409/47, danh sách gợi ý có giải thích đã xác minh và chi tiết sản phẩm. Luồng mở riêng từ `Demo API 1.2`, catalog cũ được giữ nguyên. `npm run build` đạt (TypeScript + Vite, 30 module). Trạng thái Nội dung 10 vẫn là **Đã triển khai một phần**: React chưa gọi Spring Boot/FastAPI, chưa có kiểm thử tương tác tự động và dữ liệu thương mại/ảnh sản phẩm không thuộc hợp đồng API.
+
 ## 1. Thông tin chung
 
 - **Tên đề tài (đã được GVHD chốt 17/09/2026):** Xây dựng hệ thống tư vấn cá nhân hóa lựa chọn thiết bị nhiếp ảnh trong thương mại điện tử bằng mô hình gợi ý lai có ràng buộc và giải thích được

@@ -6,6 +6,24 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 24/10/2026: frontend demo gợi ý theo API contract 1.2. Nhánh `quyen/fron-p1`, người thực hiện: Quyền
+
+**Sửa gì / thêm gì**
+- `frontend/src/App.tsx`: thêm lối vào `Demo API 1.2`, giữ nguyên catalog và luồng tư vấn mock có sẵn.
+- Mới `frontend/src/RecommendationDemo.tsx`: ba màn hình chọn người dùng, danh sách gợi ý có giải thích và chi tiết sản phẩm; dùng dữ liệu tĩnh của người dùng 409 và 47 theo `docs/api_contract.md`.
+- `frontend/src/styles.css`: thêm giao diện responsive cho luồng demo.
+
+**Vì sao**
+- Cần có giao diện frontend để trình diễn dữ liệu của hợp đồng API trước khi nối Spring Boot và FastAPI.
+- Chỉ hiển thị các sản phẩm, thứ hạng, điểm và giải thích được tài liệu công bố; không tự tạo thêm kết quả mô hình. Giải thích chỉ hiện với dữ liệu có `verified = true`.
+
+**Kiểm chứng / ảnh hưởng**
+- Chạy `npm run build` trong `frontend/`: TypeScript và Vite build thành công (30 module).
+- Catalog cũ vẫn được giữ; luồng mới mở riêng từ mục `Demo API 1.2`.
+- Không thay đổi hợp đồng API, backend, mô hình, dữ liệu AI hoặc các số đánh giá. React vẫn dùng dữ liệu tĩnh và chưa kết nối Spring Boot/FastAPI.
+
+---
+
 ## 16/10/2026 (khuya): giải thích và độ trễ cho hệ thống cuối (LightGCN + mặt nạ QĐ 4-9). Nhánh `nam/cakg-v2`, code `fbf994a`, thử val `4166de4`, kết quả test `8ea1edc`
 
 Theo `docs/reviews/final_system_explain_plan.md` (Nam duyệt). Không sửa code của Hải, không sửa code dùng chung; chỉ thêm file và `.gitignore` (bỏ `*.npy`, `*.npz`, `explanations.jsonl` trong `results/final_system/`).
