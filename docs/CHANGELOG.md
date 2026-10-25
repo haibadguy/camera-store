@@ -6,6 +6,33 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 26/10/2026: backend Spring Boot nối dịch vụ mô hình FastAPI. Nhánh `nam/backend`, commit `e94b0c7`
+
+Không sửa code AI của Hải (`ai/pipeline/`), không đổi số nào. Có sửa **khung backend Spring Boot** của Hải (commit `d403389`, `fa83381`).
+
+**Sửa gì (file của Hải)**
+- `backend/src/main/resources/application.yml`: mặc định tắt tự cấu hình DataSource / Hibernate JPA / Flyway (`spring.autoconfigure.exclude`); thêm `spring.jackson.property-naming-strategy: SNAKE_CASE`, khối `model-service` (địa chỉ FastAPI, timeout 1 s), `cors.allowed-origins`. Thêm `application-db.yml` (profile `db` bật lại phần database).
+- `SeedData.java`, `catalog/ProductController.java`, `recommendations/RecommendationController.java`: thêm `@Profile("db")`, **không đổi logic**.
+- `config/CorsConfig.java`: địa chỉ được phép lấy từ cấu hình (mặc định `http://localhost:5173`, `http://127.0.0.1:5173`) thay vì viết cứng một địa chỉ.
+- `CameraStoreApplication.java`: thêm `@ConfigurationPropertiesScan`. `backend/README.md`: viết lại (cách chạy, điểm cuối, lỗi, luồng một yêu cầu).
+- Thêm mới (không phải file của Hải): `common/` (định dạng lỗi chung), `modules/advisor/` (Controller, Service, Client gọi FastAPI, DTO), test `src/test/`, script `ai/service/check_backend.py`.
+
+**Vì sao**
+- Nam giao việc dựng backend cho demo React → Spring Boot → FastAPI theo `docs/api_contract.md` 1.3, **chưa làm database / đăng nhập** (chờ cô chốt chương 3). Khung của Hải bắt buộc có PostgreSQL mới khởi động được (`ddl-auto: validate`, Flyway). Ví dụ: chạy với profile `db` trên máy Nam, Spring dừng ở Flyway "password authentication failed for user camera". Tắt mặc định để Spring chạy không cần database; giữ code cũ để sau này dùng lại.
+- CORS viết cứng một địa chỉ và cho cả POST / PUT / DELETE; giữ các phương thức, chỉ đưa địa chỉ ra cấu hình và thêm `127.0.0.1:5173`.
+
+**Ảnh hưởng**
+
+| | Trước | Sau |
+|---|---|---|
+| Khởi động không có PostgreSQL | lỗi | chạy được (mặc định) |
+| `/api/products`, `/api/recommendations` (code cũ) | có (cần database) | chỉ có với profile `db` |
+| `/api/recommend`, `/api/items/{id}`, `/api/users/{id}/bodies`, `/api/compat`, `/api/health` | không có | có, cùng dạng hợp đồng 1.3 |
+
+Kiểm (`results/backend/mvn_test_20261026_lan1.log`, `results/backend/check_backend_s1_20261026_lan2/summary.json`): 33/33 test; 28/28 phản hồi qua Spring trùng `frontend/src/mock/` và trùng gọi thẳng FastAPI seed 1. Phía sau: khi làm database phải xem lại `ddl-auto: validate`, `SeedData` (dữ liệu sản phẩm giả, không phải sản phẩm Amazon) và nối bảng sản phẩm với mô hình bằng `asin` (hợp đồng hạn chế 7).
+
+---
+
 ## 16/10/2026 (khuya): giải thích và độ trễ cho hệ thống cuối (LightGCN + mặt nạ QĐ 4-9). Nhánh `nam/cakg-v2`, code `fbf994a`, thử val `4166de4`, kết quả test `8ea1edc`
 
 Theo `docs/reviews/final_system_explain_plan.md` (Nam duyệt). Không sửa code của Hải, không sửa code dùng chung; chỉ thêm file và `.gitignore` (bỏ `*.npy`, `*.npz`, `explanations.jsonl` trong `results/final_system/`).
