@@ -29,7 +29,7 @@ Không sửa code AI của Hải (`ai/pipeline/`), không đổi số nào. Có 
 | `/api/products`, `/api/recommendations` (code cũ) | có (cần database) | chỉ có với profile `db` |
 | `/api/recommend`, `/api/items/{id}`, `/api/users/{id}/bodies`, `/api/compat`, `/api/health` | không có | có, cùng dạng hợp đồng 1.3 |
 
-Kiểm (`results/backend/mvn_test_20261026_lan1.log`, `results/backend/check_backend_s1_20261026_lan2/summary.json`): 33/33 test; 28/28 phản hồi qua Spring trùng `frontend/src/mock/` và trùng gọi thẳng FastAPI seed 1. Phía sau: khi làm database phải xem lại `ddl-auto: validate`, `SeedData` (dữ liệu sản phẩm giả, không phải sản phẩm Amazon) và nối bảng sản phẩm với mô hình bằng `asin` (hợp đồng hạn chế 7).
+Kiểm (`results/backend/mvn_test_20261026_lan1.log`, `results/backend/check_backend_s1_20261026_lan3/summary.json`): 33/33 test; 28/28 phản hồi qua Spring trùng `frontend/src/mock/` và trùng gọi thẳng FastAPI seed 1. Phía sau: khi làm database phải xem lại `ddl-auto: validate`, `SeedData` (dữ liệu sản phẩm giả, không phải sản phẩm Amazon) và nối bảng sản phẩm với mô hình bằng `asin` (hợp đồng hạn chế 7).
 
 ---
 
