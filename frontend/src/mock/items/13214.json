@@ -1,0 +1,30 @@
+{
+  "item_id": 13214,
+  "asin": "B00V8VNL2E",
+  "title": "Nikon AF-S VR Micro-NIKKOR 105mm f/2.8G IF-ED Lens",
+  "type": "ong",
+  "type_label": "ống kính",
+  "mount": "nikon_f",
+  "khung": "ff",
+  "may_phim": false,
+  "mount_uncertain": false,
+  "mount_source": "tieu_de",
+  "categories": "Electronics > Camera & Photo > Lenses > Camera Lenses > SLR Camera Lenses",
+  "in_matrix": true,
+  "focal_mm": {
+    "min": 105.0,
+    "max": 105.0
+  },
+  "max_aperture_f": {
+    "at_min_focal": 2.8,
+    "at_max_focal": 2.8
+  },
+  "usecases": [
+    "chan_dung",
+    "macro"
+  ],
+  "usecases_label": [
+    "chân dung",
+    "macro"
+  ]
+}

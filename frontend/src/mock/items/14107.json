@@ -1,0 +1,28 @@
+{
+  "item_id": 14107,
+  "asin": "B013JLRWKW",
+  "title": "Nikon AF S NIKKOR 85mm f/1.8G Fixed Lens with Auto Focus for Nikon DSLR Cameras",
+  "type": "ong",
+  "type_label": "ống kính",
+  "mount": "nikon_f",
+  "khung": "ff",
+  "may_phim": false,
+  "mount_uncertain": false,
+  "mount_source": "hang_slr",
+  "categories": "Electronics > Camera & Photo > Lenses > Camera Lenses > SLR Camera Lenses",
+  "in_matrix": true,
+  "focal_mm": {
+    "min": 85.0,
+    "max": 85.0
+  },
+  "max_aperture_f": {
+    "at_min_focal": 1.8,
+    "at_max_focal": 1.8
+  },
+  "usecases": [
+    "chan_dung"
+  ],
+  "usecases_label": [
+    "chân dung"
+  ]
+}

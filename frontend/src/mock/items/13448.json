@@ -1,0 +1,28 @@
+{
+  "item_id": 13448,
+  "asin": "B00WUI9ITO",
+  "title": "Canon EF 24-70mm f/4.0L is USM Standard Zoom Lens - 6313B002",
+  "type": "ong",
+  "type_label": "ống kính",
+  "mount": "canon_ef",
+  "khung": "ff",
+  "may_phim": false,
+  "mount_uncertain": false,
+  "mount_source": "tieu_de",
+  "categories": "Electronics > Camera & Photo > Lenses > Camera Lenses > SLR Camera Lenses",
+  "in_matrix": true,
+  "focal_mm": {
+    "min": 24.0,
+    "max": 70.0
+  },
+  "max_aperture_f": {
+    "at_min_focal": 4.0,
+    "at_max_focal": 4.0
+  },
+  "usecases": [
+    "phong_canh"
+  ],
+  "usecases_label": [
+    "phong cảnh"
+  ]
+}

@@ -1,0 +1,350 @@
+{
+  "user_id": 47,
+  "k": 10,
+  "exclude": "all_history",
+  "has_bodies": true,
+  "n_bodies": 2,
+  "items": [
+    {
+      "rank": 1,
+      "item_id": 13466,
+      "asin": "B00WUIDQLK",
+      "title": "Nikon AF-S FX NIKKOR 28-300mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras",
+      "type": "ong",
+      "type_label": "ống kính",
+      "score": 9.528878211975098,
+      "explanation": {
+        "text": "Gợi ý Nikon AF-S FX NIKKOR 28-300mm f/3.5-5.6G ED Vibration Reduction Zoom… vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp phong cảnh (tiêu cự 28-300 mm, khẩu độ tối đa f/3.5-5.6).",
+        "path": [
+          {
+            "kind": "user",
+            "id": 47
+          },
+          {
+            "kind": "item",
+            "role": "body",
+            "item_id": 14934,
+            "asin": "B01A7Q0J3Y",
+            "title": "Nikon D500 DX-Format Digital SLR (Body Only), Base",
+            "type": "than",
+            "type_label": "thân máy"
+          },
+          {
+            "kind": "item",
+            "role": "lens",
+            "item_id": 13466,
+            "asin": "B00WUIDQLK",
+            "title": "Nikon AF-S FX NIKKOR 28-300mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras",
+            "type": "ong",
+            "type_label": "ống kính"
+          },
+          {
+            "kind": "usecase",
+            "id": "phong_canh",
+            "label": "phong cảnh"
+          }
+        ],
+        "edges": [
+          "owns",
+          "compatible_with",
+          "suitable_for"
+        ],
+        "b_star": 14934,
+        "rho": "compatible_with",
+        "c_star": "phong_canh",
+        "b_star_score": 17.276500701904297,
+        "b_star_source": "val",
+        "candidate_bodies": [
+          12369,
+          14934
+        ],
+        "verified": true,
+        "errors": []
+      }
+    },
+    {
+      "rank": 2,
+      "item_id": 13214,
+      "asin": "B00V8VNL2E",
+      "title": "Nikon AF-S VR Micro-NIKKOR 105mm f/2.8G IF-ED Lens",
+      "type": "ong",
+      "type_label": "ống kính",
+      "score": 9.359149932861328,
+      "explanation": {
+        "text": "Gợi ý Nikon AF-S VR Micro-NIKKOR 105mm f/2.8G IF-ED Lens vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp chân dung (tiêu cự 105 mm, khẩu độ tối đa f/2.8).",
+        "path": [
+          {
+            "kind": "user",
+            "id": 47
+          },
+          {
+            "kind": "item",
+            "role": "body",
+            "item_id": 14934,
+            "asin": "B01A7Q0J3Y",
+            "title": "Nikon D500 DX-Format Digital SLR (Body Only), Base",
+            "type": "than",
+            "type_label": "thân máy"
+          },
+          {
+            "kind": "item",
+            "role": "lens",
+            "item_id": 13214,
+            "asin": "B00V8VNL2E",
+            "title": "Nikon AF-S VR Micro-NIKKOR 105mm f/2.8G IF-ED Lens",
+            "type": "ong",
+            "type_label": "ống kính"
+          },
+          {
+            "kind": "usecase",
+            "id": "chan_dung",
+            "label": "chân dung"
+          }
+        ],
+        "edges": [
+          "owns",
+          "compatible_with",
+          "suitable_for"
+        ],
+        "b_star": 14934,
+        "rho": "compatible_with",
+        "c_star": "chan_dung",
+        "b_star_score": 17.82408332824707,
+        "b_star_source": "val",
+        "candidate_bodies": [
+          12369,
+          14934
+        ],
+        "verified": true,
+        "errors": []
+      }
+    },
+    {
+      "rank": 3,
+      "item_id": 13211,
+      "asin": "B00V8VM7SS",
+      "title": "Nikon AF-S FX NIKKOR 24-70mm f/2.8G ED Zoom Lens with Auto Focus for Nikon DSLR Cameras",
+      "type": "ong",
+      "type_label": "ống kính",
+      "score": 8.608516693115234,
+      "explanation": {
+        "text": "Gợi ý Nikon AF-S FX NIKKOR 24-70mm f/2.8G ED Zoom Lens with Auto Focus for… vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp phong cảnh (tiêu cự 24-70 mm, khẩu độ tối đa f/2.8).",
+        "path": [
+          {
+            "kind": "user",
+            "id": 47
+          },
+          {
+            "kind": "item",
+            "role": "body",
+            "item_id": 14934,
+            "asin": "B01A7Q0J3Y",
+            "title": "Nikon D500 DX-Format Digital SLR (Body Only), Base",
+            "type": "than",
+            "type_label": "thân máy"
+          },
+          {
+            "kind": "item",
+            "role": "lens",
+            "item_id": 13211,
+            "asin": "B00V8VM7SS",
+            "title": "Nikon AF-S FX NIKKOR 24-70mm f/2.8G ED Zoom Lens with Auto Focus for Nikon DSLR Cameras",
+            "type": "ong",
+            "type_label": "ống kính"
+          },
+          {
+            "kind": "usecase",
+            "id": "phong_canh",
+            "label": "phong cảnh"
+          }
+        ],
+        "edges": [
+          "owns",
+          "compatible_with",
+          "suitable_for"
+        ],
+        "b_star": 14934,
+        "rho": "compatible_with",
+        "c_star": "phong_canh",
+        "b_star_score": 13.749659538269043,
+        "b_star_source": "val",
+        "candidate_bodies": [
+          12369,
+          14934
+        ],
+        "verified": true,
+        "errors": []
+      }
+    },
+    {
+      "rank": 4,
+      "item_id": 5988,
+      "asin": "B005PCDSBQ",
+      "title": "RFN-4s Wireless Remote Shutter Release for Nikon DSLR with MC30 Type Connection (Nikon D200, D300, D300s, D500, D700, D800, D800E, D810, D1, D2, D3, D3x, D3s, D4, D5) - Transmitter and Receiver Set",
+      "type": "phu_kien",
+      "type_label": "phụ kiện",
+      "score": 8.571357727050781,
+      "explanation": null
+    },
+    {
+      "rank": 5,
+      "item_id": 12373,
+      "asin": "B00PHRW09A",
+      "title": "Nikon D810 FX-format Digital SLR Camera Body",
+      "type": "than",
+      "type_label": "thân máy",
+      "score": 7.866089820861816,
+      "explanation": null
+    },
+    {
+      "rank": 6,
+      "item_id": 8822,
+      "asin": "B00BXK7LX0",
+      "title": "Zeikos ZE-NBG300 Professional Multi-Power Pack for Nikon D300/300S & D700",
+      "type": "phu_kien",
+      "type_label": "phụ kiện",
+      "score": 7.786437511444092,
+      "explanation": null
+    },
+    {
+      "rank": 7,
+      "item_id": 13429,
+      "asin": "B00WUI4TFM",
+      "title": "Nikon D800 36.3 MP CMOS FX-Format Digital SLR Camera (Body Only) (OLD MODEL)",
+      "type": "than",
+      "type_label": "thân máy",
+      "score": 7.700390815734863,
+      "explanation": null
+    },
+    {
+      "rank": 8,
+      "item_id": 13434,
+      "asin": "B00WUI60YU",
+      "title": "Nikon AF-S NIKKOR 14-24mm f/2.8G ED",
+      "type": "ong",
+      "type_label": "ống kính",
+      "score": 7.368493556976318,
+      "explanation": {
+        "text": "Gợi ý Nikon AF-S NIKKOR 14-24mm f/2.8G ED vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp phong cảnh (tiêu cự 14-24 mm, khẩu độ tối đa f/2.8).",
+        "path": [
+          {
+            "kind": "user",
+            "id": 47
+          },
+          {
+            "kind": "item",
+            "role": "body",
+            "item_id": 14934,
+            "asin": "B01A7Q0J3Y",
+            "title": "Nikon D500 DX-Format Digital SLR (Body Only), Base",
+            "type": "than",
+            "type_label": "thân máy"
+          },
+          {
+            "kind": "item",
+            "role": "lens",
+            "item_id": 13434,
+            "asin": "B00WUI60YU",
+            "title": "Nikon AF-S NIKKOR 14-24mm f/2.8G ED",
+            "type": "ong",
+            "type_label": "ống kính"
+          },
+          {
+            "kind": "usecase",
+            "id": "phong_canh",
+            "label": "phong cảnh"
+          }
+        ],
+        "edges": [
+          "owns",
+          "compatible_with",
+          "suitable_for"
+        ],
+        "b_star": 14934,
+        "rho": "compatible_with",
+        "c_star": "phong_canh",
+        "b_star_score": 11.869418144226074,
+        "b_star_source": "val",
+        "candidate_bodies": [
+          12369,
+          14934
+        ],
+        "verified": true,
+        "errors": []
+      }
+    },
+    {
+      "rank": 9,
+      "item_id": 14107,
+      "asin": "B013JLRWKW",
+      "title": "Nikon AF S NIKKOR 85mm f/1.8G Fixed Lens with Auto Focus for Nikon DSLR Cameras",
+      "type": "ong",
+      "type_label": "ống kính",
+      "score": 7.173004150390625,
+      "explanation": {
+        "text": "Gợi ý Nikon AF S NIKKOR 85mm f/1.8G Fixed Lens with Auto Focus for Nikon DS… vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp chân dung (tiêu cự 85 mm, khẩu độ tối đa f/1.8).",
+        "path": [
+          {
+            "kind": "user",
+            "id": 47
+          },
+          {
+            "kind": "item",
+            "role": "body",
+            "item_id": 14934,
+            "asin": "B01A7Q0J3Y",
+            "title": "Nikon D500 DX-Format Digital SLR (Body Only), Base",
+            "type": "than",
+            "type_label": "thân máy"
+          },
+          {
+            "kind": "item",
+            "role": "lens",
+            "item_id": 14107,
+            "asin": "B013JLRWKW",
+            "title": "Nikon AF S NIKKOR 85mm f/1.8G Fixed Lens with Auto Focus for Nikon DSLR Cameras",
+            "type": "ong",
+            "type_label": "ống kính"
+          },
+          {
+            "kind": "usecase",
+            "id": "chan_dung",
+            "label": "chân dung"
+          }
+        ],
+        "edges": [
+          "owns",
+          "compatible_with",
+          "suitable_for"
+        ],
+        "b_star": 14934,
+        "rho": "compatible_with",
+        "c_star": "chan_dung",
+        "b_star_score": 17.294063568115234,
+        "b_star_source": "val",
+        "candidate_bodies": [
+          12369,
+          14934
+        ],
+        "verified": true,
+        "errors": []
+      }
+    },
+    {
+      "rank": 10,
+      "item_id": 1054,
+      "asin": "B000BYCKU8",
+      "title": "Nikon EN-EL3e Rechargeable Li-Ion Battery for D200, D300, D700 and D80 Digital SLR Cameras - Retail Packaging",
+      "type": "phu_kien",
+      "type_label": "phụ kiện",
+      "score": 7.101871967315674,
+      "explanation": null
+    }
+  ],
+  "mask": {
+    "rule": "QĐ 4-9 (mặt nạ 15)",
+    "n_lenses_blocked": 814,
+    "n_blocked_in_topk_before_mask": 0,
+    "blocked_in_topk_before_mask": []
+  }
+}
