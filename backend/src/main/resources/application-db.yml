@@ -1,0 +1,5 @@
+# Profile "db": bật lại DataSource / JPA / Flyway và code cũ dùng PostgreSQL (catalog, /api/recommendations).
+# Chưa dùng cho demo (chưa làm database, chờ cô chốt chương 3). Chạy: mvn spring-boot:run -Dspring-boot.run.profiles=db
+spring:
+  autoconfigure:
+    exclude: ""

@@ -1,0 +1,1 @@
+{"error":{"code":"USER_NOT_FOUND","message":"Không có người dùng 99999 trong dữ liệu (chỉ phục vụ user_id 0..67660; chưa hỗ trợ người dùng mới).","details":{"user_id":99999}}}

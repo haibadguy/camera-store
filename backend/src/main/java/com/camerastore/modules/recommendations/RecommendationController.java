@@ -4,12 +4,14 @@ import com.camerastore.modules.catalog.Product;
 import com.camerastore.modules.catalog.ProductRepository;
 import java.math.BigDecimal;
 import java.util.List;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Profile("db")
 @RequestMapping("/api/recommendations")
 public class RecommendationController {
     private final ProductRepository products;
