@@ -160,5 +160,5 @@ FastAPI đổi tên / bỏ trường, test so nội dung sẽ báo lệch. Cái 
   ai\.venv\Scripts\python.exe ai/service/check_backend.py --label <nhãn>
   ```
   Kết quả `results/backend/check_backend_<nhãn>/` (log, log FastAPI, log Spring, `summary.json`). Lần
-  `s1_20261026_lan2` (commit `e94b0c7`): ĐẠT — 28/28 phản hồi trùng mock và trùng FastAPI, health + 4 compat + 3 lỗi
+  `s1_20261026_lan3` (commit `34a9c7a`): ĐẠT — 28/28 phản hồi trùng mock và trùng FastAPI, health + 4 compat + 3 lỗi
   trùng FastAPI, CORS đúng, tắt FastAPI → 503.
