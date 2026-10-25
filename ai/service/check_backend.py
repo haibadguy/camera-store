@@ -77,7 +77,8 @@ def start_spring(port, fastapi_base, log_file, log):
         except httpx.HTTPError:
             pass
         time.sleep(0.5)
-    p.kill()
+    for x in reversed(CS.tree(p)):
+        x.kill()
     sys.exit("DỪNG: Spring không lên sau 120 s")
 
 
@@ -186,7 +187,10 @@ def main():
                 res["fastapi_down"].append({"url": path, "status": r.status_code, "body": j})
                 log(f"  {path} -> {r.status_code} {json.dumps(j, ensure_ascii=False)}")
     finally:
-        sp.kill()
+        # java trong PATH trên Windows có thể là launcher sinh tiến trình con: diệt cả cây (sửa sau lần lan2, lần đó
+        # tiến trình Spring con còn chạy sau khi script xong)
+        for x in reversed(CS.tree(sp)):
+            x.kill()
         sp.wait(30)
         sf.close()
 
