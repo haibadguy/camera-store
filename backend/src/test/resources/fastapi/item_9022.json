@@ -1,0 +1,19 @@
+{
+  "item_id": 9022,
+  "asin": "B00CIRLDC2",
+  "title": "Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zoom Lens (Discontinued by Manufacturer)",
+  "type": "than",
+  "type_label": "thân máy",
+  "mount": "nikon_f",
+  "khung": "apsc",
+  "may_phim": false,
+  "mount_uncertain": false,
+  "mount_source": "dong_may",
+  "categories": "Electronics > Camera & Photo > Digital Cameras > DSLR Cameras",
+  "in_matrix": true,
+  "focal_mm": null,
+  "max_aperture_f": null,
+  "usecases": [],
+  "usecases_label": [],
+  "n_lenses_m1": 219
+}
