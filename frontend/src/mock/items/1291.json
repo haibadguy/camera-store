@@ -1,0 +1,19 @@
+{
+  "item_id": 1291,
+  "asin": "B000I7TV3W",
+  "title": "Canon Rebel XTi DSLR Camera with EF-S 18-55mm f/3.5-5.6 Lens (OLD MODEL)",
+  "type": "than",
+  "type_label": "thân máy",
+  "mount": "canon_efs",
+  "khung": "apsc",
+  "may_phim": false,
+  "mount_uncertain": false,
+  "mount_source": "dong_may",
+  "categories": "Electronics > Camera & Photo > Digital Cameras > DSLR Cameras",
+  "in_matrix": true,
+  "focal_mm": null,
+  "max_aperture_f": null,
+  "usecases": [],
+  "usecases_label": [],
+  "n_lenses_m1": 286
+}

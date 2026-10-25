@@ -1,10 +1,12 @@
-# Hợp đồng API — dịch vụ mô hình (FastAPI), phiên bản 1.2
+# Hợp đồng API — dịch vụ mô hình (FastAPI), phiên bản 1.3
 
 - Viết 21/10/2026, nhánh `nam/api-fastapi`. **1.1 (21/10, Nam chốt):** `/recommend` mặc định `exclude=all_history` (bỏ
   toàn bộ lịch sử train + val + test); bỏ giá trị `exclude=train` của 1.0; demo dùng seed 1. **1.2 (21/10, Nam chốt):**
   ở `all_history`, thân máy dùng cho mặt nạ QĐ 4-9 và câu giải thích lấy từ **cả lịch sử** (train + val + test);
   `train_val` giữ nguyên thân train như lúc chấm; thêm `b_star_source`, `/users/{id}/bodies?exclude=`, trường `source`;
-  `n_users_with_bodies` của `/health` thành object. Code: `ai/service/` (cách chạy: `ai/README.md`, mục "Dịch vụ mô hình").
+  `n_users_with_bodies` của `/health` thành object. **1.3 (26/10, Nam chốt):** câu giải thích ở `all_history` nói
+  "bạn **đã đánh giá**" thay "bạn đã mua" (dữ liệu là đánh giá Amazon, không phải lịch sử mua); `train_val` giữ nguyên câu
+  cũ để vẫn so được với kết quả đã chấm; mọi trường khác không đổi. Code: `ai/service/` (cách chạy: `ai/README.md`, mục "Dịch vụ mô hình").
 - Dùng cho: **Spring Boot** (`backend/`) gọi dịch vụ này; **React** (`frontend/`) chỉ gọi Spring Boot, không gọi thẳng FastAPI.
   Kiến trúc chốt 09/10/2026: React → Spring Boot → FastAPI.
 - Mô hình phía sau: **hệ thống cuối = LightGCN + mặt nạ QĐ 4-9 + giải thích theo đường** (STATUS 16/10). Checkpoint
@@ -68,7 +70,7 @@ Ví dụ (seed 1, `results/service/check_http_s1_20261021_lan1/summary.json`):
  "embeddings_sha256": "fbda48a1f84c9fd0047d2a8d06319e1e816dcf20cbe51817f5f86241f97200b4",
  "device": "cpu", "n_users": 67661, "n_items": 27940,
  "n_users_with_bodies": {"train": 10406, "all_history": 12472},
- "startup_s": 2.4, "contract_version": "1.2"}
+ "startup_s": 2.4, "contract_version": "1.3"}
 ```
 
 ## 4. `GET /recommend?user_id=&k=&exclude=`
@@ -106,7 +108,7 @@ cố định seed 20261009, `eval_05.tie_keys`); ống bị mặt nạ chặn c�
 |---|---|---|
 | `text` | string | câu tiếng Việt (mẫu của `eval_cakg.sentence`; tên dài quá 70 ký tự được cắt, thêm "…") |
 | `path` | mảng 3 hoặc 4 nút | `[u, b*, l]` hoặc `[u, b*, l, c*]`: `{"kind": "user", "id"}`, `{"kind": "item", "role": "body" \| "lens", item_id, asin, title, type, type_label}`, `{"kind": "usecase", "id", "label"}` |
-| `edges` | mảng 2 hoặc 3 chuỗi | loại cạnh giữa hai nút liền nhau: `owns` (u đã mua b\*: trong lịch sử ở `all_history`, trong train ở `train_val`), ρ (`compatible_with` / `compatible_with_crop_unknown` / `crops_sensor`), `suitable_for` |
+| `edges` | mảng 2 hoặc 3 chuỗi | loại cạnh giữa hai nút liền nhau: `owns` (u có b\* trong lịch sử đánh giá: cả lịch sử ở `all_history`, train ở `train_val`), ρ (`compatible_with` / `compatible_with_crop_unknown` / `crops_sensor`), `suitable_for` |
 | `b_star`, `rho`, `c_star` | | b* (item_id thân), ρ, c* (`phong_canh` / `the_thao_chim` / `chan_dung` / `macro` hoặc `null`) |
 | `b_star_score` | float | e_{b\*}ᵀe_l (điểm dùng để chọn b\*) |
 | `b_star_source` | string | b\* nằm ở phần nào của lịch sử: `train` / `val` / `test` (chỉ `all_history` mới có `val` / `test`) |
@@ -114,15 +116,18 @@ cố định seed 20261009, `eval_05.tie_keys`); ống bị mặt nạ chặn c�
 | `verified`, `errors` | bool, mảng | kết quả `eval_cakg.verify_explanation`: mọi sự kiện trong câu đều đúng. Luôn `true` / `[]` trong các lần kiểm (mục 9); nếu `false` thì Spring Boot không nên hiện câu |
 
 **Cách kiểm sự kiện của câu** (`verified`):
-- "bạn đã mua <thân>" (cạnh `owns`): b\* phải là thân máy trong **file lịch sử của người dùng** — `train.txt` ở
+- "bạn đã đánh giá <thân>" (`all_history`) / "bạn đã mua <thân>" (`train_val`) (cạnh `owns`): b\* phải là thân máy trong **file lịch sử của người dùng** — `train.txt` ở
   `train_val`; `train.txt` + `val.txt` + `test.txt` ở `all_history`. Đồ thị tri thức chỉ có cạnh `interacted_with` của
   train, nên với thân ở val / test **không** kiểm bằng đồ thị được;
 - cạnh lắp được (b\*, l) loại ρ, ngàm của b\* (`has_spec_mount`), cạnh mục đích (l, c\*) `suitable_for`, tiêu cự, khẩu
   độ: kiểm bằng **đồ thị** như cũ (cả hai chế độ);
 - b\* không được là máy phim; tên l và b\* trong câu đúng tên sản phẩm.
 
-Ba dạng câu theo ρ:
-- `compatible_with`: "… vì ống này lắp trực tiếp được trên … bạn đã mua (ngàm …)";
+Ba dạng câu theo ρ. Cụm chỉ cạnh `owns` theo chế độ (từ 1.3): **`all_history` (mặc định, demo): "bạn đã đánh giá"**;
+`train_val`: "bạn đã mua" (đúng câu của `eval_cakg.sentence` lúc chấm). Dịch vụ lấy câu của `eval_cakg.sentence` rồi chỉ
+thay đúng một cụm " bạn đã mua (ngàm " (kiểm có đúng một lần) bằng " bạn đã đánh giá (ngàm "; kiểm sự kiện chạy trên câu
+cuối. Ví dụ dưới viết theo `all_history`:
+- `compatible_with`: "… vì ống này lắp trực tiếp được trên … bạn đã đánh giá (ngàm …)";
 - `crops_sensor`: thêm "…, nhưng ống thiết kế cho cảm biến nhỏ hơn nên ảnh sẽ bị cắt khung";
 - `compatible_with_crop_unknown`: "… lắp được trên …; chưa rõ máy có tự cắt khung với ống này không".
 
@@ -132,7 +137,8 @@ Nếu có c\*: thêm ", và phù hợp chụp <nhãn> (tiêu cự …, khẩu đ
 
 `GET /recommend?user_id=409&k=10` (seed 1, `exclude` mặc định `all_history`, chạy `core.RecommenderCore` 21/10/2026;
 rút gọn: chỉ giữ hạng 1, 2, 5). Item val / test của người 409 (một máy ống liền, một bao da) không lọt top-10 và không phải thân máy, nên kết quả giống
-bản 1.0, 1.1 (đã chạy lại với bản 1.2).
+bản 1.0, 1.1 (đã chạy lại với bản 1.2). Bản 1.3 (26/10): chỉ `text` đổi "bạn đã mua" → "bạn đã đánh giá", mọi số khác
+trùng; bản đầy đủ không rút gọn ở `frontend/src/mock/recommend_409.json` (`ai/service/export_mock.py`).
 Người 409 có một thân (Nikon D3100). Không có mặt nạ thì ống Canon EF 24-70mm vào top-10; mặt nạ gỡ nó ra.
 
 ```json
@@ -145,7 +151,7 @@ Người 409 có một thân (Nikon D3100). Không có mặt nạ thì ống Can
    "title": "Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor Zoom Lens Bulk packaging (White box, New)",
    "type": "ong", "type_label": "ống kính", "score": 6.998710632324219,
    "explanation": {
-    "text": "Gợi ý Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor… vì ống này lắp trực tiếp được trên Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zo… bạn đã mua (ngàm nikon_f), và phù hợp chụp thể thao / chim (tiêu cự 55-200 mm, khẩu độ tối đa f/4-5.6).",
+    "text": "Gợi ý Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor… vì ống này lắp trực tiếp được trên Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zo… bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp thể thao / chim (tiêu cự 55-200 mm, khẩu độ tối đa f/4-5.6).",
     "path": [
      {"kind": "user", "id": 409},
      {"kind": "item", "role": "body", "item_id": 9022, "asin": "B00CIRLDC2", "title": "Nikon D3100 DSLR Camera with 18-55mm …", "type": "than", "type_label": "thân máy"},
@@ -266,9 +272,21 @@ Mọi lỗi trả cùng một dạng:
 - Đặt thời gian chờ ~1 s cho `/recommend` (p99 đo được ~21 ms, mục 9); hết giờ hoặc 5xx thì hiện danh sách dự phòng.
 - Nối với bảng sản phẩm của Spring Boot bằng `asin`.
 
-## 9. Đã kiểm (21/10/2026)
+## 9. Đã kiểm (21/10/2026; bản 1.3: 26/10/2026)
 
 Script `ai/service/check_service.py`, `ai/service/diag_mismatch.py`; kết quả trong `results/service/`.
+
+**Bản 1.3 (26/10, commit `5c28e2d`)** — chỉ đổi cụm "bạn đã mua" → "bạn đã đánh giá" ở `all_history`:
+- `train_val` qua HTTP, 3 seed (`check_http_s{1,2,3}_20261026_lan5`): phần khớp kết quả đã lưu (nhóm A, B, từng người)
+  và hợp đồng trong `summary.json` **y hệt `lan4`** (so bằng script: hai object bằng nhau); 40/40 người trùng top-10,
+  14 + 61 / 9 + 65 / 12 + 67 câu trùng từng chữ với câu đã lưu ("bạn đã mua"), 16/16 hợp đồng;
+- `all_history` qua HTTP: trong 1.050 yêu cầu mỗi seed, 0 câu sai cụm (thiếu "bạn đã đánh giá" hoặc còn "bạn đã mua"),
+  0 câu không qua kiểm sự kiện, 0 sản phẩm trong lịch sử;
+- `all_history`, mọi 67.661 người seed 1 (`check_history_s1_20261026_lan2`): 0 lỗi sự kiện, 0 câu sai cụm, 0 b\* ngoài
+  lịch sử, 0 ống vi phạm QĐ 4-9; mọi số đếm khác trùng `check_history_s1_20261021_lan1` (22.739 câu, ...);
+- độ trễ `lan5` chậm hơn `lan4` (seed 1 phía khách p50 / p99 21,56 / 26,89 ms so với 14,77 / 20,41 ms; seed 2 max
+  151,52 ms) dù code chỉ thêm một phép thay chuỗi mỗi câu; lúc đo máy chỉ còn ~2,9 GB RAM trống. **Chưa tìm nguyên
+  nhân**; bảng độ trễ dưới giữ số `lan4`.
 
 **Khớp với kết quả đã lưu qua HTTP** (`exclude=train_val`, k = 10; bản 1.2: commit `ea3a16a`,
 `check_http_s{1,2,3}_20261021_lan4`; bản 1.1: `lan3` trên `ead4acd`; bản 1.0: `lan1` trên `8f47897`, `lan2` trên `37b7fd8`;

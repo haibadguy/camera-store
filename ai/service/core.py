@@ -49,12 +49,16 @@ EXCLUDE_MODES = ("all_history", "train_val")   # mặc định: bỏ cả lịch
 # Thân máy dùng cho mặt nạ và giải thích (Nam chốt 21/10, phiên sau): all_history -> thân trong CẢ lịch sử (train + val +
 # test); train_val -> thân trong train, đúng như lúc chấm test.
 MODE_VIEW = {"all_history": "history", "train_val": "train"}
+# Cụm chỉ cạnh owns trong câu (Nam chốt 26/10): dữ liệu là đánh giá Amazon, không phải lịch sử mua -> all_history nói
+# "bạn đã đánh giá"; train_val giữ đúng câu của eval_cakg.sentence ("bạn đã mua") để so được với câu đã lưu lúc chấm.
+SENTENCE_OWNS = " bạn đã mua (ngàm "
+OWNS_PHRASE = {"all_history": " bạn đã đánh giá (ngàm ", "train_val": SENTENCE_OWNS}
 
 
 @dataclass
 class BodyView:
     """Một tập thân máy của mọi người dùng và những thứ dựng từ nó (cùng hàm, chỉ khác dict lịch sử truyền vào).
-    owned: dict lịch sử dùng để kiểm "bạn đã mua b*" (pctx.train của verify_explanation)."""
+    owned: dict lịch sử dùng để kiểm "bạn đã mua / đã đánh giá b*" (pctx.train của verify_explanation)."""
     owned: dict
     bodies: dict
     cmask: np.ndarray
@@ -264,15 +268,17 @@ class RecommenderCore:
         # nên đặt một ứng viên bất kỳ (iid nhỏ nhất không bị loại).
         return E.Split("serve", np.array([u]), np.array([dummy]), np.array([0, len(ex)]), np.array(ex, dtype=np.int64))
 
-    def explain(self, u, l, v):
+    def explain(self, u, l, v, exclude):
         """Giải thích cho ống l trong top-k của u (người có thân trong góc nhìn v), hoặc None nếu không có đường
-        u → b → l."""
+        u → b → l. Cụm "bạn đã mua" / "bạn đã đánh giá" theo chế độ exclude (OWNS_PHRASE)."""
         if self.item_type[l] != 1 or u not in v.bodies:
             return None
         ex = v.xp.explain(u, l)
         if ex is None:
             return None
         s = EC.sentence(ex, v.pctx)
+        assert s.count(SENTENCE_OWNS) == 1, s
+        s = s.replace(SENTENCE_OWNS, OWNS_PHRASE[exclude])
         err = EC.verify_explanation(ex, s, v.pctx, self.has_edge)
         b, c = ex["b_star"], ex["c_star"]
         path = [{"kind": "user", "id": u}, {"kind": "item", "role": "body", **self.item_brief(b)},
@@ -303,7 +309,7 @@ class RecommenderCore:
         blocked_top0 = [i for i in top0 if i in self.lens_col and v.cmask[u, self.lens_col[i]]]
         items = []
         for r, i in enumerate(top, 1):
-            items.append({"rank": r, **self.item_brief(i), "score": float(S[i]), "explanation": self.explain(u, i, v)})
+            items.append({"rank": r, **self.item_brief(i), "score": float(S[i]), "explanation": self.explain(u, i, v, exclude)})
         return {"user_id": u, "k": k, "exclude": exclude, "has_bodies": u in v.bodies,
                 "n_bodies": len(v.bodies.get(u, ())), "items": items,
                 "mask": {"rule": "QĐ 4-9 (mặt nạ 15)", "n_lenses_blocked": int(v.cmask[u].sum()),

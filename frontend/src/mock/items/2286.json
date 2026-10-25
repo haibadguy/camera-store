@@ -1,0 +1,19 @@
+{
+  "item_id": 2286,
+  "asin": "B001G60DUE",
+  "title": "Canon EOS 5D Mark II 21.1MP Full Frame CMOS Digital SLR Camera with EF 24-105mm f/4 L IS USM Lens (OLD MODEL)",
+  "type": "than",
+  "type_label": "thân máy",
+  "mount": "canon_ef",
+  "khung": "ff",
+  "may_phim": false,
+  "mount_uncertain": false,
+  "mount_source": "dong_may",
+  "categories": "Electronics > Camera & Photo > Digital Cameras > DSLR Cameras",
+  "in_matrix": true,
+  "focal_mm": null,
+  "max_aperture_f": null,
+  "usecases": [],
+  "usecases_label": [],
+  "n_lenses_m1": 156
+}

@@ -1,0 +1,28 @@
+{
+  "item_id": 13211,
+  "asin": "B00V8VM7SS",
+  "title": "Nikon AF-S FX NIKKOR 24-70mm f/2.8G ED Zoom Lens with Auto Focus for Nikon DSLR Cameras",
+  "type": "ong",
+  "type_label": "ống kính",
+  "mount": "nikon_f",
+  "khung": "ff",
+  "may_phim": false,
+  "mount_uncertain": false,
+  "mount_source": "tieu_de",
+  "categories": "Electronics > Camera & Photo > Lenses > Camera Lenses > SLR Camera Lenses",
+  "in_matrix": true,
+  "focal_mm": {
+    "min": 24.0,
+    "max": 70.0
+  },
+  "max_aperture_f": {
+    "at_min_focal": 2.8,
+    "at_max_focal": 2.8
+  },
+  "usecases": [
+    "phong_canh"
+  ],
+  "usecases_label": [
+    "phong cảnh"
+  ]
+}
