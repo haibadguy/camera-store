@@ -357,7 +357,7 @@ export default function App() {
             <SparkleIcon /> Tư vấn AI theo nhu cầu
           </button>
           <button className="nav-item api-demo-link" onClick={() => setActiveView("recommendation")}>
-            Demo API 1.2
+            Tư vấn thiết bị
           </button>
         </div>
       </nav>

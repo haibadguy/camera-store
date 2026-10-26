@@ -1,4 +1,16 @@
+# Cấu hình Spring Boot (backend nghiệp vụ của demo, nội dung 10).
+# Chưa làm database / đăng nhập (chờ cô chốt chương 3): tắt tự cấu hình DataSource / JPA / Flyway để Spring chạy được
+# khi không có PostgreSQL. Code cũ dùng database (catalog, /api/recommendations) chỉ bật với profile "db"
+# (application-db.yml), xem backend/README.md.
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+  jackson:
+    # Trường JSON theo hợp đồng docs/api_contract.md là snake_case (user_id, b_star, ...); DTO Java viết camelCase
+    property-naming-strategy: SNAKE_CASE
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/camera_store}
     username: ${DATABASE_USERNAME:camera}
@@ -11,5 +23,14 @@ spring:
     enabled: true
 server:
   port: ${PORT:8080}
-recommendation-service:
-  url: ${RECOMMENDATION_SERVICE_URL:http://127.0.0.1:8001}
+
+# Dịch vụ mô hình FastAPI (ai/service/run_service.py, mặc định cổng 8001; hợp đồng docs/api_contract.md 1.3)
+model-service:
+  base-url: ${MODEL_SERVICE_URL:http://127.0.0.1:8001}
+  connect-timeout: 1s
+  # Hợp đồng mục 8 gợi ý ~1 s cho /recommend (p99 đo được ~21 ms)
+  read-timeout: 1s
+
+# Cổng dev của React (Vite mặc định 5173); nhiều địa chỉ cách nhau bằng dấu phẩy
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}

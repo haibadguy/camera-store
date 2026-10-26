@@ -19,7 +19,7 @@ Giai đoạn "all": không qua HTTP, gọi RecommenderCore trực tiếp cho M�
 Giai đoạn "history" (thêm 21/10, phiên sau): không qua HTTP, MỌI người, chế độ mặc định all_history (thân cho mặt nạ và
   giải thích lấy từ train + val + test). Phải = 0: lỗi sự kiện (verify_explanation, "đã mua b*" kiểm bằng lịch sử), b*
   không phải thân trong lịch sử (kiểm độc lập), ống trong top-10 vi phạm QĐ 4-9 với thân cả lịch sử (common_05.judge_lens),
-  sản phẩm trả về nằm trong lịch sử. Đếm so với khi chỉ dùng thân train (cùng chế độ all_history, recommend(view="train")):
+  sản phẩm trả về nằm trong lịch sử, câu không dùng cụm "bạn đã đánh giá" (hoặc còn "bạn đã mua"; thêm 26/10). Đếm so với khi chỉ dùng thân train (cùng chế độ all_history, recommend(view="train")):
   số người đổi mặt nạ (tăng / giảm số ống bị chặn), đổi top-10, thêm / bớt câu giải thích.
 
 Chạy (từ thư mục camera-store):
@@ -45,6 +45,7 @@ sys.path.insert(0, str(HERE.parent / "pipeline"))
 sys.path.insert(0, str(HERE))
 import common_05 as C    # noqa: E402
 import eval_05 as E      # noqa: E402
+from core import OWNS_PHRASE, SENTENCE_OWNS  # noqa: E402
 
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
@@ -131,7 +132,7 @@ def history_stage(emb_dir, log):
     core = RecommenderCore(emb_dir, device="cpu", log=log)
     vh, vt = core.views["history"], core.views["train"]
     it, ctx = core.item_type, core.ctx
-    keys = ["n_fact_errors", "n_bstar_not_owned", "n_viol_qd49_hist", "n_items_in_history", "n_lens_top10",
+    keys = ["n_fact_errors", "n_phrase_wrong", "n_bstar_not_owned", "n_viol_qd49_hist", "n_items_in_history", "n_lens_top10",
             "n_expl_hist", "n_expl_train", "n_expl_bstar_val_test", "users_mask_more", "users_mask_less",
             "users_mask_new", "users_has_bodies_new", "users_top10_changed", "users_more_expl", "users_less_expl",
             "users_expl_new"]
@@ -163,6 +164,7 @@ def history_stage(emb_dir, log):
                 c["n_viol_qd49_hist"] += C.judge_lens(x["item_id"], hb, ctx) is True
         for e in eh:
             c["n_fact_errors"] += len(e["errors"])
+            c["n_phrase_wrong"] += OWNS_PHRASE["all_history"] not in e["text"] or SENTENCE_OWNS in e["text"]
             b = e["b_star"]
             c["n_bstar_not_owned"] += not (b in core.history[u] and it[b] == 0 and b in hb)
             if e["b_star_source"] != "train":
@@ -173,7 +175,7 @@ def history_stage(emb_dir, log):
         if (u + 1) % 10000 == 0:
             log(f"  {u + 1:,} người ({time.time() - t:.0f}s)")
     log(f"  người có thân: train {len(vt.bodies):,}, cả lịch sử {len(vh.bodies):,} (thêm {c['users_has_bodies_new']:,})")
-    log(f"  PHẢI = 0: lỗi sự kiện {c['n_fact_errors']} | b* không phải thân trong lịch sử {c['n_bstar_not_owned']} | ống "
+    log(f"  PHẢI = 0: lỗi sự kiện {c['n_fact_errors']} | câu sai cụm 'bạn đã đánh giá' {c['n_phrase_wrong']} | b* không phải thân trong lịch sử {c['n_bstar_not_owned']} | ống "
         f"vi phạm QĐ 4-9 với thân cả lịch sử trong top-10 {c['n_viol_qd49_hist']} (trên {c['n_lens_top10']:,} ống) | "
         f"sản phẩm trả về nằm trong lịch sử {c['n_items_in_history']}")
     log(f"  mặt nạ so với chỉ thân train: tăng số ống bị chặn {c['users_mask_more']:,} người (trong đó trước 0 ống, nay > 0: "
@@ -252,6 +254,7 @@ def latency_http(cl, n, warmup, log):
     users = np.random.default_rng(LAT.SEED).choice(C.N_USERS, warmup + n, replace=False).tolist()
     train, val, test = C.load_train(), C.load_pos("val"), C.load_pos("test")
     tc, ts, n_s, n_hist = [], [], 0, 0          # n_hist: sản phẩm trả về nằm trong train / val / test (phải = 0)
+    n_phrase_wrong, n_unverified = 0, 0         # câu all_history sai cụm "bạn đã đánh giá" / không qua kiểm sự kiện (phải = 0)
     for k, u in enumerate(users):
         t = time.perf_counter()
         r = cl.get("/recommend", params={"user_id": u, "k": 10})
@@ -259,6 +262,11 @@ def latency_http(cl, n, warmup, log):
         dt = time.perf_counter() - t
         assert r.status_code == 200, (u, r.status_code, j)
         n_hist += sum(it["item_id"] in train[u] or it["item_id"] in (val[u], test[u]) for it in j["items"])
+        for it in j["items"]:
+            if it["explanation"] is not None:
+                t_ = it["explanation"]["text"]
+                n_phrase_wrong += OWNS_PHRASE["all_history"] not in t_ or SENTENCE_OWNS in t_
+                n_unverified += not it["explanation"]["verified"]
         if k >= warmup:
             tc.append(dt * 1000)
             ts.append(float(r.headers["X-Process-Time-Ms"]))
@@ -267,7 +275,8 @@ def latency_http(cl, n, warmup, log):
     for nm, v in (("client_ms", np.array(tc)), ("server_ms", np.array(ts))):
         out[nm] = {f"p{q}": float(np.percentile(v, q)) for q in (50, 95, 99)}
         out[nm].update(max=float(v.max()), mean=float(v.mean()))
-    out.update(n_requests=n, warmup=warmup, n_sentences=n_s, n_items_in_history=n_hist, user_seed=LAT.SEED, k=10, exclude="all_history")
+    out.update(n_requests=n, warmup=warmup, n_sentences=n_s, n_items_in_history=n_hist, n_phrase_wrong=n_phrase_wrong,
+               n_unverified=n_unverified, user_seed=LAT.SEED, k=10, exclude="all_history")
     for nm, lab in (("client_ms", "phía khách (HTTP + JSON)"), ("server_ms", "phía máy chủ")):
         s = out[nm]
         log(f"  {lab}: p50 {s['p50']:.2f} ms, p95 {s['p95']:.2f} ms, p99 {s['p99']:.2f} ms, max {s['max']:.2f} ms, "
@@ -275,6 +284,8 @@ def latency_http(cl, n, warmup, log):
     log(f"  ({n:,} yêu cầu sau {warmup} khởi động, gửi lần lượt; {n_s:,} câu giải thích)")
     log(f"  sản phẩm trả về nằm trong lịch sử (train / val / test) của người đó, trên cả {warmup + n:,} yêu cầu: {n_hist} "
         f"(phải = 0)")
+    log(f"  câu sai cụm 'bạn đã đánh giá': {n_phrase_wrong}, câu không qua kiểm sự kiện: {n_unverified}, trên cả "
+        f"{warmup + n:,} yêu cầu (phải = 0)")
     return out
 
 

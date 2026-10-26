@@ -17,7 +17,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from core import ApiError, RecommenderCore
 
-CONTRACT_VERSION = "1.2"
+CONTRACT_VERSION = "1.3"
 STATE = {}
 
 

@@ -1,0 +1,1 @@
+{"status":"ok","model":"LightGCN + mặt nạ QĐ 4-9","seed":1,"best_pt_sha256":"d857e24c3d7fff692c39627b54ee30fb1e62044d9ec6fd932642d892285f5fc2","embeddings_sha256":"fbda48a1f84c9fd0047d2a8d06319e1e816dcf20cbe51817f5f86241f97200b4","device":"cpu","n_users":67661,"n_items":27940,"n_users_with_bodies":{"train":10406,"all_history":12472},"startup_s":2.72,"contract_version":"1.3"}

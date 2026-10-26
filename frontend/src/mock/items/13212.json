@@ -1,0 +1,24 @@
+{
+  "item_id": 13212,
+  "asin": "B00V8VMLA2",
+  "title": "Nikon AF-S DX NIKKOR 35mm f/1.8G Lens with Auto Focus for Nikon DSLR Cameras, 2183, Black",
+  "type": "ong",
+  "type_label": "ống kính",
+  "mount": "nikon_f",
+  "khung": "apsc",
+  "may_phim": false,
+  "mount_uncertain": false,
+  "mount_source": "tieu_de",
+  "categories": "Electronics > Camera & Photo > Lenses > Camera Lenses > SLR Camera Lenses",
+  "in_matrix": true,
+  "focal_mm": {
+    "min": 35.0,
+    "max": 35.0
+  },
+  "max_aperture_f": {
+    "at_min_focal": 1.8,
+    "at_max_focal": 1.8
+  },
+  "usecases": [],
+  "usecases_label": []
+}

@@ -1,0 +1,31 @@
+{
+  "user_id": 47,
+  "exclude": "all_history",
+  "n_history_items": 10,
+  "n_bodies": 2,
+  "bodies": [
+    {
+      "item_id": 12369,
+      "asin": "B00PHRVRXU",
+      "title": "Nikon D4S 16.2 MP CMOS FX Digital SLR with Full 1080p HD Video (Body Only)",
+      "mount": "nikon_f",
+      "khung": "ff",
+      "may_phim": false,
+      "in_matrix": true,
+      "n_lenses_m1": 219,
+      "source": "train"
+    },
+    {
+      "item_id": 14934,
+      "asin": "B01A7Q0J3Y",
+      "title": "Nikon D500 DX-Format Digital SLR (Body Only), Base",
+      "mount": "nikon_f",
+      "khung": "apsc",
+      "may_phim": false,
+      "in_matrix": true,
+      "n_lenses_m1": 219,
+      "source": "val"
+    }
+  ],
+  "n_lenses_blocked": 814
+}

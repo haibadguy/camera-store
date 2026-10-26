@@ -6,7 +6,7 @@ Dữ liệu: Amazon Reviews 2023, nhóm Electronics. Trạng thái dự án, quy
 
 ## Kiến trúc demo
 
-React (`frontend/`) → Spring Boot (`backend/`, nghiệp vụ) → FastAPI (dịch vụ mô hình, nội dung 10, chưa viết). Quyết định giữ Spring Boot: `docs/STATUS.md`, nhật ký 09/10/2026. Hiện `backend/` và `frontend/` là khung có từ trước, chưa nối với mô hình.
+React (`frontend/`) → Spring Boot (`backend/`, nghiệp vụ) → FastAPI (dịch vụ mô hình `ai/service/`, nội dung 10). Quyết định giữ Spring Boot: `docs/STATUS.md`, nhật ký 09/10/2026. Hiện (26/10) Spring Boot đã gọi FastAPI theo `docs/api_contract.md` (cách chạy: `backend/README.md`; chưa có database / đăng nhập); `frontend/` chưa nối (có dữ liệu giả `frontend/src/mock/`).
 
 ## Thư mục chính
 
@@ -64,7 +64,7 @@ Huấn luyện từng mô hình riêng: `05b_lightgcn_train.py --l2 <λ> --seed 
 
 ## Chạy backend và frontend (khung demo)
 
-Cần: Git, Node.js (LTS), JDK 17 hoặc 21, Maven (hoặc tích hợp trong IDE), Docker Desktop. Chỉ làm bước 1–2 một lần đầu.
+Cần: Git, Node.js (LTS), JDK 21 trở lên, Maven (hoặc tích hợp trong IDE); Docker Desktop chỉ cần khi làm database. Chỉ làm bước 1–2 một lần đầu.
 
 1. Clone: `git clone https://github.com/haibadguy/camera-store.git`, rồi `cd camera-store`.
 2. Cài thư viện frontend:
@@ -73,11 +73,13 @@ Cần: Git, Node.js (LTS), JDK 17 hoặc 21, Maven (hoặc tích hợp trong IDE
    npm install
    cd ..
    ```
-3. Bật Docker Desktop (đợi *Engine Running*), rồi khởi động database mỗi lần bắt đầu làm việc, từ thư mục gốc repo:
+3. Terminal 0, dịch vụ mô hình FastAPI seed 1 (`http://127.0.0.1:8001`, cần `ai/.venv`, xem `ai/README.md`):
    ```powershell
-   docker compose up -d postgres redis
+   ai\.venv\Scripts\python.exe ai/service/run_service.py --emb-dir results/service/emb_s1_20261021 --port 8001
    ```
-4. Terminal 1, backend Spring Boot (`http://localhost:8080`):
+   (Database chưa dùng: backend hiện chạy không cần PostgreSQL. Khi làm database: bật Docker Desktop rồi
+   `docker compose up -d postgres redis`.)
+4. Terminal 1, backend Spring Boot (`http://localhost:8080`, chi tiết `backend/README.md`):
    ```powershell
    cd backend
    mvn spring-boot:run

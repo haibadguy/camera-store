@@ -1,0 +1,28 @@
+{
+  "item_id": 15485,
+  "asin": "B01DZP4UAM",
+  "title": "Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor Zoom Lens Bulk packaging (White box, New)",
+  "type": "ong",
+  "type_label": "ống kính",
+  "mount": "nikon_f",
+  "khung": "apsc",
+  "may_phim": false,
+  "mount_uncertain": false,
+  "mount_source": "tieu_de",
+  "categories": "Electronics > Camera & Photo > Lenses > Camera Lenses > SLR Camera Lenses",
+  "in_matrix": true,
+  "focal_mm": {
+    "min": 55.0,
+    "max": 200.0
+  },
+  "max_aperture_f": {
+    "at_min_focal": 4.0,
+    "at_max_focal": 5.6
+  },
+  "usecases": [
+    "the_thao_chim"
+  ],
+  "usecases_label": [
+    "thể thao / chim"
+  ]
+}

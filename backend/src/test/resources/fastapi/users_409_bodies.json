@@ -1,0 +1,20 @@
+{
+  "user_id": 409,
+  "exclude": "all_history",
+  "n_history_items": 5,
+  "n_bodies": 1,
+  "bodies": [
+    {
+      "item_id": 9022,
+      "asin": "B00CIRLDC2",
+      "title": "Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zoom Lens (Discontinued by Manufacturer)",
+      "mount": "nikon_f",
+      "khung": "apsc",
+      "may_phim": false,
+      "in_matrix": true,
+      "n_lenses_m1": 219,
+      "source": "train"
+    }
+  ],
+  "n_lenses_blocked": 814
+}

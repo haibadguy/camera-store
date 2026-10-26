@@ -6,94 +6,47 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
-## 26/10/2026: Kiểm tra chuẩn bị commit FE v2 — smoke test bị chặn bởi môi trường. Nhánh `hai/fe-v2-integration`
+## 26/10/2026: đồng bộ nhánh Hải với `main` và chuẩn bị FE dùng mock thật
 
-**Kiểm chứng**
-- Tạo `ai/.venv` bằng Python 3.11 và thử cài `ai/requirements-lock.txt`: thất bại vì lock hiện yêu cầu `contourpy==1.4.0`, không có bản tương thích Python 3.11; không sửa lock.
-- Cài tạm các dependency tương thích để import service: FastAPI khởi động đến bước nạp model nhưng dừng vì `results/service/emb_s1_20261021/embeddings.npz` không có trong worktree, chỉ còn `meta.json`.
-- `docker compose up -d postgres redis` thất bại vì Docker Desktop Linux engine chưa chạy.
-- Frontend và backend build lại đều đạt.
+**Sửa gì**
+- Đồng bộ `origin/main` vào `hai/fe-v2-integration`, giữ backend contract 1.3 và các file mock thật trong `frontend/src/mock/`.
+- Giữ lịch sử tích hợp FE v2 của branch Hải ở commit `cbe9277`; client hiện hỗ trợ API v1.3 và mặc định dùng adapter mock tương ứng.
 
-**Kết luận**
-- Không có bằng chứng để báo smoke test `React → Spring Boot → FastAPI` đạt trên máy hiện tại.
-- Đây là blocker môi trường/dữ liệu runtime, không phải kết quả lỗi của code FE v2. Không đưa dữ liệu embedding lớn vào commit để né blocker.
+**Vì sao**
+- `main` đã có API advisor v1.3 và dữ liệu xuất từ FastAPI seed 1; proxy `/api/recommendations` v1.2 trên branch Hải không còn là điểm nối đúng của hệ thống hiện tại.
+
+**Ảnh hưởng**
+- Backend chính dùng các endpoint `/api/recommend`, `/api/items/{id}`, `/api/users/{id}/bodies`, `/api/compat`, `/api/health`.
+- FE hiển thị đúng 10 gợi ý của user 409/47, nối chi tiết sản phẩm từ `frontend/src/mock/items/`, và đổi câu chữ mặt tiền sang ngôn ngữ người mua.
+- Build FE đạt 59 modules; kiểm tra browser user 409 hiển thị 814 ống kính bị lọc, không còn `item_id`, `QĐ 4-9`, `contract`, `API 1.2` trên UI.
+- Chưa thay đổi số liệu mô hình hoặc dữ liệu gốc; `report_figures/` vẫn không được đưa vào commit.
 
 ---
 
-## 26/10/2026: FE v2 tinh chỉnh giao diện recommendation theo hướng tự nhiên, tránh cảm giác AI-generated. Nhánh `hai/fe-v2-integration`
+## 26/10/2026: backend Spring Boot nối dịch vụ mô hình FastAPI. Nhánh `nam/backend`, commit `e94b0c7`
 
-**Sửa gì / thêm gì**
-- `frontend/src/RecommendationDemo.tsx`: thay các nhãn kỹ thuật như “API 1.2 DEMO”, “người dùng kiểm thử” và “xem chi tiết theo contract” bằng câu chữ hướng người dùng; giữ nguyên dữ liệu và luồng gọi API.
-- `frontend/src/styles.css`: tạo treatment riêng cho recommendation demo với nền giấy ấm, serif tiêu đề, màu đất nung, đường viền mảnh, ít bo góc và bỏ cảm giác card đồng loạt.
+Không sửa code AI của Hải (`ai/pipeline/`), không đổi số nào. Có sửa **khung backend Spring Boot** của Hải (commit `d403389`, `fa83381`).
 
-**Vì sao**
-- Giao diện demo cần giống một luồng tư vấn sản phẩm thật hơn là màn hình kiểm thử API; chi tiết contract vẫn nằm trong code/tài liệu, không cần phô ra ở mặt tiền.
-
-**Kiểm chứng / ảnh hưởng**
-- Không đổi API client, endpoint, model, checkpoint hoặc logic xếp hạng.
-- Đã kiểm tra nhanh trên trình duyệt: màn hình chọn hồ sơ hiển thị đúng; khi backend chưa chạy, giao diện chuyển sang trạng thái lỗi và nút thử lại thay vì im lặng hoặc hiển thị dữ liệu giả.
-- `npm run build` trong `frontend/` đạt: TypeScript và Vite build thành công, 31 modules.
-- Request đang chờ được hủy khi đổi hồ sơ hoặc rời màn hình, tránh response cũ ghi đè lựa chọn mới.
-- `backend/src/main/java/com/camerastore/config/CorsConfig.java`: cho phép cả `localhost:5173` và `127.0.0.1:5173`, khớp với cách chạy Vite local.
-- API client có timeout 10 giây và thông báo riêng khi backend phản hồi quá lâu.
-
----
-
-## 26/10/2026: FE v2 thêm proxy Spring Boot tới FastAPI contract 1.2. Nhánh `hai/fe-v2-integration`
-
-**Sửa gì / thêm gì**
-- Mới `backend/src/main/java/com/camerastore/common/ApiResponse.java`: wrapper response cho API trung gian.
-- Mới `backend/src/main/java/com/camerastore/config/RecommendationServiceConfig.java` và `RecommendationServiceProperties.java`: cấu hình `RECOMMENDATION_SERVICE_URL`, mặc định `http://127.0.0.1:8001`.
-- `backend/src/main/java/com/camerastore/modules/recommendations/RecommendationController.java`: đổi endpoint `/api/recommendations` sang proxy `GET /recommend` của FastAPI với `user_id`, `k`, `exclude`; kiểm tra `k` và chuyển lỗi upstream thành lỗi HTTP rõ ràng.
-- `backend/src/main/resources/application.yml`: thêm URL dịch vụ recommendation.
+**Sửa gì (file của Hải)**
+- `backend/src/main/resources/application.yml`: mặc định tắt tự cấu hình DataSource / Hibernate JPA / Flyway (`spring.autoconfigure.exclude`); thêm `spring.jackson.property-naming-strategy: SNAKE_CASE`, khối `model-service` (địa chỉ FastAPI, timeout 1 s), `cors.allowed-origins`. Thêm `application-db.yml` (profile `db` bật lại phần database).
+- `SeedData.java`, `catalog/ProductController.java`, `recommendations/RecommendationController.java`: thêm `@Profile("db")`, **không đổi logic**.
+- `config/CorsConfig.java`: địa chỉ được phép lấy từ cấu hình (mặc định `http://localhost:5173`, `http://127.0.0.1:5173`) thay vì viết cứng một địa chỉ.
+- `CameraStoreApplication.java`: thêm `@ConfigurationPropertiesScan`. `backend/README.md`: viết lại (cách chạy, điểm cuối, lỗi, luồng một yêu cầu).
+- Thêm mới (không phải file của Hải): `common/` (định dạng lỗi chung), `modules/advisor/` (Controller, Service, Client gọi FastAPI, DTO), test `src/test/`, script `ai/service/check_backend.py`.
 
 **Vì sao**
-- Frontend FE v2 đã gọi Spring Boot theo kiến trúc `React → Spring Boot → FastAPI`, nên backend không thể tiếp tục trả recommendation cũ theo `budget/category`.
-- Giữ FastAPI là nguồn sự thật cho mô hình và API contract v1.2; Spring Boot chỉ làm lớp trung gian.
+- Nam giao việc dựng backend cho demo React → Spring Boot → FastAPI theo `docs/api_contract.md` 1.3, **chưa làm database / đăng nhập** (chờ cô chốt chương 3). Khung của Hải bắt buộc có PostgreSQL mới khởi động được (`ddl-auto: validate`, Flyway). Ví dụ: chạy với profile `db` trên máy Nam, Spring dừng ở Flyway "password authentication failed for user camera". Tắt mặc định để Spring chạy không cần database; giữ code cũ để sau này dùng lại.
+- CORS viết cứng một địa chỉ và cho cả POST / PUT / DELETE; giữ các phương thức, chỉ đưa địa chỉ ra cấu hình và thêm `127.0.0.1:5173`.
 
-**Kiểm chứng / ảnh hưởng**
-- `mvn -q -DskipTests package` trong `backend/` đạt.
-- `npm run build` trong `frontend/` đạt: TypeScript và Vite build thành công, 31 modules.
-- Chưa chạy smoke test HTTP end-to-end vì phiên này chưa khởi động PostgreSQL, FastAPI và Spring Boot cùng lúc; chưa báo số liệu latency hay kết quả recommendation mới.
-- Không đổi model, checkpoint, seed hoặc dữ liệu AI. `report_figures/` vẫn là thư mục chưa được theo dõi và không đưa vào thay đổi.
+**Ảnh hưởng**
 
----
+| | Trước | Sau |
+|---|---|---|
+| Khởi động không có PostgreSQL | lỗi | chạy được (mặc định) |
+| `/api/products`, `/api/recommendations` (code cũ) | có (cần database) | chỉ có với profile `db` |
+| `/api/recommend`, `/api/items/{id}`, `/api/users/{id}/bodies`, `/api/compat`, `/api/health` | không có | có, cùng dạng hợp đồng 1.3 |
 
-## 26/10/2026: FE v2 chuyển từ dữ liệu tĩnh sang API recommendation qua Spring Boot. Nhánh `hai/fe-v2-integration`
-
-**Sửa gì / thêm gì**
-- Mới `frontend/src/services/recommendationService.ts`: định nghĩa kiểu dữ liệu API contract v1.2 và gọi `GET /api/recommendations?user_id=&k=10&exclude=all_history`.
-- `frontend/src/RecommendationDemo.tsx`: bỏ dữ liệu recommendation tĩnh; thêm gọi API, trạng thái loading, lỗi HTTP/schema, thử lại và hiển thị explanation đã xác minh.
-- `frontend/.env.example`: đổi API mặc định sang `http://localhost:8080/api`.
-- Mới `frontend/src/vite-env.d.ts`: khai báo kiểu `import.meta.env` cho TypeScript.
-- `docs/plan_hai_fe_v2.md`: cập nhật tiến trình branch.
-
-**Vì sao**
-- FE v2 cần đi đúng kiến trúc `React → Spring Boot → FastAPI`, không gọi FastAPI trực tiếp từ trình duyệt.
-- Dữ liệu sai contract không được hiển thị như kết quả thành công; client báo lỗi rõ ràng để phát hiện backend chưa tích hợp.
-
-**Kiểm chứng / ảnh hưởng**
-- `npm run build` trong `frontend/` đạt: TypeScript và Vite build thành công, 31 modules.
-- Chưa kiểm thử end-to-end vì endpoint Spring Boot hiện tại vẫn là recommendation cũ theo `budget/category`, chưa trả contract v1.2. Chưa có số liệu trước → sau cho recommendation.
-- Không thay đổi model, checkpoint, seed hoặc dữ liệu AI. Thư mục `report_figures/` chưa được theo dõi và không đưa vào thay đổi.
-
----
-
-## 24/10/2026: frontend demo gợi ý theo API contract 1.2. Nhánh `quyen/fron-p1`, người thực hiện: Quyền
-
-**Sửa gì / thêm gì**
-- `frontend/src/App.tsx`: thêm lối vào `Demo API 1.2`, giữ nguyên catalog và luồng tư vấn mock có sẵn.
-- Mới `frontend/src/RecommendationDemo.tsx`: ba màn hình chọn người dùng, danh sách gợi ý có giải thích và chi tiết sản phẩm; dùng dữ liệu tĩnh của người dùng 409 và 47 theo `docs/api_contract.md`.
-- `frontend/src/styles.css`: thêm giao diện responsive cho luồng demo.
-
-**Vì sao**
-- Cần có giao diện frontend để trình diễn dữ liệu của hợp đồng API trước khi nối Spring Boot và FastAPI.
-- Chỉ hiển thị các sản phẩm, thứ hạng, điểm và giải thích được tài liệu công bố; không tự tạo thêm kết quả mô hình. Giải thích chỉ hiện với dữ liệu có `verified = true`.
-
-**Kiểm chứng / ảnh hưởng**
-- Chạy `npm run build` trong `frontend/`: TypeScript và Vite build thành công (30 module).
-- Catalog cũ vẫn được giữ; luồng mới mở riêng từ mục `Demo API 1.2`.
-- Không thay đổi hợp đồng API, backend, mô hình, dữ liệu AI hoặc các số đánh giá. React vẫn dùng dữ liệu tĩnh và chưa kết nối Spring Boot/FastAPI.
+Kiểm (`results/backend/mvn_test_20261026_lan1.log`, `results/backend/check_backend_s1_20261026_lan3/summary.json`): 33/33 test; 28/28 phản hồi qua Spring trùng `frontend/src/mock/` và trùng gọi thẳng FastAPI seed 1. Phía sau: khi làm database phải xem lại `ddl-auto: validate`, `SeedData` (dữ liệu sản phẩm giả, không phải sản phẩm Amazon) và nối bảng sản phẩm với mô hình bằng `asin` (hợp đồng hạn chế 7).
 
 ---
 

@@ -1,58 +1,39 @@
 package com.camerastore.modules.recommendations;
 
-import com.camerastore.common.ApiResponse;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.http.ResponseEntity;
+import com.camerastore.modules.catalog.Product;
+import com.camerastore.modules.catalog.ProductRepository;
+import java.math.BigDecimal;
+import java.util.List;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientResponseException;
-import org.springframework.web.server.ResponseStatusException;
-
-import static org.springframework.http.HttpStatus.BAD_GATEWAY;
 
 @RestController
+@Profile("db")
 @RequestMapping("/api/recommendations")
 public class RecommendationController {
-    private final RestClient recommendationClient;
+    private final ProductRepository products;
 
-    public RecommendationController(RestClient recommendationClient) {
-        this.recommendationClient = recommendationClient;
+    public RecommendationController(ProductRepository products) {
+        this.products = products;
     }
 
     @GetMapping
-    public ApiResponse<JsonNode> recommend(
-            @RequestParam("user_id") int userId,
-            @RequestParam(defaultValue = "10") int k,
-            @RequestParam(defaultValue = "all_history") String exclude) {
-        if (k < 1 || k > 50) {
-            throw new ResponseStatusException(
-                    org.springframework.http.HttpStatus.BAD_REQUEST,
-                    "k phải nằm trong khoảng 1..50");
-        }
-        try {
-            ResponseEntity<JsonNode> response = recommendationClient.get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/recommend")
-                            .queryParam("user_id", userId)
-                            .queryParam("k", k)
-                            .queryParam("exclude", exclude)
-                            .build())
-                    .retrieve()
-                    .toEntity(JsonNode.class);
-            return new ApiResponse<>(response.getBody());
-        } catch (RestClientResponseException exception) {
-            throw new ResponseStatusException(
-                    exception.getStatusCode(),
-                    "Dịch vụ recommendation từ chối yêu cầu: " + exception.getResponseBodyAsString(),
-                    exception);
-        } catch (RuntimeException exception) {
-            throw new ResponseStatusException(
-                    BAD_GATEWAY,
-                    "Không thể kết nối dịch vụ recommendation.",
-                    exception);
-        }
+    public RecommendationResponse recommend(
+            @RequestParam(defaultValue = "5000") BigDecimal budget,
+            @RequestParam(required = false) String category) {
+        List<Product> items = products
+                .findByStockGreaterThanAndPriceLessThanEqualOrderByFeaturedDescPriceAsc(0, budget)
+                .stream()
+                .filter(product -> category == null || category.isBlank()
+                        || product.getCategory().equalsIgnoreCase(category))
+                .limit(6)
+                .toList();
+        return new RecommendationResponse("content-based", budget, category, items);
     }
+
+    public record RecommendationResponse(String strategy, BigDecimal budget,
+                                          String category, List<Product> items) {}
 }
