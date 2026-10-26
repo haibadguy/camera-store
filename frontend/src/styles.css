@@ -1268,3 +1268,123 @@ body {
   .demo-attributes { grid-template-columns: 1fr; }
   .demo-explanation dl div { grid-template-columns: 1fr; gap: 1px; }
 }
+
+/* Recommendation demo: quieter editorial treatment, separate from the legacy storefront. */
+.demo-page {
+  --demo-ink: #24211d;
+  --demo-muted: #746d64;
+  --demo-paper: #f5f1ea;
+  --demo-card: #fffdf9;
+  --demo-line: #ded7cc;
+  --demo-accent: #bd4d2d;
+  background: var(--demo-paper);
+  color: var(--demo-ink);
+}
+
+.demo-header { background: var(--demo-ink); border-bottom: 0; }
+.demo-header-content { min-height: 64px; }
+.demo-brand {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.08rem;
+  letter-spacing: .08em;
+}
+.demo-brand span {
+  color: #bdb4a8;
+  font-family: inherit;
+  font-size: .62rem;
+  font-weight: 400;
+  letter-spacing: .02em;
+}
+.demo-link-button {
+  border-color: #655f57;
+  border-radius: 2px;
+  color: #f7f1e8;
+  font-weight: 600;
+}
+.demo-main { padding-top: 72px; }
+.demo-eyebrow { color: var(--demo-accent); font-size: .7rem; letter-spacing: .14em; }
+.demo-main h1 {
+  max-width: 680px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.35rem, 5vw, 4.35rem);
+  font-weight: 400;
+  letter-spacing: -.045em;
+  line-height: .98;
+}
+.demo-lead { color: var(--demo-muted); font-size: .98rem; max-width: 590px; }
+.demo-user-grid {
+  grid-template-columns: repeat(2, minmax(0, 360px));
+  gap: 20px;
+  margin-top: 48px;
+}
+.demo-user-card,
+.demo-detail-card {
+  background: var(--demo-card);
+  border: 1px solid var(--demo-line);
+  border-radius: 2px;
+  box-shadow: none;
+}
+.demo-user-card { min-height: 230px; padding: 26px; }
+.demo-card-topline, .demo-type-row { color: var(--demo-muted); font-weight: 600; }
+.demo-card-topline strong {
+  color: var(--demo-accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+.demo-user-card h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.42rem;
+  font-weight: 400;
+  line-height: 1.15;
+}
+.demo-user-card > p { color: var(--demo-muted); line-height: 1.6; }
+.demo-primary-button {
+  border: 1px solid var(--demo-accent);
+  border-radius: 2px;
+  background: var(--demo-accent);
+  font-weight: 700;
+}
+.demo-primary-button:hover { background: #9e3f26; }
+.demo-back-button { color: var(--demo-muted); font-weight: 600; }
+.demo-summary-grid { border-color: var(--demo-line); border-radius: 2px; background: var(--demo-line); }
+.demo-summary-grid div { background: var(--demo-card); }
+.demo-summary-grid span { color: var(--demo-muted); font-weight: 600; }
+.demo-summary-grid strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+}
+.demo-recommendation-card { border-color: var(--demo-line); border-radius: 2px; background: var(--demo-card); }
+.demo-rank {
+  background: #ebe4da;
+  color: var(--demo-accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  font-weight: 400;
+}
+.demo-type-row span:first-child { color: var(--demo-accent); }
+.demo-recommendation-content h2, .demo-detail-content h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+.demo-asin, .demo-score { color: var(--demo-muted); }
+.demo-secondary-button {
+  border-color: #b9afa2;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--demo-ink);
+  font-weight: 600;
+}
+.demo-secondary-button:hover { background: #eee7dc; }
+.demo-mask-note { border-color: #dfc5b7; border-radius: 2px; background: #fbf0e9; }
+.demo-mask-note strong { color: #9e3f26; }
+.demo-mask-note p { color: #745247; }
+.demo-explanation { border-left-color: #6f866c; background: #f0f3eb; }
+.demo-explanation-title { color: #53694f; font-weight: 700; }
+.demo-explanation p, .demo-explanation dd { color: #384b36; }
+.demo-explanation dt { color: #6b7d67; }
+.demo-detail-visual { background: #ebe4da; border-color: var(--demo-line); color: var(--demo-muted); }
+.demo-attributes { border-color: var(--demo-line); background: var(--demo-line); }
+.demo-attributes div { background: var(--demo-card); }
+.demo-attributes dt { color: var(--demo-muted); }

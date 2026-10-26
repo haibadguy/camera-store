@@ -11,3 +11,5 @@ spring:
     enabled: true
 server:
   port: ${PORT:8080}
+recommendation-service:
+  url: ${RECOMMENDATION_SERVICE_URL:http://127.0.0.1:8001}
