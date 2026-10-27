@@ -57,10 +57,11 @@ def build(log):
     log(f"đóng gói Spring: {time.perf_counter() - t:.1f}s, {JAR.relative_to(C.ROOT)} sha256 {E.sha256(JAR)}")
 
 
-def start_spring(port, fastapi_base, log_file, log):
+def start_spring(port, fastapi_base, log_file, log, jvm_args=(), extra_args=()):
     java = shutil.which("java")
     v = subprocess.run([java, "-version"], capture_output=True, text=True).stderr.splitlines()[0]
-    cmd = [java, "-jar", str(JAR), f"--server.port={port}", f"--model-service.base-url={fastapi_base}"]
+    cmd = [java, *jvm_args, "-jar", str(JAR), f"--server.port={port}", f"--model-service.base-url={fastapi_base}",
+           *extra_args]
     log(f"bật Spring: {v} | {' '.join(cmd[1:])}")
     f = open(log_file, "x", encoding="utf-8")
     p = subprocess.Popen(cmd, cwd=BACKEND, stdout=f, stderr=subprocess.STDOUT)

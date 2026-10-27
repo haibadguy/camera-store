@@ -51,6 +51,10 @@ class AdvisorControllerTest {
         FAKE.file("/recommend?user_id=99999", 404, "error_user_not_found.json");
         FAKE.file("/recommend?user_id=409&k=0", 422, "error_invalid_k.json");
         FAKE.file("/compat?body_id=9696&lens_id=19071", 400, "error_not_a_body.json");
+        // số nguyên vượt kiểu long: Spring chuyển nguyên cho FastAPI (phản biện S2)
+        FAKE.file("/recommend?user_id=99999999999999999999", 404, "error_user_not_found_huge.json");
+        FAKE.file("/recommend?user_id=409&k=999999999999", 422, "error_invalid_k_huge.json");
+        FAKE.file("/items/99999999999999999999", 404, "error_item_not_found_huge.json");
         FAKE.raw("/recommend?user_id=1", 500, "application/json",
                 "{\"error\": {\"code\": \"INTERNAL_ERROR\", \"message\": \"KeyError: 1\", \"details\": {}}}", 0);
         FAKE.raw("/recommend?user_id=2", 200, "application/json", "{}", 2000);     // chậm hơn read-timeout 500 ms
@@ -107,6 +111,9 @@ class AdvisorControllerTest {
         "/api/recommend?user_id=99999,           404, error_user_not_found.json",
         "/api/recommend?user_id=409&k=0,         422, error_invalid_k.json",
         "/api/compat?body_id=9696&lens_id=19071, 400, error_not_a_body.json",
+        "/api/recommend?user_id=99999999999999999999, 404, error_user_not_found_huge.json",
+        "/api/recommend?user_id=409&k=999999999999,   422, error_invalid_k_huge.json",
+        "/api/items/99999999999999999999,             404, error_item_not_found_huge.json",
     })
     void fastApiErrorsArePassedThrough(String url, int status, String fixture) throws Exception {
         MvcResult r = mvc.perform(get(url)).andReturn();
@@ -140,6 +147,7 @@ class AdvisorControllerTest {
     @CsvSource({
         "/api/recommend,                  query, user_id",
         "/api/recommend?user_id=abc,      query, user_id",
+        "/api/recommend?user_id=1.5,      query, user_id",
         "/api/recommend?user_id=409&k=x,  query, k",
         "/api/items/abc,                  path,  id",
         "/api/compat?body_id=9022,        query, lens_id",

@@ -28,8 +28,9 @@ server:
 model-service:
   base-url: ${MODEL_SERVICE_URL:http://127.0.0.1:8001}
   connect-timeout: 1s
-  # Hợp đồng mục 8 gợi ý ~1 s cho /recommend (p99 đo được ~21 ms)
-  read-timeout: 1s
+  # Hợp đồng mục 8 gợi ý ~1 s (p99 đo được ~21-30 ms); đặt 3 s để máy demo bận (RAM trống 2-3 GB) không báo
+  # "tạm dừng" vì một yêu cầu chậm (Nam chốt 28/10, phản biện D3)
+  read-timeout: 3s
 
 # Cổng dev của React (Vite mặc định 5173); nhiều địa chỉ cách nhau bằng dấu phẩy
 cors:

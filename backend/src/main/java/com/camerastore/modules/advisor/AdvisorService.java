@@ -5,6 +5,7 @@ import com.camerastore.modules.advisor.dto.HealthResponse;
 import com.camerastore.modules.advisor.dto.ItemDetail;
 import com.camerastore.modules.advisor.dto.RecommendResponse;
 import com.camerastore.modules.advisor.dto.UserBodiesResponse;
+import java.math.BigInteger;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.springframework.stereotype.Service;
@@ -25,20 +26,20 @@ public class AdvisorService {
         this.modelService = modelService;
     }
 
-    public RecommendResponse recommend(long userId, Integer k, String exclude) {
+    public RecommendResponse recommend(BigInteger userId, BigInteger k, String exclude) {
         return modelService.get("/recommend", params("user_id", userId, "k", k, "exclude", exclude),
                 RecommendResponse.class);
     }
 
-    public ItemDetail item(long itemId) {
+    public ItemDetail item(BigInteger itemId) {
         return modelService.get("/items/" + itemId, Map.of(), ItemDetail.class);
     }
 
-    public UserBodiesResponse userBodies(long userId, String exclude) {
+    public UserBodiesResponse userBodies(BigInteger userId, String exclude) {
         return modelService.get("/users/" + userId + "/bodies", params("exclude", exclude), UserBodiesResponse.class);
     }
 
-    public CompatResponse compat(long bodyId, long lensId) {
+    public CompatResponse compat(BigInteger bodyId, BigInteger lensId) {
         return modelService.get("/compat", params("body_id", bodyId, "lens_id", lensId), CompatResponse.class);
     }
 

@@ -6,6 +6,93 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 28/10/2026 (phiên sau): sửa phần web theo phản biện `E:\DATN\reviews\redteam_code_lan1.md`. Nhánh `nam/fe-integration`, commit `d7d22a8`
+
+Nam chốt 8 điểm. Sửa trên **code frontend của Hải** (`RecommendationDemo.tsx`, `recommendationService.ts`) và backend
+Spring / `run_demo.ps1` / hợp đồng. Không đụng CSS / font (Quyền đang làm): file CSS sau build vẫn `index-5xQRVSv1.css`.
+Không đổi mô hình, không đổi số nào của chương 2.
+
+**Sửa gì**
+1. **Câu mặt nạ** (phản biện S1): khối mới `MaskNote` liệt kê **mọi** thân của người dùng (từ `/api/users/{id}/bodies`)
+   và tách hai số: "Có N ống kính không lắp được trên bất kỳ máy nào của bạn nên không được gợi ý" (N =
+   `mask.n_lenses_blocked`, tính trên 1.033 ống của M) và "Trong danh sách này, M ống đã bị bỏ ra (vd …)" (M =
+   `n_blocked_in_topk_before_mask`, ví dụ là ống đầu của `blocked_in_topk_before_mask`). Người chưa có thân, người có
+   thân ngoài M (mặt nạ không chặn gì) có câu riêng. Ô tóm tắt đổi nhãn "Ống kính không lắp được trên máy nào của bạn".
+   Test e2e (`tools/demo_e2e/demo_e2e.mjs`) dựng câu mong đợi từ trường API theo câu Nam chốt, và **kiểm độc lập** ý
+   nghĩa: mỗi ống bị bỏ ra phải có `m = 0` với mọi thân theo `/api/compat`, và không có trong danh sách.
+2. **Chế độ dữ liệu mẫu** (D1): `run_demo.ps1` bỏ tùy chọn `-Source`, luôn chạy api; chạy Vite tay (mặc định mock) thì
+   mọi trang của luồng tư vấn hiện nhãn "Dữ liệu mẫu" (`IS_MOCK_SOURCE`). Câu lỗi mock khi nhập người khác: "Dữ liệu mẫu
+   chỉ có người dùng 409 và 47."
+3. **Chữ theo hợp đồng 1.3** (S4): "Thiết bị đang dùng / Thân máy đang dùng / lịch sử sử dụng" → "Thân máy bạn đã đánh
+   giá"; bỏ câu "ưu tiên những món chưa xuất hiện" (thay "Những sản phẩm bạn đã đánh giá không có trong danh sách. Thứ tự
+   theo điểm của mô hình gợi ý."); bỏ nhãn "Gợi ý phù hợp" ở mọi mục; nút người 47 ghi đủ 2 thân "Nikon D4S, Nikon
+   D500" (trước chỉ "Nikon D500"); tiêu đề giải thích "Vì sao gợi ý món này?" → "Gợi ý này liên quan gì tới máy của
+   bạn?" (P9, giải thích là post-hoc).
+4. **Ô nhập user_id** (D4): giữ 409, 47 làm nút chọn nhanh, thêm ô nhập (1–9 chữ số; sai dạng thì báo "Mã người dùng là
+   một số nguyên không âm, vd 409." ngay trên trang, không gọi API). Nhãn trang danh sách ghi "Người dùng {id}".
+5. **Chống hỏng khi demo** (D3, D5, D7, D2 một phần, D8): `application.yml` `model-service.read-timeout` 1 s → **3 s**;
+   `run_demo.ps1`: Spring `-Xmx512m` (tham số `-SpringHeap`), `--server.address=127.0.0.1`; dùng jar có sẵn, chỉ đóng gói
+   khi chưa có jar hoặc có `-Build` (thay `-SkipBuild`); kiểm JDK ≥ 21; kiểm cổng đang bị chiếm (nêu tên chương trình)
+   và cổng nằm trong khoảng Windows giữ riêng (`netsh int ipv4 show excludedportrange`); bọc ngoặc kép tham số có dấu
+   cách (hàm `Q`). `check_demo.py` chạy Spring cùng `-Xmx512m`, `--server.address=127.0.0.1` (thêm tham số
+   `jvm_args`, `extra_args` cho `check_backend.start_spring`, mặc định rỗng nên `check_backend.py` chạy như cũ).
+6. **Số nguyên quá lớn** (S2): `AdvisorController` / `AdvisorService` nhận `user_id`, `item_id`, `body_id`, `lens_id`, `k`
+   kiểu `BigInteger` (trước `long` / `Integer`), chuyển nguyên cho FastAPI. 3 phản hồi thật của FastAPI làm dữ liệu test
+   (`backend/src/test/resources/fastapi/error_*_huge.json`) + 4 ca test mới.
+7. **Hợp đồng** (S3, P3): `docs/api_contract.md` hạn chế 3 thêm: người có ≥ 1 thân ngoài M thì mặt nạ không chặn ống nào,
+   83 người (`all_history`) / 71 người (`train_val`), 306 / 1.339 ống ngoài M không bao giờ bị chặn; `n_lenses_blocked`
+   không phải số ống bị gỡ khỏi top-k; `verified` không kiểm b\* có là argmax. Số từ script mới
+   `ai/service/count_bodies_outside_m.py` (`results/demo/count_bodies_outside_m_20261028_lan1/`).
+8. Lỗi trình bày khác: CORS chỉ cho `GET` (P7); bơm `verified = false` trong test e2e (P1). Các điểm không sửa: dưới.
+
+**Vì sao** (bằng chứng): phản biện chạy thật trên `c16c7b1`; với code cũ, màn hình người 409 ghi "Đã ẩn 814 ống kính
+không lắp được trên Nikon D3100…" trong khi chỉ **1** ống bị gỡ khỏi top-10 (`check_demo_s1_20261028_lan3`), và test e2e
+cũ tính câu mong đợi bằng đúng công thức của React nên không bắt được. Đếm của tôi trùng số phản biện: 83 / 71 người có
+thân ngoài M, 1.339 ống catalog / 1.033 ống trong M; thêm: **0** người có mọi thân trong M mà bị chặn 0 ống (nên câu "chưa
+có trong bảng tương thích" đúng mọi trường hợp N = 0 có thân). Ca `user_id=99999999999999999999` qua Spring cũ trả 422
+"Phải là số nguyên." theo phản biện (tôi không chạy lại bản cũ); FastAPI trả 404 (đã `curl` 28/10).
+
+**Ảnh hưởng** (cũ: `check_demo_s1_20261028_lan3` trên `15efc8f`; mới: `check_demo_s1_20261028_lan4` trên `d7d22a8`, cây sạch)
+
+| Mục | Cũ | Mới |
+|---|---|---|
+| Ghi chú mặt nạ người 409 | "Đã ẩn 814 ống kính không lắp được trên Nikon D3100 … ." | "Có 814 ống kính không lắp được trên bất kỳ máy nào của bạn nên không được gợi ý." + "Trong danh sách này, 1 ống đã bị bỏ ra (vd Canon EF 24-70mm f/4.0L is USM Standard Zoom Lens - 6313B002)." (ống 13448: m = 0 với thân duy nhất) |
+| Người 47 (2 thân) | không có ghi chú (0 ống bị gỡ) | liệt kê D4S, D500 + "Có 814 ống kính …" |
+| Người 178 (3 thân, nhập ô) | không thử được trên giao diện | 3 thân; "Có 772 …"; "1 ống đã bị bỏ ra (vd Canon EF-S 55-250mm …)" (ống 12951: m = 0 với cả 3 thân) |
+| Người 1476 (1 thân ngoài M) | không thử được | "Máy Canon Cameras US 24.2 Digital SLR … chưa có trong bảng tương thích nên hệ thống không loại ống kính nào." |
+| Người 0 (chưa có thân) | không thử được | "Bạn chưa đánh giá thân máy nào nên không có ống kính nào bị loại." |
+| Người 99999 | chặn mạng để đổi user_id | nhập vào ô → "Không tìm thấy người dùng này." |
+| `user_id=99999999999999999999` qua Spring | 422 INVALID_PARAM (phản biện) | 404 USER_NOT_FOUND, trùng FastAPI |
+| Câu `verified = false` | chưa từng kiểm | bơm vào hạng 1 người 47 → "Chưa đủ thông tin để giải thích gợi ý này." |
+| Nhãn chế độ mẫu | không có | "Dữ liệu mẫu" trên trang chọn và danh sách; danh sách 409 trùng `recommend_409.json`; 0 yêu cầu API |
+| `mvn test` | 33/33 | 37/37 (`results/backend/mvn_test_20261028_lan3.log`) |
+| `check_demo` | 9/9 (bộ kiểm cũ) | **12/12 ĐẠT** (bộ kiểm mới, chặt hơn) |
+| Độ trễ qua Spring, 1.000 yêu cầu, p50 / p95 / p99 | 22,39 / 27,98 / 30,33 ms (RAM trống 2,4–2,7 GB) | 17,06 / 24,16 / 27,33 ms (RAM trống 4,5 GB, Spring `-Xmx512m`); cả hai **đo khi máy bận** |
+
+`run_demo.ps1` thử tay 28/10: chạy từ đường dẫn có dấu cách (junction tạm trong scratchpad, đã gỡ) cả khi `-Build` và
+khi dùng jar có sẵn: cả ba lên, Spring chỉ nghe `127.0.0.1:8080`, `user_id` quá lớn qua Spring 404; `-VitePort 50010` →
+dừng, báo khoảng giữ riêng 50000-50059; cổng 8001 bị `python` chiếm → dừng, nêu tên. Không sót tiến trình.
+
+**Không sửa (Nam chốt "sửa nếu nhanh; không thì ghi lý do")**
+- P1 (phần còn lại): không viết test đơn vị frontend / CI — chưa có bộ test frontend, e2e đã phủ các luồng chính; để sau.
+- P2 `check_service.contract_checks` kiểm nông: phía Spring đã so cả cây JSON với phản hồi thật (`AdvisorControllerTest`),
+  `check_demo` so màn hình với API; viết lại kiểm hợp đồng FastAPI là việc riêng, không gấp cho demo.
+- P4 mật khẩu mặc định `camera123`, compose mở cổng Postgres / Redis: database chưa dùng cho demo, `docker-compose.yml`
+  và profile `db` là phần của Hải; đổi mặc định làm hỏng cách chạy profile `db` hiện có. Làm khi làm database.
+- P5 đường dẫn `E:\DATN\...` trong docstring `ai/survey/report*/`: sửa sẽ đổi sha256 của các script đã ghi trong log làm
+  bằng chứng số liệu chương 1–2; chỉ lộ cấu trúc thư mục.
+- P6 chi tiết kỹ thuật trong thân lỗi (`details.cause`, `details.model_service`): dùng để dò lỗi; React không hiện;
+  Spring giờ chỉ nghe `127.0.0.1`.
+- P8 tham số lặp (Spring lấy giá trị đầu, FastAPI giá trị cuối): không ảnh hưởng đầu cuối vì Spring chỉ gửi một giá trị.
+- Ngoài 8 điểm Nam chốt, chưa làm: D6 danh sách dự phòng khi FastAPI lỗi, D9 `docker-compose.yml` / Dockerfile cũ, D10
+  một câu lỗi làm 500 cả danh sách; D2 chưa thử trên máy thứ hai.
+
+**Phía sau:** ảnh màn hình cho chương 3 lấy ở `results/demo/check_demo_s1_20261028_lan4/screens/` (thay `lan3`). Ô nhập
+user_id chưa có CSS riêng (Quyền). Thư mục `results/demo/check_demo_thu_20261028_a/` là lần chạy thử trước khi commit
+(độ trễ 50 yêu cầu), không dùng số, không đưa lên git.
+
+---
+
 ## 28/10/2026: frontend chế độ api — đọc lỗi đúng hợp đồng, gọi thêm bodies và items. Nhánh `nam/fe-integration`, commit `15efc8f`
 
 Sửa trên **code frontend của Hải** (nhánh `hai/fe-v2-integration`, commit `cbe9277` / `a49009b`), Nam yêu cầu 28/10.

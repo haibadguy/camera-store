@@ -1,0 +1,65 @@
+{
+  "n_lenses_catalog": 1339,
+  "n_lenses_in_m": 1033,
+  "n_bodies_in_m": 537,
+  "train": {
+    "n_users_with_bodies": 10406,
+    "n_users_with_body_outside_m": 71,
+    "n_of_them_all_bodies_outside_m": 47,
+    "n_users_all_bodies_in_m_but_0_blocked": 0,
+    "examples_body_outside_m": [
+      1476,
+      2511,
+      2969,
+      5677,
+      6147,
+      7265,
+      8042,
+      9073,
+      10259,
+      10373
+    ],
+    "examples_mixed_in_and_outside_m": [
+      1476,
+      2969,
+      5677,
+      6147,
+      7265,
+      9073,
+      11538,
+      13096,
+      14042,
+      25413
+    ]
+  },
+  "all_history": {
+    "n_users_with_bodies": 12472,
+    "n_users_with_body_outside_m": 83,
+    "n_of_them_all_bodies_outside_m": 49,
+    "n_users_all_bodies_in_m_but_0_blocked": 0,
+    "examples_body_outside_m": [
+      1476,
+      2511,
+      2969,
+      4965,
+      5677,
+      6147,
+      7265,
+      8042,
+      9073,
+      10259
+    ],
+    "examples_mixed_in_and_outside_m": [
+      1476,
+      2969,
+      4965,
+      5677,
+      6147,
+      7265,
+      9073,
+      11538,
+      12663,
+      13096
+    ]
+  }
+}

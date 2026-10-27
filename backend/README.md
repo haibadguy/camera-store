@@ -37,7 +37,7 @@ Cần: JDK 21 trở lên (máy của Nam: JDK 24), Maven 3.9. Không cần Docke
 |---|---|---|
 | `model-service.base-url` | `http://127.0.0.1:8001` (biến môi trường `MODEL_SERVICE_URL`) | địa chỉ FastAPI |
 | `model-service.connect-timeout` | `1s` | chờ mở kết nối |
-| `model-service.read-timeout` | `1s` | chờ phản hồi (hợp đồng mục 8 gợi ý ~1 s; p99 đo được ~21 ms) |
+| `model-service.read-timeout` | `3s` | chờ phản hồi (hợp đồng mục 8 gợi ý ~1 s, p99 đo được ~21–30 ms; để 3 s cho máy demo bận, Nam chốt 28/10) |
 | `cors.allowed-origins` | `http://localhost:5173,http://127.0.0.1:5173` (`CORS_ALLOWED_ORIGINS`) | cổng dev của Vite được gọi `/api/**` |
 | `server.port` | `8080` (`PORT`) | cổng Spring |
 
@@ -58,7 +58,7 @@ Flyway và code cũ; cần PostgreSQL (`docker compose up -d postgres`).
 | `GET /api/health` | `/health` | mục 3 |
 
 `k`, `exclude` không gửi thì Spring cũng không gửi, FastAPI dùng mặc định (`k = 10`, `exclude = all_history`).
-Spring **không kiểm lại** giá trị (k trong 1..50, user_id có trong dữ liệu...): FastAPI là nơi kiểm duy nhất.
+Spring **không kiểm lại** giá trị (k trong 1..50, user_id có trong dữ liệu...): FastAPI là nơi kiểm duy nhất. Mã số nhận kiểu `BigInteger` nên số nguyên rất lớn (vd `user_id=99999999999999999999`) cũng được chuyển nguyên và nhận đúng lỗi của FastAPI (404 `USER_NOT_FOUND`); chỉ khi không phải số nguyên (`abc`, `1.5`) Spring mới tự trả 422.
 
 ### Lỗi (luôn dạng `{"error": {"code", "message", "details"}}`, hợp đồng mục 7)
 
@@ -117,11 +117,11 @@ sách dự phòng khi FastAPI lỗi.
 
 **Bước 3 — Client (`ModelServiceClient.get`): gọi FastAPI qua HTTP.**
 Ghép địa chỉ từ `application.yml` thành `http://127.0.0.1:8001/recommend?user_id=409&k=10` (tham số `null` bị bỏ, nên
-FastAPI dùng mặc định `exclude=all_history`), gửi GET, chờ tối đa 1 s. Ba khả năng:
+FastAPI dùng mặc định `exclude=all_history`), gửi GET, chờ tối đa 3 s. Ba khả năng:
 - FastAPI trả **200**: đọc JSON thành DTO (bước 4);
 - FastAPI trả **lỗi 4xx** (vd `user_id=99999` → 404 `USER_NOT_FOUND`): ném `ApiException` mang đúng mã 404 và thân
   lỗi đó; `GlobalExceptionHandler` trả nguyên cho React;
-- **không gọi được**: FastAPI tắt → 503 `MODEL_SERVICE_UNAVAILABLE`; quá 1 s → 504 `MODEL_SERVICE_TIMEOUT`;
+- **không gọi được**: FastAPI tắt → 503 `MODEL_SERVICE_UNAVAILABLE`; quá 3 s → 504 `MODEL_SERVICE_TIMEOUT`;
   FastAPI lỗi 5xx → 502 `MODEL_SERVICE_ERROR`.
 
 **Bước 4 — DTO (`dto/RecommendResponse`): dữ liệu có kiểu.**

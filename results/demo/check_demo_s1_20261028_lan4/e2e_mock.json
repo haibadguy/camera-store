@@ -1,0 +1,25 @@
+{
+  "phase": "mock",
+  "web": "http://127.0.0.1:5174",
+  "api": "http://127.0.0.1:8098/api",
+  "checks": {
+    "mock_label_and_list": true,
+    "only_spring": true,
+    "no_console_error_except_http": true
+  },
+  "users": [],
+  "requests": [],
+  "console_errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "browser": "msedge 156.0.4314.50",
+  "other_local_requests": [],
+  "external_hosts": [
+    "images.unsplash.com"
+  ],
+  "mock": {
+    "label_on_picker": true,
+    "label_on_list": true,
+    "mismatches": []
+  }
+}

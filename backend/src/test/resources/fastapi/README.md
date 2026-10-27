@@ -15,3 +15,7 @@ FastAPI giả lập trong test (`FakeModelService`) trả đúng các file này.
     `body_id=9022&lens_id=105` (ống ngàm `khong_ro`: `level = null`, có `reason`);
   - lỗi: `/recommend?user_id=99999` (404), `/recommend?user_id=409&k=0` (422),
     `/compat?body_id=9696&lens_id=19071` (400).
+- `error_user_not_found_huge.json` (`/recommend?user_id=99999999999999999999`, 404), `error_invalid_k_huge.json`
+  (`/recommend?user_id=409&k=999999999999`, 422), `error_item_not_found_huge.json` (`/items/99999999999999999999`, 404):
+  lấy ngày 28/10/2026 bằng `curl` tới `run_service.py` seed 1 cổng 8071 (commit `c16c7b1`; log dịch vụ để ngoài repo),
+  cho test số nguyên vượt kiểu long (phản biện `E:\DATN\reviews\redteam_code_lan1.md` mục S2).
