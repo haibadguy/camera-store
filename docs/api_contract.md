@@ -47,6 +47,15 @@
    bị chặn. **Gợi ý thân máy khác hãng / khác ngàm không phải vi phạm** (Nam chốt 21/10): người dùng có thể chuyển hệ
    máy; ràng buộc tương thích chỉ có nghĩa với cặp (thân đã có, ống). Ví dụ thật: người 409 chỉ có Nikon D3100 vẫn được
    gợi ý thân Canon EOS 40D (mục 4.4); Spring Boot / React không được hiển thị đó là lỗi tương thích.
+   - **Người có ít nhất một thân ngoài M thì mặt nạ không chặn ống nào** (thêm 28/10, phản biện
+     `E:\DATN\reviews\redteam_code_lan1.md` S3; quy tắc của `eval_05.certain_violation_mask` lúc chấm, không đổi): M chỉ
+     gồm 537 thân có đúng một ngàm; thân ngoài M không biết lắp được ống nào nên không thể khẳng định "mọi thân đều
+     không lắp được". Đếm (không phụ thuộc seed; `ai/service/count_bodies_outside_m.py`, `results/demo/count_bodies_outside_m_20261028_lan1/`):
+     `all_history` 12.472 người có thân, **83** người có ≥ 1 thân ngoài M (49 người mọi thân đều ngoài M) →
+     `has_bodies = true` nhưng `n_lenses_blocked = 0`; `train_val` 10.406 / 71 người. Không có người nào mọi thân trong M
+     mà bị chặn 0 ống. Trong `/users/{id}/bodies`, thân ngoài M có `in_matrix = false`; React nói rõ "máy … chưa có trong
+     bảng tương thích nên hệ thống không loại ống kính nào" thay vì để người xem hiểu "mọi ống đều lắp được".
+   - Ống ngoài M (306 trên 1.339 ống của catalog: không có đúng một ngàm, hoặc ngàm "không chắc") **không bao giờ bị chặn**.
 4. `score` là tích vô hướng LightGCN eU[u]·eI[i], **chỉ dùng để xếp thứ tự trong cùng một người**; không phải xác suất,
    không so được giữa hai người.
 5. Giải thích chỉ có cho **ống kính** trong top-k của **người có thân** khi có đường u → b → l (thân b của u lắp được
@@ -95,7 +104,7 @@ Ví dụ (seed 1, `results/service/check_http_s1_20261021_lan1/summary.json`):
 | `items[].score` | float | điểm LightGCN (hạn chế 4) |
 | `items[].explanation` | object hoặc `null` | mục 4.3 |
 | `mask.rule` | string | `"QĐ 4-9 (mặt nạ 15)"` |
-| `mask.n_lenses_blocked` | int | số ống trong ma trận M (1.033 ống) bị mặt nạ chặn với người này (cả catalog) |
+| `mask.n_lenses_blocked` | int | số ống trong ma trận M (1.033 ống) bị mặt nạ chặn với người này (cả catalog), **không phải** số ống bị gỡ khỏi top-k; 0 với người không có thân hoặc có thân ngoài M (hạn chế 3) |
 | `mask.n_blocked_in_topk_before_mask` | int | **số ống bị mặt nạ chặn khỏi top-k**: có trong top-k nếu không có mặt nạ, bị gỡ ra khi áp mặt nạ |
 | `mask.blocked_in_topk_before_mask[]` | mảng | các ống đó (`item_id`, `asin`, `title`, `type`, `type_label`) |
 
@@ -113,7 +122,7 @@ cố định seed 20261009, `eval_05.tie_keys`); ống bị mặt nạ chặn c�
 | `b_star_score` | float | e_{b\*}ᵀe_l (điểm dùng để chọn b\*) |
 | `b_star_source` | string | b\* nằm ở phần nào của lịch sử: `train` / `val` / `test` (chỉ `all_history` mới có `val` / `test`) |
 | `candidate_bodies` | mảng int | mọi thân của u (theo chế độ) lắp được l (M = 1); b\* là một trong số đó |
-| `verified`, `errors` | bool, mảng | kết quả `eval_cakg.verify_explanation`: mọi sự kiện trong câu đều đúng. Luôn `true` / `[]` trong các lần kiểm (mục 9); nếu `false` thì Spring Boot không nên hiện câu |
+| `verified`, `errors` | bool, mảng | kết quả `eval_cakg.verify_explanation`: mọi sự kiện trong câu đều đúng. Luôn `true` / `[]` trong các lần kiểm (mục 9); nếu `false` thì Spring Boot không nên hiện câu. **Phạm vi:** kiểm sự kiện của câu (dưới đây); **không** kiểm b\* có đúng là argmax e_bᵀe_l trong `candidate_bodies` (cùng hàm `pick_body`, ở `train_val` b\* được so với kết quả đã lưu), không kiểm mẫu câu có khớp ρ |
 
 **Cách kiểm sự kiện của câu** (`verified`):
 - "bạn đã đánh giá <thân>" (`all_history`) / "bạn đã mua <thân>" (`train_val`) (cạnh `owns`): b\* phải là thân máy trong **file lịch sử của người dùng** — `train.txt` ở

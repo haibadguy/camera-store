@@ -28,6 +28,7 @@ export type RecommendationBody = {
   title: string;
   mount?: string;
   khung?: string | null;
+  in_matrix?: boolean;
   source?: "train" | "val" | "test";
 };
 
@@ -95,6 +96,10 @@ function toUserMessage(status: number, payload: unknown): string {
   return `Không tải được dữ liệu (HTTP ${status}).`;
 }
 
+// Chế độ dữ liệu mẫu (mặc định khi chạy Vite tay): đọc frontend/src/mock/, không gọi Spring / mô hình.
+// run_demo.ps1 đặt VITE_RECOMMENDATION_SOURCE=api.
+export const IS_MOCK_SOURCE = import.meta.env.VITE_RECOMMENDATION_SOURCE !== "api";
+
 const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8080/api").replace(/\/$/, "");
 const REQUEST_TIMEOUT_MS = 10_000;
 
@@ -131,7 +136,7 @@ function getMockResponse(userId: number): RecommendationResponse {
   const source = userId === 409 ? mockRecommend409 : userId === 47 ? mockRecommend47 : null;
   const bodies = userId === 409 ? mockBodies409.bodies : userId === 47 ? mockBodies47.bodies : null;
   if (!source || !bodies) {
-    throw new Error("Hồ sơ này chưa có dữ liệu tư vấn.");
+    throw new Error("Dữ liệu mẫu chỉ có người dùng 409 và 47.");
   }
   return {
     ...source,
@@ -142,6 +147,7 @@ function getMockResponse(userId: number): RecommendationResponse {
       title: body.title,
       mount: body.mount,
       khung: body.khung,
+      in_matrix: body.in_matrix,
       source: toHistorySource(body.source),
     })),
     items: source.items.map((item) => ({
@@ -193,6 +199,7 @@ async function fetchLiveRecommendations(
       title: body.title,
       mount: body.mount,
       khung: body.khung,
+      in_matrix: body.in_matrix,
       source: toHistorySource(body.source),
     })),
   };
@@ -226,7 +233,7 @@ export async function fetchRecommendations(
   userId: number,
   signal?: AbortSignal,
 ): Promise<RecommendationResponse> {
-  if (import.meta.env.VITE_RECOMMENDATION_SOURCE !== "api") {
+  if (IS_MOCK_SOURCE) {
     return Promise.resolve(getMockResponse(userId));
   }
   return withTimeout((timeoutSignal) => fetchLiveRecommendations(userId, timeoutSignal), signal);
@@ -237,7 +244,7 @@ export async function fetchProductDetail(
   itemId: number,
   signal?: AbortSignal,
 ): Promise<RecommendationProductDetail> {
-  if (import.meta.env.VITE_RECOMMENDATION_SOURCE !== "api") {
+  if (IS_MOCK_SOURCE) {
     const product = mockItemModules[`../mock/items/${itemId}.json`];
     if (!product) throw new Error("Chưa có thông tin chi tiết cho sản phẩm này.");
     return product;

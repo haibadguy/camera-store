@@ -1,0 +1,1 @@
+{"error":{"code":"INVALID_PARAM","message":"Tham số không hợp lệ.","details":{"errors":[{"loc":["query","k"],"msg":"Input should be less than or equal to 50"}]}}}

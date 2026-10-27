@@ -1,28 +1,33 @@
 """
 check_demo.py -- Kiểm đầu cuối giao diện demo: React (Vite, chế độ api) -> Spring Boot -> FastAPI seed 1 (nội dung 10).
-Viết 28/10/2026.
+Viết 28/10/2026; sửa cùng ngày theo phản biện E:\\DATN\\reviews\\redteam_code_lan1.md (Nam chốt 8 điểm).
 
 Các bước:
   0. Đóng gói Spring (như check_backend.py) và kiểm tools/demo_e2e đã cài (npm install trong thư mục đó).
-  1. Bật FastAPI seed 1, Spring (model-service.base-url trỏ tới FastAPI vừa bật), Vite dev với
-     VITE_RECOMMENDATION_SOURCE=api và VITE_API_URL trỏ tới Spring. Mỗi tiến trình ghi log tên mới trong thư mục kết quả.
-  2. Gọi qua Spring bằng HTTP: /api/recommend người 409, 47, 99999 (không tồn tại) -> ghi mã HTTP, mã lỗi.
-  3. Trình duyệt (tools/demo_e2e/demo_e2e.mjs --phase up, Edge có sẵn trên máy): người 409, 47 -> danh sách trên
-     màn hình trùng /api/recommend (hạng, tên, câu giải thích, ô tóm tắt), ghi chú mặt nạ nêu tên thân của
-     /api/users/{id}/bodies, trang chi tiết có thuộc tính của /api/items/{id}; người không tồn tại -> giao diện báo
-     "Không tìm thấy người dùng này." (bước 5: tắt FastAPI -> "Dịch vụ gợi ý đang tạm dừng, thử lại sau.").
-     Ảnh màn hình: <thư mục kết quả>/screens/.
+  1. Bật FastAPI seed 1, Spring như run_demo.ps1 (-Xmx512m, chỉ nghe 127.0.0.1, model-service.base-url trỏ tới
+     FastAPI vừa bật), Vite dev với VITE_RECOMMENDATION_SOURCE=api và VITE_API_URL trỏ tới Spring. Mỗi tiến trình ghi
+     log tên mới trong thư mục kết quả.
+  2. Gọi qua Spring bằng HTTP: /api/recommend người 409, 47, 99999 (không tồn tại), 99999999999999999999 (vượt kiểu
+     long, phải 404 USER_NOT_FOUND như FastAPI) -> ghi mã HTTP, mã lỗi.
+  3. Trình duyệt (tools/demo_e2e/demo_e2e.mjs --phase up, Edge có sẵn trên máy): người 409, 47 (nút chọn nhanh), 178,
+     1476, 0 (ô nhập) -> danh sách trùng /api/recommend, ghi chú mặt nạ đúng câu Nam chốt (điền từ trường API, ống bị
+     bỏ không lắp được trên mọi thân theo /api/compat), chi tiết (409, 47) có thuộc tính của /api/items/{id}, không có
+     chữ trái hợp đồng 1.3; người 99999 nhập vào ô -> "Không tìm thấy người dùng này."; ô nhập "abc" bị từ chối; bơm
+     một câu verified = false -> hiện câu thay thế. Ảnh màn hình: <thư mục kết quả>/screens/.
   4. Độ trễ đầu cuối qua Spring: 1.000 yêu cầu /api/recommend?k=10 (exclude mặc định all_history, như giao diện), người
      chọn ngẫu nhiên như check_service.py (seed 20261014, không lặp), sau 50 yêu cầu khởi động, gửi lần lượt. Rồi cùng
      những người đó gọi thẳng FastAPI để tham khảo. Ghi RAM trống trước / sau mỗi lượt; RAM trống < 6 GB thì ghi
      "đo khi máy bận".
-  5. Tắt FastAPI: HTTP /api/recommend qua Spring, rồi trình duyệt (--phase down) -> giao diện báo lỗi.
+  5. Tắt FastAPI: HTTP /api/recommend qua Spring, rồi trình duyệt (--phase down) -> "Dịch vụ gợi ý đang tạm dừng, thử
+     lại sau."
+  6. Vite thứ hai ở chế độ dữ liệu mẫu (--phase mock): nhãn "Dữ liệu mẫu" hiện, danh sách 409 trùng
+     frontend/src/mock/recommend_409.json, không gọi API.
 
 Chạy (từ thư mục camera-store; cần JDK 21+, Maven, Node trong PATH; npm ci trong frontend/ và npm install trong
 tools/demo_e2e/):
   ai\\.venv\\Scripts\\python.exe ai/service/check_demo.py --label <nhãn>
 Kết quả: results/demo/check_demo_<nhãn>/ (thư mục mới): log, log FastAPI / Spring / Vite / trình duyệt, screens/,
-e2e_up.json, e2e_down.json, summary.json.
+e2e_up.json, e2e_down.json, e2e_mock.json, summary.json.
 """
 
 import argparse
@@ -46,9 +51,9 @@ E2E_DIR = C.ROOT / "tools" / "demo_e2e"
 VITE_JS = FRONTEND / "node_modules" / "vite" / "bin" / "vite.js"
 LAT_SEED = 20261014          # cùng seed chọn người với 08b_latency.py / check_service.py
 BUSY_GB = 6.0                # RAM trống dưới mức này: ghi "đo khi máy bận" (CLAUDE.md, môi trường)
-# Câu giao diện phải hiện (frontend/src/services/recommendationService.ts, toUserMessage)
-EXPECTED_MESSAGES = {"unknown_user": "Không tìm thấy người dùng này.",
-                     "fastapi_down": "Dịch vụ gợi ý đang tạm dừng, thử lại sau."}
+HUGE_USER = "99999999999999999999"
+SPRING_JVM = ("-Xmx512m",)                       # như run_demo.ps1
+SPRING_EXTRA = ("--server.address=127.0.0.1",)   # như run_demo.ps1
 
 
 def free_gb():
@@ -64,13 +69,13 @@ def kill(p):
     p.wait(30)
 
 
-def start_vite(port, api_base, log_file, log):
+def start_vite(port, api_base, log_file, log, source="api"):
     node = shutil.which("node")
     assert node and VITE_JS.exists(), "không thấy node hoặc frontend/node_modules (chạy npm ci trong frontend/)"
-    env = dict(os.environ, VITE_RECOMMENDATION_SOURCE="api", VITE_API_URL=api_base)
+    env = dict(os.environ, VITE_RECOMMENDATION_SOURCE=source, VITE_API_URL=api_base)
     cmd = [node, str(VITE_JS), "--host", "127.0.0.1", "--port", str(port), "--strictPort"]
     v = subprocess.run([node, "--version"], capture_output=True, text=True).stdout.strip()
-    log(f"bật Vite: node {v} | VITE_RECOMMENDATION_SOURCE=api VITE_API_URL={api_base} | {' '.join(cmd[1:])}")
+    log(f"bật Vite: node {v} | VITE_RECOMMENDATION_SOURCE={source} VITE_API_URL={api_base} | {' '.join(cmd[1:])}")
     f = open(log_file, "x", encoding="utf-8")
     p = subprocess.Popen(cmd, cwd=FRONTEND, env=env, stdout=f, stderr=subprocess.STDOUT)
     base = f"http://127.0.0.1:{port}"
@@ -139,6 +144,7 @@ def main():
     ap.add_argument("--spring-port", type=int, default=8098)
     # 5173: cổng Vite mặc định, đúng cors.allowed-origins mặc định của Spring (không đổi cấu hình CORS khi kiểm)
     ap.add_argument("--vite-port", type=int, default=5173)
+    ap.add_argument("--vite-mock-port", type=int, default=5174)
     ap.add_argument("--n-latency", type=int, default=1000)
     ap.add_argument("--warmup", type=int, default=50)
     a = ap.parse_args()
@@ -155,15 +161,15 @@ def main():
     fp, fbase, h = CS.start_server(a.emb_dir, a.fastapi_port, run_dir / f"serve_{tag}.log", log)
     assert h["best_pt_sha256"] == meta["best_pt_sha256"] and h["seed"] == 1
     res["health"] = h
-    sp = vp = None
+    sp = vp = mp = None
     try:
-        sp, sf, sbase = CB.start_spring(a.spring_port, fbase, run_dir / f"spring_{tag}.log", log)
+        sp, sf, sbase = CB.start_spring(a.spring_port, fbase, run_dir / f"spring_{tag}.log", log, SPRING_JVM, SPRING_EXTRA)
         api = sbase + "/api"
         vp, vf, web = start_vite(a.vite_port, api, run_dir / f"vite_{tag}.log", log)
 
         log("bước 2: HTTP qua Spring")
         with httpx.Client(timeout=10) as cl:
-            for u in (409, 47, 99999):
+            for u in (409, 47, 99999, HUGE_USER):
                 r = cl.get(api + "/recommend", params={"user_id": u, "k": 10, "exclude": "all_history"})
                 j = r.json()
                 row = {"user_id": u, "status": r.status_code}
@@ -196,30 +202,35 @@ def main():
             res["fastapi_down_http"] = {"status": r.status_code, "body": r.json()}
             log(f"  HTTP qua Spring: {r.status_code} {json.dumps(r.json(), ensure_ascii=False)}")
         res["e2e_down"] = run_browser("down", web, api, run_dir, tag, log)
+
+        log("bước 6: Vite chế độ dữ liệu mẫu")
+        mp, mf, mweb = start_vite(a.vite_mock_port, api, run_dir / f"vite_mock_{tag}.log", log, source="mock")
+        res["e2e_mock"] = run_browser("mock", mweb, api, run_dir, tag, log)
     finally:
-        for p in (fp, sp, vp):
+        for p in (fp, sp, vp, mp):
             if p is not None:
                 kill(p)
         log(f"đã tắt mọi tiến trình đã bật; RAM trống {free_gb()} GB")
 
-    up, down = res["e2e_up"] or {}, res["e2e_down"] or {}
+    up, down, mock = res["e2e_up"] or {}, res["e2e_down"] or {}, res["e2e_mock"] or {}
+    upc, downc, mockc = up.get("checks", {}), down.get("checks", {}), mock.get("checks", {})
+    http = {str(r["user_id"]): r for r in res["http"]}
     checks = {
-        "http_409_47_ok": [r["status"] for r in res["http"][:2]] == [200, 200],
-        "http_unknown_404": res["http"][2]["status"] == 404 and res["http"][2]["error"]["code"] == "USER_NOT_FOUND",
-        "browser_409_same_as_api": up.get("checks", {}).get("user_409", False),
-        "browser_47_same_as_api": up.get("checks", {}).get("user_47", False),
-        "browser_unknown_error_shown": up.get("checks", {}).get("unknown_user_error_shown", False),
-        "browser_only_calls_spring": up.get("checks", {}).get("only_spring", False)
-                                     and down.get("checks", {}).get("only_spring", False),
+        "http_409_47_ok": http["409"]["status"] == 200 and http["47"]["status"] == 200,
+        "http_unknown_404": http["99999"]["status"] == 404 and http["99999"]["error"]["code"] == "USER_NOT_FOUND",
+        # phản biện S2: số vượt kiểu long qua Spring phải trùng FastAPI (404), không phải 422
+        "http_huge_user_404": http[HUGE_USER]["status"] == 404 and http[HUGE_USER]["error"]["code"] == "USER_NOT_FOUND",
+        "browser_users_same_as_api": bool(up.get("users")) and all(upc.get(f"user_{r['user_id']}", False) for r in up["users"])
+                                     and len(up["users"]) == 5,
+        "browser_unknown_message": upc.get("unknown_user_message", False),
+        "browser_bad_input_rejected": upc.get("bad_input_rejected", False),
+        "browser_verified_false_hidden": upc.get("verified_false_hidden", False),
         "http_down_503": res["fastapi_down_http"].get("status") == 503,
-        "browser_down_error_shown": down.get("checks", {}).get("fastapi_down_error_shown", False),
+        "browser_down_message": downc.get("fastapi_down_message", False),
+        "browser_mock_label_and_list": mockc.get("mock_label_and_list", False),
+        "browser_only_calls_spring": all(c.get("only_spring", False) for c in (upc, downc, mockc)),
+        "browser_no_console_error": all(c.get("no_console_error_except_http", False) for c in (upc, downc, mockc)),
     }
-    # Khung lỗi phải là câu dễ hiểu theo mã lỗi (thân lỗi {"error": {"code", ...}}, hợp đồng mục 7), Nam chốt 28/10;
-    # lần lan1, lan2 (code của Hải nguyên trạng) hiện "[object Object]"
-    msgs = {"unknown_user": up.get("unknown_user", {}).get("message"), "fastapi_down": down.get("fastapi_down", {}).get("message")}
-    res["error_messages_shown"] = msgs
-    res["error_messages_expected"] = EXPECTED_MESSAGES
-    checks["error_messages_as_expected"] = msgs == EXPECTED_MESSAGES
     res["checks"] = checks
     (run_dir / "summary.json").write_text(json.dumps(res, indent=2, ensure_ascii=False), encoding="utf-8")
     log(f"KẾT QUẢ: {checks} -> {'ĐẠT' if all(checks.values()) else 'KHÔNG ĐẠT'}; summary {run_dir / 'summary.json'}")
