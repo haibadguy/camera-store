@@ -6,6 +6,54 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 28/10/2026: frontend chế độ api — đọc lỗi đúng hợp đồng, gọi thêm bodies và items. Nhánh `nam/fe-integration`, commit `15efc8f`
+
+Sửa trên **code frontend của Hải** (nhánh `hai/fe-v2-integration`, commit `cbe9277` / `a49009b`), Nam yêu cầu 28/10.
+Không đụng CSS / font (để Quyền sửa: file CSS sau build giữ nguyên mã băm `index-5xQRVSv1.css`). Không đổi số nào của mô hình.
+
+**Sửa gì**
+- `frontend/src/services/recommendationService.ts`:
+  - Lỗi đọc theo đúng định dạng lỗi chung của hợp đồng mục 7, `{"error": {"code", "message", "details"}}`; hàm mới
+    `toUserMessage` chọn câu theo mã: `USER_NOT_FOUND` → "Không tìm thấy người dùng này."; mã `MODEL_SERVICE_*` của
+    Spring (503 FastAPI không chạy, 504 hết giờ, 502 FastAPI lỗi) hoặc HTTP 5xx → "Dịch vụ gợi ý đang tạm dừng, thử lại
+    sau."; mã khác → "Không tải được dữ liệu (HTTP …)". Không hiện `message` của backend vì đó là câu kỹ thuật (địa chỉ
+    FastAPI, khoảng `user_id`).
+  - Chế độ api gọi song song `/api/recommend` và `/api/users/{id}/bodies?exclude=all_history` (cùng chế độ `exclude`,
+    nên đúng tập thân dùng cho mặt nạ, hợp đồng mục 6.1), gắn vào `bodies` như chế độ mock.
+  - Hàm mới `fetchProductDetail`: mock đọc `frontend/src/mock/items/`, api gọi `/api/items/{id}`. Phần chờ 10 s tách
+    thành `withTimeout` dùng chung cho cả hai lời gọi (giữ nguyên câu "Hệ thống phản hồi hơi lâu…" và cách hủy yêu cầu).
+- `frontend/src/RecommendationDemo.tsx`, `ProductDetail`: nếu `item.product` chưa có (chế độ api) thì gọi
+  `fetchProductDetail` khi mở trang, hiện "Đang tải thông tin sản phẩm..." / câu lỗi bằng class có sẵn; chế độ mock
+  không đổi (đã có `item.product`).
+
+**Vì sao** (bằng chứng: `results/demo/check_demo_s1_20261028_lan2/`, code của Hải nguyên trạng trừ 3 file backend đã bỏ)
+- Client cũ đọc `payload.message ?? payload.error`; thân lỗi thật có `payload.error` là object nên
+  `new Error(object)` thành chữ "[object Object]". Ví dụ: người 99999 → Spring 404 `USER_NOT_FOUND`, giao diện hiện
+  "[object Object]"; tắt FastAPI → Spring 503 `MODEL_SERVICE_UNAVAILABLE`, giao diện cũng hiện "[object Object]".
+- Chế độ api cũ chỉ gọi `/api/recommend` (không có thân máy, không có thuộc tính sản phẩm) nên khác chế độ mock: ghi chú
+  mặt nạ của người 409 nói "thiết bị của bạn" thay tên thân, trang chi tiết chỉ có "Loại sản phẩm".
+
+**Ảnh hưởng** (`ai/service/check_demo.py`; cũ: lần `lan2` trên `e59edc0`; mới: lần `lan3` trên `15efc8f`, cây sạch)
+
+| Mục | Cũ (`lan2`) | Mới (`lan3`) |
+|---|---|---|
+| Câu lỗi, người 99999 | "[object Object]" | "Không tìm thấy người dùng này." |
+| Câu lỗi, tắt FastAPI | "[object Object]" | "Dịch vụ gợi ý đang tạm dừng, thử lại sau." |
+| Ghi chú mặt nạ người 409 | "Đã ẩn 814 ống kính không lắp được trên thiết bị của bạn." | "… trên Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zoom Lens (Discontinued by Manufacturer)." |
+| Chi tiết 409 hạng 2 (Nikon 55-200mm) | Loại sản phẩm | Loại sản phẩm, Ngàm Nikon F, Định dạng APS-C, Phù hợp với thể thao / chim |
+| Chi tiết 47 hạng 1 (Nikon 28-300mm) | Loại sản phẩm | Loại sản phẩm, Ngàm Nikon F, Định dạng Full-frame, Phù hợp với phong cảnh, thể thao / chim |
+| Danh sách 409 / 47 so với `/api/recommend` | trùng | trùng (không đổi) |
+| Kiểm `check_demo` | 8/9 (KHÔNG ĐẠT) | **9/9 ĐẠT** |
+
+Script kiểm cũng chặt hơn ở `lan3`: kiểm thứ 9 đòi đúng hai câu trên (trước chỉ đòi "không phải [object Object]"); ghi
+chú mặt nạ phải nêu tên thân đầu tiên của `/api/users/{id}/bodies`; thuộc tính trang chi tiết phải trùng `/api/items/{id}`.
+
+**Chưa kiểm / phía sau:** chế độ mock chỉ kiểm bằng `npm run build` (đạt), chưa chạy lại trên trình duyệt; mỗi lần chọn
+hồ sơ giờ có 2 yêu cầu (recommend + bodies), số độ trễ của `check_demo` vẫn chỉ đo `/api/recommend`; `docs/plan_hai_fe_v2.md`
+của Hải chưa cập nhật theo.
+
+---
+
 ## 26/10/2026: đồng bộ nhánh Hải với `main` và chuẩn bị FE dùng mock thật
 
 **Sửa gì**

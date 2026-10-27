@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  fetchProductDetail,
   fetchRecommendations,
   RecommendationExplanation,
   RecommendationItem,
+  RecommendationProductDetail,
   RecommendationResponse,
 } from "./services/recommendationService";
 
@@ -136,10 +138,28 @@ function ExplanationPanel({ explanation }: { explanation: RecommendationExplanat
 }
 
 function ProductDetail({ item, userId, onBack, onExit }: { item: RecommendationItem; userId: number; onBack: () => void; onExit: () => void }) {
-  const product = item.product;
+  // Chế độ mock đã gắn sẵn item.product; chế độ api lấy từ /api/items/{id} khi mở trang
+  const [product, setProduct] = useState<RecommendationProductDetail | undefined>(item.product);
+  const [productError, setProductError] = useState<string | null>(null);
+  useEffect(() => {
+    if (item.product) return;
+    const controller = new AbortController();
+    fetchProductDetail(item.item_id, controller.signal)
+      .then(setProduct)
+      .catch((requestError) => {
+        if (requestError instanceof DOMException && requestError.name === "AbortError") return;
+        setProductError(requestError instanceof TypeError
+          ? "Chưa kết nối được với cửa hàng. Bạn thử lại sau ít phút nhé."
+          : requestError instanceof Error ? requestError.message : "Chưa tải được thông tin sản phẩm.");
+      });
+    return () => controller.abort();
+  }, [item]);
+  const productLoading = !product && !productError;
   return <div className="demo-page"><DemoHeader onExit={onExit} trail="Thông tin sản phẩm" />
     <main className="demo-shell demo-main"><button className="demo-back-button" onClick={onBack}>← Quay lại danh sách gợi ý</button><span className="demo-eyebrow">Thông tin sản phẩm</span>
       <article className="demo-detail-card"><div className="demo-detail-visual" aria-hidden="true">{item.type_label}</div><div className="demo-detail-content"><div className="demo-type-row"><span>{item.type_label}</span><span>Hạng #{item.rank}</span></div><h1>{item.title}</h1><p className="demo-lead">Thông tin sản phẩm và lý do được đề xuất cho bạn.</p>
+        {productLoading && <p role="status" className="demo-lead">Đang tải thông tin sản phẩm...</p>}
+        {productError && <p role="alert" className="demo-lead">{productError}</p>}
         <dl className="demo-attributes"><div><dt>Loại sản phẩm</dt><dd>{item.type_label}</dd></div>{product?.mount && <div><dt>Ngàm</dt><dd>{formatMount(product.mount)}</dd></div>}{product?.khung && <div><dt>Định dạng</dt><dd>{formatFrame(product.khung)}</dd></div>}{product?.usecases_label?.length ? <div><dt>Phù hợp với</dt><dd>{product.usecases_label.join(", ")}</dd></div> : null}</dl>{item.explanation && <ExplanationPanel explanation={item.explanation} />}
       </div></article>
     </main>

@@ -44,7 +44,7 @@ page.on("request", (r) => {
   else if (!res.external_hosts.includes(u.host)) res.external_hosts.push(u.host);
 });
 page.on("response", async (r) => {
-  if (!new URL(r.url()).pathname.endsWith("/recommend")) return;   // chỉ yêu cầu API, không tính file mã của Vite
+  if (!new URL(r.url()).pathname.startsWith("/api/")) return;   // chỉ yêu cầu API, không tính file mã của Vite
   let body = null;
   try { body = await r.json(); } catch { /* không phải JSON */ }
   res.requests.push({ url: r.url(), status: r.status(), error: body?.error ?? null });
@@ -125,8 +125,12 @@ async function checkUser({ id, body }, idx) {
   }
   const maskNote = page.locator("aside.demo-mask-note:not([role=alert]) p");
   row.mask_note = (await maskNote.count()) ? (await maskNote.innerText()).trim() : null;
-  if ((row.mask_note !== null) !== (expected.mask.n_blocked_in_topk_before_mask > 0)) {
-    row.mismatches.push("ghi chú mặt nạ hiện / ẩn không khớp n_blocked_in_topk_before_mask");
+  // Ghi chú mặt nạ hiện khi có ống bị gỡ khỏi top-k, nêu tên thân đầu tiên của /api/users/{id}/bodies
+  const bodies = (await (await fetch(`${api}/users/${id}/bodies?exclude=all_history`)).json()).bodies;
+  const wantNote = expected.mask.n_blocked_in_topk_before_mask > 0
+    ? `Đã ẩn ${expected.mask.n_lenses_blocked} ống kính không lắp được trên ${bodies[0].title}.` : null;
+  if (row.mask_note !== wantNote) {
+    row.mismatches.push(`ghi chú mặt nạ: màn hình ${JSON.stringify(row.mask_note)}, mong đợi ${JSON.stringify(wantNote)}`);
   }
   row.n_items = n;
   row.n_explanations = shown.filter((s) => s.explanation !== null).length;
@@ -139,12 +143,26 @@ async function checkUser({ id, body }, idx) {
   const pos = Math.max(0, shown.findIndex((s) => s.explanation !== null));
   await cards.nth(pos).getByRole("button", { name: "Xem thông tin sản phẩm" }).click();
   await page.locator(".demo-detail-card").waitFor();
+  await page.locator(".demo-detail-card [role=status]").waitFor({ state: "detached", timeout: 15000 });
+  const detailError = page.locator(".demo-detail-card [role=alert]");
+  if (await detailError.count()) row.mismatches.push(`trang chi tiết báo lỗi: ${await detailError.innerText()}`);
   const dts = await page.locator(".demo-attributes dt").allInnerTexts();
   const dds = await page.locator(".demo-attributes dd").allInnerTexts();
   row.detail = { rank: shown[pos].rank, title: (await page.locator(".demo-detail-card h1").innerText()).trim(),
                  attributes: Object.fromEntries(dts.map((t, i) => [t, dds[i]])) };
   log(`  chi tiết hạng ${row.detail.rank}: ${row.detail.title} | thuộc tính ${JSON.stringify(row.detail.attributes)}`);
   if (row.detail.title !== want[pos].title) row.mismatches.push("tên ở trang chi tiết khác danh sách");
+  // Thuộc tính mong đợi từ /api/items/{id}, cùng cách ghi với RecommendationDemo (formatMount, formatFrame)
+  const prod = await (await fetch(`${api}/items/${expected.items[pos].item_id}`)).json();
+  const mountName = { nikon_f: "Nikon F", canon_ef: "Canon EF" }[prod.mount] ?? prod.mount;
+  const frameName = { apsc: "APS-C", ff: "Full-frame" }[prod.khung] ?? prod.khung;
+  const wantAttr = { "Loại sản phẩm": expected.items[pos].type_label };
+  if (prod.mount) wantAttr["Ngàm"] = mountName;
+  if (prod.khung) wantAttr["Định dạng"] = frameName;
+  if (prod.usecases_label?.length) wantAttr["Phù hợp với"] = prod.usecases_label.join(", ");
+  if (JSON.stringify(row.detail.attributes) !== JSON.stringify(wantAttr)) {
+    row.mismatches.push(`thuộc tính chi tiết: màn hình ${JSON.stringify(row.detail.attributes)}, /api/items ${JSON.stringify(wantAttr)}`);
+  }
   await shot(`0${4 + 2 * idx}_chi_tiet_${id}_hang${row.detail.rank}.png`);
   await page.getByRole("button", { name: "← Quay lại danh sách gợi ý" }).click();
   await page.locator(".demo-recommendation-card").first().waitFor();
@@ -160,14 +178,19 @@ try {
 
     log(`người không tồn tại: đổi user_id của yêu cầu nút 409 thành ${UNKNOWN_USER} ở tầng mạng`);
     await openPicker();
-    await page.route("**/recommend?*", (route) => {
+    await page.route("**/api/recommend?*", (route) => {
       const u = new URL(route.request().url());
       u.searchParams.set("user_id", String(UNKNOWN_USER));
       route.continue({ url: u.toString() });
     });
+    await page.route("**/api/users/*/bodies*", (route) => {
+      const u = new URL(route.request().url());
+      u.pathname = u.pathname.replace(/\/users\/\d+\//, `/users/${UNKNOWN_USER}/`);
+      route.continue({ url: u.toString() });
+    });
     await pickUser("Nikon D3100");
     const kind = await waitResult();
-    await page.unroute("**/recommend?*");
+    await page.unrouteAll();
     res.unknown_user = { kind, ...(kind === "error" ? await errorShown() : {}) };
     log(`  giao diện: ${JSON.stringify(res.unknown_user)}`);
     await shot("07_nguoi_khong_ton_tai.png");
@@ -185,10 +208,10 @@ try {
 } finally {
   // Yêu cầu gợi ý chỉ đi tới Spring (/api/recommend); trang không gọi dịch vụ nào khác trên máy (nên không gọi
   // thẳng FastAPI)
-  res.checks.only_spring = res.requests.length > 0 && res.requests.every((r) => r.url.startsWith(api + "/recommend"))
+  res.checks.only_spring = res.requests.length > 0 && res.requests.every((r) => r.url.startsWith(api + "/"))
     && res.other_local_requests.length === 0;
   res.checks.no_console_error_except_http = res.console_errors.every((t) => t.includes("Failed to load resource"));
-  log(`yêu cầu /recommend của trang: ${JSON.stringify(res.requests)}`);
+  log(`yêu cầu API của trang: ${JSON.stringify(res.requests)}`);
   log(`yêu cầu tới dịch vụ khác trên máy (phải rỗng): ${JSON.stringify(res.other_local_requests)}; ` +
       `máy chủ Internet: ${JSON.stringify(res.external_hosts)}`);
   log(`lỗi console: ${JSON.stringify(res.console_errors)}`);

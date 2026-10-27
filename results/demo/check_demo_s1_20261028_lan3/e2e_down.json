@@ -1,0 +1,54 @@
+{
+  "phase": "down",
+  "web": "http://127.0.0.1:5173",
+  "api": "http://127.0.0.1:8098/api",
+  "checks": {
+    "fastapi_down_error_shown": true,
+    "only_spring": true,
+    "no_console_error_except_http": true
+  },
+  "users": [],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:8098/api/recommend?user_id=409&k=10&exclude=all_history",
+      "status": 503,
+      "error": {
+        "code": "MODEL_SERVICE_UNAVAILABLE",
+        "message": "Không kết nối được dịch vụ gợi ý (FastAPI) ở http://127.0.0.1:8061: dịch vụ chưa chạy hoặc sai địa chỉ (model-service.base-url).",
+        "details": {
+          "model_service": "http://127.0.0.1:8061",
+          "path": "/recommend",
+          "cause": "java.net.ConnectException: Connection refused: getsockopt"
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/users/409/bodies?exclude=all_history",
+      "status": 503,
+      "error": {
+        "code": "MODEL_SERVICE_UNAVAILABLE",
+        "message": "Không kết nối được dịch vụ gợi ý (FastAPI) ở http://127.0.0.1:8061: dịch vụ chưa chạy hoặc sai địa chỉ (model-service.base-url).",
+        "details": {
+          "model_service": "http://127.0.0.1:8061",
+          "path": "/users/409/bodies",
+          "cause": "java.net.ConnectException: Connection refused: getsockopt"
+        }
+      }
+    }
+  ],
+  "console_errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 503 ()",
+    "Failed to load resource: the server responded with a status of 503 ()"
+  ],
+  "browser": "msedge 156.0.4314.42",
+  "other_local_requests": [],
+  "external_hosts": [
+    "images.unsplash.com"
+  ],
+  "fastapi_down": {
+    "kind": "error",
+    "title": "Không tải được dữ liệu",
+    "message": "Dịch vụ gợi ý đang tạm dừng, thử lại sau."
+  }
+}

@@ -8,7 +8,9 @@ Các bước:
      VITE_RECOMMENDATION_SOURCE=api và VITE_API_URL trỏ tới Spring. Mỗi tiến trình ghi log tên mới trong thư mục kết quả.
   2. Gọi qua Spring bằng HTTP: /api/recommend người 409, 47, 99999 (không tồn tại) -> ghi mã HTTP, mã lỗi.
   3. Trình duyệt (tools/demo_e2e/demo_e2e.mjs --phase up, Edge có sẵn trên máy): người 409, 47 -> danh sách trên
-     màn hình trùng /api/recommend (hạng, tên, câu giải thích, ô tóm tắt); người không tồn tại -> giao diện báo lỗi.
+     màn hình trùng /api/recommend (hạng, tên, câu giải thích, ô tóm tắt), ghi chú mặt nạ nêu tên thân của
+     /api/users/{id}/bodies, trang chi tiết có thuộc tính của /api/items/{id}; người không tồn tại -> giao diện báo
+     "Không tìm thấy người dùng này." (bước 5: tắt FastAPI -> "Dịch vụ gợi ý đang tạm dừng, thử lại sau.").
      Ảnh màn hình: <thư mục kết quả>/screens/.
   4. Độ trễ đầu cuối qua Spring: 1.000 yêu cầu /api/recommend?k=10 (exclude mặc định all_history, như giao diện), người
      chọn ngẫu nhiên như check_service.py (seed 20261014, không lặp), sau 50 yêu cầu khởi động, gửi lần lượt. Rồi cùng
@@ -44,6 +46,9 @@ E2E_DIR = C.ROOT / "tools" / "demo_e2e"
 VITE_JS = FRONTEND / "node_modules" / "vite" / "bin" / "vite.js"
 LAT_SEED = 20261014          # cùng seed chọn người với 08b_latency.py / check_service.py
 BUSY_GB = 6.0                # RAM trống dưới mức này: ghi "đo khi máy bận" (CLAUDE.md, môi trường)
+# Câu giao diện phải hiện (frontend/src/services/recommendationService.ts, toUserMessage)
+EXPECTED_MESSAGES = {"unknown_user": "Không tìm thấy người dùng này.",
+                     "fastapi_down": "Dịch vụ gợi ý đang tạm dừng, thử lại sau."}
 
 
 def free_gb():
@@ -209,10 +214,12 @@ def main():
         "http_down_503": res["fastapi_down_http"].get("status") == 503,
         "browser_down_error_shown": down.get("checks", {}).get("fastapi_down_error_shown", False),
     }
-    # Khung lỗi phải là câu đọc được, không phải "[object Object]" (thân lỗi là {"error": {...}}, hợp đồng mục 7)
+    # Khung lỗi phải là câu dễ hiểu theo mã lỗi (thân lỗi {"error": {"code", ...}}, hợp đồng mục 7), Nam chốt 28/10;
+    # lần lan1, lan2 (code của Hải nguyên trạng) hiện "[object Object]"
     msgs = {"unknown_user": up.get("unknown_user", {}).get("message"), "fastapi_down": down.get("fastapi_down", {}).get("message")}
     res["error_messages_shown"] = msgs
-    checks["error_messages_readable"] = all(m and "[object Object]" not in m for m in msgs.values())
+    res["error_messages_expected"] = EXPECTED_MESSAGES
+    checks["error_messages_as_expected"] = msgs == EXPECTED_MESSAGES
     res["checks"] = checks
     (run_dir / "summary.json").write_text(json.dumps(res, indent=2, ensure_ascii=False), encoding="utf-8")
     log(f"KẾT QUẢ: {checks} -> {'ĐẠT' if all(checks.values()) else 'KHÔNG ĐẠT'}; summary {run_dir / 'summary.json'}")
