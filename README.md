@@ -6,7 +6,7 @@ Dữ liệu: Amazon Reviews 2023, nhóm Electronics. Trạng thái dự án, quy
 
 ## Kiến trúc demo
 
-React (`frontend/`) → Spring Boot (`backend/`, nghiệp vụ) → FastAPI (dịch vụ mô hình `ai/service/`, nội dung 10). Quyết định giữ Spring Boot: `docs/STATUS.md`, nhật ký 09/10/2026. Hiện (28/10) Spring Boot gọi FastAPI theo `docs/api_contract.md` 1.3 (cách chạy: `backend/README.md`; chưa có database / đăng nhập); React gọi Spring khi đặt `VITE_RECOMMENDATION_SOURCE=api`, mặc định đọc dữ liệu giả `frontend/src/mock/`. Chạy cả ba bằng một lệnh: mục "Chạy demo trên máy khác".
+React (`frontend/`) → Spring Boot (`backend/`, nghiệp vụ) → FastAPI (dịch vụ mô hình `ai/service/`, nội dung 10). Quyết định giữ Spring Boot: `docs/STATUS.md`, nhật ký 09/10/2026. Hiện (28/10) Spring Boot gọi FastAPI theo `docs/api_contract.md` 1.3 (cách chạy: `backend/README.md`; chưa có database / đăng nhập); React gọi Spring khi đặt `VITE_RECOMMENDATION_SOURCE=api` (`run_demo.ps1` luôn đặt); chạy Vite tay thì mặc định đọc dữ liệu giả `frontend/src/mock/` và trang hiện nhãn "Dữ liệu mẫu". Chạy cả ba bằng một lệnh: mục "Chạy demo trên máy khác".
 
 ## Thư mục chính
 
@@ -95,7 +95,8 @@ Cơ sở dữ liệu của demo: PostgreSQL 17, Redis 7 (Docker). Tài liệu c�
 ## Chạy demo trên máy khác
 
 Demo = FastAPI (dịch vụ mô hình, seed 1) → Spring Boot → React (Vite), bật cả ba bằng `run_demo.ps1` (Windows,
-PowerShell). Đã thử trên máy của Nam 28/10/2026.
+PowerShell). Đã thử trên máy của Nam 28/10/2026, cả khi repo nằm ở đường dẫn có dấu cách; **chưa thử trên máy thứ hai**.
+Lần đầu cần mạng (pip, `npm ci`, Maven); sau khi đã có `backend/target/*.jar` thì chạy demo không cần mạng.
 
 **1. Cài phần mềm**
 
@@ -136,10 +137,13 @@ nếu thiếu hoặc sai. Nếu không có file từ Nam: chạy lại bước 1
 powershell -ExecutionPolicy Bypass -File .\run_demo.ps1
 ```
 
-Script kiểm máy, `npm ci` nếu chưa có `frontend/node_modules`, đóng gói Spring, rồi bật FastAPI (cổng 8001, ~15 s),
-Spring (8080), Vite (5173, chế độ api). Mở `http://127.0.0.1:5173`, bấm **"Tư vấn thiết bị"**, chọn hồ sơ. Nhấn Enter
-trong cửa sổ PowerShell để tắt cả ba. Log mỗi lần chạy: `results/demo/run_demo_logs/<ngày_giờ>/`. Tùy chọn: `-Source
-mock` (React đọc dữ liệu giả, không gọi API), `-SkipBuild`, `-FastApiPort` / `-SpringPort` / `-VitePort`.
+Script kiểm máy (Python 3.12, JDK ≥ 21, sha256 của 5 file, cổng đang bị chiếm hoặc nằm trong khoảng Windows giữ riêng),
+`npm ci` nếu chưa có `frontend/node_modules`, đóng gói Spring **chỉ khi chưa có jar** (hoặc khi thêm `-Build`, cần sau
+khi đổi code backend), rồi bật FastAPI (cổng 8001, ~15–20 s), Spring (8080, heap tối đa 512 MB, chỉ nghe 127.0.0.1),
+Vite (5173, chế độ api). Mở `http://127.0.0.1:5173`, bấm **"Tư vấn thiết bị"**, chọn người 409 / 47 hoặc nhập mã người
+dùng khác (0–67.660, vd 178 nhiều hệ máy, 1476 có thân ngoài bảng tương thích, 0 chưa có thân). Bấm thử một lượt trước
+khi trình bày. Nhấn Enter trong cửa sổ PowerShell để tắt cả ba. Log mỗi lần chạy: `results/demo/run_demo_logs/<ngày_giờ>/`.
+Tùy chọn: `-Build`, `-SpringHeap 768m`, `-FastApiPort` / `-SpringPort` / `-VitePort`.
 
 Kiểm tự động cả chuỗi (trình duyệt Edge có sẵn của Windows, Playwright; lần đầu `npm install` trong `tools/demo_e2e/`):
 `ai\.venv\Scripts\python.exe ai/service/check_demo.py --label <nhãn>` → `results/demo/check_demo_<nhãn>/` (ảnh màn
