@@ -1,0 +1,10 @@
+{
+  "name": "camera-store-demo-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Kiểm đầu cuối giao diện demo (React -> Spring Boot -> FastAPI) bằng Playwright, dùng Edge có sẵn trên máy",
+  "type": "module",
+  "dependencies": {
+    "playwright-core": "1.56.1"
+  }
+}
