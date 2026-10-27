@@ -65,6 +65,19 @@ $Want = (Get-Content $Meta -Raw -Encoding UTF8 | ConvertFrom-Json).embeddings_sh
 $Got = (Get-FileHash $Emb -Algorithm SHA256).Hash.ToLower()
 if ($Got -ne $Want) { Fail "sha256 embeddings.npz = $Got, meta.json ghi $Want" }
 Write-Host "  Python $PyVer, embeddings.npz đúng sha256 ($($Got.Substring(0, 12))...)"
+# 4 file dữ liệu khác FastAPI đọc mà không có trong git (đo bằng ai/service/list_runtime_files.py, 28/10/2026)
+$DataFiles = [ordered]@{
+    "ai/data/processed/train.txt"     = "ebd29b03a4866cfca243edc1ee31539f16be19b756bfbd4c388e3f20ca06a5c5"
+    "ai/data/processed/val.txt"       = "e8a47d06bd6e6977fe7eebc485cbf07eb75e7e9bdb651da955e8fd7f85a3a900"
+    "ai/data/processed/test.txt"      = "410fc46cea72cdc5115a3e0413036456d1d1d59b8bcb7c63da6edd026e4da8ea"
+    "ai/data/processed/item_map.json" = "c7ccd84b3fbcc5cf7cab85171fdf187dea8deccf3d36aaceb4877f06cfdaa63c"
+}
+foreach ($f in $DataFiles.Keys) {
+    $path = Join-Path $Root $f
+    if (-not (Test-Path $path)) { Fail "thiếu $f (không có trong git)" }
+    if ((Get-FileHash $path -Algorithm SHA256).Hash.ToLower() -ne $DataFiles[$f]) { Fail "sha256 của $f khác bản chuẩn" }
+}
+Write-Host "  4 file ai/data/processed đúng sha256"
 
 foreach ($port in @($FastApiPort, $SpringPort, $VitePort)) {
     if (Get-NetTCPConnection -State Listen -LocalPort $port -ErrorAction SilentlyContinue) {

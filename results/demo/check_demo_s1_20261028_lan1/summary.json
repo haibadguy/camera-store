@@ -1,0 +1,403 @@
+{
+  "git": {
+    "commit": "322612378f3896f343bbc3b9956c70bd9acf0a5f",
+    "dirty": false
+  },
+  "jar_sha256": "d01c70d0b02739bb0b8c236692fbacafcbf1d9d51c411afcfed25632a6c82d6f",
+  "http": [
+    {
+      "user_id": 409,
+      "status": 200,
+      "n_items": 10,
+      "n_bodies": 1,
+      "n_lenses_blocked": 814,
+      "n_explanations": 2
+    },
+    {
+      "user_id": 47,
+      "status": 200,
+      "n_items": 10,
+      "n_bodies": 2,
+      "n_lenses_blocked": 814,
+      "n_explanations": 5
+    },
+    {
+      "user_id": 99999,
+      "status": 404,
+      "error": {
+        "code": "USER_NOT_FOUND",
+        "message": "Không có người dùng 99999 trong dữ liệu (chỉ phục vụ user_id 0..67660; chưa hỗ trợ người dùng mới).",
+        "details": {
+          "user_id": 99999
+        }
+      }
+    }
+  ],
+  "latency_ms": {
+    "spring": {
+      "p50": 17.47,
+      "p95": 23.07,
+      "p99": 36.5,
+      "max": 45.31,
+      "mean": 18.37,
+      "n": 1000,
+      "warmup": 50,
+      "ram_free_gb_before": 3.12,
+      "ram_free_gb_after": 3.16,
+      "busy": true
+    },
+    "fastapi_direct": {
+      "p50": 15.93,
+      "p95": 19.75,
+      "p99": 22.24,
+      "max": 56.3,
+      "mean": 16.38,
+      "n": 1000,
+      "warmup": 50,
+      "ram_free_gb_before": 3.16,
+      "ram_free_gb_after": 3.1,
+      "busy": true,
+      "fastapi_server_p50_ms": 14.71
+    }
+  },
+  "fastapi_down_http": {
+    "status": 503,
+    "body": {
+      "error": {
+        "code": "MODEL_SERVICE_UNAVAILABLE",
+        "message": "Không kết nối được dịch vụ gợi ý (FastAPI) ở http://127.0.0.1:8061: dịch vụ chưa chạy hoặc sai địa chỉ (model-service.base-url).",
+        "details": {
+          "model_service": "http://127.0.0.1:8061",
+          "path": "/recommend",
+          "cause": "java.net.ConnectException: Connection refused: getsockopt"
+        }
+      }
+    }
+  },
+  "health": {
+    "status": "ok",
+    "model": "LightGCN + mặt nạ QĐ 4-9",
+    "seed": 1,
+    "best_pt_sha256": "d857e24c3d7fff692c39627b54ee30fb1e62044d9ec6fd932642d892285f5fc2",
+    "embeddings_sha256": "fbda48a1f84c9fd0047d2a8d06319e1e816dcf20cbe51817f5f86241f97200b4",
+    "device": "cpu",
+    "n_users": 67661,
+    "n_items": 27940,
+    "n_users_with_bodies": {
+      "train": 10406,
+      "all_history": 12472
+    },
+    "startup_s": 2.88,
+    "contract_version": "1.3"
+  },
+  "e2e_up": {
+    "phase": "up",
+    "web": "http://127.0.0.1:5173",
+    "api": "http://127.0.0.1:8098/api",
+    "checks": {
+      "user_409": true,
+      "user_47": true,
+      "unknown_user_error_shown": true,
+      "only_spring": false,
+      "no_console_error_except_http": true
+    },
+    "users": [
+      {
+        "user_id": 409,
+        "kind": "list",
+        "mismatches": [],
+        "mask_note": "Đã ẩn 814 ống kính không lắp được trên thiết bị của bạn.",
+        "n_items": 10,
+        "n_explanations": 2,
+        "shown": [
+          {
+            "rank": 1,
+            "title": "Canon PSC-55 Deluxe Leather Compact Case for SD430, SD500, SD550, SD600, SD630, SD700IS, SD800IS, SD850 IS, SD900,SD950IS & SD870IS 300 HS , 100 HS Canon Digital Cameras models",
+            "explanation": null
+          },
+          {
+            "rank": 2,
+            "title": "Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor Zoom Lens Bulk packaging (White box, New)",
+            "explanation": "Gợi ý Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor… vì ống này lắp trực tiếp được trên Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zo… bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp thể thao / chim (tiêu cự 55-200 mm, khẩu độ tối đa f/4-5.6)."
+          },
+          {
+            "rank": 3,
+            "title": "Canon PowerShot SD800 IS 7.1MP Digital Elph Camera with 3.8x Wide Angle Image-Stabilized Optical Zoom (OLD MODEL)",
+            "explanation": null
+          },
+          {
+            "rank": 4,
+            "title": "Nikon AF-S DX NIKKOR 35mm f/1.8G Lens with Auto Focus for Nikon DSLR Cameras, 2183, Black",
+            "explanation": "Gợi ý Nikon AF-S DX NIKKOR 35mm f/1.8G Lens with Auto Focus for Nikon DSLR… vì ống này lắp trực tiếp được trên Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zo… bạn đã đánh giá (ngàm nikon_f)."
+          },
+          {
+            "rank": 5,
+            "title": "Canon EOS 40D 10.1MP Digital SLR Camera with EF 28-135mm f/3.5-5.6 IS USM Standard Zoom Lens",
+            "explanation": null
+          },
+          {
+            "rank": 6,
+            "title": "Canon Rebel XTi DSLR Camera with EF-S 18-55mm f/3.5-5.6 Lens (OLD MODEL)",
+            "explanation": null
+          },
+          {
+            "rank": 7,
+            "title": "Canon Deluxe Backpack 200EG-water resistant back pack made-holds 1-2 Canon digital SLR cameras with 3-4 lenses, flash and accessories",
+            "explanation": null
+          },
+          {
+            "rank": 8,
+            "title": "Canon EOS 5D Mark II 21.1MP Full Frame CMOS Digital SLR Camera with EF 24-105mm f/4 L IS USM Lens (OLD MODEL)",
+            "explanation": null
+          },
+          {
+            "rank": 9,
+            "title": "Canon Digital Rebel XSI 12MP Digital SLR Camera (Silver Body Only)",
+            "explanation": null
+          },
+          {
+            "rank": 10,
+            "title": "Canon BP511A 1390mAh Lithium Ion Battery Pack for Select Digital Cameras and Camcorders (Retail Package)",
+            "explanation": null
+          }
+        ],
+        "detail": {
+          "rank": 2,
+          "title": "Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor Zoom Lens Bulk packaging (White box, New)",
+          "attributes": {
+            "Loại sản phẩm": "ống kính"
+          }
+        }
+      },
+      {
+        "user_id": 47,
+        "kind": "list",
+        "mismatches": [],
+        "mask_note": null,
+        "n_items": 10,
+        "n_explanations": 5,
+        "shown": [
+          {
+            "rank": 1,
+            "title": "Nikon AF-S FX NIKKOR 28-300mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras",
+            "explanation": "Gợi ý Nikon AF-S FX NIKKOR 28-300mm f/3.5-5.6G ED Vibration Reduction Zoom… vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp phong cảnh (tiêu cự 28-300 mm, khẩu độ tối đa f/3.5-5.6)."
+          },
+          {
+            "rank": 2,
+            "title": "Nikon AF-S VR Micro-NIKKOR 105mm f/2.8G IF-ED Lens",
+            "explanation": "Gợi ý Nikon AF-S VR Micro-NIKKOR 105mm f/2.8G IF-ED Lens vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp chân dung (tiêu cự 105 mm, khẩu độ tối đa f/2.8)."
+          },
+          {
+            "rank": 3,
+            "title": "Nikon AF-S FX NIKKOR 24-70mm f/2.8G ED Zoom Lens with Auto Focus for Nikon DSLR Cameras",
+            "explanation": "Gợi ý Nikon AF-S FX NIKKOR 24-70mm f/2.8G ED Zoom Lens with Auto Focus for… vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp phong cảnh (tiêu cự 24-70 mm, khẩu độ tối đa f/2.8)."
+          },
+          {
+            "rank": 4,
+            "title": "RFN-4s Wireless Remote Shutter Release for Nikon DSLR with MC30 Type Connection (Nikon D200, D300, D300s, D500, D700, D800, D800E, D810, D1, D2, D3, D3x, D3s, D4, D5) - Transmitter and Receiver Set",
+            "explanation": null
+          },
+          {
+            "rank": 5,
+            "title": "Nikon D810 FX-format Digital SLR Camera Body",
+            "explanation": null
+          },
+          {
+            "rank": 6,
+            "title": "Zeikos ZE-NBG300 Professional Multi-Power Pack for Nikon D300/300S & D700",
+            "explanation": null
+          },
+          {
+            "rank": 7,
+            "title": "Nikon D800 36.3 MP CMOS FX-Format Digital SLR Camera (Body Only) (OLD MODEL)",
+            "explanation": null
+          },
+          {
+            "rank": 8,
+            "title": "Nikon AF-S NIKKOR 14-24mm f/2.8G ED",
+            "explanation": "Gợi ý Nikon AF-S NIKKOR 14-24mm f/2.8G ED vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp phong cảnh (tiêu cự 14-24 mm, khẩu độ tối đa f/2.8)."
+          },
+          {
+            "rank": 9,
+            "title": "Nikon AF S NIKKOR 85mm f/1.8G Fixed Lens with Auto Focus for Nikon DSLR Cameras",
+            "explanation": "Gợi ý Nikon AF S NIKKOR 85mm f/1.8G Fixed Lens with Auto Focus for Nikon DS… vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp chân dung (tiêu cự 85 mm, khẩu độ tối đa f/1.8)."
+          },
+          {
+            "rank": 10,
+            "title": "Nikon EN-EL3e Rechargeable Li-Ion Battery for D200, D300, D700 and D80 Digital SLR Cameras - Retail Packaging",
+            "explanation": null
+          }
+        ],
+        "detail": {
+          "rank": 1,
+          "title": "Nikon AF-S FX NIKKOR 28-300mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras",
+          "attributes": {
+            "Loại sản phẩm": "ống kính"
+          }
+        }
+      }
+    ],
+    "requests": [
+      {
+        "url": "http://127.0.0.1:5173/src/services/recommendationService.ts",
+        "status": 200,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:5173/src/mock/recommend_409.json?import",
+        "status": 200,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:5173/src/mock/recommend_47.json?import",
+        "status": 200,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:5173/src/services/recommendationService.ts",
+        "status": 304,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:5173/src/mock/recommend_409.json?import",
+        "status": 304,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:5173/src/mock/recommend_47.json?import",
+        "status": 304,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:8098/api/recommend?user_id=409&k=10&exclude=all_history",
+        "status": 200,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:5173/src/services/recommendationService.ts",
+        "status": 304,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:5173/src/mock/recommend_409.json?import",
+        "status": 304,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:5173/src/mock/recommend_47.json?import",
+        "status": 304,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:8098/api/recommend?user_id=47&k=10&exclude=all_history",
+        "status": 200,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:5173/src/services/recommendationService.ts",
+        "status": 304,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:5173/src/mock/recommend_409.json?import",
+        "status": 304,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:5173/src/mock/recommend_47.json?import",
+        "status": 304,
+        "error": null
+      },
+      {
+        "url": "http://127.0.0.1:8098/api/recommend?user_id=99999&k=10&exclude=all_history",
+        "status": 404,
+        "error": {
+          "code": "USER_NOT_FOUND",
+          "message": "Không có người dùng 99999 trong dữ liệu (chỉ phục vụ user_id 0..67660; chưa hỗ trợ người dùng mới).",
+          "details": {
+            "user_id": 99999
+          }
+        }
+      }
+    ],
+    "console_errors": [
+      "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "Failed to load resource: the server responded with a status of 404 ()"
+    ],
+    "browser": "msedge 156.0.4314.42",
+    "unknown_user": {
+      "kind": "error",
+      "title": "Không tải được dữ liệu",
+      "message": "[object Object]"
+    }
+  },
+  "latency_users": {
+    "seed": 20261014,
+    "n": 1050,
+    "first5": [
+      12176,
+      14684,
+      3040,
+      53021,
+      66070
+    ]
+  },
+  "e2e_down": {
+    "phase": "down",
+    "web": "http://127.0.0.1:5173",
+    "api": "http://127.0.0.1:8098/api",
+    "checks": {
+      "fastapi_down_error_shown": true,
+      "only_spring": false,
+      "no_console_error_except_http": true
+    },
+    "users": [],
+    "requests": [
+      {
+        "url": "http://127.0.0.1:8098/api/recommend?user_id=409&k=10&exclude=all_history",
+        "status": 503,
+        "error": {
+          "code": "MODEL_SERVICE_UNAVAILABLE",
+          "message": "Không kết nối được dịch vụ gợi ý (FastAPI) ở http://127.0.0.1:8061: dịch vụ chưa chạy hoặc sai địa chỉ (model-service.base-url).",
+          "details": {
+            "model_service": "http://127.0.0.1:8061",
+            "path": "/recommend",
+            "cause": "java.net.ConnectException: Connection refused: getsockopt"
+          }
+        }
+      }
+    ],
+    "console_errors": [
+      "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "Failed to load resource: the server responded with a status of 503 ()"
+    ],
+    "browser": "msedge 156.0.4314.42",
+    "other_origin_requests": [
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=800&q=80"
+    ],
+    "fastapi_down": {
+      "kind": "error",
+      "title": "Không tải được dữ liệu",
+      "message": "[object Object]"
+    }
+  },
+  "error_messages_shown": {
+    "unknown_user": "[object Object]",
+    "fastapi_down": "[object Object]"
+  },
+  "checks": {
+    "http_409_47_ok": true,
+    "http_unknown_404": true,
+    "browser_409_same_as_api": true,
+    "browser_47_same_as_api": true,
+    "browser_unknown_error_shown": true,
+    "browser_only_calls_spring": false,
+    "http_down_503": true,
+    "browser_down_error_shown": true,
+    "error_messages_readable": false
+  }
+}

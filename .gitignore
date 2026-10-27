@@ -83,3 +83,6 @@ results/final_system/**/explanations.jsonl
 
 # Dịch vụ mô hình (ai/service/): embedding tính sẵn (lớn); giữ meta.json, summary.json
 results/service/**/*.npz
+
+# Log mỗi lần chạy run_demo.ps1 (chỉ để dò lỗi, không phải kết quả)
+results/demo/run_demo_logs/

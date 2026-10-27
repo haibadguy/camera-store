@@ -1,0 +1,128 @@
+[
+  {
+    "path": "ai/config/mount_rules.toml",
+    "in_git": true,
+    "bytes": 38405,
+    "sha256": "f13d241aba0696c046eaa98f448c366129dc3858866a1704080e6f4cc2e2c42a"
+  },
+  {
+    "path": "ai/data/kg/body_index.json",
+    "in_git": true,
+    "bytes": 11170,
+    "sha256": "dfffbc204edfc945b09fb5e4b88c35b3499ac28747152bcf39d24375f18cda8d"
+  },
+  {
+    "path": "ai/data/kg/compat_pairs.csv",
+    "in_git": true,
+    "bytes": 8662034,
+    "sha256": "b93d9defff3b401f347fc950457e0ce6376efa8586431e792890da6409e6c317"
+  },
+  {
+    "path": "ai/data/kg/item_attributes.csv",
+    "in_git": true,
+    "bytes": 7118147,
+    "sha256": "3b05f535c5dad6e08cd99f2c360e34a95c20b816cd6cd8ce0ca9fbbd4cc7b621"
+  },
+  {
+    "path": "ai/data/kg/kg_edges_compatible_with.csv",
+    "in_git": true,
+    "bytes": 5667265,
+    "sha256": "77c8d5c86d824a028bef6838759499702952f537d891ae204610cac607c9bb60"
+  },
+  {
+    "path": "ai/data/kg/kg_edges_crops_sensor.csv",
+    "in_git": true,
+    "bytes": 155221,
+    "sha256": "a2a052a5210f9e7f547da6db46ec91111dbf6138aa2989bafdc75240201c688e"
+  },
+  {
+    "path": "ai/data/kg/kg_edges_has_spec_aperture_class.csv",
+    "in_git": true,
+    "bytes": 157281,
+    "sha256": "f548b013236f1865e6b3eb717d52cc313ac7c6705532b61d2b8eb7b879de0c63"
+  },
+  {
+    "path": "ai/data/kg/kg_edges_has_spec_focal_range.csv",
+    "in_git": true,
+    "bytes": 299171,
+    "sha256": "6ea97d4c492efd9800ed360f956337891d5e2edd4f07611fed0d019116caeab3"
+  },
+  {
+    "path": "ai/data/kg/kg_edges_has_spec_mount.csv",
+    "in_git": true,
+    "bytes": 510675,
+    "sha256": "b58f7696c0adf08d74eda8c81bc97e8b8f2af1cb9760ea409b61b0880d85f07e"
+  },
+  {
+    "path": "ai/data/kg/kg_edges_has_spec_sensor_format.csv",
+    "in_git": true,
+    "bytes": 202213,
+    "sha256": "408052fa49f8e1192096b9002c50a59b811c0a940767f3ef6eb71108fe10e878"
+  },
+  {
+    "path": "ai/data/kg/kg_edges_requires_adapter.csv",
+    "in_git": true,
+    "bytes": 1269412,
+    "sha256": "177447cd04689586eb099767bf5924782cec4c7a62306e6075024a4013364a94"
+  },
+  {
+    "path": "ai/data/kg/kg_edges_suitable_for.csv",
+    "in_git": true,
+    "bytes": 135157,
+    "sha256": "927795fc26b9ef1cec9014605661dd4668d8fe1d69e4d279664023e6e3b85c44"
+  },
+  {
+    "path": "ai/data/kg/kg_node_index.json",
+    "in_git": true,
+    "bytes": 4346374,
+    "sha256": "8fb1b4cbc05ce66f54ee3238aa827ea8e5eed76989df56d7909d903505fbb9d4"
+  },
+  {
+    "path": "ai/data/kg/lens_index.json",
+    "in_git": true,
+    "bytes": 21619,
+    "sha256": "f774c8e53d5679b952026e725daf74d1a85b4c66452239dad37c0baebc57862d"
+  },
+  {
+    "path": "ai/data/kg/unknown_mask.npz",
+    "in_git": true,
+    "bytes": 2336,
+    "sha256": "c9ae5c10e4fa80b60210049f6210828bbc4ff4b240ca67496d6b810db5d98b2d"
+  },
+  {
+    "path": "ai/data/processed/item_map.json",
+    "in_git": false,
+    "bytes": 659453,
+    "sha256": "c7ccd84b3fbcc5cf7cab85171fdf187dea8deccf3d36aaceb4877f06cfdaa63c"
+  },
+  {
+    "path": "ai/data/processed/test.txt",
+    "in_git": false,
+    "bytes": 850792,
+    "sha256": "410fc46cea72cdc5115a3e0413036456d1d1d59b8bcb7c63da6edd026e4da8ea"
+  },
+  {
+    "path": "ai/data/processed/train.txt",
+    "in_git": false,
+    "bytes": 3015661,
+    "sha256": "ebd29b03a4866cfca243edc1ee31539f16be19b756bfbd4c388e3f20ca06a5c5"
+  },
+  {
+    "path": "ai/data/processed/val.txt",
+    "in_git": false,
+    "bytes": 846700,
+    "sha256": "e8a47d06bd6e6977fe7eebc485cbf07eb75e7e9bdb651da955e8fd7f85a3a900"
+  },
+  {
+    "path": "results/service/emb_s1_20261021/embeddings.npz",
+    "in_git": false,
+    "bytes": 24474350,
+    "sha256": "fbda48a1f84c9fd0047d2a8d06319e1e816dcf20cbe51817f5f86241f97200b4"
+  },
+  {
+    "path": "results/service/emb_s1_20261021/meta.json",
+    "in_git": true,
+    "bytes": 832,
+    "sha256": "486fd681fd8cf7182a7e2679803ea4f46e2d1f8c7c0f2583bda8df2cf8bb7d04"
+  }
+]
