@@ -6,7 +6,7 @@ Dữ liệu: Amazon Reviews 2023, nhóm Electronics. Trạng thái dự án, quy
 
 ## Kiến trúc demo
 
-React (`frontend/`) → Spring Boot (`backend/`, nghiệp vụ) → FastAPI (dịch vụ mô hình `ai/service/`, nội dung 10). Quyết định giữ Spring Boot: `docs/STATUS.md`, nhật ký 09/10/2026. Hiện (26/10) Spring Boot đã gọi FastAPI theo `docs/api_contract.md` (cách chạy: `backend/README.md`; chưa có database / đăng nhập); `frontend/` chưa nối (có dữ liệu giả `frontend/src/mock/`).
+React (`frontend/`) → Spring Boot (`backend/`, nghiệp vụ) → FastAPI (dịch vụ mô hình `ai/service/`, nội dung 10). Quyết định giữ Spring Boot: `docs/STATUS.md`, nhật ký 09/10/2026. Hiện (28/10) Spring Boot gọi FastAPI theo `docs/api_contract.md` 1.3 (cách chạy: `backend/README.md`; chưa có database / đăng nhập); React gọi Spring khi đặt `VITE_RECOMMENDATION_SOURCE=api`, mặc định đọc dữ liệu giả `frontend/src/mock/`. Chạy cả ba bằng một lệnh: mục "Chạy demo trên máy khác".
 
 ## Thư mục chính
 
@@ -91,3 +91,56 @@ Cần: Git, Node.js (LTS), JDK 21 trở lên, Maven (hoặc tích hợp trong ID
    ```
 
 Cơ sở dữ liệu của demo: PostgreSQL 17, Redis 7 (Docker). Tài liệu cũ về kiến trúc, kế hoạch, setup: `docs/setup.md`, `docs/plan.md`, `docs/architecture.md` (một phần đã lỗi thời, xem `docs/STATUS.md`).
+
+## Chạy demo trên máy khác
+
+Demo = FastAPI (dịch vụ mô hình, seed 1) → Spring Boot → React (Vite), bật cả ba bằng `run_demo.ps1` (Windows,
+PowerShell). Đã thử trên máy của Nam 28/10/2026.
+
+**1. Cài phần mềm**
+
+| Cần | Phiên bản | Ghi chú |
+|---|---|---|
+| Python | **3.12** (đúng 3.12; `run_demo.ps1` dừng nếu venv khác 3.12) | tải ở python.org, có kèm `py` |
+| JDK | 21 trở lên (máy Nam: 24) | `java -version` |
+| Maven | 3.9 | `mvn -v` |
+| Node.js | LTS (máy Nam: 24.11) | `node --version` |
+
+Tạo venv từ file lock (lần đầu; torch bản CUDA 12.6 khá nặng, vẫn chạy được trên máy không có GPU vì dịch vụ chạy CPU):
+
+```powershell
+py -3.12 -m venv ai\.venv
+ai\.venv\Scripts\python.exe -m pip install -r ai/requirements-lock.txt
+```
+
+**2. Lấy 5 file dữ liệu không có trong git** (Nam gửi; tổng 28,5 MiB). Đặt đúng đường dẫn dưới đây (tính từ thư mục
+`camera-store`). Danh sách đo bằng `ai/service/list_runtime_files.py` (mọi file dịch vụ đọc khi chạy, kết quả
+`results/demo/runtime_files_20261028_lan1/files.json`); các file khác dịch vụ cần đều đã có trong git.
+
+| File | Kích thước (byte) | sha256 |
+|---|---:|---|
+| `results/service/emb_s1_20261021/embeddings.npz` | 24.474.350 | `fbda48a1f84c9fd0047d2a8d06319e1e816dcf20cbe51817f5f86241f97200b4` |
+| `ai/data/processed/train.txt` | 3.015.661 | `ebd29b03a4866cfca243edc1ee31539f16be19b756bfbd4c388e3f20ca06a5c5` |
+| `ai/data/processed/val.txt` | 846.700 | `e8a47d06bd6e6977fe7eebc485cbf07eb75e7e9bdb651da955e8fd7f85a3a900` |
+| `ai/data/processed/test.txt` | 850.792 | `410fc46cea72cdc5115a3e0413036456d1d1d59b8bcb7c63da6edd026e4da8ea` |
+| `ai/data/processed/item_map.json` | 659.453 | `c7ccd84b3fbcc5cf7cab85171fdf187dea8deccf3d36aaceb4877f06cfdaa63c` |
+
+`embeddings.npz` là vector LightGCN seed 1 tính sẵn từ checkpoint đã chốt (`meta.json` cùng thư mục có trong git và ghi
+sha256 của nó). Kiểm sau khi chép: `Get-FileHash <file> -Algorithm SHA256`; `run_demo.ps1` tự kiểm cả 5 file và dừng
+nếu thiếu hoặc sai. Nếu không có file từ Nam: chạy lại bước 1–2 của "Thứ tự chạy" (cần dữ liệu gốc Amazon) để có
+`ai/data/processed/`, rồi `ai/service/export_embeddings.py --seed 1` (cần `best.pt` của nội dung 5, xem `ai/README.md`).
+
+**3. Chạy**
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run_demo.ps1
+```
+
+Script kiểm máy, `npm ci` nếu chưa có `frontend/node_modules`, đóng gói Spring, rồi bật FastAPI (cổng 8001, ~15 s),
+Spring (8080), Vite (5173, chế độ api). Mở `http://127.0.0.1:5173`, bấm **"Tư vấn thiết bị"**, chọn hồ sơ. Nhấn Enter
+trong cửa sổ PowerShell để tắt cả ba. Log mỗi lần chạy: `results/demo/run_demo_logs/<ngày_giờ>/`. Tùy chọn: `-Source
+mock` (React đọc dữ liệu giả, không gọi API), `-SkipBuild`, `-FastApiPort` / `-SpringPort` / `-VitePort`.
+
+Kiểm tự động cả chuỗi (trình duyệt Edge có sẵn của Windows, Playwright; lần đầu `npm install` trong `tools/demo_e2e/`):
+`ai\.venv\Scripts\python.exe ai/service/check_demo.py --label <nhãn>` → `results/demo/check_demo_<nhãn>/` (ảnh màn
+hình, `summary.json`).

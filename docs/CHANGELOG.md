@@ -6,6 +6,23 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 26/10/2026: đồng bộ nhánh Hải với `main` và chuẩn bị FE dùng mock thật
+
+**Sửa gì**
+- Đồng bộ `origin/main` vào `hai/fe-v2-integration`, giữ backend contract 1.3 và các file mock thật trong `frontend/src/mock/`.
+- Giữ lịch sử tích hợp FE v2 của branch Hải ở commit `cbe9277`; client hiện hỗ trợ API v1.3 và mặc định dùng adapter mock tương ứng.
+
+**Vì sao**
+- `main` đã có API advisor v1.3 và dữ liệu xuất từ FastAPI seed 1; proxy `/api/recommendations` v1.2 trên branch Hải không còn là điểm nối đúng của hệ thống hiện tại.
+
+**Ảnh hưởng**
+- Backend chính dùng các endpoint `/api/recommend`, `/api/items/{id}`, `/api/users/{id}/bodies`, `/api/compat`, `/api/health`.
+- FE hiển thị đúng 10 gợi ý của user 409/47, nối chi tiết sản phẩm từ `frontend/src/mock/items/`, và đổi câu chữ mặt tiền sang ngôn ngữ người mua.
+- Build FE đạt 59 modules; kiểm tra browser user 409 hiển thị 814 ống kính bị lọc, không còn `item_id`, `QĐ 4-9`, `contract`, `API 1.2` trên UI.
+- Chưa thay đổi số liệu mô hình hoặc dữ liệu gốc; `report_figures/` vẫn không được đưa vào commit.
+
+---
+
 ## 26/10/2026: backend Spring Boot nối dịch vụ mô hình FastAPI. Nhánh `nam/backend`, commit `e94b0c7`
 
 Không sửa code AI của Hải (`ai/pipeline/`), không đổi số nào. Có sửa **khung backend Spring Boot** của Hải (commit `d403389`, `fa83381`).
