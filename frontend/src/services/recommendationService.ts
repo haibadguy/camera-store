@@ -75,9 +75,25 @@ export type RecommendationResponse = {
 type ApiEnvelope<T> = {
   data?: T;
   result?: T;
-  message?: string;
-  error?: string;
 };
+
+// Định dạng lỗi chung của hợp đồng (docs/api_contract.md mục 7, Spring giữ nguyên dạng):
+// {"error": {"code": "USER_NOT_FOUND", "message": "...", "details": {...}}}
+type ApiErrorBody = {
+  error?: { code?: string; message?: string };
+};
+
+const USER_NOT_FOUND_MESSAGE = "Không tìm thấy người dùng này.";
+const SERVICE_DOWN_MESSAGE = "Dịch vụ gợi ý đang tạm dừng, thử lại sau.";
+
+// Câu cho người dùng theo mã lỗi; message của backend là câu kỹ thuật (địa chỉ FastAPI, khoảng user_id) nên không hiện.
+function toUserMessage(status: number, payload: unknown): string {
+  const code = (payload as ApiErrorBody | null)?.error?.code;
+  if (code === "USER_NOT_FOUND") return USER_NOT_FOUND_MESSAGE;
+  // Spring: 503 FastAPI không chạy, 504 hết giờ, 502 FastAPI lỗi / trả dữ liệu hỏng (backend/README.md mục 2)
+  if (code?.startsWith("MODEL_SERVICE_") || status >= 500) return SERVICE_DOWN_MESSAGE;
+  return `Không tải được dữ liệu (HTTP ${status}).`;
+}
 
 const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8080/api").replace(/\/$/, "");
 const REQUEST_TIMEOUT_MS = 10_000;
@@ -138,6 +154,20 @@ function getMockResponse(userId: number): RecommendationResponse {
   };
 }
 
+async function getJson(path: string, signal?: AbortSignal): Promise<unknown> {
+  const response = await fetch(`${API_URL}${path}`, { signal });
+  let payload: unknown = null;
+  try {
+    payload = await response.json();
+  } catch {
+    if (response.ok) throw new Error(`Backend trả về HTTP ${response.status} nhưng không có JSON hợp lệ.`);
+  }
+  if (!response.ok) throw new Error(toUserMessage(response.status, payload));
+  return payload;
+}
+
+type BodiesPayload = { bodies: Array<RecommendationBody & { source: string }> };
+
 async function fetchLiveRecommendations(
   userId: number,
   signal?: AbortSignal,
@@ -147,18 +177,49 @@ async function fetchLiveRecommendations(
     k: "10",
     exclude: "all_history",
   });
-  const response = await fetch(`${API_URL}/recommend?${params}`, { signal });
-  let payload: unknown;
+  // Thân máy cùng chế độ exclude với /recommend: đúng tập thân dùng cho mặt nạ (hợp đồng mục 6.1)
+  const [payload, bodiesPayload] = await Promise.all([
+    getJson(`/recommend?${params}`, signal),
+    getJson(`/users/${userId}/bodies?exclude=all_history`, signal),
+  ]);
+  const response = extractResponse(payload);
+  const bodies = (bodiesPayload as BodiesPayload | null)?.bodies;
+  if (!Array.isArray(bodies)) throw new Error("Dữ liệu lịch sử thiết bị không hợp lệ.");
+  return {
+    ...response,
+    bodies: bodies.map((body) => ({
+      item_id: body.item_id,
+      asin: body.asin,
+      title: body.title,
+      mount: body.mount,
+      khung: body.khung,
+      source: toHistorySource(body.source),
+    })),
+  };
+}
+
+// Chạy một yêu cầu API với thời gian chờ REQUEST_TIMEOUT_MS; signal của người gọi vẫn hủy được yêu cầu.
+async function withTimeout<T>(run: (signal: AbortSignal) => Promise<T>, signal?: AbortSignal): Promise<T> {
+  const timeoutController = new AbortController();
+  let timedOut = false;
+  const timeoutId = setTimeout(() => {
+    timedOut = true;
+    timeoutController.abort();
+  }, REQUEST_TIMEOUT_MS);
+  const abortExternalRequest = () => timeoutController.abort();
+  signal?.addEventListener("abort", abortExternalRequest, { once: true });
+
   try {
-    payload = await response.json();
-  } catch {
-    throw new Error(`Backend trả về HTTP ${response.status} nhưng không có JSON hợp lệ.`);
+    return await run(timeoutController.signal);
+  } catch (error) {
+    if (timedOut) {
+      throw new Error("Hệ thống phản hồi hơi lâu. Bạn thử lại nhé.");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+    signal?.removeEventListener("abort", abortExternalRequest);
   }
-  if (!response.ok) {
-    const error = payload as ApiEnvelope<unknown>;
-    throw new Error(error.message ?? error.error ?? `Không thể lấy gợi ý (HTTP ${response.status}).`);
-  }
-  return extractResponse(payload);
 }
 
 export async function fetchRecommendations(
@@ -168,31 +229,25 @@ export async function fetchRecommendations(
   if (import.meta.env.VITE_RECOMMENDATION_SOURCE !== "api") {
     return Promise.resolve(getMockResponse(userId));
   }
-  try {
-    const timeoutController = new AbortController();
-    let timedOut = false;
-    const timeoutId = setTimeout(() => {
-      timedOut = true;
-      timeoutController.abort();
-    }, REQUEST_TIMEOUT_MS);
-    const abortExternalRequest = () => timeoutController.abort();
-    signal?.addEventListener("abort", abortExternalRequest, { once: true });
+  return withTimeout((timeoutSignal) => fetchLiveRecommendations(userId, timeoutSignal), signal);
+}
 
-    try {
-      return await fetchLiveRecommendations(userId, timeoutController.signal);
-    } catch (error) {
-      if (timedOut) {
-        throw new Error("Hệ thống phản hồi hơi lâu. Bạn thử lại nhé.");
-      }
-      throw error;
-    } finally {
-      clearTimeout(timeoutId);
-      signal?.removeEventListener("abort", abortExternalRequest);
-    }
-  } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError" && signal?.aborted) {
-      throw error;
-    }
-    throw error;
+// Chi tiết sản phẩm cho trang chi tiết: chế độ mock đọc frontend/src/mock/items, chế độ api gọi /api/items/{id}.
+export async function fetchProductDetail(
+  itemId: number,
+  signal?: AbortSignal,
+): Promise<RecommendationProductDetail> {
+  if (import.meta.env.VITE_RECOMMENDATION_SOURCE !== "api") {
+    const product = mockItemModules[`../mock/items/${itemId}.json`];
+    if (!product) throw new Error("Chưa có thông tin chi tiết cho sản phẩm này.");
+    return product;
   }
+  return withTimeout(async (timeoutSignal) => {
+    const payload = await getJson(`/items/${itemId}`, timeoutSignal);
+    const product = payload as Partial<RecommendationProductDetail> | null;
+    if (typeof product?.item_id !== "number" || typeof product.title !== "string") {
+      throw new Error("Backend trả về thông tin sản phẩm không hợp lệ.");
+    }
+    return product as RecommendationProductDetail;
+  }, signal);
 }
