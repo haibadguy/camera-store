@@ -1,0 +1,491 @@
+{
+  "phase": "up",
+  "web": "http://127.0.0.1:5173",
+  "api": "http://127.0.0.1:8098/api",
+  "checks": {
+    "user_409": true,
+    "user_47": true,
+    "user_178": true,
+    "user_1476": true,
+    "user_0": true,
+    "unknown_user_message": true,
+    "bad_input_rejected": true,
+    "verified_false_hidden": true,
+    "only_spring": true,
+    "no_console_error_except_http": true
+  },
+  "users": [
+    {
+      "user_id": 409,
+      "how": "quick",
+      "mismatches": [],
+      "kind": "list",
+      "mask_sentences": [
+        "Có 814 ống kính không lắp được trên bất kỳ máy nào của bạn nên không được gợi ý.",
+        "Trong danh sách này, 1 ống đã bị bỏ ra (vd Canon EF 24-70mm f/4.0L is USM Standard Zoom Lens - 6313B002)."
+      ],
+      "removed_check": [
+        {
+          "lens": 13448,
+          "m_per_body": [
+            0
+          ]
+        }
+      ],
+      "n_items": 10,
+      "n_explanations": 2,
+      "shown": [
+        {
+          "rank": 1,
+          "title": "Canon PSC-55 Deluxe Leather Compact Case for SD430, SD500, SD550, SD600, SD630, SD700IS, SD800IS, SD850 IS, SD900,SD950IS & SD870IS 300 HS , 100 HS Canon Digital Cameras models",
+          "explanation": null
+        },
+        {
+          "rank": 2,
+          "title": "Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor Zoom Lens Bulk packaging (White box, New)",
+          "explanation": "Gợi ý Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor… vì ống này lắp trực tiếp được trên Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zo… bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp thể thao / chim (tiêu cự 55-200 mm, khẩu độ tối đa f/4-5.6)."
+        },
+        {
+          "rank": 3,
+          "title": "Canon PowerShot SD800 IS 7.1MP Digital Elph Camera with 3.8x Wide Angle Image-Stabilized Optical Zoom (OLD MODEL)",
+          "explanation": null
+        },
+        {
+          "rank": 4,
+          "title": "Nikon AF-S DX NIKKOR 35mm f/1.8G Lens with Auto Focus for Nikon DSLR Cameras, 2183, Black",
+          "explanation": "Gợi ý Nikon AF-S DX NIKKOR 35mm f/1.8G Lens with Auto Focus for Nikon DSLR… vì ống này lắp trực tiếp được trên Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zo… bạn đã đánh giá (ngàm nikon_f)."
+        },
+        {
+          "rank": 5,
+          "title": "Canon EOS 40D 10.1MP Digital SLR Camera with EF 28-135mm f/3.5-5.6 IS USM Standard Zoom Lens",
+          "explanation": null
+        },
+        {
+          "rank": 6,
+          "title": "Canon Rebel XTi DSLR Camera with EF-S 18-55mm f/3.5-5.6 Lens (OLD MODEL)",
+          "explanation": null
+        },
+        {
+          "rank": 7,
+          "title": "Canon Deluxe Backpack 200EG-water resistant back pack made-holds 1-2 Canon digital SLR cameras with 3-4 lenses, flash and accessories",
+          "explanation": null
+        },
+        {
+          "rank": 8,
+          "title": "Canon EOS 5D Mark II 21.1MP Full Frame CMOS Digital SLR Camera with EF 24-105mm f/4 L IS USM Lens (OLD MODEL)",
+          "explanation": null
+        },
+        {
+          "rank": 9,
+          "title": "Canon Digital Rebel XSI 12MP Digital SLR Camera (Silver Body Only)",
+          "explanation": null
+        },
+        {
+          "rank": 10,
+          "title": "Canon BP511A 1390mAh Lithium Ion Battery Pack for Select Digital Cameras and Camcorders (Retail Package)",
+          "explanation": null
+        }
+      ],
+      "detail": {
+        "rank": 2,
+        "title": "Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor Zoom Lens Bulk packaging (White box, New)",
+        "attributes": {
+          "Loại sản phẩm": "ống kính",
+          "Ngàm": "Nikon F",
+          "Định dạng": "APS-C",
+          "Phù hợp với": "thể thao / chim"
+        }
+      }
+    },
+    {
+      "user_id": 47,
+      "how": "quick",
+      "mismatches": [],
+      "kind": "list",
+      "mask_sentences": [
+        "Có 814 ống kính không lắp được trên bất kỳ máy nào của bạn nên không được gợi ý."
+      ],
+      "removed_check": [],
+      "n_items": 10,
+      "n_explanations": 5,
+      "shown": [
+        {
+          "rank": 1,
+          "title": "Nikon AF-S FX NIKKOR 28-300mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras",
+          "explanation": "Gợi ý Nikon AF-S FX NIKKOR 28-300mm f/3.5-5.6G ED Vibration Reduction Zoom… vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp phong cảnh (tiêu cự 28-300 mm, khẩu độ tối đa f/3.5-5.6)."
+        },
+        {
+          "rank": 2,
+          "title": "Nikon AF-S VR Micro-NIKKOR 105mm f/2.8G IF-ED Lens",
+          "explanation": "Gợi ý Nikon AF-S VR Micro-NIKKOR 105mm f/2.8G IF-ED Lens vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp chân dung (tiêu cự 105 mm, khẩu độ tối đa f/2.8)."
+        },
+        {
+          "rank": 3,
+          "title": "Nikon AF-S FX NIKKOR 24-70mm f/2.8G ED Zoom Lens with Auto Focus for Nikon DSLR Cameras",
+          "explanation": "Gợi ý Nikon AF-S FX NIKKOR 24-70mm f/2.8G ED Zoom Lens with Auto Focus for… vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp phong cảnh (tiêu cự 24-70 mm, khẩu độ tối đa f/2.8)."
+        },
+        {
+          "rank": 4,
+          "title": "RFN-4s Wireless Remote Shutter Release for Nikon DSLR with MC30 Type Connection (Nikon D200, D300, D300s, D500, D700, D800, D800E, D810, D1, D2, D3, D3x, D3s, D4, D5) - Transmitter and Receiver Set",
+          "explanation": null
+        },
+        {
+          "rank": 5,
+          "title": "Nikon D810 FX-format Digital SLR Camera Body",
+          "explanation": null
+        },
+        {
+          "rank": 6,
+          "title": "Zeikos ZE-NBG300 Professional Multi-Power Pack for Nikon D300/300S & D700",
+          "explanation": null
+        },
+        {
+          "rank": 7,
+          "title": "Nikon D800 36.3 MP CMOS FX-Format Digital SLR Camera (Body Only) (OLD MODEL)",
+          "explanation": null
+        },
+        {
+          "rank": 8,
+          "title": "Nikon AF-S NIKKOR 14-24mm f/2.8G ED",
+          "explanation": "Gợi ý Nikon AF-S NIKKOR 14-24mm f/2.8G ED vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp phong cảnh (tiêu cự 14-24 mm, khẩu độ tối đa f/2.8)."
+        },
+        {
+          "rank": 9,
+          "title": "Nikon AF S NIKKOR 85mm f/1.8G Fixed Lens with Auto Focus for Nikon DSLR Cameras",
+          "explanation": "Gợi ý Nikon AF S NIKKOR 85mm f/1.8G Fixed Lens with Auto Focus for Nikon DS… vì ống này lắp trực tiếp được trên Nikon D500 DX-Format Digital SLR (Body Only), Base bạn đã đánh giá (ngàm nikon_f), và phù hợp chụp chân dung (tiêu cự 85 mm, khẩu độ tối đa f/1.8)."
+        },
+        {
+          "rank": 10,
+          "title": "Nikon EN-EL3e Rechargeable Li-Ion Battery for D200, D300, D700 and D80 Digital SLR Cameras - Retail Packaging",
+          "explanation": null
+        }
+      ],
+      "detail": {
+        "rank": 1,
+        "title": "Nikon AF-S FX NIKKOR 28-300mm f/3.5-5.6G ED Vibration Reduction Zoom Lens with Auto Focus for Nikon DSLR Cameras",
+        "attributes": {
+          "Loại sản phẩm": "ống kính",
+          "Ngàm": "Nikon F",
+          "Định dạng": "Full-frame",
+          "Phù hợp với": "phong cảnh, thể thao / chim"
+        }
+      }
+    },
+    {
+      "user_id": 178,
+      "how": "input",
+      "mismatches": [],
+      "kind": "list",
+      "mask_sentences": [
+        "Có 772 ống kính không lắp được trên bất kỳ máy nào của bạn nên không được gợi ý.",
+        "Trong danh sách này, 1 ống đã bị bỏ ra (vd Canon EF-S 55-250mm f/4.0-5.6 IS II Telephoto Zoom Lens)."
+      ],
+      "removed_check": [
+        {
+          "lens": 12951,
+          "m_per_body": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "n_items": 10,
+      "n_explanations": 3,
+      "shown": [
+        {
+          "rank": 1,
+          "title": "Canon Cameras US 2514A002 EF 50mm f/1.8 II Camera Lens - Fixed (Discontinued by Manufacturer)",
+          "explanation": "Gợi ý Canon Cameras US 2514A002 EF 50mm f/1.8 II Camera Lens - Fixed (Disco… vì ống này lắp trực tiếp được trên Canon EOS 6D Mark II with EF 24-105mm is STM Lens, WiFi Enabled bạn đã đánh giá (ngàm canon_ef)."
+        },
+        {
+          "rank": 2,
+          "title": "Fotodiox Pro Auto Macro Extension Tube, 21mm Section - for Canon EOS EF/EF-s Lenses for Extreme Close-up with Autofocus and Auto-Exposure",
+          "explanation": null
+        },
+        {
+          "rank": 3,
+          "title": "Canon Deluxe Backpack 200EG-water resistant back pack made-holds 1-2 Canon digital SLR cameras with 3-4 lenses, flash and accessories",
+          "explanation": null
+        },
+        {
+          "rank": 4,
+          "title": "Canon EF 50mm f/1.2L USM Ultra-Fast Standard AutoFocus Lens - International Version (No Warranty)",
+          "explanation": "Gợi ý Canon EF 50mm f/1.2L USM Ultra-Fast Standard AutoFocus Lens - Interna… vì ống này lắp trực tiếp được trên Canon EOS 6D Mark II with EF 24-105mm is STM Lens, WiFi Enabled bạn đã đánh giá (ngàm canon_ef)."
+        },
+        {
+          "rank": 5,
+          "title": "Canon EF 85mm f/1.8 USM Medium Telephoto Lens for Canon SLR Cameras - Fixed",
+          "explanation": "Gợi ý Canon EF 85mm f/1.8 USM Medium Telephoto Lens for Canon SLR Cameras -… vì ống này lắp trực tiếp được trên Canon EOS 6D Mark II with EF 24-105mm is STM Lens, WiFi Enabled bạn đã đánh giá (ngàm canon_ef), và phù hợp chụp chân dung (tiêu cự 85 mm, khẩu độ tối đa f/1.8)."
+        },
+        {
+          "rank": 6,
+          "title": "Canon 7507A004 Gadget Bag Camera Case, Black",
+          "explanation": null
+        },
+        {
+          "rank": 7,
+          "title": "Canon EOS 60D 18 MP CMOS Digital SLR Camera with EF-S 18-200mm f/3.5-5.6 IS Lens (discontinued by manufacturer)",
+          "explanation": null
+        },
+        {
+          "rank": 8,
+          "title": "Canon EOS Rebel T3i Digital SLR Camera with EF-S 18-55mm f/3.5-5.6 IS Lens (discontinued by manufacturer)",
+          "explanation": null
+        },
+        {
+          "rank": 9,
+          "title": "Canon EOS Rebel T2i 18 MP CMOS APS-C Digital SLR Camera with EF-S 18-55mm f/3.5-5.6 IS Lens + Canon EF-S 55-250mm f/4.0-5.6 IS Telephoto Zoom Lens",
+          "explanation": null
+        },
+        {
+          "rank": 10,
+          "title": "Canon EOS 7D 18 MP CMOS Digital SLR Camera with 18-135mm f/3.5-5.6 IS UD Lens (discontinued by manufacturer)",
+          "explanation": null
+        }
+      ]
+    },
+    {
+      "user_id": 1476,
+      "how": "input",
+      "mismatches": [],
+      "kind": "list",
+      "mask_sentences": [
+        "Máy Canon Cameras US 24.2 Digital SLR Camera with 3-Inch LCD, Black (1894C001) chưa có trong bảng tương thích nên hệ thống không loại ống kính nào."
+      ],
+      "removed_check": [],
+      "n_items": 10,
+      "n_explanations": 4,
+      "shown": [
+        {
+          "rank": 1,
+          "title": "Canon EF 50mm f/1.8 STM Lens",
+          "explanation": "Gợi ý Canon EF 50mm f/1.8 STM Lens vì ống này lắp trực tiếp được trên Canon Cameras US 2252C001 EOS Rebel SL2 (WH) EF-S 18-55mm f/4-5.6 STM… bạn đã đánh giá (ngàm canon_efs)."
+        },
+        {
+          "rank": 2,
+          "title": "Amazon Basics 60-Inch Lightweight Tripod With Bag, Black",
+          "explanation": null
+        },
+        {
+          "rank": 3,
+          "title": "Amazon Basics UV Protection Camera Lens Filter - 67mm",
+          "explanation": null
+        },
+        {
+          "rank": 4,
+          "title": "Tiffen 52UVP 52mm UV Protection Filter,black",
+          "explanation": null
+        },
+        {
+          "rank": 5,
+          "title": "YONGNUO YN50mm F1.8 Lens Large Aperture Auto Focus Lens Compatible with Canon EF Mount EOS Camera",
+          "explanation": "Gợi ý YONGNUO YN50mm F1.8 Lens Large Aperture Auto Focus Lens Compatible wi… vì ống này lắp trực tiếp được trên Canon Cameras US 2252C001 EOS Rebel SL2 (WH) EF-S 18-55mm f/4-5.6 STM… bạn đã đánh giá (ngàm canon_efs)."
+        },
+        {
+          "rank": 6,
+          "title": "Canon EF-S 10-18mm f/4.5-5.6 is STM Lens, Lens Only",
+          "explanation": "Gợi ý Canon EF-S 10-18mm f/4.5-5.6 is STM Lens, Lens Only vì ống này lắp trực tiếp được trên Canon Cameras US 2252C001 EOS Rebel SL2 (WH) EF-S 18-55mm f/4-5.6 STM… bạn đã đánh giá (ngàm canon_efs), và phù hợp chụp phong cảnh (tiêu cự 10-18 mm, khẩu độ tối đa f/4.5-5.6)."
+        },
+        {
+          "rank": 7,
+          "title": "Amazon Basics Backpack for SLR Cameras and Accessories-Black",
+          "explanation": null
+        },
+        {
+          "rank": 8,
+          "title": "Sigma 17-50mm f/2.8 EX DC OS HSM FLD Large Aperture Standard Zoom Lens for Nikon Digital DSLR Camera",
+          "explanation": null
+        },
+        {
+          "rank": 9,
+          "title": "Canon Cameras US 2514A002 EF 50mm f/1.8 II Camera Lens - Fixed (Discontinued by Manufacturer)",
+          "explanation": "Gợi ý Canon Cameras US 2514A002 EF 50mm f/1.8 II Camera Lens - Fixed (Disco… vì ống này lắp trực tiếp được trên Canon Cameras US 2252C001 EOS Rebel SL2 (WH) EF-S 18-55mm f/4-5.6 STM… bạn đã đánh giá (ngàm canon_efs)."
+        },
+        {
+          "rank": 10,
+          "title": "Amazon Basics Wireless Remote Control for Specific Canon Digital SLR Cameras, Black, 0.28\" x 1.10\" x 3.36\"",
+          "explanation": null
+        }
+      ]
+    },
+    {
+      "user_id": 0,
+      "how": "input",
+      "mismatches": [],
+      "kind": "list",
+      "mask_sentences": [
+        "Bạn chưa đánh giá thân máy nào nên không có ống kính nào bị loại."
+      ],
+      "removed_check": [],
+      "n_items": 10,
+      "n_explanations": 0,
+      "shown": [
+        {
+          "rank": 1,
+          "title": "Manfrotto 026 Swivel Lite-Tite Umbrella Adapter,Black",
+          "explanation": null
+        },
+        {
+          "rank": 2,
+          "title": "Fotodiox 22in 5-in-1 Collapsible Reflector Panel with Bag for Photography and Video - Black, Gold, Silver, Translucent, and White Panel",
+          "explanation": null
+        },
+        {
+          "rank": 3,
+          "title": "DTOL Camera Speedlite Mount Flash Stand Bracket Umbrella Mount Holder Shoe Mount Compatible with Nikon Pentax Olympus Nissin Metz and Other Speedlite Flashes E Type 2 Pack",
+          "explanation": null
+        },
+        {
+          "rank": 4,
+          "title": "Nikon EN-EL15 Rechargeable Li-Ion Battery for Select DSLR Cameras (Retail Packaging)",
+          "explanation": null
+        },
+        {
+          "rank": 5,
+          "title": "Zeikos ZE-NBG300 Professional Multi-Power Pack for Nikon D300/300S & D700",
+          "explanation": null
+        },
+        {
+          "rank": 6,
+          "title": "B + W 43mm UV Protection Filter (010) for Camera Lens – Standard Mount (F-PRO), E Coating, 2 Layers Resistant Coating, Photography Filter, 43 mm, Clear Protector",
+          "explanation": null
+        },
+        {
+          "rank": 7,
+          "title": "Manfrotto 5001B 74-Inch Nano Stand Replaces Manfrotto 001B - Black",
+          "explanation": null
+        },
+        {
+          "rank": 8,
+          "title": "CowboyStudio Umbrella Mount Bracket with Swivel Tilt Bracket for Nikon and Canon 430EX E580EX SB600 SB800 SB900",
+          "explanation": null
+        },
+        {
+          "rank": 9,
+          "title": "Yongnuo Professional Flash Speedlight Flashlight Yongnuo YN 560 III for Canon Nikon Pentax Olympus Camera / Such as: Canon EOS 1Ds Mark, EOS1D Mark, EOS 5D Mark, EOS 7D, EOS 60D, EOS 600D, EOS 550D, EOS 500D, EOS 1100D (Discontinued by Manufacturer)",
+          "explanation": null
+        },
+        {
+          "rank": 10,
+          "title": "YONGNUO Wireless TTL Flash Trigger YN622 YN622N with High-Speed Sync HSS 1/8000s for Nikon Came",
+          "explanation": null
+        }
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:8098/api/users/409/bodies?exclude=all_history",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/recommend?user_id=409&k=10&exclude=all_history",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/items/15485",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/users/47/bodies?exclude=all_history",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/recommend?user_id=47&k=10&exclude=all_history",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/items/13466",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/users/178/bodies?exclude=all_history",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/recommend?user_id=178&k=10&exclude=all_history",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/users/1476/bodies?exclude=all_history",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/recommend?user_id=1476&k=10&exclude=all_history",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/users/0/bodies?exclude=all_history",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/recommend?user_id=0&k=10&exclude=all_history",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/users/99999/bodies?exclude=all_history",
+      "status": 404,
+      "error": {
+        "code": "USER_NOT_FOUND",
+        "message": "Không có người dùng 99999 trong dữ liệu (chỉ phục vụ user_id 0..67660; chưa hỗ trợ người dùng mới).",
+        "details": {
+          "user_id": 99999
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/recommend?user_id=99999&k=10&exclude=all_history",
+      "status": 404,
+      "error": {
+        "code": "USER_NOT_FOUND",
+        "message": "Không có người dùng 99999 trong dữ liệu (chỉ phục vụ user_id 0..67660; chưa hỗ trợ người dùng mới).",
+        "details": {
+          "user_id": 99999
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/users/47/bodies?exclude=all_history",
+      "status": 200,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:8098/api/recommend?user_id=47&k=10&exclude=all_history",
+      "status": 200,
+      "error": null
+    }
+  ],
+  "console_errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 ()"
+  ],
+  "browser": "msedge 156.0.4314.50",
+  "other_local_requests": [],
+  "external_hosts": [
+    "images.unsplash.com"
+  ],
+  "unknown_user": {
+    "kind": "error",
+    "title": "Không tải được dữ liệu",
+    "message": "Không tìm thấy người dùng này."
+  },
+  "bad_input": "Mã người dùng là một số nguyên không âm, vd 409.",
+  "verified_false": {
+    "injected_rank": 1,
+    "shown": "Chưa đủ thông tin để giải thích gợi ý này."
+  }
+}

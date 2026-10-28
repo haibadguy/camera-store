@@ -1,0 +1,418 @@
+{
+  "health": {
+    "status": "ok",
+    "model": "LightGCN + mặt nạ QĐ 4-9",
+    "seed": 1,
+    "best_pt_sha256": "d857e24c3d7fff692c39627b54ee30fb1e62044d9ec6fd932642d892285f5fc2",
+    "embeddings_sha256": "fbda48a1f84c9fd0047d2a8d06319e1e816dcf20cbe51817f5f86241f97200b4",
+    "device": "cpu",
+    "n_users": 67661,
+    "n_items": 27940,
+    "n_users_with_bodies": {
+      "train": 10406,
+      "all_history": 12472
+    },
+    "startup_s": 2.63,
+    "contract_version": "1.3"
+  },
+  "git": {
+    "commit": "2ac042f46571875afb0aff74d67ac998b409a01b",
+    "dirty": false
+  },
+  "jar_sha256": "f5c4b54951ce3964a423961354dae6130efd4914354bc085b6c3f66d18eab341",
+  "mock": [
+    {
+      "url": "/api/recommend",
+      "params": {
+        "user_id": 409,
+        "k": 10
+      },
+      "mock": "recommend_409.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/users/409/bodies",
+      "params": null,
+      "mock": "users_409_bodies.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/recommend",
+      "params": {
+        "user_id": 47,
+        "k": 10
+      },
+      "mock": "recommend_47.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/users/47/bodies",
+      "params": null,
+      "mock": "users_47_bodies.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/658",
+      "params": null,
+      "mock": "items/658.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/1054",
+      "params": null,
+      "mock": "items/1054.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/1154",
+      "params": null,
+      "mock": "items/1154.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/1262",
+      "params": null,
+      "mock": "items/1262.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/1291",
+      "params": null,
+      "mock": "items/1291.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/1665",
+      "params": null,
+      "mock": "items/1665.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/1890",
+      "params": null,
+      "mock": "items/1890.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/2286",
+      "params": null,
+      "mock": "items/2286.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/5988",
+      "params": null,
+      "mock": "items/5988.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/8822",
+      "params": null,
+      "mock": "items/8822.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/9022",
+      "params": null,
+      "mock": "items/9022.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/12369",
+      "params": null,
+      "mock": "items/12369.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/12373",
+      "params": null,
+      "mock": "items/12373.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/13211",
+      "params": null,
+      "mock": "items/13211.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/13212",
+      "params": null,
+      "mock": "items/13212.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/13214",
+      "params": null,
+      "mock": "items/13214.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/13429",
+      "params": null,
+      "mock": "items/13429.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/13434",
+      "params": null,
+      "mock": "items/13434.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/13442",
+      "params": null,
+      "mock": "items/13442.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/13448",
+      "params": null,
+      "mock": "items/13448.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/13466",
+      "params": null,
+      "mock": "items/13466.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/14107",
+      "params": null,
+      "mock": "items/14107.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/14934",
+      "params": null,
+      "mock": "items/14934.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    },
+    {
+      "url": "/api/items/15485",
+      "params": null,
+      "mock": "items/15485.json",
+      "status": 200,
+      "content_type": "application/json",
+      "same_as_mock": true,
+      "same_as_fastapi": true
+    }
+  ],
+  "same_as_fastapi": [
+    {
+      "url": "/api/health",
+      "params": null,
+      "status_spring": 200,
+      "status_fastapi": 200,
+      "same": true
+    },
+    {
+      "url": "/api/compat",
+      "params": {
+        "body_id": 9022,
+        "lens_id": 13448
+      },
+      "status_spring": 200,
+      "status_fastapi": 200,
+      "same": true
+    },
+    {
+      "url": "/api/compat",
+      "params": {
+        "body_id": 19071,
+        "lens_id": 9696
+      },
+      "status_spring": 200,
+      "status_fastapi": 200,
+      "same": true
+    },
+    {
+      "url": "/api/compat",
+      "params": {
+        "body_id": 9022,
+        "lens_id": 118
+      },
+      "status_spring": 200,
+      "status_fastapi": 200,
+      "same": true
+    },
+    {
+      "url": "/api/compat",
+      "params": {
+        "body_id": 9022,
+        "lens_id": 105
+      },
+      "status_spring": 200,
+      "status_fastapi": 200,
+      "same": true
+    },
+    {
+      "url": "/api/recommend",
+      "params": {
+        "user_id": 99999
+      },
+      "status_spring": 404,
+      "status_fastapi": 404,
+      "same": true
+    },
+    {
+      "url": "/api/recommend",
+      "params": {
+        "user_id": 409,
+        "k": 0
+      },
+      "status_spring": 422,
+      "status_fastapi": 422,
+      "same": true
+    },
+    {
+      "url": "/api/compat",
+      "params": {
+        "body_id": 9696,
+        "lens_id": 19071
+      },
+      "status_spring": 400,
+      "status_fastapi": 400,
+      "same": true
+    }
+  ],
+  "cors": {
+    "vite_allow_origin": "http://localhost:5173",
+    "other_origin_status": 403
+  },
+  "latency_ms": {
+    "spring": {
+      "n": 200,
+      "p50": 17.43,
+      "p95": 21.19,
+      "max": 40.05
+    },
+    "fastapi": {
+      "n": 200,
+      "p50": 15.35,
+      "p95": 18.63,
+      "max": 20.07
+    }
+  },
+  "fastapi_down": [
+    {
+      "url": "/api/recommend?user_id=409&k=10",
+      "status": 503,
+      "body": {
+        "error": {
+          "code": "MODEL_SERVICE_UNAVAILABLE",
+          "message": "Không kết nối được dịch vụ gợi ý (FastAPI) ở http://127.0.0.1:8051: dịch vụ chưa chạy hoặc sai địa chỉ (model-service.base-url).",
+          "details": {
+            "model_service": "http://127.0.0.1:8051",
+            "path": "/recommend",
+            "cause": "java.net.ConnectException: Connection refused: getsockopt"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/health",
+      "status": 503,
+      "body": {
+        "error": {
+          "code": "MODEL_SERVICE_UNAVAILABLE",
+          "message": "Không kết nối được dịch vụ gợi ý (FastAPI) ở http://127.0.0.1:8051: dịch vụ chưa chạy hoặc sai địa chỉ (model-service.base-url).",
+          "details": {
+            "model_service": "http://127.0.0.1:8051",
+            "path": "/health",
+            "cause": "java.net.ConnectException: Connection refused: getsockopt"
+          }
+        }
+      }
+    }
+  ],
+  "checks": {
+    "mock_all_same": true,
+    "fastapi_all_same": true,
+    "cors": true,
+    "down_503": true
+  },
+  "n_mock": 28
+}
