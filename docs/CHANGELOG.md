@@ -6,6 +6,16 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 02/11/2026 (phiên sau): kiểm thử E2E demo FE v2 đạt
+
+**Kiểm chứng**
+- Chạy `ai\.venv\Scripts\python.exe ai/service/check_demo.py --label fev2_20261102_lan1` trên commit `e7a08e9`.
+- Kết quả tổng: **ĐẠT**; tất cả cờ HTTP, trình duyệt, down FastAPI, mock mode và chỉ gọi Spring đều `true`.
+- 5 ca giao diện (user 409, 47, 178, 1476, 0) khớp API; user không tồn tại, mã nhập sai và `verified=false` xử lý đúng.
+- Độ trễ qua Spring: p50 **20,77 ms**, p95 **24,55 ms**, p99 **28,95 ms** trên 1.000 yêu cầu; máy được ghi nhận là đang bận vì RAM trống 1,99–2,06 GB.
+- FastAPI tắt: Spring trả HTTP 503 đúng hợp đồng; chế độ mock hiển thị nhãn "Dữ liệu mẫu" và khớp `recommend_409.json`.
+- Bằng chứng: `results/demo/check_demo_fev2_20261102_lan1/summary.json`.
+
 ## 02/11/2026: đồng bộ `user_map.json` để chạy demo FE v2
 
 **Sửa gì**
