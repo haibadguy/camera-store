@@ -142,7 +142,7 @@ def main():
     ap.add_argument("--label", required=True)
     ap.add_argument("--fastapi-port", type=int, default=8061)
     ap.add_argument("--spring-port", type=int, default=8098)
-    # 5173: cổng Vite mặc định, đúng cors.allowed-origins mặc định của Spring (không đổi cấu hình CORS khi kiểm)
+    # Mặc định là 5173; khi test đổi cổng, truyền CORS tương ứng như run_demo.ps1.
     ap.add_argument("--vite-port", type=int, default=5173)
     ap.add_argument("--vite-mock-port", type=int, default=5174)
     ap.add_argument("--n-latency", type=int, default=1000)
@@ -163,7 +163,9 @@ def main():
     res["health"] = h
     sp = vp = mp = None
     try:
-        sp, sf, sbase = CB.start_spring(a.spring_port, fbase, run_dir / f"spring_{tag}.log", log, SPRING_JVM, SPRING_EXTRA)
+        cors = f"http://localhost:{a.vite_port},http://127.0.0.1:{a.vite_port}"
+        spring_extra = (*SPRING_EXTRA, f"--cors.allowed-origins={cors}")
+        sp, sf, sbase = CB.start_spring(a.spring_port, fbase, run_dir / f"spring_{tag}.log", log, SPRING_JVM, spring_extra)
         api = sbase + "/api"
         vp, vf, web = start_vite(a.vite_port, api, run_dir / f"vite_{tag}.log", log)
 

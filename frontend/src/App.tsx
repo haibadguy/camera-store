@@ -1,7 +1,21 @@
-﻿import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./styles.css";
 import RecommendationDemo from "./RecommendationDemo";
 import CompatibilityChecker from "./CompatibilityChecker";
+import CatalogProfileSelector from "./components/catalog/CatalogProfileSelector";
+import {
+  formatVND,
+  Product,
+} from "./components/catalog/CatalogProductCard";
+import CatalogFilterSidebar from "./components/catalog/CatalogFilterSidebar";
+import CatalogProductGrid from "./components/catalog/CatalogProductGrid";
+import CatalogDetailModal from "./components/catalog/CatalogDetailModal";
+import {
+  fetchCompatibility,
+  fetchHealth,
+  HealthResponse,
+  IS_MOCK_SOURCE,
+} from "./services/recommendationService";
 
 // SVG Icons for professional E-Commerce UI (No emojis!)
 const SearchIcon = () => (
@@ -16,12 +30,6 @@ const ShoppingBagIcon = () => (
     <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
     <line x1="3" y1="6" x2="21" y2="6"></line>
     <path d="M16 10a4 4 0 0 1-8 0"></path>
-  </svg>
-);
-
-const FilterIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
 );
 
@@ -44,32 +52,13 @@ const CloseIcon = () => (
   </svg>
 );
 
-type CameraSpec = {
-  sensor: string;
-  resolution: string;
-  mount: string;
-  video: string;
-  weight: string;
-};
 
-type Product = {
-  id: number;
-  name: string;
-  brand: string;
-  category: string;
-  price: number;
-  originalPrice?: number;
-  rating: number;
-  reviewsCount: number;
-  stock: number;
-  badge?: string;
-  image: string;
-  description: string;
-  specs: CameraSpec;
-  aiMatchScore?: number;
-  aiReasons?: string[];
-  useCases: string[];
-};
+const DATASET_STATS = [
+  ["67.661", "người dùng"],
+  ["27.940", "sản phẩm"],
+  ["595.515", "tương tác"],
+  ["72.720", "cặp tương thích M=1"],
+];
 
 const PRODUCTS_DATA: Product[] = [
   {
@@ -83,7 +72,7 @@ const PRODUCTS_DATA: Product[] = [
     reviewsCount: 142,
     stock: 8,
     badge: "Bán chạy",
-    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80",
+    image: "/camera-placeholder.svg",
     description: "Máy ảnh Full-frame hybrid trang bị cảm biến Exmor R 33.0 MP, quay phim 4K 60p 10-bit và hệ thống lấy nét Real-time Eye AF.",
     specs: { sensor: "Full-frame", resolution: "33.0 MP", mount: "Sony E", video: "4K 60p", weight: "658g" },
     aiMatchScore: 98,
@@ -105,7 +94,7 @@ const PRODUCTS_DATA: Product[] = [
     reviewsCount: 98,
     stock: 5,
     badge: "Khuyên dùng",
-    image: "https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=800&q=80",
+    image: "/camera-placeholder.svg",
     description: "Tốc độ chụp liên tiếp 40 hình/giây, hệ thống chống rung IBIS 8 stop và lấy nét Dual Pixel CMOS AF II mượt mà.",
     specs: { sensor: "Full-frame", resolution: "24.2 MP", mount: "Canon RF", video: "4K 60p", weight: "670g" },
     aiMatchScore: 95,
@@ -127,7 +116,7 @@ const PRODUCTS_DATA: Product[] = [
     reviewsCount: 165,
     stock: 12,
     badge: "Mới",
-    image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80",
+    image: "/camera-placeholder.svg",
     description: "Cảm biến APS-C X-Trans 5 HR 40.2 MP, giả lập màu phim Film Simulation độc quyền và thiết kế cơ học hoài cổ.",
     specs: { sensor: "APS-C", resolution: "40.2 MP", mount: "Fujifilm X", video: "6.2K 30p", weight: "557g" },
     aiMatchScore: 92,
@@ -149,7 +138,7 @@ const PRODUCTS_DATA: Product[] = [
     reviewsCount: 210,
     stock: 15,
     badge: "Giá tốt",
-    image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80",
+    image: "/camera-placeholder.svg",
     description: "Máy ảnh thiết kế chuyên dụng cho quay Vlog, màn hình xoay lật 180 độ, micro định hướng 3 khoang lọc gió.",
     specs: { sensor: "APS-C", resolution: "26.0 MP", mount: "Sony E", video: "4K 60p", weight: "377g" },
     aiMatchScore: 94,
@@ -171,7 +160,7 @@ const PRODUCTS_DATA: Product[] = [
     reviewsCount: 42,
     stock: 4,
     badge: "Nổi bật",
-    image: "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=800&q=80",
+    image: "/camera-placeholder.svg",
     description: "Cảm biến Partially-stacked CMOS 24.5 MP, quay phim 6K N-RAW và kính ngắm EVF độ sáng 4000 nits.",
     specs: { sensor: "Full-frame", resolution: "24.5 MP", mount: "Nikon Z", video: "6K 60p RAW", weight: "760g" },
     aiMatchScore: 89,
@@ -193,7 +182,7 @@ const PRODUCTS_DATA: Product[] = [
     reviewsCount: 34,
     stock: 6,
     badge: "Cao cấp",
-    image: "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=800&q=80",
+    image: "/camera-placeholder.svg",
     description: "Ống kính tiêu cự 85mm chuyên chụp chân dung, khẩu độ lớn f/1.4 tạo hiệu ứng bokeh mượt mà.",
     specs: { sensor: "Ống kính Prime", resolution: "N/A", mount: "Sony E", video: "AF êm ái", weight: "642g" },
     aiMatchScore: 97,
@@ -202,16 +191,131 @@ const PRODUCTS_DATA: Product[] = [
       "Thuộc dòng ống kính G Master cao cấp nhất của Sony",
       "Lấy nét tự động nhanh và êm ái khi quay phim"
     ],
-    useCases: ["portrait", "event"]
+    useCases: ["portrait", "event"],
+    compatLensId: 9696,
   }
 ];
 
-const formatVND = (amount: number) => {
-  return new Intl.NumberFormat("vi-VN").format(amount) + " ₫";
-};
+const makeCatalogProduct = (
+  id: number,
+  name: string,
+  brand: string,
+  category: string,
+  price: number,
+  mount: string,
+  sensor: string,
+  useCases: string[],
+  badge?: string,
+): Product => ({
+  id,
+  name,
+  brand,
+  category,
+  price,
+  rating: 4.7,
+  reviewsCount: 24 + (id % 80),
+  stock: 4 + (id % 12),
+  badge,
+  image: "/camera-placeholder.svg",
+  description: `${name} là sản phẩm minh họa trong catalog thương mại của demo, dùng để trình bày cách lọc theo nhu cầu và thông số.`,
+  specs: { sensor, resolution: "Theo thông số nhà sản xuất", mount, video: "Theo phiên bản", weight: "Đang cập nhật" },
+  useCases,
+  compatLensId: category === "Ống kính"
+    ? mount === "Sony E" ? 9696
+      : mount === "Nikon F" ? 15485
+        : mount === "Canon EF" ? 13448
+          : undefined
+    : undefined,
+});
+
+const CATALOG_PRODUCTS: Product[] = [
+  ...PRODUCTS_DATA,
+  makeCatalogProduct(7, "Canon EOS R8 Body", "Canon", "Mirrorless", 32990000, "Canon RF", "Full-frame", ["portrait", "travel"], "Nhỏ gọn"),
+  makeCatalogProduct(8, "Canon EOS R50 Kit 18-45mm", "Canon", "Mirrorless", 18990000, "Canon RF-S", "APS-C", ["travel", "vlog"], "Người mới"),
+  makeCatalogProduct(9, "Nikon Z5 Body", "Nikon", "Mirrorless", 27990000, "Nikon Z", "Full-frame", ["portrait", "travel"]),
+  makeCatalogProduct(10, "Nikon Z fc Body", "Nikon", "Mirrorless", 23990000, "Nikon Z", "APS-C", ["street", "travel"], "Hoài cổ"),
+  makeCatalogProduct(11, "Sony Alpha A6700 Body", "Sony", "Mirrorless", 31990000, "Sony E", "APS-C", ["sports", "travel"]),
+  makeCatalogProduct(12, "Sony Alpha A7C II Body", "Sony", "Mirrorless", 49990000, "Sony E", "Full-frame", ["travel", "vlog"]),
+  makeCatalogProduct(13, "Fujifilm X-S20 Body", "Fujifilm", "Mirrorless", 31990000, "Fujifilm X", "APS-C", ["vlog", "travel"]),
+  makeCatalogProduct(14, "Fujifilm X100VI", "Fujifilm", "Compact", 44990000, "Tích hợp", "APS-C", ["street", "travel"], "Được quan tâm"),
+  makeCatalogProduct(15, "Panasonic Lumix S5II Body", "Panasonic", "Mirrorless", 36990000, "L-Mount", "Full-frame", ["video", "event"]),
+  makeCatalogProduct(16, "OM System OM-5 Body", "OM System", "Mirrorless", 24990000, "Micro Four Thirds", "Micro Four Thirds", ["travel", "nature"]),
+  makeCatalogProduct(17, "Sony FE 24-70mm f/2.8 GM II", "Sony", "Ống kính", 52990000, "Sony E", "Full-frame", ["event", "portrait"]),
+  makeCatalogProduct(18, "Canon RF 24-70mm f/2.8L IS USM", "Canon", "Ống kính", 59990000, "Canon RF", "Full-frame", ["event", "portrait"]),
+  makeCatalogProduct(19, "Nikon Z 24-120mm f/4 S", "Nikon", "Ống kính", 29990000, "Nikon Z", "Full-frame", ["travel", "event"]),
+  makeCatalogProduct(20, "Fujifilm XF 16-55mm f/2.8 R LM WR", "Fujifilm", "Ống kính", 31990000, "Fujifilm X", "APS-C", ["event", "street"]),
+  makeCatalogProduct(21, "Sony FE 20-70mm f/4 G", "Sony", "Ống kính", 29990000, "Sony E", "Full-frame", ["travel", "vlog"]),
+  makeCatalogProduct(22, "Canon RF 50mm f/1.8 STM", "Canon", "Ống kính", 5790000, "Canon RF", "Full-frame", ["portrait", "street"], "Giá tốt"),
+  makeCatalogProduct(23, "Nikon Z 50mm f/1.8 S", "Nikon", "Ống kính", 13990000, "Nikon Z", "Full-frame", ["portrait", "street"]),
+  makeCatalogProduct(24, "Fujifilm XF 35mm f/2 R WR", "Fujifilm", "Ống kính", 9990000, "Fujifilm X", "APS-C", ["street", "portrait"]),
+  makeCatalogProduct(25, "Godox V1 Flash for Sony", "Godox", "Phụ kiện", 5990000, "Sony", "N/A", ["event", "portrait"]),
+  makeCatalogProduct(26, "Peak Design Everyday Sling 6L", "Peak Design", "Phụ kiện", 2890000, "N/A", "N/A", ["travel", "street"]),
+  makeCatalogProduct(27, "SanDisk Extreme Pro SDXC 256GB", "SanDisk", "Phụ kiện", 1290000, "N/A", "N/A", ["video", "travel"]),
+  makeCatalogProduct(28, "DJI Mic 2 Wireless", "DJI", "Phụ kiện", 8990000, "N/A", "N/A", ["vlog", "video"]),
+];
+
+function DatasetScaleBanner({ health }: { health: HealthResponse | null }) {
+  const live = health?.status === "ok";
+  return (
+    <section className="dataset-scale-banner" aria-label="Quy mô dữ liệu và trạng thái hệ thống">
+      <div className="site-wrapper dataset-scale-inner">
+        <div>
+          <strong>Camera Recommender</strong>
+          <span className="dataset-source">Amazon Electronics 2023 · tập đại diện trên giao diện</span>
+        </div>
+        <div className="dataset-stat-list">
+          {DATASET_STATS.map(([value, label]) => (
+            <span key={label}><strong>{value}</strong> {label}</span>
+          ))}
+        </div>
+        <span className={`health-badge ${live ? "live" : IS_MOCK_SOURCE ? "mock" : "offline"}`}>
+          {live ? `Live API · FastAPI seed ${health?.seed ?? 1}` : IS_MOCK_SOURCE ? "Dữ liệu mẫu" : "API chưa kết nối"}
+        </span>
+      </div>
+    </section>
+  );
+}
+
+function SystemOverview({ onExit }: { onExit: () => void }) {
+  return (
+    <div className="demo-page">
+      <header className="demo-header">
+        <div className="demo-shell demo-header-content">
+          <button className="demo-brand" onClick={onExit}>CAMERA STORE <span>Về hệ thống</span></button>
+          <p>Giới thiệu đề tài và phạm vi demo</p>
+          <button className="demo-link-button" onClick={onExit}>Quay về catalog</button>
+        </div>
+      </header>
+      <main className="demo-shell demo-main system-overview">
+        <span className="demo-eyebrow">Đồ án tốt nghiệp</span>
+        <h1>Hệ thống tư vấn cá nhân hóa thiết bị nhiếp ảnh</h1>
+        <p className="demo-lead">
+          Mục tiêu là đề xuất sản phẩm tiếp theo từ dữ liệu đánh giá Amazon,
+          đồng thời không đưa ống kính chắc chắn không tương thích vào danh sách.
+        </p>
+        <div className="system-overview-grid">
+          <article><h2>1. Dữ liệu</h2><p>Amazon Electronics 2023, 67.661 người dùng, 27.940 sản phẩm và 595.515 tương tác sau tiền xử lý.</p></article>
+          <article><h2>2. Mô hình</h2><p>LightGCN tạo điểm xếp hạng. Điểm chỉ có ý nghĩa khi so sánh các sản phẩm trong cùng một người dùng, không phải xác suất.</p></article>
+          <article><h2>3. Ràng buộc</h2><p>Ma trận ngàm M và QĐ 4–9 chỉ chặn ống kính chắc chắn không lắp được trên mọi thân máy đã đánh giá.</p></article>
+          <article><h2>4. Giải thích</h2><p>Giải thích là hậu nghiệm: tìm thân máy tương thích làm cầu nối u → b → l. Một số sản phẩm không đủ đường giải thích.</p></article>
+        </div>
+        <div className="system-flow"><strong>React</strong><span>→</span><strong>Spring Boot</strong><span>→</span><strong>FastAPI</strong><small>Spring là lớp nghiệp vụ; React không gọi trực tiếp dịch vụ mô hình.</small></div>
+        <aside className="system-limitations">
+          <h2>Phạm vi và giới hạn demo</h2>
+          <ul>
+            <li>Catalog có thông tin thương mại minh họa, không dùng để đánh giá mô hình.</li>
+            <li>Lịch sử là đánh giá Amazon, không phải đơn hàng hay giỏ hàng của website.</li>
+            <li>Chưa có đăng nhập, người dùng mới và cập nhật gợi ý theo giao dịch thật.</li>
+            <li>Demo dùng seed 1 và dữ liệu đã xử lý; kết quả không đại diện cho mọi người dùng mới.</li>
+          </ul>
+        </aside>
+      </main>
+    </div>
+  );
+}
 
 export default function App() {
-  const [activeView, setActiveView] = useState<"catalog" | "recommendation" | "compat">("catalog");
+  const [activeView, setActiveView] = useState<"catalog" | "recommendation" | "compat" | "about">("catalog");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -229,9 +333,49 @@ export default function App() {
   const [wizardBudget, setWizardBudget] = useState(50000000);
   const [wizardNeed, setWizardNeed] = useState("portrait");
   const [wizardBrand, setWizardBrand] = useState("All");
+  const [health, setHealth] = useState<HealthResponse | null>(null);
+  const [compatibilityProfile, setCompatibilityProfile] = useState<409 | 47 | null>(null);
+  const [compatibilityStatus, setCompatibilityStatus] = useState<Record<number, "compatible" | "incompatible" | "unknown">>({});
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetchHealth(controller.signal).then(setHealth).catch(() => setHealth(null));
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    if (compatibilityProfile === null) {
+      setCompatibilityStatus({});
+      return;
+    }
+    const bodyIds = compatibilityProfile === 409 ? [9022] : [12369, 14934];
+    const controller = new AbortController();
+    const lensProducts = CATALOG_PRODUCTS.filter((product) => product.compatLensId !== undefined);
+    void Promise.all(
+      lensProducts.map(async (product) => {
+        const checks = await Promise.allSettled(
+          bodyIds.map((bodyId) => fetchCompatibility(bodyId, product.compatLensId!, controller.signal)),
+        );
+        const successful = checks
+          .filter((check): check is PromiseFulfilledResult<Awaited<ReturnType<typeof fetchCompatibility>>> => check.status === "fulfilled")
+          .map((check) => check.value);
+        if (successful.length === 0) return [product.id, "unknown"] as const;
+        return [
+          product.id,
+          successful.some((result) => result.level === "compatible_with" || result.level === "crops_sensor")
+            ? "compatible"
+            : successful.every((result) => result.level === "incompatible")
+              ? "incompatible"
+              : "unknown",
+        ] as const;
+      }),
+    ).then((entries) => setCompatibilityStatus(Object.fromEntries(entries) as Record<number, "compatible" | "incompatible" | "unknown">))
+      .catch(() => setCompatibilityStatus({}));
+    return () => controller.abort();
+  }, [compatibilityProfile]);
 
   const filteredProducts = useMemo(() => {
-    let result = PRODUCTS_DATA.filter((p) => {
+    let result = CATALOG_PRODUCTS.filter((p) => {
       const matchSearch = searchQuery === "" || `${p.name} ${p.brand} ${p.category}`.toLowerCase().includes(searchQuery.toLowerCase());
       const matchBrand = selectedBrand === "All" || p.brand === selectedBrand;
       const matchCategory = selectedCategory === "All" || p.category === selectedCategory;
@@ -271,6 +415,9 @@ export default function App() {
   }
   if (activeView === "compat") {
     return <CompatibilityChecker onExit={() => setActiveView("catalog")} />;
+  }
+  if (activeView === "about") {
+    return <SystemOverview onExit={() => setActiveView("catalog")} />;
   }
 
   return (
@@ -323,8 +470,8 @@ export default function App() {
             <button className="ai-consult-button" onClick={() => setIsAiWizardOpen(true)}>
               <SparkleIcon />
               <div className="btn-label-wrap">
-                <span className="btn-top-label">Gợi ý thông minh</span>
-                <span className="btn-main-label">Tư vấn chọn máy</span>
+                <span className="btn-top-label">Lọc theo nhu cầu</span>
+                <span className="btn-main-label">Chọn máy tham khảo</span>
               </div>
             </button>
 
@@ -366,19 +513,25 @@ export default function App() {
           <button className="nav-item" onClick={() => setActiveView("compat")}>
             Kiểm tra tương thích
           </button>
+          <button className="nav-item" onClick={() => setActiveView("about")}>
+            Về hệ thống
+          </button>
         </div>
       </nav>
+
+      <DatasetScaleBanner health={health} />
 
       {/* 4. PROMO HERO BANNER */}
       <section className="promo-banner-section">
         <div className="site-wrapper promo-container">
           <div className="promo-text-wrap">
-            <span className="promo-tag">HỆ THỐNG GỢI Ý TỰ ĐỘNG</span>
+          <span className="promo-tag">CATALOG MINH HỌA · NGHIÊN CỨU GỢI Ý</span>
             <h1>Tư Vấn Chọn Máy Ảnh Phù Hợp Nhu Cầu & Ngân Sách</h1>
             <p>
-              Thuật toán tự động phân tích thông số kỹ thuật (Cảm biến, Ngàm Lens, ISO) kết hợp ràng buộc ngân sách 
-              để đưa ra danh sách sản phẩm tối ưu kèm <strong>lý do giải thích chi tiết</strong>.
-            </p>
+            Catalog này minh họa giao diện cửa hàng. Luồng nghiên cứu chính là
+            <strong> Tư vấn thiết bị</strong>: LightGCN xếp hạng từ dữ liệu đánh giá,
+            sau đó áp mặt nạ tương thích và hiển thị giải thích hậu nghiệm.
+          </p>
             <div className="promo-actions">
               <button className="primary-action-btn" onClick={() => setIsAiWizardOpen(true)}>
                 <SparkleIcon /> Bắt đầu tư vấn ngay
@@ -393,103 +546,29 @@ export default function App() {
 
       {/* 5. MAIN CATALOG LAYOUT */}
       <main className="site-wrapper main-layout">
-        {/* SIDEBAR FILTER */}
-        <aside className="sidebar-filter-panel">
-          <div className="filter-panel-header">
-            <div className="panel-title">
-              <FilterIcon />
-              <span>Bộ lọc tìm kiếm</span>
-            </div>
-            {(selectedBrand !== "All" || selectedUseCase !== "All" || selectedMount !== "All" || maxPrice < 70000000) && (
-              <button className="reset-filter-btn" onClick={resetFilters}>Xóa lọc</button>
-            )}
-          </div>
-
-          {/* Filter Group: Nhu cầu */}
-          <div className="filter-block">
-            <h4 className="filter-heading">Nhu cầu sử dụng</h4>
-            <div className="filter-options-list">
-              {[
-                { id: "All", name: "Tất cả nhu cầu" },
-                { id: "portrait", name: "Chụp chân dung & xóa phông" },
-                { id: "travel", name: "Du lịch & phượt gọn nhẹ" },
-                { id: "vlog", name: "Quay Vlogging & Content" },
-                { id: "sports", name: "Chụp thể thao & chuyển động" }
-              ].map((item) => (
-                <label key={item.id} className="radio-option">
-                  <input
-                    type="radio"
-                    name="usecase-radio"
-                    checked={selectedUseCase === item.id}
-                    onChange={() => setSelectedUseCase(item.id)}
-                  />
-                  <span>{item.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Filter Group: Ngân sách */}
-          <div className="filter-block">
-            <h4 className="filter-heading">Ngân sách tối đa</h4>
-            <div className="price-range-container">
-              <div className="price-current-value">{formatVND(maxPrice)}</div>
-              <input
-                type="range"
-                min={20000000}
-                max={70000000}
-                step={5000000}
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(Number(e.target.value))}
-              />
-              <div className="range-bounds">
-                <span>20 triệu</span>
-                <span>70 triệu+</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Filter Group: Hãng sản xuất */}
-          <div className="filter-block">
-            <h4 className="filter-heading">Thương hiệu</h4>
-            <div className="chip-options-grid">
-              {["All", "Sony", "Canon", "Fujifilm", "Nikon"].map((brand) => (
-                <button
-                  key={brand}
-                  className={selectedBrand === brand ? "chip-btn active" : "chip-btn"}
-                  onClick={() => setSelectedBrand(brand)}
-                >
-                  {brand === "All" ? "Tất cả" : brand}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Filter Group: Ngàm Lens */}
-          <div className="filter-block">
-            <h4 className="filter-heading">Ngàm Lens tương thích</h4>
-            <select
-              className="select-field"
-              value={selectedMount}
-              onChange={(e) => setSelectedMount(e.target.value)}
-            >
-              <option value="All">Tất cả ngàm lens</option>
-              <option value="Sony E">Sony E-mount</option>
-              <option value="Canon RF">Canon RF-mount</option>
-              <option value="Fujifilm X">Fujifilm X-mount</option>
-              <option value="Nikon Z">Nikon Z-mount</option>
-            </select>
-          </div>
-        </aside>
+        <CatalogFilterSidebar
+          selectedUseCase={selectedUseCase}
+          maxPrice={maxPrice}
+          selectedBrand={selectedBrand}
+          selectedMount={selectedMount}
+          hasFilters={selectedBrand !== "All" || selectedUseCase !== "All" || selectedMount !== "All" || maxPrice < 70000000}
+          onUseCaseChange={setSelectedUseCase}
+          onPriceChange={setMaxPrice}
+          onBrandChange={setSelectedBrand}
+          onMountChange={setSelectedMount}
+          onReset={resetFilters}
+        />
 
         {/* PRODUCT LIST CONTENT */}
         <section className="catalog-products-section">
           {/* Toolbar */}
           <div className="catalog-toolbar">
             <div className="toolbar-left">
-              <h2>Danh sách thiết bị nhiếp ảnh</h2>
+              <h2>Danh sách thiết bị nhiếp ảnh <span className="catalog-demo-label">dữ liệu thương mại minh họa</span></h2>
               <span className="results-count">Hiển thị {filteredProducts.length} sản phẩm</span>
             </div>
+
+            <CatalogProfileSelector value={compatibilityProfile} onChange={setCompatibilityProfile} />
 
             <div className="toolbar-right">
               <label>Sắp xếp:</label>
@@ -518,90 +597,14 @@ export default function App() {
             </div>
           )}
 
-          {/* Products Grid */}
-          {filteredProducts.length === 0 ? (
-            <div className="no-products-card">
-              <h3>Không tìm thấy sản phẩm phù hợp</h3>
-              <p>Rất tiếc, không có máy ảnh nào khớp với các tiêu chí lọc hiện tại của bạn.</p>
-              <button className="secondary-action-btn dark" onClick={resetFilters}>Xóa bộ lọc tìm kiếm</button>
-            </div>
-          ) : (
-            <div className="products-grid">
-              {filteredProducts.map((product) => (
-                <article key={product.id} className="product-card">
-                  {/* Image wrap */}
-                  <div className="product-image-container" onClick={() => setDetailProduct(product)}>
-                    <img src={product.image} alt={product.name} />
-                    {product.badge && <span className="status-badge">{product.badge}</span>}
-                    {product.aiMatchScore && (
-                      <span className="ai-score-badge">Mức độ phù hợp {product.aiMatchScore}%</span>
-                    )}
-                  </div>
-
-                  {/* Card Info */}
-                  <div className="product-card-body">
-                    <div className="product-brand-meta">{product.brand} • {product.category}</div>
-                    <h3 className="product-title" onClick={() => setDetailProduct(product)}>
-                      {product.name}
-                    </h3>
-
-                    {/* Rating */}
-                    <div className="rating-summary">
-                      <span className="star-icon">★</span>
-                      <span className="score">{product.rating}</span>
-                      <span className="count">({product.reviewsCount} đánh giá)</span>
-                    </div>
-
-                    {/* Technical Specs Tags */}
-                    <div className="specs-pills-row">
-                      <span className="spec-pill">{product.specs.sensor}</span>
-                      <span className="spec-pill">{product.specs.resolution}</span>
-                      <span className="spec-pill">Ngàm {product.specs.mount}</span>
-                    </div>
-
-                    {/* AI EXPLAINABLE REASONS BOX */}
-                    {product.aiReasons && product.aiReasons.length > 0 && (
-                      <div className="ai-reason-container">
-                        <div className="reason-title">
-                          <SparkleIcon /> Lý do gợi ý phù hợp:
-                        </div>
-                        <ul className="reason-list">
-                          {product.aiReasons.map((reason, idx) => (
-                            <li key={idx}>
-                              <CheckIcon /> {reason}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Price and Stock */}
-                    <div className="price-stock-row">
-                      <div className="price-container">
-                        <span className="main-price">{formatVND(product.price)}</span>
-                        {product.originalPrice && (
-                          <span className="old-price">{formatVND(product.originalPrice)}</span>
-                        )}
-                      </div>
-                      <div className="stock-indicator">
-                        <span className="status-dot"></span> Còn hàng
-                      </div>
-                    </div>
-
-                    {/* Action buttons */}
-                    <div className="card-buttons-row">
-                      <button className="add-cart-btn" onClick={() => setCartCount(cartCount + 1)}>
-                        Thêm vào giỏ
-                      </button>
-                      <button className="view-detail-btn" onClick={() => setDetailProduct(product)}>
-                        Chi tiết
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
+          <CatalogProductGrid
+            products={filteredProducts}
+            compatibilityStatus={compatibilityStatus}
+            compatibilityEnabled={compatibilityProfile !== null}
+            onDetail={setDetailProduct}
+            onAddToCart={() => setCartCount((count) => count + 1)}
+            onReset={resetFilters}
+          />
         </section>
       </main>
 
@@ -614,9 +617,9 @@ export default function App() {
             </button>
 
             <div className="wizard-dialog-header">
-              <span className="dialog-badge"><SparkleIcon /> Thuật toán gợi ý cá nhân hóa</span>
-              <h2>Trợ Lý Tư Vấn Chọn Máy Ảnh</h2>
-              <p>Phân tích thông số kỹ thuật và nhu cầu sử dụng để tìm thiết bị tối ưu dành cho bạn.</p>
+              <span className="dialog-badge"><SparkleIcon /> Bộ lọc nhu cầu tham khảo</span>
+              <h2>Lọc thiết bị theo nhu cầu</h2>
+              <p>Đây là bộ lọc minh họa cho catalog, không phải mô hình LightGCN của đề tài.</p>
             </div>
 
             {/* Steps indicator */}
@@ -675,7 +678,7 @@ export default function App() {
 
               {wizardStep === 3 && (
                 <div className="step-view">
-                  <h4>Bạn có ưu tiên thương hiệu cụ thể nào không?</h4>
+                  <h4>Bạn có thương hiệu cụ thể nào không?</h4>
                   <div className="brands-list-options">
                     {[
                       { id: "All", name: "Tất cả thương hiệu (Hệ thống tự chọn máy ảnh tối ưu nhất)" },
@@ -710,7 +713,7 @@ export default function App() {
                 </button>
               ) : (
                 <button className="apply-ai-btn" onClick={applyWizardFilter}>
-                  <SparkleIcon /> Lọc và hiển thị gợi ý phù hợp
+                  <SparkleIcon /> Lọc và hiển thị thiết bị tham khảo
                 </button>
               )}
             </div>
@@ -720,53 +723,11 @@ export default function App() {
 
       {/* 7. PRODUCT DETAIL SPECS DIALOG */}
       {detailProduct && (
-        <div className="dialog-overlay" onClick={() => setDetailProduct(null)}>
-          <div className="detail-dialog-box" onClick={(e) => e.stopPropagation()}>
-            <button className="dialog-close-btn" onClick={() => setDetailProduct(null)}>
-              <CloseIcon />
-            </button>
-
-            <div className="detail-dialog-layout">
-              <div className="detail-media-wrap">
-                <img src={detailProduct.image} alt={detailProduct.name} />
-              </div>
-
-              <div className="detail-specs-wrap">
-                <div className="product-brand-meta">{detailProduct.brand} • {detailProduct.category}</div>
-                <h2>{detailProduct.name}</h2>
-                <div className="detail-price">{formatVND(detailProduct.price)}</div>
-
-                <p className="detail-description">{detailProduct.description}</p>
-
-                <h4>Thông số kỹ thuật chi tiết:</h4>
-                <table className="specs-table">
-                  <tbody>
-                    <tr><td>Cảm biến (Sensor)</td><td><strong>{detailProduct.specs.sensor}</strong></td></tr>
-                    <tr><td>Độ phân giải</td><td><strong>{detailProduct.specs.resolution}</strong></td></tr>
-                    <tr><td>Ngàm Lens tương thích</td><td><strong>{detailProduct.specs.mount}</strong></td></tr>
-                    <tr><td>Quay video</td><td><strong>{detailProduct.specs.video}</strong></td></tr>
-                    <tr><td>Trọng lượng body</td><td><strong>{detailProduct.specs.weight}</strong></td></tr>
-                  </tbody>
-                </table>
-
-                {detailProduct.aiReasons && (
-                  <div className="ai-reason-container highlight">
-                    <div className="reason-title"><SparkleIcon /> Đánh giá tư vấn AI:</div>
-                    <ul className="reason-list">
-                      {detailProduct.aiReasons.map((r, idx) => (
-                        <li key={idx}><CheckIcon /> {r}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                <button className="add-cart-large-btn" onClick={() => { setCartCount(cartCount + 1); setDetailProduct(null); }}>
-                  Thêm vào giỏ hàng
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <CatalogDetailModal
+          product={detailProduct}
+          onClose={() => setDetailProduct(null)}
+          onAddToCart={() => { setCartCount((count) => count + 1); setDetailProduct(null); }}
+        />
       )}
 
       {/* 8. FOOTER */}

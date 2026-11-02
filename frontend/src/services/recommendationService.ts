@@ -74,6 +74,16 @@ export type RecommendationResponse = {
   };
 };
 
+export type HealthResponse = {
+  status: string;
+  model?: string;
+  seed?: number;
+  device?: string;
+  n_users?: number;
+  n_items?: number;
+  contract_version?: string;
+};
+
 // --- Types cho /compat (hợp đồng mục 6.2) ---
 
 export type CompatItemBrief = {
@@ -209,8 +219,23 @@ async function getJson(path: string, signal?: AbortSignal): Promise<unknown> {
   } catch {
     if (response.ok) throw new Error(`Backend trả về HTTP ${response.status} nhưng không có JSON hợp lệ.`);
   }
+
   if (!response.ok) throw new Error(toUserMessage(response.status, payload));
   return payload;
+}
+
+export async function fetchHealth(signal?: AbortSignal): Promise<HealthResponse> {
+  if (IS_MOCK_SOURCE) {
+    return { status: "mock", model: "Dữ liệu mẫu", contract_version: "1.3" };
+  }
+  return withTimeout(async (timeoutSignal) => {
+    const payload = await getJson("/health", timeoutSignal);
+    const health = payload as Partial<HealthResponse> | null;
+    if (!health || typeof health.status !== "string") {
+      throw new Error("Backend trả về trạng thái hệ thống không hợp lệ.");
+    }
+    return health as HealthResponse;
+  }, signal);
 }
 
 type BodiesPayload = { bodies: Array<RecommendationBody & { source: string }> };

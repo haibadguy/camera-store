@@ -56,15 +56,15 @@ Nối React → Spring Boot → FastAPI (Contract 1.3, E2E Check Demo 12/12 Đ�
        ↓
 [Phase 2: NHIỆM VỤ CỦA HẢI TRÊN hai/fe-v2-integration]
 ├── Task 1: Tra cứu tương thích Thân máy – Ống kính (/api/compat) [✔ ĐÃ HOÀN THÀNH]
-├── Task 2: Mở rộng dữ liệu hiển thị & Minh bạch quy mô Dataset
+├── Task 2: Mở rộng dữ liệu hiển thị & Minh bạch quy mô Dataset [✔ ĐÃ HOÀN THÀNH]
 │   ├── 2.1: Thêm thanh thông số quy mô Dataset (Data Scale Banner)
 │   ├── 2.2: Mở rộng 5 hồ sơ người dùng tiêu biểu (409, 47, 178, 0, 1476)
-│   └── 2.3: Nâng kho Catalog từ 6 lên 24–30 sản phẩm thực tế từ dataset
-├── Task 3: Chỉ báo trạng thái kết nối hệ thống (Health & Mode Indicator)
+│   └── 2.3: Nâng kho Catalog từ 6 lên 28 sản phẩm minh họa có nguồn cục bộ
+├── Task 3: Chỉ báo trạng thái kết nối hệ thống (Health & Mode Indicator) [✔ ĐÃ HOÀN THÀNH]
 │   └── Gọi /api/health → hiển thị badge 🟢 Live API FastAPI Seed 1 vs 🟡 Dữ liệu mẫu
-├── Task 4: Cá nhân hóa Catalog theo Profile đang chọn (Personalized Storefront)
+├── Task 4: Cá nhân hóa Catalog theo Profile đang chọn (Personalized Storefront) [✔ ĐÃ HOÀN THÀNH]
 │   └── Chọn Profile trên Header → gắn badge tương thích trực tiếp lên sản phẩm Catalog
-└── Task 5: Tái cấu trúc Clean Code & Khóa chất lượng E2E
+└── Task 5: Tái cấu trúc Clean Code & Khóa chất lượng E2E [✔ ĐÃ HOÀN THÀNH]
     ├── Tách App.tsx thành các component con độc lập
     └── Kiểm tra Playwright tools/demo_e2e/demo_e2e.mjs pass 100%
 ```
@@ -81,15 +81,15 @@ Nối React → Spring Boot → FastAPI (Contract 1.3, E2E Check Demo 12/12 Đ�
   - Tích hợp view `"compat"` và nút "Kiểm tra tương thích" trên Navigation bar của `App.tsx`.
 - **Kết quả:** `npm run build` đạt 61 modules, không lỗi.
 
-#### Task 2: Mở rộng dữ liệu hiển thị & Minh bạch quy mô Dataset [TIẾP THEO]
+#### Task 2: Mở rộng dữ liệu hiển thị & Minh bạch quy mô Dataset [✔ ĐÃ HOÀN THÀNH]
 - **Mục tiêu:** Xóa bỏ cảm giác "ít data", khẳng định quy mô thật 67k users trước hội đồng.
 - **Nội dung:**
   1. *Data Scale Banner:* Gắn dải thông số quy mô đề tài ở đầu Catalog và đầu trang Tư vấn.
   2. *5 Curated Profiles:* Bổ sung các thẻ chọn nhanh cho User 178, User 0, User 1476 bên cạnh User 409, 47 trong `RecommendationDemo.tsx` (có mock data tương ứng cho chế độ offline).
-  3. *Mở rộng Catalog:* Thay mảng 6 sản phẩm hardcode bằng danh sách 24–30 sản phẩm đại diện trích từ dữ liệu Amazon thật (ảnh, specs cảm biến, ngàm lens, giá VND hợp lý).
+  3. *Mở rộng Catalog:* Thay mảng 6 sản phẩm hardcode bằng 28 sản phẩm đại diện (thân máy, ống kính, phụ kiện). Đây là catalog thương mại minh họa, không tuyên bố là danh sách item recommendation.
 - **Kiểm chứng:** Giao diện dày dặn, lọc mượt mà theo thương hiệu/ngàm, chọn được 5 ca người dùng khác nhau.
 
-#### Task 3: Chỉ báo trạng thái kết nối hệ thống (Health Check Indicator)
+#### Task 3: Chỉ báo trạng thái kết nối hệ thống (Health Check Indicator) [✔ ĐÃ HOÀN THÀNH]
 - **Mục tiêu:** Nhận biết ngay hệ thống đang chạy Live API hay Mock data khi demo.
 - **Nội dung:**
   - Gọi `/api/health` của Spring Boot.
@@ -98,19 +98,19 @@ Nối React → Spring Boot → FastAPI (Contract 1.3, E2E Check Demo 12/12 Đ�
     - 🟡 `Chế độ: Dữ liệu mẫu (Offline Mode)`
 - **Kiểm chứng:** Đổi `VITE_RECOMMENDATION_SOURCE=api` và `mock`, kiểm tra badge đổi màu chính xác.
 
-#### Task 4: Cá nhân hóa Catalog theo Profile đang chọn (Personalized Storefront)
+#### Task 4: Cá nhân hóa Catalog theo Profile đang chọn (Personalized Storefront) [✔ ĐÃ HOÀN THÀNH]
 - **Mục tiêu:** Gắn kết trải nghiệm duyệt sản phẩm với thuật toán gợi ý và ma trận tương thích.
 - **Nội dung:**
-  - Thanh chọn Profile đang kích hoạt ở Header: `Khách vãng lai` | `User 409 (Nikon D3100)` | `User 47 (Nikon D4S, D500)`.
+  - Thanh chọn hồ sơ trong catalog: `Không đối chiếu` | `User 409 (Nikon D3100)` | `User 47 (Nikon D4S, D500)`.
   - Khi một User được chọn:
     - Các ống kính trong Catalog lắp được trên thân của họ sẽ có badge xanh: *"Tương thích với máy của bạn"*.
     - Các ống kính bị chặn theo ma trận $M$ sẽ có nhãn cảnh báo đỏ: *"Không tương thích với thân máy của bạn"*.
 - **Kiểm chứng:** Đổi qua lại giữa các user, danh sách sản phẩm trong Catalog phản ánh đúng trạng thái tương thích.
 
-#### Task 5: Tái cấu trúc Clean Code & Khóa chất lượng E2E
+#### Task 5: Tái cấu trúc Clean Code & Khóa chất lượng E2E [✔ ĐÃ HOÀN THÀNH] [✔ E2E ĐẠT]
 - **Mục tiêu:** Mã nguồn sạch sẽ, dễ bảo trì, vượt qua 100% kiểm thử tự động.
 - **Nội dung:**
-  - Tách `App.tsx` thành: `src/components/common/` (Header, Footer, Icons), `src/components/catalog/` (ProductGrid, FilterSidebar, DetailModal).
+  - Tách phần catalog thành `CatalogFilterSidebar.tsx`, `CatalogProductGrid.tsx`, `CatalogProductCard.tsx`, `CatalogDetailModal.tsx` và `CatalogProfileSelector.tsx`; `App.tsx` giữ orchestration và trạng thái trang.
   - Kiểm tra `npm run build` không warning/error.
   - Đối chiếu toàn bộ selector và text với `tools/demo_e2e/demo_e2e.mjs` để đảm bảo test tự động không bị gãy.
   - Cập nhật kết quả vào `docs/CHANGELOG.md` và `docs/STATUS.md`.

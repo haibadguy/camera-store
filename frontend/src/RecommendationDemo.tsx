@@ -87,9 +87,12 @@ function DemoHeader({ onExit, trail }: { onExit: () => void; trail: string }) {
 }
 
 // Người dùng chọn nhanh và thân máy họ đã đánh giá (cả lịch sử, /api/users/{id}/bodies seed 1)
-const QUICK_USERS = [
-  { id: 409, bodies: "Nikon D3100" },
-  { id: 47, bodies: "Nikon D4S, Nikon D500" },
+const CURATED_USERS = [
+  { id: 409, bodies: "Nikon D3100", case: "Một thân máy trong ma trận M: minh họa mặt nạ chặn ống không tương thích." },
+  { id: 47, bodies: "Nikon D4S, Nikon D500", case: "Hai thân cùng hệ: minh họa giải thích qua nhiều thân máy." },
+  { id: 178, bodies: "Nhiều hệ máy", case: "Người dùng nhiều hệ: thân khác ngàm có thể làm giảm số ống bị chặn." },
+  { id: 1476, bodies: "Có thân ngoài ma trận M", case: "Ngoại lệ QĐ 4–9: không đủ dữ liệu để khẳng định ống không lắp được." },
+  { id: 0, bodies: "Chưa có thân trong lịch sử", case: "Cold-start theo dữ liệu: không áp mặt nạ tương thích." },
 ];
 const USER_ID_PATTERN = /^\d{1,9}$/;
 
@@ -119,16 +122,17 @@ function UserPicker({ onExit, onSelect }: { onExit: () => void; onSelect: (id: n
       <span className="demo-eyebrow">Tư vấn cá nhân</span><h1>Bạn đang tìm món đồ tiếp theo?</h1>
       <p className="demo-lead">Chọn một người dùng có trong dữ liệu đánh giá Amazon. Gợi ý dựa vào những sản phẩm người đó đã đánh giá; ống kính được lọc theo thân máy bạn đã đánh giá.</p>
       <section className="demo-user-grid" aria-label="Chọn người dùng">
-        {QUICK_USERS.map(({ id, bodies }) => <article className="demo-user-card" key={id}>
+        {CURATED_USERS.map(({ id, bodies, case: demoCase }) => <article className="demo-user-card" key={id}>
           <div className="demo-card-topline"><span>Thân máy bạn đã đánh giá</span><strong>{bodies}</strong></div>
           <h2>Người dùng {id}</h2>
-          <p>Sản phẩm người này đã đánh giá sẽ không được gợi ý lại.</p>
+          <p>{demoCase}</p>
           <button className="demo-primary-button" onClick={() => onSelect(id)}>Xem gợi ý</button>
         </article>)}
         <article className="demo-user-card">
           <form onSubmit={submitUserId} aria-label="Nhập mã người dùng">
-            <div className="demo-card-topline"><label htmlFor="demo-user-id">Người dùng khác</label><strong>0 – 67.660</strong></div>
+            <div className="demo-card-topline"><label htmlFor="demo-user-id">Tra cứu thêm</label><strong>0 – 67.660</strong></div>
             <h2>Nhập mã người dùng</h2>
+            <p>Nhập chỉ số nội bộ để kiểm tra một ca khác trong tập dữ liệu.</p>
             <p><input id="demo-user-id" name="user_id" inputMode="numeric" autoComplete="off" placeholder="vd 178"
               value={userInput} onChange={(event) => setUserInput(event.target.value)} /></p>
             {inputError && <p role="alert">{inputError}</p>}

@@ -1,3 +1,59 @@
+## 02/11/2026 (phiên sau): hoàn thiện giao diện demo FE v2 và kiểm chứng end-to-end
+
+**Sửa gì**
+- `frontend/src/App.tsx`: mở catalog minh họa từ 6 lên 28 sản phẩm đại diện (thân máy, ống kính, phụ kiện); đổi tên các nhãn bộ lọc để không đánh đồng với LightGCN; thêm thông báo rõ catalog là dữ liệu thương mại minh họa.
+- `frontend/src/App.tsx`, `frontend/public/camera-placeholder.svg`: thay ảnh Unsplash bằng placeholder cục bộ để demo không phụ thuộc Internet.
+- `frontend/src/services/recommendationService.ts`, `frontend/src/RecommendationDemo.tsx`, `frontend/src/styles.css`: thêm health/mode indicator, quy mô dataset, trang giới thiệu kiến trúc và 5 hồ sơ demo.
+
+**Vì sao**
+- Catalog 6 sản phẩm và ảnh ngoài Internet khiến giao diện trông như mock nhỏ, dễ bị hỏi về quy mô và khả năng chạy offline.
+- Bộ lọc catalog là logic trình bày, không phải mô hình đề xuất; cần tách rõ với luồng React → Spring Boot → FastAPI dùng LightGCN + mặt nạ QĐ 4-9.
+
+**Ảnh hưởng thế nào**
+- Số thẻ catalog: **6 → 28**; ảnh sản phẩm: **host ngoài → placeholder cục bộ**.
+- `npm run build`: **61 modules, đạt**.
+- `check_demo.py --label fev2_full_20261102_lan5`: HTTP, 5 hồ sơ (409, 47, 178, 1476, 0), lỗi input, FastAPI down, mock mode và chỉ gọi Spring đều **đạt**; p50/p95/p99 qua Spring **23,38 / 30,58 / 37,63 ms** trên 1.000 yêu cầu, RAM trống 2,06 → 2,03 GB.
+- Bằng chứng: `results/demo/check_demo_fev2_full_20261102_lan5/summary.json`.
+
+## 02/11/2026 (tiếp): hoàn tất Personalized Storefront và tách component catalog
+
+**Sửa gì**
+- `frontend/src/App.tsx`: thêm chọn hồ sơ User 409/47; khi chọn, catalog gọi `/api/compat` qua Spring cho các item có `item_id` đối chiếu được và gắn nhãn tương thích/không tương thích.
+- Tách thẻ sản phẩm và bộ chọn hồ sơ sang `frontend/src/components/catalog/`.
+
+**Vì sao**
+- Hoàn thiện Task 4 của kế hoạch: người xem có thể thấy trực tiếp ràng buộc tương thích trong catalog thay vì chỉ ở trang tra cứu riêng.
+- Giảm JSX catalog trong `App.tsx`, tách phần hiển thị thành component có thể kiểm thử độc lập.
+
+**Kiểm chứng**
+- `npm run build`: đạt, 63 modules.
+- `check_demo.py --label fev2_full_20261102_lan6`: đạt toàn bộ HTTP/E2E/mock/down/only-Spring; 5 hồ sơ không lệch dữ liệu; p50/p95/p99 qua Spring **23,19 / 29,26 / 39,22 ms** trên 1.000 yêu cầu, RAM trống 2,62→2,66 GB.
+- Bằng chứng: `results/demo/check_demo_fev2_full_20261102_lan6/summary.json`.
+
+## 02/11/2026 (tiếp): hoàn tất tách cấu trúc catalog
+
+**Sửa gì**
+- Tách đầy đủ các khối catalog theo kế hoạch: `CatalogFilterSidebar.tsx`, `CatalogProductGrid.tsx`, `CatalogProductCard.tsx`, `CatalogDetailModal.tsx` và `CatalogProfileSelector.tsx`.
+- `App.tsx` chỉ còn điều phối trạng thái, lọc dữ liệu và luồng trang; hành vi hiển thị catalog được giữ nguyên.
+
+**Kiểm chứng**
+- `npm run build`: đạt, **66 modules**, không lỗi.
+- `check_demo.py --label fev2_full_20261102_lan7`: đạt toàn bộ HTTP/E2E/mock/down/only-Spring; p50/p95/p99 qua Spring **22,57 / 29,61 / 34,94 ms** trên 1.000 yêu cầu.
+- Bằng chứng: `results/demo/check_demo_fev2_full_20261102_lan7/summary.json`.
+
+## 02/11/2026 (tiếp): nghiệm thu nghiêm ngặt FE v2
+
+**Kiểm thử**
+- `frontend`: `npm run build` đạt, 66 modules.
+- `backend`: `mvn test` đạt **37/37**, 0 lỗi.
+- `check_demo.py --label fev2_strict_20261102_lan2 --n-latency 2000 --warmup 100`: tất cả cờ HTTP, 5 hồ sơ, input lỗi, mock, FastAPI down, chỉ gọi Spring và console đều `true`.
+- Độ trễ qua Spring trên 2.000 yêu cầu: p50/p95/p99 **18,28 / 22,44 / 25,67 ms**; FastAPI trực tiếp **16,54 / 18,85 / 19,89 ms**. RAM trống 3,66→3,77 GB.
+- Bằng chứng: `results/demo/check_demo_fev2_strict_20261102_lan2/summary.json`.
+
+**Sửa harness**
+- `ai/service/check_demo.py` nay truyền `--cors.allowed-origins` theo `--vite-port`, đồng bộ với `run_demo.ps1`; vì vậy kiểm thử được cả port tùy ý thay vì phụ thuộc cổng mặc định 5173.
+- Xác nhận lại bằng `fev2_strict_20261102_lan3` trên port 5181/5182: mọi cờ vẫn `true`; Spring p50/p95/p99 **19,54 / 24,84 / 30,99 ms**.
+
 # Nhật ký thay đổi so với bản của Hải
 
 Bản gốc để so sánh: commit `62abf54` (Hải, 28/09/2026).
