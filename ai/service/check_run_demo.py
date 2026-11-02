@@ -26,6 +26,7 @@ browser_http_errors_{api,mock}_<giờ>.log, http_errors_{api,mock}.json, run_dem
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -41,7 +42,10 @@ CB, C, E = CD.CB, CD.C, CD.E
 RUN_DEMO = C.ROOT / "run_demo.ps1"
 PORTS = {"FastAPI": 8001, "Spring Boot": 8080, "Vite": 5173}   # mặc định của run_demo.ps1
 MOCK_PORT = 5174
-READY_MARK = "Demo đang chạy"
+# PowerShell 5.1 in ra ống (pipe) theo bảng mã OEM của Windows, chữ tiếng Việt có dấu thành "?" (lần chạy
+# 20261102_lan1 không nhận ra dòng "Demo đang chạy" vì vậy). Chỉ khớp phần không dấu của các dòng run_demo.ps1 in.
+READY_RE = re.compile(r"^Demo .*http://127\.0\.0\.1:5173")
+SERVICE_RE = re.compile(r"^\s*(FastAPI|Spring Boot|Vite) .* (\d+[.,]\d+) s$")
 
 
 def listeners(port):
@@ -128,7 +132,7 @@ def main():
             out_f.write(f"[{dt:7.1f}s] {s}\n")
             out_f.flush()
             log(f"  run_demo [{dt:6.1f}s] {s}")
-            if READY_MARK in s:
+            if READY_RE.search(s):
                 ready.set()
         out_f.close()
 
@@ -139,7 +143,7 @@ def main():
     res["ready"] = ready.is_set()
     res["ready_after_s"] = round(time.perf_counter() - t0, 1) if ready.is_set() else None
     if not ready.is_set():
-        log(f"KHÔNG thấy '{READY_MARK}' (PowerShell {'đã thoát, mã ' + str(ps.returncode) if ps.poll() is not None else 'vẫn chạy'})")
+        log(f"KHÔNG thấy dòng 'Demo ... http://127.0.0.1:5173' (PowerShell {'đã thoát, mã ' + str(ps.returncode) if ps.poll() is not None else 'vẫn chạy'})")
         if ps.poll() is None:
             CD.kill(ps)
         th.join(10)
@@ -147,7 +151,8 @@ def main():
         (run_dir / "summary.json").write_text(json.dumps(res, ensure_ascii=False, indent=2), encoding="utf-8")
         sys.exit(1)
     log(f"run_demo.ps1 báo sẵn sàng sau {res['ready_after_s']} s kể từ lúc gõ lệnh (gồm cả bước kiểm máy, sha256)")
-    res["service_ready_lines"] = [s.strip() for _, s in lines if "sẵn sàng sau" in s]
+    res["service_ready_s"] = {m[1]: float(m[2].replace(",", ".")) for m in (SERVICE_RE.search(s) for _, s in lines) if m}
+    log(f"thời gian sẵn sàng run_demo.ps1 tự đo cho từng dịch vụ (s): {res['service_ready_s']}")
 
     # -- 3. Trong lúc chạy ---------------------------------------------------------------------------------------
     tree = [i for i in (proc_info(p) for p in psutil.Process(ps.pid).children(recursive=True)) if i]
