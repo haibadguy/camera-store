@@ -1,0 +1,14 @@
+[    0.5s] Ki?m m�y...
+[    1.2s]   Python 3.12, Java 24, embeddings.npz d�ng sha256 (fbda48a1f84c...)
+[    1.3s]   4 file ai/data/processed d�ng sha256
+[    3.8s]   d�ng jar c� s?n (2026-10-28 06:54); d?i code backend th� ch?y l?i v?i -Build
+[    3.8s] B?t FastAPI seed 1 (http://127.0.0.1:8001, ~15 s)...
+[   20.1s]   FastAPI s?n s�ng sau 16.3 s
+[   20.2s] B?t Spring Boot (http://127.0.0.1:8080, heap t?i da 512m)...
+[   25.4s]   Spring Boot s?n s�ng sau 5.3 s
+[   25.4s] B?t React / Vite (http://127.0.0.1:5173, ch? d? api)...
+[   26.6s]   Vite s?n s�ng sau 1.1 s
+[   26.6s] 
+[   26.6s] Demo dang ch?y: http://127.0.0.1:5173  (b?m 'Tu v?n thi?t b?')
+[   26.6s]   React -> Spring http://127.0.0.1:8080/api -> FastAPI http://127.0.0.1:8001
+[   26.6s]   B?m th? m?t lu?t tru?c khi tr�nh b�y (lu?t d?u n?p ch?m hon). Log: E:\DATN\camera-store\results\demo\run_demo_logs\20261102_184449

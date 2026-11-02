@@ -1,0 +1,8 @@
+E:\DATN\camera-store\ai\.venv\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+INFO:     Started server process [15224]
+INFO:     Waiting for application startup.
+INFO:       kiểm luật tương thích: 107,452 cặp của compat_pairs.csv trùng Rules.level; M = 1 72,720, không biết 5,846 (trùng CvrContext)
+INFO:     RecommenderCore: LightGCN + mặt nạ QĐ 4-9 seed 1 | best.pt d857e24c3d7f… | embeddings fbda48a1f84c… | thiết bị cpu | 67,661 người, 27,940 sản phẩm | người có thân: train 10,406, cả lịch sử 12,472 | nạp 3.5s
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)

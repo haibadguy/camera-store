@@ -1,0 +1,9 @@
+count_mask_new_users | emb results/service/emb_s1_20261021 | git {'commit': 'cd2f6534858f7bb288fea5c332afc9f4061d9c40', 'dirty': False} | script sha256 b5ffbf679b19baf89bfc3e9246f7dc37d5ea50c98a8b373d93e908dfbb18c11a
+  kiểm luật tương thích: 107,452 cặp của compat_pairs.csv trùng Rules.level; M = 1 72,720, không biết 5,846 (trùng CvrContext)
+RecommenderCore: LightGCN + mặt nạ QĐ 4-9 seed 1 | best.pt d857e24c3d7f… | embeddings fbda48a1f84c… | thiết bị cpu | 67,661 người, 27,940 sản phẩm | người có thân: train 10,406, cả lịch sử 12,472 | nạp 3.3s
+người có thân: train 10,406, cả lịch sử 12,472 (thêm 2,066)
+trước 0 ống (chỉ thân train), nay > 0 (thân cả lịch sử): 2,062 người
+  trong đó KHÔNG có thân nào trong train: 2,062
+  trong đó CÓ thân trong train: 0
+số ống bị chặn giảm (nh < nt): 344 người
+có thân mới (không có thân train, có thân ở val / test) mà vẫn bị chặn 0 ống: 4 người [18688, 26774, 31942, 39129]

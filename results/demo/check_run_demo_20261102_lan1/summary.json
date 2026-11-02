@@ -1,0 +1,14 @@
+{
+  "git": {
+    "commit": "c883c83f2cc839087ad4f7d65d8b5bc7b117cf82",
+    "dirty": false
+  },
+  "run_demo_sha256": "13cc8a97ad728c924babebaa32e9584b2bf53478cf0d165aa421ccd79a3eee49",
+  "script_sha256": "4ded79ffdfd1f5f5ea7d27adda16a52f1a15468e41cf3ecd854fbfa4927561ca",
+  "find_http_errors_sha256": "37e0f4250a38b9759d7221f525d2c6b42f8df214e79af96a6bbbddcefe663fa4",
+  "jar_sha256": "f5c4b54951ce3964a423961354dae6130efd4914354bc085b6c3f66d18eab341",
+  "ram_free_gb_start": 5.18,
+  "ready": false,
+  "ready_after_s": null,
+  "ok": false
+}
