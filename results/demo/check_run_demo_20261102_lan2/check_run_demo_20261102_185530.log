@@ -1,0 +1,66 @@
+check_run_demo | git {'commit': 'be6bd8ce0993c51c6b812535e0c506ca615d127b', 'dirty': False} | run_demo.ps1 sha256 13cc8a97ad728c924babebaa32e9584b2bf53478cf0d165aa421ccd79a3eee49 | script sha256 54cd301977707d841a19b5d01bf8fe912ff9182b3865c1dd35cbee23342be3c9 | find_http_errors.mjs sha256 37e0f4250a38b9759d7221f525d2c6b42f8df214e79af96a6bbbddcefe663fa4 | jar sha256 f5c4b54951ce3964a423961354dae6130efd4914354bc085b6c3f66d18eab341 | RAM trống 5.36 GB
+trước khi chạy, cổng 8001 (FastAPI): trống
+trước khi chạy, cổng 8080 (Spring Boot): trống
+trước khi chạy, cổng 5173 (Vite): trống
+lệnh: powershell.exe -NoProfile -ExecutionPolicy Bypass -File E:\DATN\camera-store\run_demo.ps1 (cwd E:\DATN\camera-store)
+  run_demo [   0.5s] Ki?m m�y...
+  run_demo [   1.0s]   Python 3.12, Java 24, embeddings.npz d�ng sha256 (fbda48a1f84c...)
+  run_demo [   1.1s]   4 file ai/data/processed d�ng sha256
+  run_demo [   2.1s]   d�ng jar c� s?n (2026-10-28 06:54); d?i code backend th� ch?y l?i v?i -Build
+  run_demo [   2.1s] B?t FastAPI seed 1 (http://127.0.0.1:8001, ~15 s)...
+  run_demo [  19.9s]   FastAPI s?n s�ng sau 17.7 s
+  run_demo [  19.9s] B?t Spring Boot (http://127.0.0.1:8080, heap t?i da 512m)...
+  run_demo [  25.3s]   Spring Boot s?n s�ng sau 5.4 s
+  run_demo [  25.3s] B?t React / Vite (http://127.0.0.1:5173, ch? d? api)...
+  run_demo [  25.9s]   Vite s?n s�ng sau 0.6 s
+  run_demo [  25.9s] 
+  run_demo [  25.9s] Demo dang ch?y: http://127.0.0.1:5173  (b?m 'Tu v?n thi?t b?')
+  run_demo [  25.9s]   React -> Spring http://127.0.0.1:8080/api -> FastAPI http://127.0.0.1:8001
+  run_demo [  25.9s]   B?m th? m?t lu?t tru?c khi tr�nh b�y (lu?t d?u n?p ch?m hon). Log: E:\DATN\camera-store\results\demo\run_demo_logs\20261102_185531
+run_demo.ps1 báo sẵn sàng sau 26.0 s kể từ lúc gõ lệnh (gồm cả bước kiểm máy, sha256)
+thời gian sẵn sàng run_demo.ps1 tự đo cho từng dịch vụ (s): {'FastAPI': 17.7, 'Spring Boot': 5.4, 'Vite': 0.6}
+cây tiến trình con của PowerShell (pid 12972): 6 tiến trình
+  pid 17616 python.exe RSS 4.1 MiB
+  pid 18128 java.exe RSS 9.5 MiB
+  pid 18780 node.exe RSS 83.9 MiB
+  pid 18452 esbuild.exe RSS 15.7 MiB
+  pid 9788 java.exe RSS 171.9 MiB
+  pid 15224 python.exe RSS 1000.7 MiB
+cổng 8001 (FastAPI) đang nghe: [{'pid': 15224, 'name': 'python.exe'}]
+cổng 8080 (Spring Boot) đang nghe: [{'pid': 9788, 'name': 'java.exe'}]
+cổng 5173 (Vite) đang nghe: [{'pid': 18780, 'name': 'node.exe'}]
+GET /api/health qua Spring: HTTP 200 | status ok, model LightGCN + mặt nạ QĐ 4-9, seed 1, n_users 67661, n_items 27940, contract 1.3, nạp dữ liệu (startup_s) 3.48 s
+GET /api/recommend?user_id=409&k=10 qua Spring: HTTP 200 | 10 mục | ống bị chặn 814 | X-Process-Time-Ms None
+GET /api/users/409/bodies qua Spring: HTTP 200 | 1 thân
+GET trang chủ Vite: HTTP 200, 368 byte
+trình duyệt (api): node E:\DATN\camera-store\tools\demo_e2e\find_http_errors.mjs --web http://127.0.0.1:5173 --out E:\DATN\camera-store\results\demo\check_run_demo_20261102_lan2\http_errors_api.json
+  | trình duyệt: msedge 156.0.4314.58; các bước: mở trang chủ -> bấm Tư vấn thiết bị -> chọn nhanh người 409; danh sách hiện: true
+  | phản hồi HTTP >= 400 (0):
+  | yêu cầu hỏng (1): [{"step":"mở trang chủ","url":"https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=800&q=80","error":"net::ERR_BLOCKED_BY_ORB"}]
+  | lỗi console (1):
+  |   [mở trang chủ] Failed to load resource: the server responded with a status of 404 (Not Found) | http://127.0.0.1:5173/favicon.ico
+gửi Enter vào run_demo.ps1 (tắt cả ba)
+  run_demo [  31.6s] 
+  run_demo [  31.6s] T?t c�c ti?n tr�nh...
+PowerShell thoát, mã 0, sau 1.2 s kể từ khi gửi Enter
+sau khi tắt, cổng 8001 (FastAPI): trống
+sau khi tắt, cổng 8080 (Spring Boot): trống
+sau khi tắt, cổng 5173 (Vite): trống
+tiến trình con còn sống sau khi tắt: không có
+bật Vite: node v24.11.0 | VITE_RECOMMENDATION_SOURCE=mock VITE_API_URL=http://127.0.0.1:8080/api | E:\DATN\camera-store\frontend\node_modules\vite\bin\vite.js --host 127.0.0.1 --port 5174 --strictPort
+Vite sẵn sàng sau 0.8s: http://127.0.0.1:5174
+trình duyệt (mock): node E:\DATN\camera-store\tools\demo_e2e\find_http_errors.mjs --web http://127.0.0.1:5174 --out E:\DATN\camera-store\results\demo\check_run_demo_20261102_lan2\http_errors_mock.json
+  | trình duyệt: msedge 156.0.4314.58; các bước: mở trang chủ -> bấm Tư vấn thiết bị -> chọn nhanh người 409; danh sách hiện: true
+  | phản hồi HTTP >= 400 (0):
+  | yêu cầu hỏng (1): [{"step":"mở trang chủ","url":"https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=800&q=80","error":"net::ERR_BLOCKED_BY_ORB"}]
+  | lỗi console (1):
+  |   [mở trang chủ] Failed to load resource: the server responded with a status of 404 (Not Found) | http://127.0.0.1:5174/favicon.ico
+đã chép log của run_demo.ps1: ['20261102_185531']
+  ĐẠT: health_200
+  ĐẠT: recommend_409_200_10_items
+  ĐẠT: bodies_409_200
+  ĐẠT: vite_200
+  ĐẠT: browser_list_shown_api
+  ĐẠT: clean_shutdown
+  ĐẠT: browser_list_shown_mock
+KẾT QUẢ: 7/7 mục đạt | RAM trống lúc kết thúc 5.41 GB

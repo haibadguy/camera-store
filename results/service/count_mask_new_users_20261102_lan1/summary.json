@@ -1,0 +1,36 @@
+{
+  "git": {
+    "commit": "cd2f6534858f7bb288fea5c332afc9f4061d9c40",
+    "dirty": false
+  },
+  "n_new": 2062,
+  "n_new_without_train_bodies": 2062,
+  "new_with_train_bodies": [],
+  "n_less": 344,
+  "has_bodies_new_zero": [
+    {
+      "u": 18688,
+      "history_bodies": [
+        17255
+      ]
+    },
+    {
+      "u": 26774,
+      "history_bodies": [
+        21050
+      ]
+    },
+    {
+      "u": 31942,
+      "history_bodies": [
+        17375
+      ]
+    },
+    {
+      "u": 39129,
+      "history_bodies": [
+        17375
+      ]
+    }
+  ]
+}
