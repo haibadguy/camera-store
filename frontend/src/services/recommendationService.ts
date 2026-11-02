@@ -2,6 +2,7 @@ import mockRecommend409 from "../mock/recommend_409.json";
 import mockRecommend47 from "../mock/recommend_47.json";
 import mockBodies409 from "../mock/users_409_bodies.json";
 import mockBodies47 from "../mock/users_47_bodies.json";
+import mockCompatPairs from "../mock/compat_pairs.json";
 
 export type RecommendationProductDetail = {
   item_id: number;
@@ -72,6 +73,46 @@ export type RecommendationResponse = {
     blocked_in_topk_before_mask: BlockedRecommendationItem[];
   };
 };
+
+// --- Types cho /compat (hợp đồng mục 6.2) ---
+
+export type CompatItemBrief = {
+  item_id: number;
+  asin: string;
+  title: string;
+  type: string;
+  type_label: string;
+};
+
+// 5 mức tương thích theo hợp đồng 6.2
+export type CompatLevel =
+  | "compatible_with"
+  | "crops_sensor"
+  | "requires_adapter"
+  | "incompatible"
+  | "unknown";
+
+export type CompatResponse = {
+  body: CompatItemBrief;
+  lens: CompatItemBrief;
+  body_mount: string;
+  lens_mount: string;
+  body_khung: string;
+  lens_khung: string | null;
+  body_film: boolean;
+  lens_uncertain: boolean;
+  level: CompatLevel | null;
+  level_label: string | null;
+  rule_id: string | null;
+  rule_note: string | null;
+  crop_unknown: boolean | null;
+  in_matrix: boolean;
+  m: number | null;
+  reason?: string | null;
+  qd49_if_only_this_body: "chan" | "khong_chan" | "khong_cham_duoc";
+};
+
+// ---
 
 type ApiEnvelope<T> = {
   data?: T;
@@ -256,5 +297,41 @@ export async function fetchProductDetail(
       throw new Error("Backend trả về thông tin sản phẩm không hợp lệ.");
     }
     return product as RecommendationProductDetail;
+  }, signal);
+}
+
+// Tra cứu mức tương thích thân máy – ống kính (hợp đồng mục 6.2, /api/compat?body_id=&lens_id=).
+// Chế độ mock: tìm trong compat_pairs.json theo body_id + lens_id.
+// Chế độ api: gọi Spring Boot /api/compat.
+function getMockCompat(bodyId: number, lensId: number): CompatResponse | null {
+  const pair = mockCompatPairs.find(
+    (p) => p.body_id === bodyId && p.lens_id === lensId,
+  );
+  if (!pair) return null;
+  return pair as unknown as CompatResponse;
+}
+
+export async function fetchCompatibility(
+  bodyId: number,
+  lensId: number,
+  signal?: AbortSignal,
+): Promise<CompatResponse> {
+  if (IS_MOCK_SOURCE) {
+    const result = getMockCompat(bodyId, lensId);
+    if (!result) {
+      throw new Error(
+        `Dữ liệu mẫu chưa có cặp thân ${bodyId} – ống ${lensId}. Bật chế độ API để tra cứu mọi cặp.`,
+      );
+    }
+    return Promise.resolve(result);
+  }
+  return withTimeout(async (timeoutSignal) => {
+    const params = new URLSearchParams({ body_id: String(bodyId), lens_id: String(lensId) });
+    const payload = await getJson(`/compat?${params}`, timeoutSignal);
+    const compat = payload as Partial<CompatResponse> | null;
+    if (!compat || typeof compat.body_mount !== "string") {
+      throw new Error("Backend trả về dữ liệu tương thích không hợp lệ.");
+    }
+    return compat as CompatResponse;
   }, signal);
 }

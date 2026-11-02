@@ -6,6 +6,22 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 02/11/2026: đồng bộ `user_map.json` để chạy demo FE v2
+
+**Sửa gì**
+- `ai/data/processed/user_map.json` (file runtime không nằm trong git): giữ lại 67.661 mục đầu, có ID liên tục `0..67.660`, phù hợp với embedding seed 1 và các file `train.txt`, `val.txt`, `test.txt`.
+- Sao lưu bản map 70.424 mục trước khi sửa tại thư mục trạng thái phiên làm việc, không ghi đè dữ liệu sao lưu.
+
+**Vì sao**
+- `run_demo.ps1` dừng ở `ai/service/core.py:102`: embedding có `eU.shape[0] = 67.661`, trong khi `common_05.py` đọc `N_USERS = 70.424` từ `user_map.json`.
+- `train.txt`, `val.txt`, `test.txt` đều có 67.661 dòng và chỉ dùng user ID `0..67.660`; metadata embedding cũng ghi `n_users = 67.661`.
+
+**Ảnh hưởng thế nào**
+- Số user runtime: **70.424 → 67.661**.
+- Trước sửa: FastAPI không khởi động, smoke test thất bại tại assertion kích thước embedding.
+- Sau sửa: `run_demo.ps1` khởi động thành công FastAPI sau 11,7 s, Spring Boot sau 5,2 s và Vite sau 0,6 s; log: `results/demo/run_demo_logs/20261102_174556/`.
+- Đã kiểm chứng SHA-256 embedding và 4 file `ai/data/processed` theo script; các kiểm thử E2E đầy đủ chưa chạy trong phiên này.
+
 ## 28/10/2026 (phiên sau): sửa phần web theo phản biện `E:\DATN\reviews\redteam_code_lan1.md`. Nhánh `nam/fe-integration`, commit `d7d22a8`
 
 Nam chốt 8 điểm. Sửa trên **code frontend của Hải** (`RecommendationDemo.tsx`, `recommendationService.ts`) và backend

@@ -1,0 +1,64 @@
+[
+  {
+    "body_id": 9022,
+    "lens_id": 13448,
+    "body": { "item_id": 9022, "asin": "B00CIRLDC2", "title": "Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zoom Lens (Discontinued by Manufacturer)", "type": "than", "type_label": "thân máy" },
+    "lens": { "item_id": 13448, "asin": "B00WUI9ITO", "title": "Canon EF 24-70mm f/4.0L is USM Standard Zoom Lens - 6313B002", "type": "ong", "type_label": "ống kính" },
+    "body_mount": "nikon_f", "lens_mount": "canon_ef", "body_khung": "apsc", "lens_khung": "ff",
+    "body_film": false, "lens_uncertain": false,
+    "level": "incompatible", "level_label": "không lắp được (M = 0)",
+    "rule_id": null, "rule_note": "không luật nào khớp → mức mặc định 'incompatible' (khác ngàm, không có ngàm chuyển chính hãng trong bảng luật)",
+    "crop_unknown": false, "in_matrix": true, "m": 0, "reason": null,
+    "qd49_if_only_this_body": "chan"
+  },
+  {
+    "body_id": 9022,
+    "lens_id": 15485,
+    "body": { "item_id": 9022, "asin": "B00CIRLDC2", "title": "Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zoom Lens (Discontinued by Manufacturer)", "type": "than", "type_label": "thân máy" },
+    "lens": { "item_id": 15485, "asin": "B01DZP4UAM", "title": "Nikon 55-200mm f/4-5.6G ED IF AF-S DX VR [Vibration Reduction] Nikkor Zoom Lens Bulk packaging (White box, New)", "type": "ong", "type_label": "ống kính" },
+    "body_mount": "nikon_f", "lens_mount": "nikon_f", "body_khung": "apsc", "lens_khung": "apsc",
+    "body_film": false, "lens_uncertain": false,
+    "level": "compatible_with", "level_label": "lắp trực tiếp, dùng đủ khung hình (M = 1)",
+    "rule_id": "same_mount_apsc_apsc", "rule_note": "Thân APS-C, ống APS-C cùng ngàm: M = 1.",
+    "crop_unknown": false, "in_matrix": true, "m": 1, "reason": null,
+    "qd49_if_only_this_body": "khong_chan"
+  },
+  {
+    "body_id": 9022,
+    "lens_id": 118,
+    "body": { "item_id": 9022, "asin": "B00CIRLDC2", "title": "Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zoom Lens (Discontinued by Manufacturer)", "type": "than", "type_label": "thân máy" },
+    "lens": { "item_id": 118, "asin": "B00005NI79", "title": "Sigma 14mm f/2.8 EX HSM RF Aspherical Ultra Wide Angle Lens for Nikon SLR Cameras", "type": "ong", "type_label": "ống kính" },
+    "body_mount": "nikon_f", "lens_mount": "nikon_f", "body_khung": "apsc", "lens_khung": "khong_ro",
+    "body_film": false, "lens_uncertain": true,
+    "level": "compatible_with", "level_label": "lắp trực tiếp, dùng đủ khung hình (M = 1)",
+    "rule_id": "same_mount_body_apsc_lens_unknown_khung", "rule_note": "Thân APS-C: ống cùng ngàm, dù FF hay APS-C, đều phủ hết cảm biến.",
+    "crop_unknown": false, "in_matrix": false, "m": null, "reason": "ống 'không chắc' ngàm (QĐ 4): có mức theo luật nhưng không có trong M, mặt nạ không chặn",
+    "qd49_if_only_this_body": "khong_cham_duoc"
+  },
+  {
+    "body_id": 19071,
+    "lens_id": 9696,
+    "body": { "item_id": 19071, "asin": "B077PSDB4X", "title": "Sony Alpha a6000 Mirrorless Digital Camera with 16-50 mm Lens 24.3MP (Silver)", "type": "than", "type_label": "thân máy" },
+    "lens": { "item_id": 9696, "asin": "B00ET0669Q", "title": "Sony 50mm f/1.8 Mid-Range Lens for Sony E Mount Nex Cameras", "type": "ong", "type_label": "ống kính" },
+    "body_mount": "sony_e", "lens_mount": "sony_e", "body_khung": "apsc", "lens_khung": "khong_ro",
+    "body_film": false, "lens_uncertain": false,
+    "level": "compatible_with", "level_label": "lắp trực tiếp, dùng đủ khung hình (M = 1)",
+    "rule_id": "same_mount_body_apsc_lens_unknown_khung", "rule_note": "Thân APS-C: ống cùng ngàm, dù FF hay APS-C, đều phủ hết cảm biến.",
+    "crop_unknown": false, "in_matrix": true, "m": 1, "reason": null,
+    "qd49_if_only_this_body": "khong_chan"
+  },
+  {
+    "body_id": 9022,
+    "lens_id": 105,
+    "body": { "item_id": 9022, "asin": "B00CIRLDC2", "title": "Nikon D3100 DSLR Camera with 18-55mm f/3.5-5.6 Auto Focus-S Nikkor Zoom Lens (Discontinued by Manufacturer)", "type": "than", "type_label": "thân máy" },
+    "lens": { "item_id": 105, "asin": "B00005LENU", "title": "Nikon 28-105mm f/3.5-4.5D Autofocus Zoom Nikkor Lens (Discontinued by Manufacturer)", "type": "ong", "type_label": "ống kính" },
+    "body_mount": "nikon_f", "lens_mount": "khong_ro", "body_khung": "apsc", "lens_khung": null,
+    "body_film": false, "lens_uncertain": false,
+    "level": null, "level_label": null,
+    "rule_id": null, "rule_note": null,
+    "crop_unknown": null, "in_matrix": false, "m": null,
+    "reason": "thân hoặc ống không xác định được đúng một ngàm: không có trong ma trận M, không xếp mức",
+    "qd49_if_only_this_body": "khong_cham_duoc"
+  }
+]
+
