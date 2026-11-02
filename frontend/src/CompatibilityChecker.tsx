@@ -467,9 +467,9 @@ export default function CompatibilityChecker({ onExit }: Props) {
         >
           <strong>Ghi chú kỹ thuật (Nội dung 3 & 4)</strong>
           <p>
-            Ma trận M gồm <strong>72.720 cặp M = 1</strong> (lắp trực tiếp) và <strong>5.846 cặp "không biết"</strong>,
-            dựng từ 22 quy tắc ngàm chính hãng + Lensfun + Wikidata (độ chính xác loại sản phẩm 99,1%,
-            ngàm 97,2%, đo lần 3 trên tập holdout H733).
+            Ma trận M gồm <strong>72.720 cặp M = 1</strong> (lắp trực tiếp) và <strong>5.846 cặp "không biết"</strong>.
+            Các số liệu phân loại được đo trong lần đo 3 trên holdout H733; chi tiết nguồn, script và giới hạn xem
+            <code>docs/STATUS.md</code> và <code>docs/api_contract.md</code>.
           </p>
           <p>
             <strong>Mặt nạ QĐ 4-9:</strong> chặn ống mà <em>mọi</em> thân của người dùng đều M = 0
@@ -481,4 +481,3 @@ export default function CompatibilityChecker({ onExit }: Props) {
     </div>
   );
 }
-

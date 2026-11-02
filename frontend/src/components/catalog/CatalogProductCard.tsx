@@ -41,7 +41,7 @@ export default function CatalogProductCard({ product, compatibility, onDetail, o
       <div className="product-image-container" onClick={() => onDetail(product)}>
         <img src={product.image} alt={product.name} />
         {product.badge && <span className="status-badge">{product.badge}</span>}
-        {product.aiMatchScore && <span className="ai-score-badge">Điểm minh họa {product.aiMatchScore}%</span>}
+        {product.aiMatchScore && <span className="ai-score-badge">Điểm minh họa · không phải score model</span>}
         {compatibility === "compatible" && <span className="compatibility-badge compatible">Tương thích với hồ sơ</span>}
         {compatibility === "incompatible" && <span className="compatibility-badge incompatible">Không tương thích với hồ sơ</span>}
       </div>
@@ -71,7 +71,7 @@ export default function CatalogProductCard({ product, compatibility, onDetail, o
             <span className="main-price">{formatVND(product.price)}</span>
             {product.originalPrice && <span className="old-price">{formatVND(product.originalPrice)}</span>}
           </div>
-          <div className="stock-indicator"><span className="status-dot"></span> Còn hàng</div>
+          <div className="stock-indicator">Thông tin thương mại minh họa</div>
         </div>
         <div className="card-buttons-row">
           <button className="add-cart-btn" onClick={onAddToCart}>Thêm vào giỏ</button>

@@ -279,10 +279,40 @@ async function checkVerifiedFalse() {
   return ok;
 }
 
+async function checkCatalogSurface() {
+  await page.goto(web);
+  const row = { mismatches: [] };
+  const cardCount = await page.locator(".product-card").count();
+  if (cardCount !== 28) row.mismatches.push(`catalog có ${cardCount} thẻ, cần đúng 28`);
+
+  for (const profile of ["409", "47"]) {
+    await page.locator("#catalog-profile").selectOption(profile);
+    try {
+      await page.locator(".compatibility-badge").first().waitFor({ timeout: 10000 });
+    } catch {
+      row.mismatches.push(`không hiện badge compatibility sau khi chọn User ${profile}`);
+    }
+    if (await page.locator("#catalog-profile").inputValue() !== profile) {
+      row.mismatches.push(`selector profile không giữ User ${profile}`);
+    }
+  }
+
+  await page.getByRole("button", { name: "Bắt đầu tư vấn ngay" }).click();
+  if (await page.getByRole("heading", { name: "Lọc thiết bị theo nhu cầu" }).count() !== 1) {
+    row.mismatches.push("wizard catalog không mở đúng tiêu đề");
+  }
+  await page.locator(".dialog-overlay").first().click({ position: { x: 2, y: 2 } });
+  res.catalog = { card_count: cardCount, profiles: ["409", "47"], mismatches: row.mismatches };
+  log(`catalog: ${cardCount} thẻ, profiles 409/47 compatibility và wizard: ${row.mismatches.length ? "LỆCH " + JSON.stringify(row.mismatches) : "ĐẠT"}`);
+  await shot("catalog_surface");
+  return row.mismatches.length === 0;
+}
+
 try {
   if (phase === "up") {
     await page.goto(web);
     await shot("trang_chu");
+    res.checks.catalog_surface = await checkCatalogSurface();
     for (const u of USERS) res.checks[`user_${u.id}`] = await checkUser(u);
 
     log(`người không tồn tại: nhập ${UNKNOWN_USER} vào ô mã người dùng`);

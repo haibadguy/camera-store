@@ -333,7 +333,73 @@ function getMockCompat(bodyId: number, lensId: number): CompatResponse | null {
     (p) => p.body_id === bodyId && p.lens_id === lensId,
   );
   if (!pair) return null;
-  return pair as unknown as CompatResponse;
+  const level = pair.level;
+  const levelLabel = pair.level_label;
+  const ruleId = pair.rule_id;
+  const ruleNote = pair.rule_note;
+  const cropUnknown = pair.crop_unknown;
+  const matrixValue = pair.m;
+  const reason = pair.reason;
+  const decision = pair.qd49_if_only_this_body;
+  if (!isCompatItemBrief(pair.body) || !isCompatItemBrief(pair.lens)
+    || typeof pair.body_mount !== "string"
+    || typeof pair.lens_mount !== "string"
+    || typeof pair.body_khung !== "string"
+    || (pair.lens_khung !== null && typeof pair.lens_khung !== "string")
+    || typeof pair.body_film !== "boolean"
+    || typeof pair.lens_uncertain !== "boolean"
+    || (level !== null && !isCompatLevel(level))
+    || (levelLabel !== null && typeof levelLabel !== "string")
+    || (ruleId !== null && typeof ruleId !== "string")
+    || (ruleNote !== null && typeof ruleNote !== "string")
+    || (cropUnknown !== null && typeof cropUnknown !== "boolean")
+    || typeof pair.in_matrix !== "boolean"
+    || (matrixValue !== null && typeof matrixValue !== "number")
+    || (reason !== null && reason !== undefined && typeof reason !== "string")
+    || !isCompatDecision(decision)) {
+    throw new Error("Dữ liệu compatibility mẫu không đúng hợp đồng.");
+  }
+  return {
+    body: pair.body,
+    lens: pair.lens,
+    body_mount: pair.body_mount,
+    lens_mount: pair.lens_mount,
+    body_khung: pair.body_khung,
+    lens_khung: pair.lens_khung,
+    body_film: pair.body_film,
+    lens_uncertain: pair.lens_uncertain,
+    level,
+    level_label: levelLabel,
+    rule_id: ruleId,
+    rule_note: ruleNote,
+    crop_unknown: cropUnknown,
+    in_matrix: pair.in_matrix,
+    m: matrixValue,
+    reason,
+    qd49_if_only_this_body: decision,
+  };
+}
+
+function isCompatItemBrief(value: unknown): value is CompatItemBrief {
+  if (!value || typeof value !== "object") return false;
+  const item = value as Record<string, unknown>;
+  return typeof item.item_id === "number"
+    && typeof item.asin === "string"
+    && typeof item.title === "string"
+    && typeof item.type === "string"
+    && typeof item.type_label === "string";
+}
+
+function isCompatLevel(value: unknown): value is CompatLevel {
+  return value === "compatible_with"
+    || value === "crops_sensor"
+    || value === "requires_adapter"
+    || value === "incompatible"
+    || value === "unknown";
+}
+
+function isCompatDecision(value: unknown): value is CompatResponse["qd49_if_only_this_body"] {
+  return value === "chan" || value === "khong_chan" || value === "khong_cham_duoc";
 }
 
 export async function fetchCompatibility(

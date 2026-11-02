@@ -110,7 +110,13 @@ Nối React → Spring Boot → FastAPI (Contract 1.3, E2E Check Demo 12/12 Đ�
 #### Task 5: Tái cấu trúc Clean Code & Khóa chất lượng E2E [✔ ĐÃ HOÀN THÀNH] [✔ E2E ĐẠT]
 - **Mục tiêu:** Mã nguồn sạch sẽ, dễ bảo trì, vượt qua 100% kiểm thử tự động.
 - **Nội dung:**
-  - Tách phần catalog thành `CatalogFilterSidebar.tsx`, `CatalogProductGrid.tsx`, `CatalogProductCard.tsx`, `CatalogDetailModal.tsx` và `CatalogProfileSelector.tsx`; `App.tsx` giữ orchestration và trạng thái trang.
+  - Tách phần catalog thành `CatalogFilterSidebar.tsx`, `CatalogProductGrid.tsx`, `CatalogProductCard.tsx`, `CatalogDetailModal.tsx` và `CatalogProfileSelector.tsx`; `App.tsx` giữ orchestration và trạng thái trang. Dữ liệu catalog nằm riêng tại `frontend/src/catalog/catalogData.ts`.
   - Kiểm tra `npm run build` không warning/error.
   - Đối chiếu toàn bộ selector và text với `tools/demo_e2e/demo_e2e.mjs` để đảm bảo test tự động không bị gãy.
   - Cập nhật kết quả vào `docs/CHANGELOG.md` và `docs/STATUS.md`.
+
+#### Task 6: Dọn AI slop và khóa phạm vi demo [✔ ĐÃ HOÀN THÀNH]
+- Đổi các nhãn marketing, tồn kho, bảo hành và đổi trả thành thông tin minh họa; phân biệt rõ catalog filter với recommendation model.
+- Thêm citation/giới hạn cho compatibility và smoke test catalog vào `tools/demo_e2e/demo_e2e.mjs`.
+- Thay cast `as any` ở bộ sắp xếp bằng union type và type guard.
+- Kiểm chứng: `npm run build` đạt 67 modules; E2E catalog đạt 28 card, profile 409, compatibility badge và wizard.

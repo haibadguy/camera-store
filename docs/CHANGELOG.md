@@ -1,3 +1,21 @@
+## 02/11/2026 (tiếp): dọn claim AI slop và kiểm thử catalog
+
+**Sửa gì**
+- Đổi badge marketing và trạng thái “Còn hàng” trong catalog thành nhãn minh họa; footer nêu rõ không có thanh toán hoặc tồn kho thật.
+- Đổi wording luồng recommendation để phân biệt với catalog/filter tĩnh; điểm trên card ghi rõ không phải score model.
+- `CompatibilityChecker.tsx` trỏ người xem tới nguồn và giới hạn trong `docs/STATUS.md` và `docs/DATA_SOURCES.md`.
+- `tools/demo_e2e/demo_e2e.mjs` kiểm tra 28 card, profile User 409, compatibility badge và wizard catalog.
+
+**Vì sao**
+- Catalog hiện không có backend thương mại nên các claim giá, tồn kho, bảo hành và đổi trả dễ bị hiểu là dữ liệu thật.
+- Demo cần chứng minh đường đi compatibility qua Spring và không gọi wizard filter là recommendation model.
+
+**Ảnh hưởng thế nào**
+- Claim thương mại: hiển thị như thật → hiển thị minh họa/phạm vi giao diện.
+- E2E catalog: chưa có → **28 card, profile compatibility và wizard đạt**.
+- `npm run build`: **66 modules, đạt**.
+- `check_demo.py --label fev2_ai_slop_20261102_lan1 --n-latency 1000 --warmup 50`: **ĐẠT** toàn bộ cờ; bằng chứng `results/demo/check_demo_fev2_ai_slop_20261102_lan1/summary.json`.
+
 ## 02/11/2026 (phiên sau): hoàn thiện giao diện demo FE v2 và kiểm chứng end-to-end
 
 **Sửa gì**
@@ -1542,3 +1560,46 @@ Mã số người dùng và sản phẩm (`user_map.json`, `item_map.json`) đã
 ### 6. Chưa kiểm chứng
 - 18.286.191 người dùng thô của Electronics: script không đếm. Số này khớp với con số 18,3M ghi trên trang dataset, nhưng nhóm chưa tự đếm.
 - Bảng 2.3 trong báo cáo 2 (1.414 thân máy / 1.462 ống kính) và mục 5 của báo cáo 2.
+## 02/11/2026 (tiếp): hoàn tất dọn AI slop và tách catalog data
+
+**Sửa gì**
+- Tách `PRODUCTS_DATA`, `makeCatalogProduct`, `CATALOG_PRODUCTS` khỏi `App.tsx` sang `frontend/src/catalog/catalogData.ts`.
+- Thay cast `as any` ở sort bằng union type và type guard.
+- Đánh dấu Task 6 trong kế hoạch FE v2 là hoàn tất.
+
+**Vì sao**
+- `App.tsx` vừa điều phối trang vừa chứa toàn bộ dữ liệu catalog, khó đọc và khó kiểm thử.
+- Cast `as any` làm mất kiểm tra kiểu ở input select.
+
+**Ảnh hưởng thế nào**
+- `App.tsx`: 768 → khoảng **550 dòng**; catalog data được quản lý ở module riêng.
+- `as any` trong phần catalog: **1 → 0**.
+- `npm run build`: **67 modules, đạt**.
+- E2E catalog vẫn đạt sau refactor; không đổi hợp đồng React → Spring Boot → FastAPI.
+## 03/11/2026: kiểm chéo sau refactor FE v2
+
+**Kiểm chứng**
+- Đối chiếu plan với code: 28 sản phẩm nằm ở `frontend/src/catalog/catalogData.ts`; `App.tsx` chỉ import và điều phối.
+- Đối chiếu plan với harness: smoke test kiểm đúng 28 card và cả profile 409/47.
+- `npm run build`: **67 modules, đạt**; `git diff --check`: đạt.
+- `check_demo.py --label fev2_crosscheck_20261103_lan1 --n-latency 1000 --warmup 50`: catalog và toàn bộ HTTP/E2E/mock/down/only-Spring **ĐẠT**.
+- Bằng chứng: `results/demo/check_demo_fev2_crosscheck_20261103_lan1/summary.json`.
+## 03/11/2026 (tiếp): xử lý điểm type-safety trong audit
+
+- Thay `as unknown as CompatResponse` ở mock compatibility bằng guard runtime kiểm tra toàn bộ trường theo hợp đồng `/api/compat`.
+- Mục tiêu là không để dữ liệu mẫu sai schema đi qua dưới dạng response hợp lệ.
+- Sẽ xác nhận lại bằng build và strict E2E trước khi chốt audit.
+## 03/11/2026 (tiếp): nghiệm thu chức năng và phi chức năng lần cuối
+
+**Kiểm chức năng**
+- `mvn test`: **37/37**, không failure/error.
+- `check_demo.py --label fev2_full_audit_20261103_lan2 --n-latency 2000 --warmup 100`: **12/12 checks đạt**; gồm 5 user, user không tồn tại, input sai, `verified=false`, mock, FastAPI down, chỉ gọi Spring và console.
+- Catalog smoke: đúng **28 card**, profile **409/47**, compatibility badge và wizard đều đạt.
+
+**Kiểm phi chức năng**
+- `npm run build`: **67 modules**, type-check đạt.
+- `git diff --check`: đạt.
+- Không có gọi trực tiếp FastAPI từ `frontend/src`; không còn `as any`/`as unknown`.
+- Ảnh catalog dùng local placeholder; sản phẩm có `alt`; E2E không phát hiện console error ngoài HTTP lỗi được tạo có chủ đích.
+- Latency 2.000 request sau 100 warm-up: qua Spring p50/p95/p99 **25,74/30,42/35,04 ms**; FastAPI tham khảo **23,80/26,89/30,46 ms**. Đo khi máy bận (RAM trống khoảng 3,31–3,41 GB).
+- Bằng chứng: `results/demo/check_demo_fev2_full_audit_20261103_lan2/summary.json`.
