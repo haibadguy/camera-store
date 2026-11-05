@@ -114,9 +114,12 @@ py -3.12 -m venv ai\.venv
 ai\.venv\Scripts\python.exe -m pip install -r ai/requirements-lock.txt
 ```
 
-**2. Lấy 5 file dữ liệu không có trong git** (Nam gửi; tổng 28,5 MiB). Đặt đúng đường dẫn dưới đây (tính từ thư mục
-`camera-store`). Danh sách đo bằng `ai/service/list_runtime_files.py` (mọi file dịch vụ đọc khi chạy, kết quả
-`results/demo/runtime_files_20261028_lan1/files.json`); các file khác dịch vụ cần đều đã có trong git.
+**2. Lấy 6 file dữ liệu không có trong git**: `demo_data_v2.zip` (Nam gửi; 31,2 MiB khi giải nén, kèm `sha256.txt`).
+Giải nén **vào thư mục `camera-store`** (trong zip đã có đường dẫn `ai/...`, `results/...`). Bản `demo_data.zip`
+cũ (28/10) **thiếu `user_map.json`**: FastAPI thoát ngay lúc nạp (Quyền gặp 05/11/2026). Danh sách đo bằng
+`ai/service/list_runtime_files.py` lần `20261105_lan1` (mọi file dịch vụ mô hình đọc khi chạy, kể cả lúc import; kết
+quả `results/demo/runtime_files_20261105_lan1/files.json`); các file khác dịch vụ cần đều đã có trong git. Spring và
+React không cần file dữ liệu nào ngoài git (`backend/target/*.jar`, `frontend/node_modules/` do `run_demo.ps1` tự dựng).
 
 | File | Kích thước (byte) | sha256 |
 |---|---:|---|
@@ -125,11 +128,13 @@ ai\.venv\Scripts\python.exe -m pip install -r ai/requirements-lock.txt
 | `ai/data/processed/val.txt` | 846.700 | `e8a47d06bd6e6977fe7eebc485cbf07eb75e7e9bdb651da955e8fd7f85a3a900` |
 | `ai/data/processed/test.txt` | 850.792 | `410fc46cea72cdc5115a3e0413036456d1d1d59b8bcb7c63da6edd026e4da8ea` |
 | `ai/data/processed/item_map.json` | 659.453 | `c7ccd84b3fbcc5cf7cab85171fdf187dea8deccf3d36aaceb4877f06cfdaa63c` |
+| `ai/data/processed/user_map.json` | 2.830.719 | `c5525a90c775572aa9837a1a3c9c3aba896f7d63de5f2fc6da1ea4ec596e61e4` |
 
 `embeddings.npz` là vector LightGCN seed 1 tính sẵn từ checkpoint đã chốt (`meta.json` cùng thư mục có trong git và ghi
-sha256 của nó). Kiểm sau khi chép: `Get-FileHash <file> -Algorithm SHA256`; `run_demo.ps1` tự kiểm cả 5 file và dừng
-nếu thiếu hoặc sai. Nếu không có file từ Nam: chạy lại bước 1–2 của "Thứ tự chạy" (cần dữ liệu gốc Amazon) để có
-`ai/data/processed/`, rồi `ai/service/export_embeddings.py --seed 1` (cần `best.pt` của nội dung 5, xem `ai/README.md`).
+sha256 của nó). Kiểm sau khi chép: `Get-FileHash <file> -Algorithm SHA256`; `run_demo.ps1` tự kiểm cả 6 file, liệt kê
+**mọi** file thiếu / sai sha256 rồi dừng. Nếu không có file từ Nam: chạy lại bước 1–2 của "Thứ tự chạy" (cần dữ liệu gốc
+Amazon) để có `ai/data/processed/`, rồi `ai/service/export_embeddings.py --seed 1` (cần `best.pt` của nội dung 5, xem
+`ai/README.md`).
 
 **3. Chạy**
 
@@ -137,12 +142,13 @@ nếu thiếu hoặc sai. Nếu không có file từ Nam: chạy lại bước 1
 powershell -ExecutionPolicy Bypass -File .\run_demo.ps1
 ```
 
-Script kiểm máy (Python 3.12, JDK ≥ 21, sha256 của 5 file, cổng đang bị chiếm hoặc nằm trong khoảng Windows giữ riêng),
+Script kiểm máy (Python 3.12, JDK ≥ 21, sha256 của 6 file, cổng đang bị chiếm hoặc nằm trong khoảng Windows giữ riêng),
 `npm ci` nếu chưa có `frontend/node_modules`, đóng gói Spring **chỉ khi chưa có jar** (hoặc khi thêm `-Build`, cần sau
 khi đổi code backend), rồi bật FastAPI (cổng 8001, ~15–20 s), Spring (8080, heap tối đa 512 MB, chỉ nghe 127.0.0.1),
 Vite (5173, chế độ api). Mở `http://127.0.0.1:5173`, bấm **"Tư vấn thiết bị"**, chọn người 409 / 47 hoặc nhập mã người
 dùng khác (0–67.660, vd 178 nhiều hệ máy, 1476 có thân ngoài bảng tương thích, 0 chưa có thân). Bấm thử một lượt trước
 khi trình bày. Nhấn Enter trong cửa sổ PowerShell để tắt cả ba. Log mỗi lần chạy: `results/demo/run_demo_logs/<ngày_giờ>/`.
+Nếu một dịch vụ thoát lúc bật, script in mã thoát và 15 dòng cuối log lỗi của dịch vụ đó.
 Tùy chọn: `-Build`, `-SpringHeap 768m`, `-FastApiPort` / `-SpringPort` / `-VitePort`.
 
 Kiểm tự động cả chuỗi (trình duyệt Edge có sẵn của Windows, Playwright; lần đầu `npm install` trong `tools/demo_e2e/`):
