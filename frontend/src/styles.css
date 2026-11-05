@@ -1388,3 +1388,282 @@ body {
 .demo-attributes { border-color: var(--demo-line); background: var(--demo-line); }
 .demo-attributes div { background: var(--demo-card); }
 .demo-attributes dt { color: var(--demo-muted); }
+
+/* Recommendation demo usability pass */
+.demo-header-content {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr) auto;
+  gap: 28px;
+}
+
+.demo-brand {
+  min-width: 0;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.demo-brand span {
+  margin-top: 5px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.demo-header p {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.demo-link-button { white-space: nowrap; }
+
+.demo-main h1 {
+  max-width: 760px;
+  font-size: clamp(2.2rem, 4.2vw, 3.65rem);
+  line-height: 1.08;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.demo-preview-note {
+  max-width: 760px;
+  margin-bottom: 32px;
+  padding: 14px 16px;
+  border: 1px solid #d8d1c5;
+  border-radius: 8px;
+  background: rgba(255, 253, 249, .72);
+}
+
+.demo-preview-note strong {
+  color: var(--demo-ink);
+  font-size: .78rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.demo-preview-note p {
+  margin: 4px 0 0;
+  color: var(--demo-muted);
+  font-size: .86rem;
+  line-height: 1.55;
+}
+
+.demo-user-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.demo-user-card {
+  display: flex;
+  min-height: 300px;
+  flex-direction: column;
+}
+
+.demo-user-form {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.demo-card-topline {
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.demo-card-topline strong {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: .86rem;
+  font-weight: 700;
+}
+
+.demo-user-card h2,
+.demo-user-form h2 {
+  margin-top: 22px;
+}
+
+.demo-user-card > p,
+.demo-user-form > p {
+  color: var(--demo-muted);
+  font-size: .86rem;
+  line-height: 1.6;
+}
+
+.demo-profile-devices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 6px 0 16px;
+}
+
+.demo-profile-devices span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid #d9cfc2;
+  border-radius: 999px;
+  background: #f3ede4;
+  color: #514a42;
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.demo-profile-devices-compact {
+  margin: 12px 0 8px;
+}
+
+.demo-user-form input {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 11px;
+  border: 1px solid #b9afa2;
+  border-radius: 5px;
+  background: #fff;
+  color: var(--demo-ink);
+  font: inherit;
+  outline: none;
+}
+
+.demo-user-form input:focus {
+  border-color: var(--demo-accent);
+  box-shadow: 0 0 0 3px rgba(189, 77, 45, .12);
+}
+
+.demo-primary-button {
+  min-height: 44px;
+  margin-top: auto;
+  border-radius: 5px;
+}
+
+.demo-secondary-button,
+.demo-link-button {
+  min-height: 40px;
+  border-radius: 5px;
+}
+
+.demo-back-button {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  margin: 0 0 28px;
+  line-height: 1.4;
+}
+
+.demo-summary-grid {
+  border-radius: 8px;
+}
+
+.demo-mask-note {
+  border-radius: 8px;
+  padding: 18px 20px;
+}
+
+.demo-mask-note > strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: .82rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.demo-mask-note p {
+  color: #654a42;
+  font-size: .9rem;
+}
+
+.demo-mask-note p strong {
+  color: #8e3922;
+  font-size: inherit;
+}
+
+.demo-recommendation-card {
+  grid-template-columns: 92px minmax(0, 1fr);
+  border-radius: 8px;
+}
+
+.demo-rank {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 24px 10px;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.demo-rank span {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.demo-rank strong {
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.demo-recommendation-content { min-width: 0; padding: 24px; }
+.demo-recommendation-content h2 { overflow-wrap: anywhere; font-size: 1.08rem; }
+.demo-explanation { border-radius: 0 6px 6px 0; }
+.demo-detail-card { border-radius: 8px; }
+
+@media (max-width: 900px) {
+  .demo-header-content { grid-template-columns: 170px minmax(0, 1fr) auto; gap: 18px; }
+  .demo-user-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .demo-header-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px 16px;
+  }
+  .demo-header p { grid-column: 1 / -1; order: initial; }
+  .demo-main { padding-top: 42px; }
+  .demo-main h1 { font-size: clamp(2rem, 11vw, 3rem); line-height: 1.08; }
+  .demo-user-grid { grid-template-columns: 1fr; margin-top: 32px; }
+  .demo-user-card { min-height: 280px; }
+  .demo-recommendation-card { grid-template-columns: 64px minmax(0, 1fr); }
+  .demo-rank { padding: 20px 6px; }
+  .demo-rank span { font-size: .55rem; }
+  .demo-rank strong { font-size: 1.25rem; }
+  .demo-recommendation-content { padding: 18px 16px; }
+  .demo-detail-card { padding: 18px; }
+}
+
+@media (max-width: 430px) {
+  .demo-shell { width: min(100% - 22px, 1120px); }
+  .demo-brand { font-size: .94rem; letter-spacing: .05em; }
+  .demo-brand span { font-size: .58rem; }
+  .demo-link-button { padding: 7px 9px; font-size: .74rem; }
+}
+
+/* Use the Windows UI font for reliable Vietnamese shaping and easier scanning. */
+.demo-page,
+.demo-brand,
+.demo-brand span,
+.demo-main h1,
+.demo-user-card h2,
+.demo-user-form h2,
+.demo-summary-grid strong,
+.demo-rank,
+.demo-recommendation-content h2,
+.demo-detail-content h1 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.demo-brand { font-weight: 850; }
+.demo-brand span { font-weight: 600; }
+.demo-main h1 { font-weight: 760; letter-spacing: -.035em; }
+.demo-user-card h2,
+.demo-user-form h2 { font-weight: 720; letter-spacing: -.015em; }
+.demo-summary-grid strong { font-weight: 750; }
+.demo-rank strong { font-weight: 750; }
+.demo-recommendation-content h2,
+.demo-detail-content h1 { font-weight: 700; letter-spacing: -.015em; }
+
+.demo-main .demo-detail-content h1 {
+  max-width: 760px;
+  font-size: clamp(1.7rem, 3vw, 2.65rem);
+  line-height: 1.08;
+}
