@@ -1,0 +1,5 @@
+trình duyệt: msedge 156.0.4314.58; các bước: mở trang chủ -> bấm Tư vấn thiết bị -> chọn nhanh người 409; danh sách hiện: true
+phản hồi HTTP >= 400 (0):
+yêu cầu hỏng (1): [{"step":"mở trang chủ","url":"https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=800&q=80","error":"net::ERR_BLOCKED_BY_ORB"}]
+lỗi console (1):
+  [mở trang chủ] Failed to load resource: the server responded with a status of 404 (Not Found) | http://127.0.0.1:5174/favicon.ico

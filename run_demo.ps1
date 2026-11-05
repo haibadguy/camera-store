@@ -34,10 +34,35 @@ function Fail($msg) { Write-Host "DỪNG: $msg" -ForegroundColor Red; exit 1 }
 # "D:\Do an\camera-store") phải bọc ngoặc kép, nếu không chương trình nhận sai tham số
 function Q($s) { $s = "$s"; if ($s -match '\s') { "`"$s`"" } else { $s } }
 
-function Wait-Http($url, $seconds, $proc, $name) {
+# Start-Process -PassThru: phải đọc .Handle ngay sau khi bật thì lúc tiến trình thoát mới đọc được ExitCode (không thì
+# ExitCode rỗng, thông báo cũ in "mã ()"; Quyền gặp 05/11/2026)
+function Start-Logged($file, $argList, $workDir, $out, $err) {
+    $p = Start-Process -FilePath $file -PassThru -NoNewWindow -WorkingDirectory $workDir -ArgumentList $argList `
+        -RedirectStandardOutput $out -RedirectStandardError $err
+    $null = $p.Handle
+    $p
+}
+
+# In mấy dòng cuối của log lỗi để thấy ngay vì sao dịch vụ thoát (không phải mở thư mục log)
+function Show-Tail($files) {
+    foreach ($f in $files) {
+        if ((Test-Path $f) -and (Get-Item $f).Length -gt 0) {
+            Write-Host "---- 15 dòng cuối $f" -ForegroundColor Yellow
+            Get-Content $f -Tail 15 -Encoding UTF8 | ForEach-Object { Write-Host "  $_" }
+        }
+    }
+}
+
+function Wait-Http($url, $seconds, $proc, $name, $logs) {
     $t = [Diagnostics.Stopwatch]::StartNew()
     while ($t.Elapsed.TotalSeconds -lt $seconds) {
-        if ($proc.HasExited) { Fail "$name thoát (mã $($proc.ExitCode)), xem log trong $LogDir" }
+        if ($proc.HasExited) {
+            $proc.WaitForExit()
+            $code = $proc.ExitCode
+            if ($null -eq $code -or "$code" -eq "") { $code = "không đọc được" }
+            Show-Tail $logs
+            Fail "$name thoát (mã $code), xem log trong $LogDir"
+        }
         try {
             $r = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 2
             if ($r.StatusCode -eq 200) {
@@ -47,6 +72,7 @@ function Wait-Http($url, $seconds, $proc, $name) {
         } catch { }
         Start-Sleep -Milliseconds 500
     }
+    Show-Tail $logs
     Fail "$name không lên sau $seconds s, xem log trong $LogDir"
 }
 
@@ -76,27 +102,35 @@ $JavaLine = (& cmd /c "java -version 2>&1" | Select-Object -First 1)
 if ($JavaLine -match 'version "(\d+)') { $JavaMajor = [int]$Matches[1] } else { $JavaMajor = 0 }
 if ($JavaMajor -lt 21) { Fail "cần JDK 21 trở lên, máy có: $JavaLine" }
 
-# File dữ liệu không có trong git: embedding seed 1 phải đúng sha256 ghi trong meta.json
-$Emb = Join-Path $Root "$EmbDir/embeddings.npz"
-$Meta = Join-Path $Root "$EmbDir/meta.json"
-if (-not (Test-Path $Emb) -or -not (Test-Path $Meta)) { Fail "thiếu $EmbDir/embeddings.npz hoặc meta.json (không có trong git)" }
-$Want = (Get-Content $Meta -Raw -Encoding UTF8 | ConvertFrom-Json).embeddings_sha256
-$Got = (Get-FileHash $Emb -Algorithm SHA256).Hash.ToLower()
-if ($Got -ne $Want) { Fail "sha256 embeddings.npz = $Got, meta.json ghi $Want" }
-Write-Host "  Python $PyVer, Java $JavaMajor, embeddings.npz đúng sha256 ($($Got.Substring(0, 12))...)"
-# 4 file dữ liệu khác FastAPI đọc mà không có trong git (đo bằng ai/service/list_runtime_files.py, 28/10/2026)
+# File dữ liệu FastAPI đọc mà không có trong git (đo bằng ai/service/list_runtime_files.py, lần 20261105_lan1: móc bật
+# trước mọi import; lần 28/10 sót user_map.json vì common_05 đọc nó ngay lúc import). Nằm trong demo_data_v2.zip.
+# Spring và React không cần file dữ liệu nào ngoài git (jar và node_modules do script tự dựng).
+# Kiểm hết rồi mới dừng, để báo đủ một lần mọi file thiếu / sai.
 $DataFiles = [ordered]@{
-    "ai/data/processed/train.txt"     = "ebd29b03a4866cfca243edc1ee31539f16be19b756bfbd4c388e3f20ca06a5c5"
-    "ai/data/processed/val.txt"       = "e8a47d06bd6e6977fe7eebc485cbf07eb75e7e9bdb651da955e8fd7f85a3a900"
-    "ai/data/processed/test.txt"      = "410fc46cea72cdc5115a3e0413036456d1d1d59b8bcb7c63da6edd026e4da8ea"
-    "ai/data/processed/item_map.json" = "c7ccd84b3fbcc5cf7cab85171fdf187dea8deccf3d36aaceb4877f06cfdaa63c"
+    "$EmbDir/embeddings.npz"           = "fbda48a1f84c9fd0047d2a8d06319e1e816dcf20cbe51817f5f86241f97200b4"
+    "ai/data/processed/train.txt"      = "ebd29b03a4866cfca243edc1ee31539f16be19b756bfbd4c388e3f20ca06a5c5"
+    "ai/data/processed/val.txt"        = "e8a47d06bd6e6977fe7eebc485cbf07eb75e7e9bdb651da955e8fd7f85a3a900"
+    "ai/data/processed/test.txt"       = "410fc46cea72cdc5115a3e0413036456d1d1d59b8bcb7c63da6edd026e4da8ea"
+    "ai/data/processed/item_map.json"  = "c7ccd84b3fbcc5cf7cab85171fdf187dea8deccf3d36aaceb4877f06cfdaa63c"
+    "ai/data/processed/user_map.json"  = "c5525a90c775572aa9837a1a3c9c3aba896f7d63de5f2fc6da1ea4ec596e61e4"
 }
+$Meta = Join-Path $Root "$EmbDir/meta.json"
+if (-not (Test-Path $Meta)) { Fail "thiếu $EmbDir/meta.json (có trong git: kiểm lại bản clone / -EmbDir)" }
+# embeddings.npz phải trùng sha256 ghi trong meta.json (khi đổi -EmbDir thì lấy theo meta.json của thư mục đó)
+$DataFiles["$EmbDir/embeddings.npz"] = (Get-Content $Meta -Raw -Encoding UTF8 | ConvertFrom-Json).embeddings_sha256
+$Missing = @(); $Wrong = @()
 foreach ($f in $DataFiles.Keys) {
     $path = Join-Path $Root $f
-    if (-not (Test-Path $path)) { Fail "thiếu $f (không có trong git)" }
-    if ((Get-FileHash $path -Algorithm SHA256).Hash.ToLower() -ne $DataFiles[$f]) { Fail "sha256 của $f khác bản chuẩn" }
+    if (-not (Test-Path $path)) { $Missing += $f; continue }
+    $got = (Get-FileHash $path -Algorithm SHA256).Hash.ToLower()
+    if ($got -ne $DataFiles[$f]) { $Wrong += "$f (sha256 $got, cần $($DataFiles[$f]))" }
 }
-Write-Host "  4 file ai/data/processed đúng sha256"
+if ($Missing.Count -or $Wrong.Count) {
+    foreach ($f in $Missing) { Write-Host "  THIẾU  $f" -ForegroundColor Red }
+    foreach ($f in $Wrong) { Write-Host "  SAI    $f" -ForegroundColor Red }
+    Fail ("{0} file dữ liệu thiếu, {1} file sai sha256 (không có trong git; giải nén demo_data_v2.zip vào thư mục camera-store, README mục 'Chạy demo trên máy khác')" -f $Missing.Count, $Wrong.Count)
+}
+Write-Host "  Python $PyVer, Java $JavaMajor, $($DataFiles.Count) file dữ liệu ngoài git đúng sha256"
 
 $Excluded = @(Get-ExcludedPortRanges)
 foreach ($port in @($FastApiPort, $SpringPort, $VitePort)) {
@@ -130,33 +164,32 @@ if ($Build -or -not (Test-Path $Jar)) {
 try {
     # -- 2. FastAPI ------------------------------------------------------------------------------------------------
     Write-Host "Bật FastAPI seed 1 (http://127.0.0.1:$FastApiPort, ~15 s)..."
-    $p = Start-Process -FilePath $Py -PassThru -NoNewWindow -WorkingDirectory $Root `
-        -ArgumentList @((Q "ai/service/run_service.py"), "--emb-dir", (Q $EmbDir), "--port", $FastApiPort, "--log-file", (Q "$LogDir/fastapi.log")) `
-        -RedirectStandardOutput "$LogDir/fastapi_stdout.txt" -RedirectStandardError "$LogDir/fastapi_stderr.txt"
+    $p = Start-Logged $Py @((Q "ai/service/run_service.py"), "--emb-dir", (Q $EmbDir), "--port", $FastApiPort, "--log-file", (Q "$LogDir/fastapi.log")) `
+        $Root "$LogDir/fastapi_stdout.txt" "$LogDir/fastapi_stderr.txt"
     $Procs += $p
-    Wait-Http "http://127.0.0.1:$FastApiPort/health" 300 $p "FastAPI"
+    Wait-Http "http://127.0.0.1:$FastApiPort/health" 300 $p "FastAPI" @("$LogDir/fastapi_stderr.txt")
 
     # -- 3. Spring Boot --------------------------------------------------------------------------------------------
     Write-Host "Bật Spring Boot (http://127.0.0.1:$SpringPort, heap tối đa $SpringHeap)..."
     $Cors = "http://localhost:$VitePort,http://127.0.0.1:$VitePort"
     # server.address=127.0.0.1: chỉ máy này gọi được /api (hợp đồng mục 1: chỉ chạy trong máy)
-    $p = Start-Process -FilePath "java" -PassThru -NoNewWindow -WorkingDirectory (Join-Path $Root "backend") `
-        -ArgumentList @("-Xmx$SpringHeap", "-jar", (Q $Jar), "--server.address=127.0.0.1", "--server.port=$SpringPort",
+    # Đường dẫn jar TƯƠNG ĐỐI (thư mục làm việc là backend): java.exe đọc tham số theo bảng mã ANSI của Windows, chữ
+    # ngoài bảng mã (ử, Đ, ...) thành "?" -> "Unable to access jarfile" khi repo ở thư mục như D:\ĐATN (lỗi 05/11/2026)
+    $p = Start-Logged "java" @("-Xmx$SpringHeap", "-jar", "target/camera-store-backend-0.1.0.jar", "--server.address=127.0.0.1", "--server.port=$SpringPort",
             "--model-service.base-url=http://127.0.0.1:$FastApiPort", "--cors.allowed-origins=$Cors") `
-        -RedirectStandardOutput "$LogDir/spring.log" -RedirectStandardError "$LogDir/spring_stderr.txt"
+        (Join-Path $Root "backend") "$LogDir/spring.log" "$LogDir/spring_stderr.txt"
     $Procs += $p
-    Wait-Http "http://127.0.0.1:$SpringPort/api/health" 120 $p "Spring Boot"
+    Wait-Http "http://127.0.0.1:$SpringPort/api/health" 120 $p "Spring Boot" @("$LogDir/spring.log", "$LogDir/spring_stderr.txt")
 
     # -- 4. Vite ---------------------------------------------------------------------------------------------------
     Write-Host "Bật React / Vite (http://127.0.0.1:$VitePort, chế độ api)..."
     $env:VITE_RECOMMENDATION_SOURCE = "api"
     $env:VITE_API_URL = "http://127.0.0.1:$SpringPort/api"
-    $p = Start-Process -FilePath "node" -PassThru -NoNewWindow -WorkingDirectory (Join-Path $Root "frontend") `
-        -ArgumentList @("node_modules/vite/bin/vite.js", "--host", "127.0.0.1", "--port", $VitePort, "--strictPort") `
-        -RedirectStandardOutput "$LogDir/vite.log" -RedirectStandardError "$LogDir/vite_stderr.txt"
+    $p = Start-Logged "node" @("node_modules/vite/bin/vite.js", "--host", "127.0.0.1", "--port", $VitePort, "--strictPort") `
+        (Join-Path $Root "frontend") "$LogDir/vite.log" "$LogDir/vite_stderr.txt"
     $Procs += $p
     Remove-Item Env:VITE_RECOMMENDATION_SOURCE, Env:VITE_API_URL
-    Wait-Http "http://127.0.0.1:$VitePort" 60 $p "Vite"
+    Wait-Http "http://127.0.0.1:$VitePort" 60 $p "Vite" @("$LogDir/vite.log", "$LogDir/vite_stderr.txt")
 
     Write-Host ""
     Write-Host "Demo đang chạy: http://127.0.0.1:$VitePort  (bấm 'Tư vấn thiết bị')" -ForegroundColor Green

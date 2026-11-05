@@ -60,7 +60,8 @@ def build(log):
 def start_spring(port, fastapi_base, log_file, log, jvm_args=(), extra_args=()):
     java = shutil.which("java")
     v = subprocess.run([java, "-version"], capture_output=True, text=True).stderr.splitlines()[0]
-    cmd = [java, *jvm_args, "-jar", str(JAR), f"--server.port={port}", f"--model-service.base-url={fastapi_base}",
+    # jar tương đối với cwd=BACKEND: java.exe đọc tham số theo bảng mã ANSI, đường dẫn có chữ như "Đ" thành "?" (05/11/2026)
+    cmd = [java, *jvm_args, "-jar", JAR.relative_to(BACKEND).as_posix(), f"--server.port={port}", f"--model-service.base-url={fastapi_base}",
            *extra_args]
     log(f"bật Spring: {v} | {' '.join(cmd[1:])}")
     f = open(log_file, "x", encoding="utf-8")

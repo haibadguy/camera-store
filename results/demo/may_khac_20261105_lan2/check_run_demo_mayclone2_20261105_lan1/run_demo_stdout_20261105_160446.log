@@ -1,0 +1,32 @@
+[    0.4s] Ki?m m�y...
+[    1.0s]   Python 3.12, Java 24, 6 file d? li?u ngo�i git d�ng sha256
+[    2.0s] C�i thu vi?n frontend (npm ci, l?n d?u, c?n m?ng)...
+[    5.5s] 
+[    5.5s] added 119 packages, and audited 120 packages in 3s
+[    5.5s] 
+[    5.5s] 9 packages are looking for funding
+[    5.5s]   run `npm fund` for details
+[    5.5s] 
+[    5.5s] 2 high severity vulnerabilities
+[    5.5s] 
+[    5.5s] To address all issues, run:
+[    5.5s]   npm audit fix
+[    5.5s] 
+[    5.5s] Run `npm audit` for details.
+[    5.5s] D�ng g�i Spring Boot (mvn -q -DskipTests package)...
+[    7.0s] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[    7.0s] WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/C:/apache-maven-3.9.11/lib/guice-5.1.0-classes.jar)
+[    7.0s] WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+[    7.0s] WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+[   14.0s] B?t FastAPI seed 1 (http://127.0.0.1:8001, ~15 s)...
+[   27.8s]   FastAPI s?n s�ng sau 13.7 s
+[   27.8s] B?t Spring Boot (http://127.0.0.1:8080, heap t?i da 512m)...
+[   32.0s]   Spring Boot s?n s�ng sau 4.2 s
+[   32.0s] B?t React / Vite (http://127.0.0.1:5173, ch? d? api)...
+[   32.6s]   Vite s?n s�ng sau 0.6 s
+[   32.6s] 
+[   32.6s] Demo dang ch?y: http://127.0.0.1:5173  (b?m 'Tu v?n thi?t b?')
+[   32.6s]   React -> Spring http://127.0.0.1:8080/api -> FastAPI http://127.0.0.1:8001
+[   32.6s]   B?m th? m?t lu?t tru?c khi tr�nh b�y (lu?t d?u n?p ch?m hon). Log: E:\DATN\th? m�y kh�c 2\DATN\camera-store\results\demo\run_demo_logs\20261105_160447
+[   37.4s] 
+[   37.4s] T?t c�c ti?n tr�nh...
