@@ -1,0 +1,15 @@
+check_run_demo | git {'commit': '947d3cbe30ab4363870a8e7ecbe5951f36e7248c', 'dirty': False} | run_demo.ps1 sha256 13cc8a97ad728c924babebaa32e9584b2bf53478cf0d165aa421ccd79a3eee49 | script sha256 7ac651fc62d03bc3a9cb677a42e1951fb7797f1b83e3745cf2412f458f5dfc83 | find_http_errors.mjs sha256 706f7e196550506483efd0f1dbc96c8e96aa02ed1837019347afb266d571e762 | jar sha256 3597615a49575ecf9e3171fab239d71d93e6370a27f8826dc36f7f96c3e00f34 | RAM trống 4.15 GB
+trước khi chạy, cổng 8001 (FastAPI): trống
+trước khi chạy, cổng 8080 (Spring Boot): trống
+trước khi chạy, cổng 5173 (Vite): trống
+lệnh: powershell.exe -NoProfile -ExecutionPolicy Bypass -File E:\DATN\thử máy khác\ĐATN\camera-store\run_demo.ps1 (cwd E:\DATN\thử máy khác\ĐATN\camera-store)
+  run_demo [   0.6s] Ki?m m�y...
+  run_demo [   1.3s]   Python 3.12, Java 24, embeddings.npz d�ng sha256 (fbda48a1f84c...)
+  run_demo [   1.4s]   4 file ai/data/processed d�ng sha256
+  run_demo [   2.8s]   d�ng jar c� s?n (2026-11-05 15:53); d?i code backend th� ch?y l?i v?i -Build
+  run_demo [   2.8s] B?t FastAPI seed 1 (http://127.0.0.1:8001, ~15 s)...
+  run_demo [  21.1s]   FastAPI s?n s�ng sau 18.3 s
+  run_demo [  21.1s] B?t Spring Boot (http://127.0.0.1:8080, heap t?i da 512m)...
+  run_demo [  23.6s] D?NG: Spring Boot tho�t (ma ), xem log trong E:\DATN\th? m�y kh�c\DATN\camera-store\results\demo\run_demo_logs\20261105_155439
+  run_demo [  23.6s] T?t c�c ti?n tr�nh...
+KHÔNG thấy dòng 'Demo ... http://127.0.0.1:5173' (PowerShell đã thoát, mã 1)

@@ -1,0 +1,7 @@
+run_service | emb E:\DATN\thử máy khác 2\ĐATN\camera-store\results\service\emb_s1_20261021 | thiết bị cpu | 127.0.0.1:8001
+2026-11-05 16:05:10,999 INFO uvicorn.error: Started server process [12236]
+2026-11-05 16:05:11,000 INFO uvicorn.error: Waiting for application startup.
+2026-11-05 16:05:14,251 INFO uvicorn.error:   kiểm luật tương thích: 107,452 cặp của compat_pairs.csv trùng Rules.level; M = 1 72,720, không biết 5,846 (trùng CvrContext)
+2026-11-05 16:05:14,253 INFO uvicorn.error: RecommenderCore: LightGCN + mặt nạ QĐ 4-9 seed 1 | best.pt d857e24c3d7f… | embeddings fbda48a1f84c… | thiết bị cpu | 67,661 người, 27,940 sản phẩm | người có thân: train 10,406, cả lịch sử 12,472 | nạp 3.2s
+2026-11-05 16:05:14,253 INFO uvicorn.error: Application startup complete.
+2026-11-05 16:05:14,254 INFO uvicorn.error: Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)

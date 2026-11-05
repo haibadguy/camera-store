@@ -1,0 +1,33 @@
+list_runtime_files | emb results/service/emb_s1_20261021 | git {'commit': '46d02ba49760e984523647d193044370567c6f78', 'dirty': False} | script sha256 6f2491516d6ad0d3ca18d67203a11bafd8478e71818ce49719fff0592f36ead7 | python 3.12.10
+  /health : 200
+  /recommend {'user_id': 409, 'k': 10}: 200
+  /recommend {'user_id': 47, 'k': 10}: 200
+  /recommend {'user_id': 47, 'k': 10, 'exclude': 'train_val'}: 200
+  /items/13466 : 200
+  /users/47/bodies : 200
+  /users/47/bodies {'exclude': 'train_val'}: 200
+  /compat {'body_id': 9022, 'lens_id': 13448}: 200
+  git           38,405 B  f13d241aba0696c046eaa98f448c366129dc3858866a1704080e6f4cc2e2c42a  ai/config/mount_rules.toml
+  git           11,170 B  dfffbc204edfc945b09fb5e4b88c35b3499ac28747152bcf39d24375f18cda8d  ai/data/kg/body_index.json
+  git        8,662,034 B  b93d9defff3b401f347fc950457e0ce6376efa8586431e792890da6409e6c317  ai/data/kg/compat_pairs.csv
+  git        7,118,147 B  3b05f535c5dad6e08cd99f2c360e34a95c20b816cd6cd8ce0ca9fbbd4cc7b621  ai/data/kg/item_attributes.csv
+  git        5,667,265 B  77c8d5c86d824a028bef6838759499702952f537d891ae204610cac607c9bb60  ai/data/kg/kg_edges_compatible_with.csv
+  git          155,221 B  a2a052a5210f9e7f547da6db46ec91111dbf6138aa2989bafdc75240201c688e  ai/data/kg/kg_edges_crops_sensor.csv
+  git          157,281 B  f548b013236f1865e6b3eb717d52cc313ac7c6705532b61d2b8eb7b879de0c63  ai/data/kg/kg_edges_has_spec_aperture_class.csv
+  git          299,171 B  6ea97d4c492efd9800ed360f956337891d5e2edd4f07611fed0d019116caeab3  ai/data/kg/kg_edges_has_spec_focal_range.csv
+  git          510,675 B  b58f7696c0adf08d74eda8c81bc97e8b8f2af1cb9760ea409b61b0880d85f07e  ai/data/kg/kg_edges_has_spec_mount.csv
+  git          202,213 B  408052fa49f8e1192096b9002c50a59b811c0a940767f3ef6eb71108fe10e878  ai/data/kg/kg_edges_has_spec_sensor_format.csv
+  git        1,269,412 B  177447cd04689586eb099767bf5924782cec4c7a62306e6075024a4013364a94  ai/data/kg/kg_edges_requires_adapter.csv
+  git          135,157 B  927795fc26b9ef1cec9014605661dd4668d8fe1d69e4d279664023e6e3b85c44  ai/data/kg/kg_edges_suitable_for.csv
+  git        4,346,374 B  8fb1b4cbc05ce66f54ee3238aa827ea8e5eed76989df56d7909d903505fbb9d4  ai/data/kg/kg_node_index.json
+  git           21,619 B  f774c8e53d5679b952026e725daf74d1a85b4c66452239dad37c0baebc57862d  ai/data/kg/lens_index.json
+  git            2,336 B  c9ae5c10e4fa80b60210049f6210828bbc4ff4b240ca67496d6b810db5d98b2d  ai/data/kg/unknown_mask.npz
+  NGOÀI GIT      659,453 B  c7ccd84b3fbcc5cf7cab85171fdf187dea8deccf3d36aaceb4877f06cfdaa63c  ai/data/processed/item_map.json
+  NGOÀI GIT      850,792 B  410fc46cea72cdc5115a3e0413036456d1d1d59b8bcb7c63da6edd026e4da8ea  ai/data/processed/test.txt
+  NGOÀI GIT    3,015,661 B  ebd29b03a4866cfca243edc1ee31539f16be19b756bfbd4c388e3f20ca06a5c5  ai/data/processed/train.txt
+  NGOÀI GIT    2,830,719 B  c5525a90c775572aa9837a1a3c9c3aba896f7d63de5f2fc6da1ea4ec596e61e4  ai/data/processed/user_map.json
+  NGOÀI GIT      846,700 B  e8a47d06bd6e6977fe7eebc485cbf07eb75e7e9bdb651da955e8fd7f85a3a900  ai/data/processed/val.txt
+  git           10,191 B  d619e8eb9d9f8f3251d9781a536876e2146621a75ded7a0f08eeddc362bd5a9d  ai/config/sony_lens_codes.toml
+  NGOÀI GIT   24,474,350 B  fbda48a1f84c9fd0047d2a8d06319e1e816dcf20cbe51817f5f86241f97200b4  results/service/emb_s1_20261021/embeddings.npz
+  git              832 B  486fd681fd8cf7182a7e2679803ea4f46e2d1f8c7c0f2583bda8df2cf8bb7d04  results/service/emb_s1_20261021/meta.json
+23 file dữ liệu được đọc, 6 file không có trong git, tổng 31.2 MiB

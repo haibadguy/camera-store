@@ -95,7 +95,10 @@ Cơ sở dữ liệu của demo: PostgreSQL 17, Redis 7 (Docker). Tài liệu c�
 ## Chạy demo trên máy khác
 
 Demo = FastAPI (dịch vụ mô hình, seed 1) → Spring Boot → React (Vite), bật cả ba bằng `run_demo.ps1` (Windows,
-PowerShell). Đã thử trên máy của Nam 28/10/2026, cả khi repo nằm ở đường dẫn có dấu cách; **chưa thử trên máy thứ hai**.
+PowerShell). Đã thử trên máy của Nam 28/10/2026; 05/11/2026 thử như máy mới: clone mới tinh ở
+`E:\DATN\thử máy khác 2\ĐATN\camera-store` (có dấu, dấu cách, chữ Đ), chỉ giải nén `demo_data_v2.zip`, `check_run_demo`
+7/7 đạt (`results/demo/may_khac_20261105_lan2/`). Bản trước 05/11 hỏng trên máy Quyền vì zip thiếu `user_map.json`, và
+còn hỏng tiếp ở Spring vì `java.exe` không mở được jar khi đường dẫn có chữ như `Đ`, `ử` (đã sửa: truyền jar tương đối).
 Lần đầu cần mạng (pip, `npm ci`, Maven); sau khi đã có `backend/target/*.jar` thì chạy demo không cần mạng.
 
 **1. Cài phần mềm**
