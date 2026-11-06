@@ -25,6 +25,7 @@ Muốn chạy LightGCN λ = 1e-3, seed 2, tối đa 1.000 epoch trên Kaggle:
 | `camera-store-v3-code` (dataset riêng tư) | `camera-store.bundle` (git bundle đến commit), `COMMIT.txt`, `recbole_gnn.bundle` + `RECBOLE_GNN_COMMIT.txt` | Notebook `git clone` bundle rồi `git checkout` đúng commit; `eval_05.git_state()` ghi được commit thật vào `config.json` của mỗi lần chạy. RecBole-GNN (SimGCL) không phải gói pip nên đi kèm dạng bundle, kiểm đúng commit |
 | `camera-store-v3-data` (dataset riêng tư) | `ai/data/processed/`, `ai/data/kg/`, `ai/data/recbole/camera_loo/` đúng đường dẫn trong repo; `manifest_sha256.json` | Notebook chép vào repo rồi kiểm sha256 từng file, lệch thì dừng |
 | `kernel/v3_runner.ipynb` | sinh từ `kaggle/v3_runner.py` | Môi trường → code → thư viện → dữ liệu → chạy tiếp (tùy chọn) → chạy việc → gom kết quả |
+| `kernel_kiem/kiem_moi_truong.ipynb` | cùng mã, `ACCOUNT = "kiem"` | Kiểm môi trường trên Kaggle trước bản thật: mọi việc của 3 tài khoản, mỗi việc 1 epoch + 1 lần chấm val (`HUONG_DAN_KAGGLE.md` mục 3b) |
 
 - **Thư viện**: hai venv Python 3.12.10 do `uv` tạo (`nhom`: `kaggle/requirements-kaggle.txt` + ràng buộc
   `ai/requirements-lock.txt`; `recbole`: `ai/recbole/requirements-recbole-lock.txt`), kiểm phiên bản với file lock.

@@ -25,8 +25,10 @@
 # %%
 # ===== CẤU HÌNH CỦA PHIÊN BẢN NÀY (sửa trước khi Save Version) =====
 EXPECT_COMMIT = "__COMMIT__"          # build_kaggle_package.py điền
-ACCOUNT = "nam"                       # "nam" | "hai" | "quyen": chọn bộ việc của tài khoản này (PRESETS bên dưới)
-RUN_LABEL = "thu_s1_" + ACCOUNT       # nhãn lần chạy; chạy tiếp ở phiên bản sau thì GIỮ NGUYÊN nhãn
+ACCOUNT = "nam"                       # "nam" | "hai" | "quyen": chọn bộ việc của tài khoản này (PRESETS bên dưới);
+                                      # "kiem": notebook kiểm môi trường (mọi việc của 3 tài khoản, mỗi việc 1 epoch)
+RUN_LABEL = "kiem_moi_truong" if ACCOUNT == "kiem" else "thu_s1_" + ACCOUNT
+                                      # nhãn lần chạy; chạy tiếp ở phiên bản sau thì GIỮ NGUYÊN nhãn
 RESUME = False                        # True khi chạy tiếp: phải thêm output của phiên bản trước làm input (xem dưới)
 REQUIRE_GPU = "T4"                    # mỗi mô hình chạy mọi seed trên cùng loại GPU (kế hoạch mục 5) -> sai GPU thì dừng
 JOB_DEADLINE_H = 8.5                  # sau mốc này (tính từ đầu phiên) ngắt việc đang chạy, lưu kết quả để chạy tiếp.
@@ -53,6 +55,19 @@ PRESETS = {
          ["--model", "BPR", "--seed", "1", "--epochs", "1000", "--group-eval"]),
     ],
 }
+
+def one_epoch(job):
+    """Bản kiểm của một việc: cùng script, cùng tham số, chỉ 1 epoch (RecBole: --epochs 1, vẫn chấm val sau epoch 1
+    vì RecBole lấy eval_step = min(eval_step, epochs); code nhóm: --max-epoch 1, train_05 chấm khi epoch = max_epoch)."""
+    name, which, script, args = job
+    args = list(args)
+    if "--epochs" in args:
+        args[args.index("--epochs") + 1] = "1"
+    else:
+        args += ["--max-epoch", "1"]
+    return ("kiem_" + name, which, script, args)
+
+PRESETS["kiem"] = [one_epoch(j) for acc in ("nam", "hai", "quyen") for j in PRESETS[acc]]
 JOBS = PRESETS[ACCOUNT]
 
 # %%
@@ -158,6 +173,13 @@ def pins_text(text):
 def pins(path):
     return pins_text(Path(path).read_text(encoding="utf-8"))
 
+def clean_req(path, name):
+    """Bản sao chỉ gồm các dòng `tên==phiên_bản` (bỏ chú thích, dòng tùy chọn như --extra-index-url: chỉ số gói
+    truyền qua dòng lệnh) -> uv đọc file requirements / ràng buộc như nhau ở mọi phiên bản."""
+    out = Path(f"/tmp/req_{name}_{Path(path).name}")
+    out.write_text("".join(f"{k}=={v}\n" for k, v in pins(path).items()), encoding="utf-8")
+    return str(out)
+
 def make_env(name, steps, must_match, lock):
     """Tạo venv /tmp/env_<name> (Python PY_VERSION), cài theo `steps`, rồi kiểm:
     mọi gói trong `must_match` có đúng phiên bản; mọi gói đã cài mà có trong `lock` cũng đúng phiên bản của `lock`."""
@@ -167,6 +189,7 @@ def make_env(name, steps, must_match, lock):
     sh(UV + ["venv", "--quiet", "--python", PY_VERSION, "--python-preference", "only-managed", str(path)])
     py = str(path / "bin" / "python")
     for args in steps:
+        args = [clean_req(x, name) if str(x).endswith(".txt") else x for x in args]
         sh(UV + ["pip", "install", "--quiet", "--python", py, "--extra-index-url", TORCH_INDEX,
                   "--index-strategy", "unsafe-best-match", *args])
     freeze = sh(UV + ["pip", "freeze", "--python", py])
@@ -291,3 +314,9 @@ for name, which, script, args in JOBS:
 # ===== Gom kết quả để lưu cùng phiên bản (checkpoint + result.json + log) =====
 collect(done)
 print(json.dumps(done, indent=2, ensure_ascii=False))
+ok = all(d["status"] in ("xong", "đã xong ở phiên bản trước") for d in done) and len(done) == len(JOBS)
+print(f"{sum(d['status'] == 'xong' for d in done)} / {len(JOBS)} việc xong trong phiên bản này; môi trường: "
+      f"{ {k: v for k, v in env.items() if k.startswith('env_')} }")
+if ACCOUNT == "kiem":
+    assert ok and all(d.get("result_json", True) for d in done), "KIỂM MÔI TRƯỜNG: TRƯỢT (xem bảng trên và log)"
+    print("KIỂM MÔI TRƯỜNG: ĐẠT — cài đặt, import, 1 epoch + 1 lần chấm val của mọi script đều chạy được")

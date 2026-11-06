@@ -15,7 +15,8 @@ Thư mục `E:\DATN\kaggle_pkg\<tag>\` (do `kaggle/build_kaggle_package.py` sinh
 |---|---|
 | `camera-store-v3-code.zip` | dataset **code**: git bundle của repo (đúng commit) + bundle RecBole-GNN |
 | `camera-store-v3-data.zip` | dataset **dữ liệu**: train / val / test, KG, file RecBole; `user_map.json` đã ẩn mã (`u0`, `u1`, ...) |
-| `kernel/v3_runner.ipynb` | notebook (đã điền commit) |
+| `kernel_kiem/kiem_moi_truong.ipynb` | notebook **kiểm môi trường** (mục 3b): chạy trước, vài phút đến ~15 phút GPU [ước tính, chưa đo] |
+| `kernel/v3_runner.ipynb` | notebook chạy thật (đã điền commit) |
 
 ## 1. Chia việc cho 3 tài khoản
 
@@ -73,6 +74,23 @@ Không bấm "Make Public". Code mới (commit khác) thì tạo **New Version**
   `logs/pip_freeze_<môi trường>_*.txt`.
 - Khác máy nhóm (bắt buộc vì Kaggle chạy Linux): torch bản Linux có thêm các gói `nvidia-*` và `triton`; phiên bản
   các gói này do torch 2.14.1 quy định, ghi trong `summary.json` → `env.env_<môi trường>.not_in_lock`.
+- Dung lượng: torch + gói `nvidia-*` chiếm khoảng vài GB trong `/tmp` (không nằm trong `/kaggle/working`, không vào
+  Output) [chưa đo trên Kaggle].
+
+## 3b. Chạy notebook kiểm môi trường trước (một lần cho mỗi gói mới)
+
+`kiem_moi_truong.ipynb` là **cùng mã** với notebook chạy thật, chỉ khác `ACCOUNT = "kiem"`: dựng 2 venv như mục 3a,
+kiểm phiên bản, rồi chạy **mọi việc của 3 tài khoản, mỗi việc 1 epoch + 1 lần chấm val** (KGIN, SimGCL, BPR-MF,
+UltraGCN, BPR RecBole) để chắc cài đặt, import, đọc dữ liệu, huấn luyện, chấm, lưu checkpoint đều chạy được trên Linux.
+
+1. **Create → New Notebook** → **File → Import Notebook** → chọn `kernel_kiem/kiem_moi_truong.ipynb`.
+   Đặt tên `camera-store-v3-kiem-moi-truong`.
+2. Thêm 2 dataset như mục 3 bước 4; Settings như mục 3 bước 5 (GPU T4, Internet On). Không sửa ô nào.
+3. **Save Version → Save & Run All**.
+4. Xem log phiên bản: ô cuối phải in `KIỂM MÔI TRƯỜNG: ĐẠT`. Nếu dừng với `TRƯỢT` hoặc lỗi ở ô nào: tải Output
+   (`out/kiem_moi_truong/logs/`) gửi vào nhóm, **chưa chạy bản thật**.
+5. Số liệu của lần kiểm (1 epoch) chỉ để kiểm, không dùng trong báo cáo. Ghi lại `env_setup_minutes` và số phút từng
+   việc trong bảng `done` để ước tính giờ.
 
 ## 4. Chạy
 
@@ -124,8 +142,9 @@ bắt đầu lại với `RUN_LABEL` mới.
 
 1. Dataset code: trang `camera-store-v3-code` → **New Version** → tải `camera-store-v3-code.zip` của gói mới →
    **Create**. Dataset dữ liệu chỉ cần **New Version** khi `PACKAGE.md` của gói mới báo dữ liệu khác gói trước.
-2. Notebook: mở `camera-store-v3-runner` → **Edit** → **File → Import Notebook** → chọn `v3_runner.ipynb` của gói mới
-   (thay toàn bộ ô; `EXPECT_COMMIT` mới đã điền sẵn) → sửa lại `ACCOUNT` cho đúng người.
-3. Khung **Input**: dataset đã thêm tự dùng bản mới nhất [chưa kiểm chứng]; nếu thấy chữ "new version available" thì
+2. Chạy notebook kiểm của gói mới trước (mục 3b; lần đầu thì tạo mới, các lần sau Import đè như bước 3).
+3. Notebook chạy thật: mở `camera-store-v3-runner` → **Edit** → **File → Import Notebook** → chọn `v3_runner.ipynb` của
+   gói mới (thay toàn bộ ô; `EXPECT_COMMIT` mới đã điền sẵn) → sửa lại `ACCOUNT` cho đúng người.
+4. Khung **Input**: dataset đã thêm tự dùng bản mới nhất [chưa kiểm chứng]; nếu thấy chữ "new version available" thì
    bấm cập nhật. Notebook kiểm commit, lệch thì dừng ở ô **Code**.
-4. **Save Version → Save & Run All**.
+5. **Save Version → Save & Run All**.

@@ -12,6 +12,7 @@ tay khi nhóm quyết định tải lên).
                           to_recbole.py / to_recbole_kg.py sinh ở máy nhóm; đúng đường dẫn trong repo), manifest_sha256.json,
                           dataset-metadata.json
   kernel/                 v3_runner.ipynb (sinh từ kaggle/v3_runner.py, đã điền commit), kernel-metadata.json
+  kernel_kiem/            kiem_moi_truong.ipynb (cùng mã, ACCOUNT = "kiem": mỗi việc 1 epoch), kernel-metadata.json
   PACKAGE.md              kích thước, sha256, lệnh kaggle CLI để tải lên (chưa chạy)
 
 Riêng tư: `kaggle datasets create` mặc định tạo dataset riêng tư (chỉ công khai khi thêm --public);
@@ -67,9 +68,9 @@ def git(*a):
     return subprocess.run(["git", *a], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
 
 
-def py_to_ipynb(src, commit):
-    """Đổi file định dạng '# %%' sang .ipynb (nbformat 4), điền commit."""
-    text = Path(src).read_text(encoding="utf-8").replace("__COMMIT__", commit)
+def py_to_ipynb(text, commit):
+    """Đổi mã định dạng '# %%' sang .ipynb (nbformat 4), điền commit."""
+    text = text.replace("__COMMIT__", commit)
     cells, cur, kind = [], [], None
     for line in text.splitlines():
         if line.startswith("# %%"):
@@ -111,8 +112,9 @@ def main():
     commit = git("rev-parse", "HEAD")
     out = Path(a.out) / a.tag
     assert not out.exists(), f"đã có {out}, không ghi đè (đổi --tag)"
-    code_d, data_d, kern_d = out / "camera-store-v3-code", out / "camera-store-v3-data", out / "kernel"
-    for d in (code_d, data_d, kern_d):
+    code_d, data_d = out / "camera-store-v3-code", out / "camera-store-v3-data"
+    kern_d, kiem_d = out / "kernel", out / "kernel_kiem"
+    for d in (code_d, data_d, kern_d, kiem_d):
         d.mkdir(parents=True)
 
     # 1. code: git bundle đến HEAD (cả lịch sử của nhánh, để `git checkout <commit>` được)
@@ -151,16 +153,29 @@ def main():
         {"title": "camera-store-v3-data", "id": f"{OWNER}/camera-store-v3-data",
          "licenses": [{"name": "other"}]}, indent=2), encoding="utf-8")
 
-    # 3. notebook
-    nb = py_to_ipynb(ROOT / "kaggle" / "v3_runner.py", commit)
-    assert "__COMMIT__" not in json.dumps(nb, ensure_ascii=False)
-    (kern_d / "v3_runner.ipynb").write_text(json.dumps(nb, indent=1, ensure_ascii=False), encoding="utf-8")
-    (kern_d / "kernel-metadata.json").write_text(json.dumps(
-        {"id": f"{OWNER}/camera-store-v3-runner", "title": "camera-store-v3-runner", "code_file": "v3_runner.ipynb",
-         "language": "python", "kernel_type": "notebook", "is_private": True, "enable_gpu": True,
-         "enable_tpu": False, "enable_internet": True,
-         "dataset_sources": [f"{OWNER}/camera-store-v3-code", f"{OWNER}/camera-store-v3-data"],
-         "competition_sources": [], "kernel_sources": []}, indent=2), encoding="utf-8")
+    # 3. notebook: bản chạy thật (kernel/) và bản kiểm môi trường (kernel_kiem/, ACCOUNT = "kiem"), cùng một mã nguồn
+    src_nb = ROOT / "kaggle" / "v3_runner.py"
+    acc_line = 'ACCOUNT = "nam"   '
+    title_line = "# # camera-store v3 — chạy huấn luyện trên Kaggle\n#\n"
+    kiem_title = ("# # camera-store v3 — KIỂM MÔI TRƯỜNG trên Kaggle (chạy trước bản thật)\n#\n"
+                  "# Cùng mã với notebook chạy thật, chỉ khác `ACCOUNT = \"kiem\"`: dựng 2 venv Python 3.12.10 bằng uv, "
+                  "kiểm phiên bản, chạy mọi việc của 3 tài khoản mỗi việc **1 epoch + 1 lần chấm val**. Ô cuối in "
+                  "`KIỂM MÔI TRƯỜNG: ĐẠT` hoặc dừng với `TRƯỢT`. Kết quả 1 epoch chỉ để kiểm, không dùng làm số liệu.\n#\n")
+    for kd, fname, slug, account in ((kern_d, "v3_runner.ipynb", "camera-store-v3-runner", "nam"),
+                                     (kiem_d, "kiem_moi_truong.ipynb", "camera-store-v3-kiem-moi-truong", "kiem")):
+        text = src_nb.read_text(encoding="utf-8")
+        if account == "kiem":
+            assert text.count(acc_line) == 1 and text.count(title_line) == 1
+            text = text.replace(acc_line, 'ACCOUNT = "kiem"  ').replace(title_line, kiem_title)
+        nb = py_to_ipynb(text, commit)
+        assert "__COMMIT__" not in json.dumps(nb, ensure_ascii=False)
+        (kd / fname).write_text(json.dumps(nb, indent=1, ensure_ascii=False), encoding="utf-8")
+        (kd / "kernel-metadata.json").write_text(json.dumps(
+            {"id": f"{OWNER}/{slug}", "title": slug, "code_file": fname,
+             "language": "python", "kernel_type": "notebook", "is_private": True, "enable_gpu": True,
+             "enable_tpu": False, "enable_internet": True,
+             "dataset_sources": [f"{OWNER}/camera-store-v3-code", f"{OWNER}/camera-store-v3-data"],
+             "competition_sources": [], "kernel_sources": []}, indent=2), encoding="utf-8")
 
     # 3b. bản .zip của 2 dataset (để tải lên bằng trình duyệt: 1 file / dataset; trong zip giữ nguyên cây thư mục)
     zips = {}
@@ -178,7 +193,8 @@ def main():
           f"(bundle `{sha256(code_d / 'recbole_gnn.bundle')}`)",
           f"- sha256 manifest dữ liệu `{sha256(data_d / 'manifest_sha256.json')}`",
           *[f"- `{k}` ({(out / k).stat().st_size / 2 ** 20:.1f} MiB) sha256 `{v}`" for k, v in zips.items()], "",
-          "Tải lên bằng trình duyệt: làm theo `kaggle/HUONG_DAN_KAGGLE.md` (dùng 2 file .zip và `kernel/v3_runner.ipynb`).",
+          "Tải lên bằng trình duyệt: làm theo `kaggle/HUONG_DAN_KAGGLE.md` (dùng 2 file .zip, `kernel_kiem/kiem_moi_truong.ipynb` "
+          "chạy trước, rồi `kernel/v3_runner.ipynb`).",
           "",
           "## Lệnh tải lên bằng kaggle CLI (chưa chạy)", "",
           f"Trước khi chạy: thay `{OWNER}` trong 3 file `*-metadata.json` bằng tên tài khoản Kaggle.", "",
