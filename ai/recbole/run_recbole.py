@@ -26,6 +26,7 @@ RecBole), và với LightGCN: emb_best.npz (embedding sau lan truyền của che
 import argparse
 import hashlib
 import json
+import os
 import platform
 import subprocess
 import sys
@@ -68,6 +69,131 @@ class Log:
         self.f.flush()
 
 
+def group_mode(a, run_dir, log, config, dataset, train_data, valid_data, model, trainer, chk):
+    """v3 (quyết định HỎI 6, 06/11/2026): huấn luyện bằng Trainer của RecBole, nhưng chấm val (chọn checkpoint, dừng
+    sớm) bằng bộ chấm của NHÓM (eval_05.full_rank: full ranking, bỏ sản phẩm train, quy tắc hòa π) thay cho bộ chấm
+    RecBole (~119 s / lần, mục 7.2 kế hoạch). Không chấm test. Ví dụ: ở epoch 10, 20, ... gọi full_sort_predict của mô
+    hình cho mọi người dùng val, đổi cột từ mã RecBole sang mã nhóm, lấy NDCG@20 -> RecBole dùng số này để dừng sớm
+    (quy tắc RecBole: bằng điểm tốt nhất vẫn tính là tăng; dừng khi > stopping_step = 4 lần không tăng).
+    Chạy tiếp: ở mỗi lần chấm (callback_fn của fit, sau khi RecBole cập nhật tốt nhất + lưu checkpoint) ghi
+    last_state.pth = mô hình, Adam, epoch kế tiếp, cur_step, best, đường dẫn checkpoint tốt nhất, lịch sử, trạng thái
+    random / numpy / torch / CUDA. Gọi lại đúng lệnh -> nạp last_state.pth, đặt lại các bộ sinh số ngay trước fit.
+    Ghi result.json cùng dạng train_05 (history, best_epoch, val = eval_05.evaluate trên checkpoint tốt nhất)."""
+    import random
+
+    import numpy as np
+    import torch
+    from recbole.data.interaction import Interaction
+
+    sys.path.insert(0, str(ROOT / "ai" / "pipeline"))
+    import common_05 as C
+    import eval_05 as E
+
+    def sync():
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+
+    uf, itf = config["USER_ID_FIELD"], config["ITEM_ID_FIELD"]
+    u_tok, i_tok = dataset.field2token_id[uf], dataset.field2token_id[itf]
+    dev = config["device"]
+    u_map = torch.as_tensor(np.array([u_tok[str(u)] for u in range(C.N_USERS)]), device=dev)
+    i_map = torch.as_tensor(np.array([i_tok[str(i)] for i in range(C.N_ITEMS)]), device=dev)
+    t = time.time()
+    ev = E.EvalContext("val", C.load_train())
+    log(f"Bộ chấm nhóm: {len(ev.split.users):,} người val, {C.N_ITEMS:,} sản phẩm ({time.time() - t:.1f}s)")
+
+    @torch.no_grad()
+    def score_batch(uids):
+        s = model.full_sort_predict(Interaction({uf: u_map[uids.to(dev)]}).to(dev))
+        return s.view(len(uids), -1)[:, i_map]
+
+    def ndcg20():
+        model.eval()
+        fr = E.full_rank(score_batch, ev.split, ev.pi)
+        return float(np.where(fr["rank"] <= 20, 1.0 / np.log2(fr["rank"] + 1.0), 0.0).mean())
+
+    last = run_dir / "last_state.pth"
+    hist, best = [], {"epoch": 0, "score": -1.0}
+    rng_state = None
+    if last.exists():
+        ck = torch.load(last, map_location="cpu", weights_only=False)
+        model.load_state_dict(ck["state_dict"])
+        model.load_other_parameter(ck.get("other_parameter"))
+        trainer.optimizer.load_state_dict(ck["optimizer"])
+        trainer.start_epoch, trainer.cur_step = ck["start_epoch"], ck["cur_step"]
+        trainer.best_valid_score, trainer.saved_model_file = ck["best_valid_score"], ck["saved_model_file"]
+        hist, best, rng_state = ck["history"], ck["best"], ck["rng"]
+        assert Path(trainer.saved_model_file).exists(), trainer.saved_model_file
+        log(f"Chạy tiếp từ last_state.pth: bắt đầu epoch {trainer.start_epoch + 1}, tốt nhất {best['score']:.5f} ở "
+            f"epoch {best['epoch']}, {trainer.cur_step} lần chấm không tăng")
+    _tr = trainer._train_epoch
+
+    def timed_train(train_data_, epoch_idx, *args, **kw):
+        sync(); t0 = time.time(); r = _tr(train_data_, epoch_idx, *args, **kw); sync()
+        loss = float(sum(r)) if isinstance(r, tuple) else float(r)
+        hist.append({"epoch": epoch_idx + 1, "loss": loss, "sec": round(time.time() - t0, 2)})
+        log(f"  epoch {epoch_idx + 1:>4}/{a.epochs} | loss {loss:.5f} | {hist[-1]['sec']:.1f}s")
+        return r
+
+    def group_valid(*_args, **_kw):
+        sync(); t0 = time.time(); nd = ndcg20(); sync()
+        hist[-1].update({"val_ndcg@20": nd, "sec_eval": round(time.time() - t0, 2)})
+        if nd >= best["score"]:                                   # đúng quy tắc RecBole (>=) để khớp checkpoint đã lưu
+            best.update(epoch=hist[-1]["epoch"], score=nd)
+        log(f"  chấm val (bộ chấm nhóm) epoch {hist[-1]['epoch']}: NDCG@20 {nd:.5f} ({hist[-1]['sec_eval']:.1f}s)"
+            f"{' *tốt nhất*' if best['epoch'] == hist[-1]['epoch'] else ''}")
+        return nd, {"ndcg@20": nd}
+
+    def save_last(epoch_idx, _score):
+        st = {"start_epoch": epoch_idx + 1, "cur_step": trainer.cur_step, "best_valid_score": trainer.best_valid_score,
+              "saved_model_file": trainer.saved_model_file, "state_dict": model.state_dict(),
+              "other_parameter": model.other_parameter(), "optimizer": trainer.optimizer.state_dict(),
+              "history": hist, "best": best,
+              "rng": {"random": random.getstate(), "numpy": np.random.get_state(), "torch": torch.get_rng_state(),
+                      "cuda": torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None}}
+        tmp = Path(str(last) + ".tmp")
+        torch.save(st, tmp)
+        os.replace(tmp, last)
+        if a.stop_after_evals and sum("val_ndcg@20" in h for h in hist) >= a.stop_after_evals:
+            log(f"Dừng giả lập sau {a.stop_after_evals} lần chấm (kiểm thử chạy tiếp)")
+            sys.exit(0)
+
+    trainer._train_epoch, trainer._valid_epoch = timed_train, group_valid
+    if rng_state is not None:                                     # đặt lại bộ sinh số ngay trước vòng huấn luyện
+        random.setstate(rng_state["random"])
+        np.random.set_state(rng_state["numpy"])
+        torch.set_rng_state(rng_state["torch"])
+        if rng_state["cuda"] is not None and torch.cuda.is_available():
+            torch.cuda.set_rng_state_all(rng_state["cuda"])
+    t_fit = time.time()
+    trainer.fit(train_data, valid_data, saved=True, show_progress=False, callback_fn=save_last)
+    t_fit = time.time() - t_fit
+    n_ep = hist[-1]["epoch"]
+    stopped = n_ep < a.epochs
+    log(f"Kết thúc: {'dừng sớm' if stopped else 'CHẠM TRẦN -> chưa chắc hội tụ'} ở epoch {n_ep}; tốt nhất epoch "
+        f"{best['epoch']}, NDCG@20 val {best['score']:.5f}")
+    ck = torch.load(trainer.saved_model_file, map_location=dev, weights_only=False)
+    model.load_state_dict(ck["state_dict"])
+    model.load_other_parameter(ck.get("other_parameter"))
+    assert ck["epoch"] + 1 == best["epoch"], (ck["epoch"], best)
+    model.eval()
+    log("Chấm đầy đủ trên val (bộ chấm nhóm) với checkpoint tốt nhất:")
+    res_val = E.evaluate(score_batch, ev, log=log, save_dir=run_dir, prefix="val_")
+    secs = [h["sec"] for h in hist]
+    out = {"model": a.model, "impl": "RecBole" + (" + RecBole-GNN" if a.gnn else ""), "seed": a.seed,
+           "cfg": {k: config[k] for k in ("embedding_size", "learning_rate", "train_batch_size", "epochs", "eval_step",
+                                          "stopping_step", "seed") if k in config.final_config_dict},
+           "set": a.set, "split": "val", "eval": "bộ chấm nhóm (eval_05), quy tắc dừng RecBole (>=, stopping_step 4)",
+           "data_checks": chk, "best_epoch": best["epoch"], "best_val_ndcg@20_during_training": best["score"],
+           "epochs_run": n_ep, "stopped_early": stopped, "chua_chac_hoi_tu": not stopped,
+           "median_sec_per_epoch": float(np.median(secs)), "sec_fit_this_call": round(t_fit, 1), "history": hist,
+           "checkpoint": str(Path(trainer.saved_model_file).resolve().relative_to(ROOT)).replace("\\", "/"),
+           "git_at_finish": git_state(), "val": res_val}
+    log(f"NDCG@20 val chấm lại từ checkpoint: {res_val['full']['ndcg@20']:.5f} (lúc huấn luyện {best['score']:.5f})")
+    (run_dir / "result.json").write_text(json.dumps(out, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
+    log(f"Xong: {run_dir / 'result.json'}")
+
+
 def main():
     if sys.platform == "win32":
         sys.stdout.reconfigure(encoding="utf-8")
@@ -78,6 +204,11 @@ def main():
     ap.add_argument("--epochs", type=int, default=300)
     ap.add_argument("--probe-epochs", type=int, default=None)
     ap.add_argument("--set", action="append", default=[], help="ghi đè siêu tham số, dạng khóa=giá_trị_json")
+    ap.add_argument("--group-eval", action="store_true",
+                    help="v3 (HỎI 6): chấm val trong vòng huấn luyện bằng bộ chấm của nhóm (eval_05, quy tắc hòa π), "
+                         "KHÔNG chấm test, lưu trạng thái chạy tiếp last_state.pth ở mỗi lần chấm, result.json cùng "
+                         "dạng train_05 (history, val)")
+    ap.add_argument("--stop-after-evals", type=int, default=None, help="(kiểm thử chạy tiếp) thoát sau N lần chấm")
     ap.add_argument("--gnn", default=None, help="thư mục mã nguồn RecBole-GNN (clone, không phải gói pip) -> dùng "
                     "Config / dataset / mô hình của RecBole-GNN (SimGCL, XSimGCL, ...)")
     a = ap.parse_args()
@@ -179,8 +310,10 @@ def main():
             "inputs_sha256": inputs, "config": {k: (v if isinstance(v, (int, float, str, bool, list, dict,
                                                                             type(None))) else str(v))
                                                 for k, v in config.final_config_dict.items()}}
-    (run_dir / "config_used.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False, default=str),
-                                              encoding="utf-8")
+    cu = run_dir / "config_used.json"
+    if cu.exists():                                   # chạy tiếp (--group-eval): không ghi đè bản của lần gọi đầu
+        cu = run_dir / f"config_used_{time.strftime('%Y%m%d_%H%M%S')}.json"
+    cu.write_text(json.dumps(meta, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
     log(f"{a.model} seed {a.seed} | RecBole {recbole.__version__} torch {torch.__version__} | {meta['gpu']} | "
         f"git {meta['git']}")
 
@@ -196,6 +329,9 @@ def main():
 
     model = get_model(config["model"])(config, train_data._dataset).to(config["device"])
     trainer = get_trainer(config["MODEL_TYPE"], config["model"])(config, model)
+    if a.group_eval:
+        assert not probe, "--group-eval không dùng với --probe-epochs"
+        return group_mode(a, run_dir, log, config, dataset, train_data, valid_data, model, trainer, chk)
     ep_sec, ev_sec, curve = [], [], []
     _tr, _va = trainer._train_epoch, trainer._valid_epoch
 
