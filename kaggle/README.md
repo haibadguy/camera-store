@@ -27,7 +27,7 @@ Muốn chạy LightGCN λ = 1e-3, seed 2, tối đa 1.000 epoch trên Kaggle:
 | `kernel/v3_runner.ipynb` | sinh từ `kaggle/v3_runner.py` | Notebook mẫu: môi trường → code → thư viện → dữ liệu → chạy tiếp (tùy chọn) → chạy việc → gom kết quả |
 
 - **Không symlink dữ liệu**: `eval_05.inputs_sha256()` gọi `Path.resolve().relative_to(ROOT)`, symlink sang
-  `/kaggle/input` sẽ lỗi; notebook chép file (≈ 190 MB) vào `/kaggle/working/camera-store/ai/data/`.
+  `/kaggle/input` sẽ lỗi; notebook chép file (≈ 130 MB) vào `/kaggle/working/camera-store/ai/data/`.
 - **Mã người dùng**: `user_map.json` trong gói thay mã người đánh giá Amazon bằng `u0, u1, ...` (code huấn luyện chỉ
   dùng số phần tử). Tắt bằng `--keep-user-ids` nếu Nam quyết.
 - **Seed**: mỗi script nhận `--seed` và tự đặt seed torch / numpy như ở máy nhóm; notebook đặt `PYTHONHASHSEED=0`.

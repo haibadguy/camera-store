@@ -43,6 +43,8 @@ MODEL_CFG = {   # siêu tham số theo mô hình; chỉ LightGCN đã chốt (= 
     "KGIN": {"embedding_size": 64, "n_factors": 4, "context_hops": 3, "node_dropout_rate": 0.5,
              "mess_dropout_rate": 0.1, "sim_regularity": 1e-4, "reg_weight": 1e-5, "ind": "distance",
              "temperature": 0.2},
+    "SimGCL": {"embedding_size": 64, "n_layers": 2, "reg_weight": 1e-4, "lambda": 0.5, "eps": 0.1,
+               "temperature": 0.2},
     "KGAT": {"embedding_size": 64, "kg_embedding_size": 64, "layers": [64, 32, 16], "mess_dropout": 0.1,
              "reg_weight": 1e-5, "aggregator_type": "bi"},
 }
@@ -83,6 +85,8 @@ def main():
     ap.add_argument("--epochs", type=int, default=300)
     ap.add_argument("--probe-epochs", type=int, default=None)
     ap.add_argument("--set", action="append", default=[], help="ghi đè siêu tham số, dạng khóa=giá_trị_json")
+    ap.add_argument("--gnn", default=None, help="thư mục mã nguồn RecBole-GNN (clone, không phải gói pip) -> dùng "
+                    "Config / dataset / mô hình của RecBole-GNN (SimGCL, XSimGCL, ...)")
     a = ap.parse_args()
     run_dir = (ROOT / a.run_dir).resolve()
     assert not (run_dir / "result.json").exists(), f"đã có kết quả, không chạy đè: {run_dir}"
@@ -98,9 +102,18 @@ def main():
     torch.load = _load
 
     import recbole
-    from recbole.config import Config
-    from recbole.data import create_dataset, data_preparation
-    from recbole.utils import get_model, get_trainer, init_logger, init_seed
+    from recbole.utils import init_logger, init_seed
+    gnn_commit = None
+    if a.gnn:
+        sys.path.insert(0, str(Path(a.gnn).resolve()))
+        from recbole_gnn.config import Config
+        from recbole_gnn.utils import create_dataset, data_preparation, get_model, get_trainer
+        gnn_commit = subprocess.run(["git", "-C", a.gnn, "rev-parse", "HEAD"], capture_output=True,
+                                    text=True).stdout.strip()
+    else:
+        from recbole.config import Config
+        from recbole.data import create_dataset, data_preparation
+        from recbole.utils import get_model, get_trainer
 
     probe = a.probe_epochs is not None
     mcfg = dict(MODEL_CFG.get(a.model, {}))
@@ -139,7 +152,7 @@ def main():
     init_logger(config)
     inputs = {p.name: sha256(p) for p in sorted((DATA / DATASET).glob(f"{DATASET}.*"))}
     meta = {"model": a.model, "seed": a.seed, "probe_epochs": a.probe_epochs, "argv": sys.argv,
-            "git": git_state(), "recbole": recbole.__version__, "torch": torch.__version__,
+            "git": git_state(), "recbole": recbole.__version__, "recbole_gnn_commit": gnn_commit, "torch": torch.__version__,
             "python": platform.python_version(),
             "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
             "inputs_sha256": inputs, "config": {k: (v if isinstance(v, (int, float, str, bool, list, dict,
