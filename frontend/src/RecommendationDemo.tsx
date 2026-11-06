@@ -34,7 +34,7 @@ function joinNames(names: string[]): string {
 
 function formatExplanation(text: string): string {
   return text
-    .replace(/^Gợi ý .*?\bvì\s+/i, "Sản phẩm này được chọn vì ")
+    .replace(/^Gợi ý .*?\bvì\s+ống này\s+/i, "Ống kính này ")
     .replace(/\s*\(ngàm [^)]+\),?/gi, "")
     .replace(/\b(Nikon\s+D\d+[A-Z]*)\b.*?(?=\s+bạn đã đánh giá)/gi, "$1")
     .replace(/\s+\/\s+/g, " và ")
@@ -225,7 +225,7 @@ function MaskNote({ response }: { response: RecommendationResponse }) {
 }
 
 function ExplanationPanel({ explanation }: { explanation: RecommendationExplanation }) {
-  return <section className="demo-explanation"><div className="demo-explanation-title">Vì sao sản phẩm này phù hợp?</div><p>{formatExplanation(explanation.text)}</p>
+  return <section className="demo-explanation"><div className="demo-explanation-title">Liên quan tới máy của bạn</div><p>{formatExplanation(explanation.text)}</p>
   </section>;
 }
 
@@ -249,7 +249,7 @@ function ProductDetail({ item, userId, onBack, onExit }: { item: RecommendationI
   const productLoading = !product && !productError;
   return <div className="demo-page"><DemoHeader onExit={onExit} trail="Thông tin sản phẩm" />
     <main className="demo-shell demo-main"><MockNotice /><button className="demo-back-button" onClick={onBack}>← Quay lại danh sách gợi ý</button><span className="demo-eyebrow">Thông tin sản phẩm</span>
-      <article className="demo-detail-card"><div className="demo-detail-visual" aria-hidden="true">{item.type_label}</div><div className="demo-detail-content"><div className="demo-type-row"><span>{item.type_label}</span><span>Gợi ý số {item.rank}</span></div><h1>{item.title}</h1><p className="demo-lead">Thông tin chính giúp bạn cân nhắc sản phẩm này{item.explanation?.verified ? " và lý do sản phẩm phù hợp với máy của bạn" : ""}.</p>
+      <article className="demo-detail-card"><div className="demo-detail-visual" aria-hidden="true">{item.type_label}</div><div className="demo-detail-content"><div className="demo-type-row"><span>{item.type_label}</span><span>Gợi ý số {item.rank}</span></div><h1>{item.title}</h1><p className="demo-lead">Thông tin chính giúp bạn cân nhắc sản phẩm này{item.explanation?.verified ? " và thông tin liên quan tới máy của bạn" : ""}.</p>
         {productLoading && <p role="status" className="demo-lead">Đang tải thông tin sản phẩm...</p>}
         {productError && <p role="alert" className="demo-lead">{productError}</p>}
         <dl className="demo-attributes"><div><dt>Loại sản phẩm</dt><dd>{item.type_label}</dd></div>{product?.mount && <div><dt>Loại ngàm</dt><dd>{formatMount(product.mount)}</dd></div>}{product?.khung && <div><dt>Kích thước cảm biến</dt><dd>{formatFrame(product.khung)}</dd></div>}{formatFocalRange(product?.focal_mm) && <div><dt>Tiêu cự</dt><dd>{formatFocalRange(product?.focal_mm)}</dd></div>}{formatAperture(product?.max_aperture_f) && <div><dt>Khẩu độ tối đa</dt><dd>{formatAperture(product?.max_aperture_f)}</dd></div>}{product?.usecases_label?.length ? <div><dt>Phù hợp để chụp</dt><dd>{product.usecases_label.join(", ")}</dd></div> : null}</dl>{item.explanation?.verified && <ExplanationPanel explanation={item.explanation} />}

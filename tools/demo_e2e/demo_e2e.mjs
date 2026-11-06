@@ -38,8 +38,9 @@ const USERS = [
 const UNKNOWN_USER = 99999;
 const EXPECTED_ERROR = { unknown: "Không tìm thấy người dùng này.", down: "Dịch vụ gợi ý đang tạm dừng, thử lại sau." };
 // Chữ trái hợp đồng 1.3 / quyết định của Nam 28/10 (dữ liệu là đánh giá, không phải đang dùng; all_history loại hẳn
-// chứ không "ưu tiên"; không gắn "Gợi ý phù hợp" cho mọi mục; giải thích là post-hoc, không phải "vì sao")
-const BANNED = ["đang dùng", "lịch sử sử dụng", "ưu tiên", "Gợi ý phù hợp", "Vì sao gợi ý"];
+// chứ không "ưu tiên"; không gắn "Gợi ý phù hợp" cho mọi mục; giải thích là post-hoc, không phải lý do mô hình chọn: chương 2, độ trung thực chưa chứng minh). So không phân biệt hoa thường.
+const BANNED = ["đang dùng", "lịch sử sử dụng", "ưu tiên", "Gợi ý phù hợp", "vì sao gợi ý", "được chọn vì", "lý do gợi ý",
+  "vì sao sản phẩm này phù hợp", "lý do sản phẩm phù hợp"];
 const TECHNICAL_UI_WORDS = ["QĐ 4-9", "item_id", "contract", "nikon_f", "bảng tương thích", "điểm của mô hình", "run_demo.ps1", "HTTP"];
 const log = (s) => console.log(s);
 const res = { phase, web, api, checks: {}, users: [], requests: [], console_errors: [] };
@@ -105,7 +106,7 @@ async function errorShown() {
 
 async function bannedWords(where, row) {
   const text = await page.locator("main").innerText();
-  for (const w of BANNED) if (text.includes(w)) row.mismatches.push(`${where}: có chữ "${w}"`);
+  for (const w of BANNED) if (text.toLowerCase().includes(w.toLowerCase())) row.mismatches.push(`${where}: có chữ "${w}"`);
   for (const w of TECHNICAL_UI_WORDS) if (text.includes(w)) row.mismatches.push(`${where}: còn thuật ngữ kỹ thuật "${w}"`);
   if (phase !== "mock" && await page.getByRole("note", { name: "Bản xem trước" }).count()) {
     row.mismatches.push(`${where}: chế độ api mà hiện nhãn "Bản xem trước"`);
@@ -153,7 +154,7 @@ function joinNames(names) {
 }
 
 function formatExplanation(text) {
-  return text.replace(/^Gợi ý .*?\bvì\s+/i, "Sản phẩm này được chọn vì ")
+  return text.replace(/^Gợi ý .*?\bvì\s+ống này\s+/i, "Ống kính này ")
     .replace(/\s*\(ngàm [^)]+\),?/gi, "")
     .replace(/\b(Nikon\s+D\d+[A-Z]*)\b.*?(?=\s+bạn đã đánh giá)/gi, "$1")
     .replace(/\s+\/\s+/g, " và ")
