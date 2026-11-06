@@ -1,7 +1,7 @@
-# Phiên bản cho Kaggle = đúng các gói mà code huấn luyện (ai/pipeline/) import, lấy từ ai/requirements-lock.txt.
+# Môi trường "nhom" trên Kaggle (venv Python 3.12.10 do uv tạo, xem kaggle/v3_runner.py): đúng các gói mà code huấn
+# luyện (ai/pipeline/) import, phiên bản lấy từ ai/requirements-lock.txt. Notebook cài file này với
+# `-c ai/requirements-lock.txt` để các gói phụ thuộc (sympy, networkx, aiohttp ...) cũng ghim đúng như máy nhóm.
 # Không dùng nguyên file lock vì file lock là pip freeze trên Windows (có gói chỉ chạy trên Windows, gói xuất báo cáo).
-# CHƯA KIỂM CHỨNG trên Kaggle: có bản torch 2.14.1+cu126 cho Python của ảnh Kaggle không, GPU Kaggle có được bản
-# cu126 hỗ trợ không (T4 = sm_75 như GTX 1660 Ti; P100 = sm_60 có thể không được bản torch mới hỗ trợ).
 --extra-index-url https://download.pytorch.org/whl/cu126
 torch==2.14.1+cu126
 torch-geometric==2.8.0.post1

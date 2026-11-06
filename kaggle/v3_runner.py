@@ -13,9 +13,14 @@
 # 3. Seed: mỗi việc truyền `--seed` cho script (script tự đặt seed torch / numpy như khi chạy ở máy nhóm).
 # 4. Log: mỗi việc ghi `logs/<việc>_<RUN_LABEL>_<thời điểm>.log` (tên mới, không ghi đè) + log của chính script.
 # 5. Không chấm test trên Kaggle (script huấn luyện chỉ chấm val). Chấm test làm ở máy nhóm, theo kế hoạch.
-# 6. Hai môi trường: "nhom" = python chính, cài đúng torch / PyG / numpy / scipy như `ai/requirements-lock.txt`;
-#    "recbole" = venv /tmp/rbenv (thấy torch của python chính, còn numpy 1.26.4 / scipy 1.11.4 / recbole 1.2.1 ... riêng)
-#    như venv RecBole ở máy nhóm (`ai/recbole/requirements-recbole-lock.txt`).
+# 6. Hai môi trường, đều là venv **Python 3.12.10** (cùng bản với máy nhóm) do `uv` tạo; Python sẵn có của Kaggle
+#    (3.13 tại 11/2026) chỉ dùng để chạy notebook này và cài `uv`, không chạy việc huấn luyện nào:
+#    - "nhom" (`/tmp/env_nhom`): torch / PyG / numpy / scipy theo `kaggle/requirements-kaggle.txt`, các gói phụ thuộc
+#      ghim theo `ai/requirements-lock.txt` (venv `ai/.venv` ở máy nhóm);
+#    - "recbole" (`/tmp/env_recbole`): đúng file `ai/recbole/requirements-recbole-lock.txt` (venv RecBole ở máy nhóm:
+#      numpy 1.26.4, scipy 1.11.4, recbole 1.2.1, torch 2.14.1+cu126 ...).
+#    Khác máy nhóm (bắt buộc vì Kaggle chạy Linux): torch bản Linux kéo thêm các gói `nvidia-*` và `triton` (bản Windows
+#    không có); phiên bản các gói này do torch 2.14.1 quy định, ghi trong `pip_freeze_*.txt` của mỗi phiên bản.
 
 # %%
 # ===== CẤU HÌNH CỦA PHIÊN BẢN NÀY (sửa trước khi Save Version) =====
@@ -26,9 +31,10 @@ RESUME = False                        # True khi chạy tiếp: phải thêm out
 REQUIRE_GPU = "T4"                    # mỗi mô hình chạy mọi seed trên cùng loại GPU (kế hoạch mục 5) -> sai GPU thì dừng
 JOB_DEADLINE_H = 8.5                  # sau mốc này (tính từ đầu phiên) ngắt việc đang chạy, lưu kết quả để chạy tiếp.
                                       # Giới hạn giờ / phiên của Kaggle CHƯA KIỂM CHỨNG -> để thận trọng 8,5 giờ.
-INSTALL_EXACT_VERSIONS = True         # cài đúng phiên bản như file lock (cần bật Internet)
+UV_VERSION = "0.13.5"                 # công cụ tạo venv (cài từ PyPI; cần bật Internet)
+PY_VERSION = "3.12.10"                # Python của cả hai venv = Python của ai/.venv và venv RecBole ở máy nhóm
 
-# Đợt "thu" (HỎI 10, Nam chốt 06/11): mỗi baseline seed 1, một cấu hình; chỉ val. Việc: (tên, môi trường, script, tham số).
+# Đợt "thu" (nhóm chốt 06/11): mỗi baseline seed 1, một cấu hình; chỉ val. Việc: (tên, môi trường, script, tham số).
 # "{GNN}" được thay bằng thư mục RecBole-GNN đã clone. Trần 1.000 epoch, chấm val mỗi 10 epoch, dừng sau 5 lần không tăng.
 PRESETS = {
     "nam": [   # KGIN: mặc định RecBole (d 64, 4 ý định, node dropout 0,5), context_hops = 2 (giữa lưới {1, 2, 3})
@@ -40,7 +46,7 @@ PRESETS = {
          ["--model", "SimGCL", "--seed", "1", "--epochs", "1000", "--group-eval", "--gnn", "{GNN}",
           "--set", "lambda=0.01"]),
     ],
-    "quyen": [  # BPR-MF code nhóm (số chính, HỎI 5), UltraGCN (cấu hình Electronics của tác giả), BPR RecBole (đối chiếu)
+    "quyen": [  # BPR-MF code nhóm (số chính), UltraGCN (cấu hình Electronics của tác giả), BPR RecBole (đối chiếu)
         ("bprmf_l2-1e-04_s1", "nhom", "ai/pipeline/05d_bprmf_train.py", ["--l2", "1e-4", "--seed", "1"]),
         ("ultragcn_electronics_s1", "nhom", "ai/pipeline/05e_ultragcn_train.py", ["--seed", "1"]),
         ("recbole_bpr_s1", "recbole", "ai/recbole/run_recbole.py",
@@ -58,7 +64,6 @@ INP = Path("/kaggle/input")
 WORK = Path("/kaggle/working")
 REPO = WORK / "camera-store"
 GNN_DIR = Path("/tmp/recbole_gnn_src")
-RB_ENV = Path("/tmp/rbenv")
 LOGS = WORK / "logs"
 LOGS.mkdir(parents=True, exist_ok=True)
 
@@ -97,7 +102,7 @@ def hours():
 
 # %%
 # ===== Môi trường =====
-env = {"python": platform.python_version(), "time_utc": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
+env = {"python_kaggle": platform.python_version(), "time_utc": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
        "account_preset": ACCOUNT, "run_label": RUN_LABEL}
 try:
     env["nvidia_smi"] = sh("nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader")
@@ -126,38 +131,75 @@ assert env["recbole_gnn_commit"] == gnn_expect
 print("commit", head, "| RecBole-GNN", gnn_expect)
 
 # %%
-# ===== Thư viện: môi trường "nhom" (python chính) =====
-if INSTALL_EXACT_VERSIONS:
-    req = REPO / "kaggle" / "requirements-kaggle.txt"
-    print(sh([sys.executable, "-m", "pip", "install", "-q", "-r", str(req)])[-2000:])
-import torch  # noqa: E402
-env["torch"] = torch.__version__
-env["cuda_available"] = torch.cuda.is_available()
-env["gpu"] = torch.cuda.get_device_name(0) if torch.cuda.is_available() else None
-(LOGS / f"pip_freeze_nhom_{RUN_LABEL}_{time.strftime('%Y%m%d_%H%M%S')}.txt").write_text(
-    sh([sys.executable, "-m", "pip", "freeze"]), encoding="utf-8")
-print(json.dumps(env, indent=2, ensure_ascii=False))
+# ===== Thư viện: tạo venv Python 3.12.10 bằng uv (chỉ tạo môi trường mà JOBS cần) =====
+# Không dùng `python -m venv` của Kaggle: ảnh Kaggle (Debian/Ubuntu) không có ensurepip, và Python 3.13 của Kaggle
+# không có bản numpy 1.26.4 / scipy 1.11.4 mà môi trường RecBole cần. uv tự tải Python 3.12.10 (bản dựng
+# python-build-standalone) nên không phụ thuộc Python của ảnh Kaggle.
+t_env = time.time()
+os.environ["UV_CACHE_DIR"] = "/tmp/uv_cache"              # tải torch một lần, hai venv dùng chung
+os.environ["UV_PYTHON_INSTALL_DIR"] = "/tmp/uv_python"
+sh([sys.executable, "-m", "pip", "install", "-q", f"uv=={UV_VERSION}"])
+UV = [sys.executable, "-m", "uv"]
+env["uv"] = sh(UV + ["--version"]).strip()
+sh(UV + ["python", "install", PY_VERSION])
 
-# %%
-# ===== Thư viện: môi trường "recbole" (chỉ tạo khi có việc cần) =====
-RB_PY = None
-if any(e == "recbole" for _, e, _, _ in JOBS):
-    if RB_ENV.exists():
-        shutil.rmtree(RB_ENV)
-    sh([sys.executable, "-m", "venv", "--system-site-packages", str(RB_ENV)])
-    RB_PY = str(RB_ENV / "bin" / "python")
-    print(sh([RB_PY, "-m", "pip", "install", "-q", "--no-deps", "-r",
-              str(REPO / "kaggle" / "requirements-kaggle-recbole.txt")])[-2000:])
-    chk = sh([RB_PY, "-c", "import json, numpy, scipy, pandas, torch, torch_geometric, recbole; print(json.dumps("
-              "{'numpy': numpy.__version__, 'scipy': scipy.__version__, 'pandas': pandas.__version__, "
-              "'torch': torch.__version__, 'pyg': torch_geometric.__version__, 'recbole': recbole.__version__, "
-              "'cuda': torch.cuda.is_available()}))"])
-    env["recbole_env"] = json.loads(chk.strip().splitlines()[-1])
-    print(env["recbole_env"])
-    assert env["recbole_env"]["numpy"] == "1.26.4" and env["recbole_env"]["recbole"] == "1.2.1", env["recbole_env"]
-    assert env["recbole_env"]["torch"] == env["torch"], "venv RecBole phải dùng torch của python chính"
-    (LOGS / f"pip_freeze_recbole_{RUN_LABEL}_{time.strftime('%Y%m%d_%H%M%S')}.txt").write_text(
-        sh([RB_PY, "-m", "pip", "freeze"]), encoding="utf-8")
+TORCH_INDEX = "https://download.pytorch.org/whl/cu126"   # như dòng --extra-index-url trong các file lock
+
+def pins_text(text):
+    """{tên chuẩn hóa: phiên bản} từ các dòng `tên==phiên_bản` (file requirements / lock / pip freeze)."""
+    out = {}
+    for ln in text.splitlines():
+        ln = ln.split("#")[0].strip()
+        if "==" in ln and not ln.startswith("-"):
+            k, v = ln.split("==", 1)
+            out[k.strip().lower().replace("_", "-").replace(".", "-")] = v.strip()
+    return out
+
+def pins(path):
+    return pins_text(Path(path).read_text(encoding="utf-8"))
+
+def make_env(name, steps, must_match, lock):
+    """Tạo venv /tmp/env_<name> (Python PY_VERSION), cài theo `steps`, rồi kiểm:
+    mọi gói trong `must_match` có đúng phiên bản; mọi gói đã cài mà có trong `lock` cũng đúng phiên bản của `lock`."""
+    path = Path(f"/tmp/env_{name}")
+    if path.exists():
+        shutil.rmtree(path)
+    sh(UV + ["venv", "--quiet", "--python", PY_VERSION, "--python-preference", "only-managed", str(path)])
+    py = str(path / "bin" / "python")
+    for args in steps:
+        sh(UV + ["pip", "install", "--quiet", "--python", py, "--extra-index-url", TORCH_INDEX,
+                  "--index-strategy", "unsafe-best-match", *args])
+    freeze = sh(UV + ["pip", "freeze", "--python", py])
+    (LOGS / f"pip_freeze_{name}_{RUN_LABEL}_{time.strftime('%Y%m%d_%H%M%S')}.txt").write_text(freeze, encoding="utf-8")
+    got, want, lk = pins_text(freeze), pins(must_match), pins(lock)
+    bad = {k: (v, got.get(k)) for k, v in want.items() if got.get(k) != v}
+    bad.update({k: (lk[k], v) for k, v in got.items() if k in lk and lk[k] != v})
+    assert not bad, f"venv {name}: phiên bản lệch (cần, có): {bad}"
+    chk = json.loads(sh([py, "-c", "import json, platform, torch; print(json.dumps({'python': platform.python_version(), "
+                         "'torch': torch.__version__, 'cuda': torch.cuda.is_available(), "
+                         "'gpu': torch.cuda.get_device_name(0) if torch.cuda.is_available() else None}))"]
+                        ).strip().splitlines()[-1])
+    assert chk["python"] == PY_VERSION, chk
+    assert chk["cuda"], f"venv {name}: torch không thấy GPU: {chk}"
+    chk["not_in_lock"] = sorted(f"{k}=={v}" for k, v in got.items() if k not in lk)   # gói chỉ có ở Linux
+    env[f"env_{name}"] = chk
+    print(name, json.dumps(chk, ensure_ascii=False), flush=True)
+    return py
+
+NEED = {e for _, e, _, _ in JOBS}
+PY = {}
+if "nhom" in NEED:
+    lock = REPO / "ai" / "requirements-lock.txt"
+    req = REPO / "kaggle" / "requirements-kaggle.txt"
+    PY["nhom"] = make_env("nhom", [["-r", str(req), "-c", str(lock)]], req, lock)
+if "recbole" in NEED:
+    lock = REPO / "ai" / "recbole" / "requirements-recbole-lock.txt"
+    # (1) torch kèm gói phụ thuộc (bản Linux cần nvidia-* / triton), các gói chung ghim theo lock;
+    # (2) cả file lock, --no-deps như ở máy nhóm (recbole 1.2.1 đòi ray<=2.6.3, không có bản cho Python 3.12).
+    PY["recbole"] = make_env("recbole", [[f"torch=={pins(lock)['torch']}", "-c", str(lock)],
+                                         ["--no-deps", "-r", str(lock)]], lock, lock)
+env["env_setup_minutes"] = round((time.time() - t_env) / 60, 1)
+print(json.dumps(env, indent=2, ensure_ascii=False))
 
 # %%
 # ===== Dữ liệu: chép vào repo (KHÔNG symlink: eval_05.inputs_sha256 cần đường dẫn nằm trong repo), kiểm sha256 =====
@@ -223,7 +265,7 @@ for name, which, script, args in JOBS:
         done.append({"name": name, "status": f"không chạy: còn {left:.2f} giờ trước mốc {JOB_DEADLINE_H}"})
         print(done[-1], flush=True)
         continue
-    py = sys.executable if which == "nhom" else RB_PY
+    py = PY[which]
     argv = [py, *(["-W", "ignore"] if which == "recbole" else []), script,
             *[x.replace("{GNN}", str(GNN_DIR)) for x in args], "--run-dir", run_dir]
     lp = LOGS / f"{name}_{RUN_LABEL}_{time.strftime('%Y%m%d_%H%M%S')}.log"
