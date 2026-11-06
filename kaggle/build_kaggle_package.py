@@ -1,8 +1,8 @@
 """
 build_kaggle_package.py — đóng gói code + dữ liệu đã xử lý thành 2 Kaggle dataset RIÊNG TƯ và 1 notebook mẫu, để
-chạy huấn luyện v3 trên Kaggle (nhận xét cô 06/11: "đưa code lên Kaggle ..., cố định seed, ghi log, lưu phiên bản").
-Viết 06/11/2026. Script này CHỈ tạo thư mục trên máy; KHÔNG tải gì lên Kaggle (lệnh tải lên in ra ở PACKAGE.md để
-Nam tự chạy sau khi đồng ý).
+chạy huấn luyện v3 trên Kaggle (cố định seed, ghi log, lưu phiên bản).
+Viết 06/11/2026. Script này CHỈ tạo thư mục trên máy; KHÔNG tải gì lên Kaggle (lệnh tải lên in ra ở PACKAGE.md, chạy
+tay khi nhóm quyết định tải lên).
 
 Đầu ra: <out>/<tag>/
   camera-store-v3-code/   camera-store.bundle (git bundle đến commit HEAD: notebook clone + checkout đúng commit),
@@ -18,10 +18,10 @@ Riêng tư: `kaggle datasets create` mặc định tạo dataset riêng tư (ch�
 kernel-metadata.json đặt "is_private": true.
 user_map.json: mặc định thay mã người dùng Amazon bằng "u0", "u1", ... (giữ nguyên số thứ tự). Code huấn luyện chỉ
 dùng len(user_map) (common_05.N_USERS), nên kết quả không đổi; không đưa mã người đánh giá của Amazon lên dịch vụ
-ngoài. Tắt bằng --keep-user-ids (chỉ khi Nam quyết).
+ngoài. Tắt bằng --keep-user-ids (chỉ khi nhóm quyết định).
 
 Chạy (từ thư mục camera-store, cây git phải sạch):
-  ai\\.venv\\Scripts\\python.exe kaggle/build_kaggle_package.py --out E:\\DATN\\kaggle_pkg --tag v3_20261106
+  ai\\.venv\\Scripts\\python.exe kaggle/build_kaggle_package.py --out E:\\DATN\\kaggle_pkg --tag thu_20261107
 """
 import argparse
 import hashlib
@@ -52,7 +52,7 @@ DATA_FILES = [
 ]
 GNN_SRC = r"E:\DATN\venvs\src\recbole_gnn_src"
 GNN_COMMIT = "632ef888589944c190ad8f449b49ca559618d4df"   # bản đã dùng ở máy nhóm (ai/recbole/README.md)
-OWNER = "KAGGLE_USERNAME"     # Nam điền tên tài khoản Kaggle khi tải lên (không ghi vào repo)
+OWNER = "KAGGLE_USERNAME"     # điền tên tài khoản Kaggle khi tải lên (không ghi vào repo)
 
 
 def sha256(p):
@@ -180,7 +180,7 @@ def main():
           *[f"- `{k}` ({(out / k).stat().st_size / 2 ** 20:.1f} MiB) sha256 `{v}`" for k, v in zips.items()], "",
           "Tải lên bằng trình duyệt: làm theo `kaggle/HUONG_DAN_KAGGLE.md` (dùng 2 file .zip và `kernel/v3_runner.ipynb`).",
           "",
-          "## Lệnh tải lên (CHƯA CHẠY — chỉ chạy khi Nam đồng ý)", "",
+          "## Lệnh tải lên bằng kaggle CLI (chưa chạy)", "",
           f"Trước khi chạy: thay `{OWNER}` trong 3 file `*-metadata.json` bằng tên tài khoản Kaggle.", "",
           "```", f"kaggle datasets create -p \"{code_d}\" --dir-mode zip",
           f"kaggle datasets create -p \"{data_d}\" --dir-mode zip",

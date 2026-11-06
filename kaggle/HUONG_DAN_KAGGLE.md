@@ -1,7 +1,8 @@
 # Hướng dẫn chạy đợt `thu` trên Kaggle (làm trên web, không cần khóa API)
 
-Viết 06/11/2026. Đợt `thu` = HỎI 10 (Nam chốt 06/11): mỗi baseline **seed 1, một cấu hình**, chỉ chấm val, để đo số
-epoch dừng sớm và giờ GPU thật trước khi quyết lưới / số seed. Kế hoạch: `docs/reviews/v3_eval_plan.md` mục 6.1, 12.1.
+Viết 06/11/2026, cập nhật 07/11/2026 (môi trường thư viện dựng bằng `uv`, mục 3a). Đợt `thu` (nhóm chốt 06/11): mỗi
+baseline **seed 1, một cấu hình**, chỉ chấm val, để đo số epoch dừng sớm và giờ GPU thật trước khi quyết lưới / số
+seed. Kế hoạch: `docs/reviews/v3_eval_plan.md` mục 6.1, 12.1.
 
 Những chỗ ghi **[chưa kiểm chứng]** là mô tả giao diện / giới hạn Kaggle theo hiểu biết chung, chưa thử trên tài khoản
 của nhóm. Gặp khác biệt thì ghi lại (ảnh chụp màn hình) để sửa file này.
@@ -16,7 +17,7 @@ Thư mục `E:\DATN\kaggle_pkg\<tag>\` (do `kaggle/build_kaggle_package.py` sinh
 | `camera-store-v3-data.zip` | dataset **dữ liệu**: train / val / test, KG, file RecBole; `user_map.json` đã ẩn mã (`u0`, `u1`, ...) |
 | `kernel/v3_runner.ipynb` | notebook (đã điền commit) |
 
-## 1. Chia việc cho 3 tài khoản (HỎI 7)
+## 1. Chia việc cho 3 tài khoản
 
 Ô cấu hình đầu notebook có `ACCOUNT`; mỗi người chỉ đổi dòng này.
 
@@ -29,7 +30,7 @@ Thư mục `E:\DATN\kaggle_pkg\<tag>\` (do `kaggle/build_kaggle_package.py` sinh
 Số giây / epoch là đo ngắn trên GTX 1660 Ti (kế hoạch mục 8.1); tốc độ T4 chưa đo. Mỗi mô hình chạy mọi seed về sau
 trên **cùng loại GPU (T4)**, nên notebook dừng ngay nếu GPU không phải T4.
 
-## 2. Nam: tạo 2 dataset riêng tư (làm 1 lần)
+## 2. Tài khoản Nam: tạo 2 dataset riêng tư (làm 1 lần)
 
 1. Đăng nhập kaggle.com → nút **Create** (dấu +, cột trái) → **New Dataset**.
 2. Kéo thả `camera-store-v3-code.zip` vào khung tải lên. Tiêu đề: `camera-store-v3-code`.
@@ -41,7 +42,7 @@ trên **cùng loại GPU (T4)**, nên notebook dừng ngay nếu GPU không ph�
 5. Chia sẻ cho Hải và Quyền: trong trang dataset → **Settings** (hoặc nút **Share**) → **Sharing** → thêm tên tài khoản
    Kaggle của Hải, Quyền, quyền **Can view** [chưa kiểm chứng tên nút].
 
-Không bấm "Make Public". Code mới (commit khác) thì tạo **New Version** của dataset code, không tạo dataset mới.
+Không bấm "Make Public". Code mới (commit khác) thì tạo **New Version** của dataset code (mục 9), không tạo dataset mới.
 
 ## 3. Mỗi người: tạo notebook trong tài khoản của mình
 
@@ -52,9 +53,26 @@ Không bấm "Make Public". Code mới (commit khác) thì tạo **New Version**
    `camera-store-v3-data`. (Hải, Quyền: dataset nằm ở mục chia sẻ với mình / "Shared with you".)
 5. Khung bên phải → **Settings**:
    - **Accelerator** = `GPU T4 x2` (KHÔNG chọn P100). Notebook chỉ dùng 1 GPU.
-   - **Internet** = On (để cài đúng torch / RecBole như file lock).
+   - **Internet** = On (notebook tải `uv`, Python 3.12.10 và thư viện đúng phiên bản như file lock).
    - Language Python, Environment để mặc định ("Pin to original environment" không cần).
 6. Ô code đầu tiên: sửa `ACCOUNT = "nam"` thành `"hai"` / `"quyen"` cho đúng người. Không sửa gì khác.
+
+## 3a. Môi trường thư viện (notebook tự làm, không cần thao tác)
+
+Ô **Thư viện** cài `uv` (bản `UV_VERSION`) bằng pip của Kaggle, rồi tạo venv **Python 3.12.10** (cùng bản với
+`ai/.venv` và venv RecBole ở máy nhóm) cho từng môi trường mà `JOBS` cần:
+
+| Môi trường | Thư mục | Cài gì |
+|---|---|---|
+| `nhom` (code `ai/pipeline/`) | `/tmp/env_nhom` | `kaggle/requirements-kaggle.txt` (torch 2.14.1+cu126, PyG 2.8.0.post1, numpy 2.5.3, scipy 1.18.1), gói phụ thuộc ghim theo `ai/requirements-lock.txt` |
+| `recbole` (RecBole, RecBole-GNN) | `/tmp/env_recbole` | đúng file `ai/recbole/requirements-recbole-lock.txt` (numpy 1.26.4, scipy 1.11.4, recbole 1.2.1, torch 2.14.1+cu126 ...), `--no-deps` như ở máy nhóm |
+
+- Vì sao không dùng Python của Kaggle: ảnh Kaggle (Python 3.13 tại 11/2026) không có `ensurepip` nên
+  `python -m venv` lỗi, và numpy 1.26.4 / scipy 1.11.4 không có bản cho Python 3.13.
+- Sau khi cài, notebook so `pip freeze` của từng venv với file lock: gói nào lệch phiên bản thì dừng. Bản freeze lưu ở
+  `logs/pip_freeze_<môi trường>_*.txt`.
+- Khác máy nhóm (bắt buộc vì Kaggle chạy Linux): torch bản Linux có thêm các gói `nvidia-*` và `triton`; phiên bản
+  các gói này do torch 2.14.1 quy định, ghi trong `summary.json` → `env.env_<môi trường>.not_in_lock`.
 
 ## 4. Chạy
 
@@ -64,15 +82,14 @@ Không bấm "Make Public". Code mới (commit khác) thì tạo **New Version**
    Ô cuối in bảng `done`: mỗi việc có `status` = `xong` / `lỗi (mã ...)` / `ngắt ở mốc 8.5 giờ ...`.
 3. Hạn mức [chưa kiểm chứng]: khoảng 30 giờ GPU / tuần / tài khoản; xem số giờ còn lại ở khung Settings → Quota.
    Notebook tự ngắt việc đang chạy ở mốc `JOB_DEADLINE_H = 8.5` giờ (thận trọng, vì giới hạn mỗi phiên chưa kiểm
-   chứng; nếu xác nhận được là 12 giờ thì báo Nam/Claude để nâng mốc) và vẫn lưu kết quả để chạy tiếp.
+   chứng; nếu xác nhận được là 12 giờ thì báo nhóm để nâng mốc) và vẫn lưu kết quả để chạy tiếp.
 
 ## 5. Lấy kết quả
 
 1. Mở phiên bản đã chạy xong → tab **Output** → thư mục `out/<RUN_LABEL>/` (vd `out/thu_s1_nam/`) gồm `results/`
    (config, history, `last.pt` / `last_state.pth`, `result.json`), `logs/`, `summary.json` (sha256 mọi file).
-2. **Download** (tải cả thư mục / "Download All") → gửi Nam. Nam đặt vào
-   `E:\DATN\camera-store\results\kaggle\<RUN_LABEL>\` (giữ nguyên tên) và báo Claude kiểm (so sha256 với `summary.json`,
-   đọc đường cong val).
+2. **Download** (tải cả thư mục / "Download All") → gửi vào nhóm. Thư mục được đặt vào `results/kaggle/<RUN_LABEL>/`
+   của repo ở máy nhóm (giữ nguyên tên) rồi kiểm: so sha256 với `summary.json`, đọc đường cong val.
 3. Ghi vào bảng lần chạy: ngày, tài khoản, số phiên bản notebook, commit (trong `summary.json` → `env.commit`).
 
 ## 6. Chạy tiếp khi bị ngắt ở mốc giờ (`status` = "ngắt ở mốc ...")
@@ -85,16 +102,30 @@ Không bấm "Make Public". Code mới (commit khác) thì tạo **New Version**
    (đã kiểm ở máy nhóm: chạy tiếp cho đúng cùng quá trình, xem CHANGELOG 06/11).
 5. Output phiên bản mới chứa toàn bộ kết quả (cả phần của phiên bản trước) và log cũ trong `logs/truoc/`.
 
-## 7. Chia sẻ notebook cho cô (HỎI 8)
+Chạy tiếp phải dùng **cùng commit** với phiên bản trước (notebook kiểm `env.commit`); đổi sang notebook / code mới thì
+bắt đầu lại với `RUN_LABEL` mới.
 
-- Cách chắc chắn: trang notebook → **Share** → **Add collaborators** → tên tài khoản Kaggle của cô, quyền **Can view**.
-  Cô xem được code, log từng phiên bản và output; dataset vẫn riêng tư.
+## 7. Chia sẻ notebook cho giảng viên hướng dẫn
+
+- Cách chắc chắn: trang notebook → **Share** → **Add collaborators** → tên tài khoản Kaggle của GVHD, quyền
+  **Can view**. GVHD xem được code, log từng phiên bản và output; dataset vẫn riêng tư.
 - Để notebook **Public** khi dataset riêng tư: [chưa kiểm chứng] Kaggle có cho không và người xem thấy gì; chưa làm.
 
 ## 8. Nếu lỗi
 
 - `cần GPU T4`: chưa chọn Accelerator = GPU T4 x2.
-- Lỗi khi `pip install` (không tải được / không có bản cho Python của Kaggle): chụp 30 dòng cuối gửi Nam. Không tự đổi
-  phiên bản thư viện (kết quả phải chạy trên đúng phiên bản trong file lock).
+- Lỗi ở ô **Thư viện** (không tải được `uv` / Python 3.12.10 / thư viện, hoặc `phiên bản lệch`): kiểm Internet = On,
+  chụp 30 dòng cuối gửi vào nhóm. Không tự đổi phiên bản thư viện (kết quả phải chạy trên đúng phiên bản trong file lock).
+- `torch không thấy GPU`: chưa chọn Accelerator, hoặc GPU không được bản torch 2.14.1+cu126 hỗ trợ (P100).
 - `sha256 lệch` / `không tìm thấy đúng một ...`: dataset tải lên thiếu file hoặc trùng; kiểm tab Data của dataset.
-- Việc báo `lỗi (mã ...)`: notebook in 30 dòng cuối log của việc đó; gửi Nam kèm file log trong Output.
+- Việc báo `lỗi (mã ...)`: notebook in 30 dòng cuối log của việc đó; gửi vào nhóm kèm file log trong Output.
+
+## 9. Thay gói cũ bằng gói mới (commit mới)
+
+1. Dataset code: trang `camera-store-v3-code` → **New Version** → tải `camera-store-v3-code.zip` của gói mới →
+   **Create**. Dataset dữ liệu chỉ cần **New Version** khi `PACKAGE.md` của gói mới báo dữ liệu khác gói trước.
+2. Notebook: mở `camera-store-v3-runner` → **Edit** → **File → Import Notebook** → chọn `v3_runner.ipynb` của gói mới
+   (thay toàn bộ ô; `EXPECT_COMMIT` mới đã điền sẵn) → sửa lại `ACCOUNT` cho đúng người.
+3. Khung **Input**: dataset đã thêm tự dùng bản mới nhất [chưa kiểm chứng]; nếu thấy chữ "new version available" thì
+   bấm cập nhật. Notebook kiểm commit, lệch thì dừng ở ô **Code**.
+4. **Save Version → Save & Run All**.
