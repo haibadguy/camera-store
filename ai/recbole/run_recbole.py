@@ -314,7 +314,9 @@ def main():
         "epochs": a.probe_epochs if probe else a.epochs, "train_batch_size": 2048, "learner": "adam",
         "learning_rate": 1e-3, "train_neg_sample_args": {"distribution": "uniform", "sample_num": 1,
                                                          "dynamic": False, "candidate_num": 0},
-        "eval_step": 10 ** 6 if probe else 10, "stopping_step": 4,
+        # ItemKNN / Pop (mô hình "traditional"): RecBole chỉ chạy 1 epoch -> chấm ngay sau epoch 1 (eval_step 10 thì
+        # không bao giờ chấm; thử 06/11: --group-eval báo NDCG@20 -1 và không có checkpoint)
+        "eval_step": 10 ** 6 if probe else (1 if a.model in ("ItemKNN", "Pop") else 10), "stopping_step": 4,
         "seed": a.seed, "reproducibility": True, "device": "cuda" if torch.cuda.is_available() else "cpu",
         "checkpoint_dir": str(run_dir / "ckpt"), "log_root": str(run_dir / "recbole_log") + "/",
         "show_progress": False, "save_dataset": False, "save_dataloaders": False, "log_wandb": False,

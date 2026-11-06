@@ -1,7 +1,7 @@
 # Kế hoạch đánh giá v3 (nhận xét cô 06/11, mục A1–A3, A5) — đăng ký trước
 
 **Trạng thái:** **ĐĂNG KÝ TRƯỚC** — Nam chốt 10 câu [HỎI] tối 06/11/2026 (mục 12.1, kèm điều kiện). Từ đây đổi gì
-phải ghi ở mục 13 kèm lý do, trước khi xem số mới. Còn 1 câu mới [HỎI 11] (mục 12.1) không chặn việc chạy. Đợt dò seed 1
+phải ghi ở mục 13 kèm lý do, trước khi xem số mới. [HỎI 11] Nam chốt 06/11 khuya: không dò λ1 cho v2 A (mục 12.1). Đợt dò seed 1
 máy nhóm bắt đầu 06/11 (`ai/pipeline/v3_sweep.py --group s1`, mục 6.1).
 
 Nguồn: nhận xét cô `E:\DATN\co\nhan_xet_co_06112026.md` (ngoài repo); kế hoạch cũ `n5_eval_plan.md`,
@@ -354,6 +354,11 @@ Hệ quả Claude rút ra (ghi lại để Nam kiểm):
 - **[HỎI 11] (mới, không chặn):** v2 A chỉ có một giá trị λ1 = 0,1 (lấy từ lúc dò v1). Có dò λ1 cho v2 A không
   (vd {0,01; 1}, như lưới v1, mỗi điểm ~0,7–6,4 giờ)? Chưa dò thì báo cáo ghi "λ1 lấy từ v1, không dò lại cho v2".
   Đợt `s1` chưa có các lần này; thêm vào cuối đợt nếu Nam đồng ý.
+  **Nam chốt 06/11 (khuya, sau): KHÔNG dò λ1 cho v2 A, giữ λ1 = 0,1.** Lý do của Nam: 0,1 không ở biên lưới v1
+  {0,01; 0,1; 1}, và lần dò v1 các điểm chênh nhau nhỏ — val NDCG@20 seed 1 0,03948 / **0,03973** / 0,03940 [ĐO, mục 3],
+  tức 0,1 hơn 0,01 là 0,00025 và hơn 1 là 0,00033 (≤ 0,00033). Báo cáo ghi: "λ1 = 0,1 chọn khi dò CaKG-Rec v1 (cả 3 điểm
+  chạm trần 300 epoch); không dò lại cho v2 A". Hệ quả: CaKG-Rec v2 A không có điểm lưới nào khác → không áp quy tắc
+  "ở biên thêm 1 điểm" cho CaKG-Rec.
 
 ## 13. Sửa đổi kế hoạch
 
