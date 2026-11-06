@@ -112,6 +112,21 @@ def group_mode(a, run_dir, log, config, dataset, train_data, valid_data, model, 
         fr = E.full_rank(score_batch, ev.split, ev.pi)
         return float(np.where(fr["rank"] <= 20, 1.0 / np.log2(fr["rank"] + 1.0), 0.0).mean())
 
+    def loader_gens(dl, name="train", out=None, depth=0):
+        """Bộ sinh số RIÊNG của dataloader RecBole (AbstractDataLoader: torch.Generator seed = config["seed"], dùng để
+        xáo thứ tự mỗi epoch), kể cả dataloader con (vd KnowledgeBasedDataLoader). Không nằm trong trạng thái torch
+        chung -> phải lưu riêng, không thì chạy tiếp xáo khác (kiểm 06/11: lệch từ epoch 11 khi dừng ở epoch 10)."""
+        out = {} if out is None else out
+        if isinstance(getattr(dl, "generator", None), torch.Generator):
+            out[name] = dl.generator
+        if depth < 3:
+            for k, v in vars(dl).items():
+                if v is not dl and isinstance(getattr(v, "generator", None), torch.Generator):
+                    loader_gens(v, f"{name}.{k}", out, depth + 1)
+        return out
+
+    gens = loader_gens(train_data)
+    assert gens, "không thấy torch.Generator của dataloader train"
     last = run_dir / "last_state.pth"
     hist, best = [], {"epoch": 0, "score": -1.0}
     rng_state = None
@@ -150,7 +165,8 @@ def group_mode(a, run_dir, log, config, dataset, train_data, valid_data, model, 
               "other_parameter": model.other_parameter(), "optimizer": trainer.optimizer.state_dict(),
               "history": hist, "best": best,
               "rng": {"random": random.getstate(), "numpy": np.random.get_state(), "torch": torch.get_rng_state(),
-                      "cuda": torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None}}
+                      "cuda": torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None,
+                      "loader_generators": {k: g.get_state() for k, g in gens.items()}}}
         tmp = Path(str(last) + ".tmp")
         torch.save(st, tmp)
         os.replace(tmp, last)
@@ -165,6 +181,10 @@ def group_mode(a, run_dir, log, config, dataset, train_data, valid_data, model, 
         torch.set_rng_state(rng_state["torch"])
         if rng_state["cuda"] is not None and torch.cuda.is_available():
             torch.cuda.set_rng_state_all(rng_state["cuda"])
+        assert set(rng_state["loader_generators"]) == set(gens), (list(rng_state["loader_generators"]), list(gens))
+        for k, g in gens.items():
+            g.set_state(rng_state["loader_generators"][k])
+    log(f"Bộ sinh số riêng của dataloader được lưu khi chạy tiếp: {list(gens)}")
     t_fit = time.time()
     trainer.fit(train_data, valid_data, saved=True, show_progress=False, callback_fn=save_last)
     t_fit = time.time() - t_fit
