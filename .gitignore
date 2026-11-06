@@ -86,3 +86,9 @@ results/service/**/*.npz
 
 # Log mỗi lần chạy run_demo.ps1 (chỉ để dò lỗi, không phải kết quả)
 results/demo/run_demo_logs/
+
+# RecBole (ai/recbole/): dữ liệu chuyển đổi (sinh lại bằng to_recbole*.py), checkpoint, embedding, log gốc RecBole
+ai/data/recbole/
+results/recbole/**/ckpt/
+results/recbole/**/*.npz
+results/recbole/**/*.pth
