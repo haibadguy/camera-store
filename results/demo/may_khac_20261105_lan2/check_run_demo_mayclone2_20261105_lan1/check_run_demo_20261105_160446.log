@@ -1,0 +1,82 @@
+check_run_demo | git {'commit': '46d02ba49760e984523647d193044370567c6f78', 'dirty': False} | run_demo.ps1 sha256 d1a5f6c9ae33f151fe88a24f24ce95e24210c3d2f0a41358b3fe9c5f60ff9941 | script sha256 7ac651fc62d03bc3a9cb677a42e1951fb7797f1b83e3745cf2412f458f5dfc83 | find_http_errors.mjs sha256 706f7e196550506483efd0f1dbc96c8e96aa02ed1837019347afb266d571e762 | jar sha256 None | RAM trống 5.05 GB
+trước khi chạy, cổng 8001 (FastAPI): trống
+trước khi chạy, cổng 8080 (Spring Boot): trống
+trước khi chạy, cổng 5173 (Vite): trống
+lệnh: powershell.exe -NoProfile -ExecutionPolicy Bypass -File E:\DATN\thử máy khác 2\ĐATN\camera-store\run_demo.ps1 (cwd E:\DATN\thử máy khác 2\ĐATN\camera-store)
+  run_demo [   0.4s] Ki?m m�y...
+  run_demo [   1.0s]   Python 3.12, Java 24, 6 file d? li?u ngo�i git d�ng sha256
+  run_demo [   2.0s] C�i thu vi?n frontend (npm ci, l?n d?u, c?n m?ng)...
+  run_demo [   5.5s] 
+  run_demo [   5.5s] added 119 packages, and audited 120 packages in 3s
+  run_demo [   5.5s] 
+  run_demo [   5.5s] 9 packages are looking for funding
+  run_demo [   5.5s]   run `npm fund` for details
+  run_demo [   5.5s] 
+  run_demo [   5.5s] 2 high severity vulnerabilities
+  run_demo [   5.5s] 
+  run_demo [   5.5s] To address all issues, run:
+  run_demo [   5.5s]   npm audit fix
+  run_demo [   5.5s] 
+  run_demo [   5.5s] Run `npm audit` for details.
+  run_demo [   5.5s] D�ng g�i Spring Boot (mvn -q -DskipTests package)...
+  run_demo [   7.0s] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+  run_demo [   7.0s] WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/C:/apache-maven-3.9.11/lib/guice-5.1.0-classes.jar)
+  run_demo [   7.0s] WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+  run_demo [   7.0s] WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+  run_demo [  14.0s] B?t FastAPI seed 1 (http://127.0.0.1:8001, ~15 s)...
+  run_demo [  27.8s]   FastAPI s?n s�ng sau 13.7 s
+  run_demo [  27.8s] B?t Spring Boot (http://127.0.0.1:8080, heap t?i da 512m)...
+  run_demo [  32.0s]   Spring Boot s?n s�ng sau 4.2 s
+  run_demo [  32.0s] B?t React / Vite (http://127.0.0.1:5173, ch? d? api)...
+  run_demo [  32.6s]   Vite s?n s�ng sau 0.6 s
+  run_demo [  32.6s] 
+  run_demo [  32.6s] Demo dang ch?y: http://127.0.0.1:5173  (b?m 'Tu v?n thi?t b?')
+  run_demo [  32.6s]   React -> Spring http://127.0.0.1:8080/api -> FastAPI http://127.0.0.1:8001
+  run_demo [  32.6s]   B?m th? m?t lu?t tru?c khi tr�nh b�y (lu?t d?u n?p ch?m hon). Log: E:\DATN\th? m�y kh�c 2\DATN\camera-store\results\demo\run_demo_logs\20261105_160447
+run_demo.ps1 báo sẵn sàng sau 33.0 s kể từ lúc gõ lệnh (gồm cả bước kiểm máy, sha256)
+thời gian sẵn sàng run_demo.ps1 tự đo cho từng dịch vụ (s): {'FastAPI': 13.7, 'Spring Boot': 4.2, 'Vite': 0.6}
+cây tiến trình con của PowerShell (pid 8516): 6 tiến trình
+  pid 7300 python.exe RSS 4.2 MiB
+  pid 20600 java.exe RSS 9.6 MiB
+  pid 7644 node.exe RSS 77.7 MiB
+  pid 11776 esbuild.exe RSS 57.4 MiB
+  pid 16620 java.exe RSS 173.2 MiB
+  pid 12236 python.exe RSS 1001.9 MiB
+cổng 8001 (FastAPI) đang nghe: [{'pid': 12236, 'name': 'python.exe'}]
+cổng 8080 (Spring Boot) đang nghe: [{'pid': 16620, 'name': 'java.exe'}]
+cổng 5173 (Vite) đang nghe: [{'pid': 7644, 'name': 'node.exe'}]
+GET /api/health qua Spring: HTTP 200 | status ok, model LightGCN + mặt nạ QĐ 4-9, seed 1, n_users 67661, n_items 27940, contract 1.3, nạp dữ liệu (startup_s) 3.25 s
+GET /api/recommend?user_id=409&k=10 qua Spring: HTTP 200 | 10 mục | ống bị chặn 814 | X-Process-Time-Ms None
+GET /api/users/409/bodies qua Spring: HTTP 200 | 1 thân
+GET trang chủ Vite: HTTP 200, 368 byte
+trình duyệt (api): node E:\DATN\thử máy khác 2\ĐATN\camera-store\tools\demo_e2e\find_http_errors.mjs --web http://127.0.0.1:5173 --out E:\DATN\thử máy khác 2\ĐATN\camera-store\results\demo\check_run_demo_mayclone2_20261105_lan1\http_errors_api.json
+  | trình duyệt: msedge 156.0.4314.58; các bước: mở trang chủ -> bấm Tư vấn thiết bị -> chọn nhanh người 409; danh sách hiện: true
+  | phản hồi HTTP >= 400 (0):
+  | yêu cầu hỏng (1): [{"step":"mở trang chủ","url":"https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=800&q=80","error":"net::ERR_BLOCKED_BY_ORB"}]
+  | lỗi console (1):
+  |   [mở trang chủ] Failed to load resource: the server responded with a status of 404 (Not Found) | http://127.0.0.1:5173/favicon.ico
+gửi Enter vào run_demo.ps1 (tắt cả ba)
+  run_demo [  37.4s] 
+  run_demo [  37.4s] T?t c�c ti?n tr�nh...
+PowerShell thoát, mã 0, sau 0.4 s kể từ khi gửi Enter
+sau khi tắt, cổng 8001 (FastAPI): trống
+sau khi tắt, cổng 8080 (Spring Boot): trống
+sau khi tắt, cổng 5173 (Vite): trống
+tiến trình con còn sống sau khi tắt: không có
+bật Vite: node v24.11.0 | VITE_RECOMMENDATION_SOURCE=mock VITE_API_URL=http://127.0.0.1:8080/api | E:\DATN\thử máy khác 2\ĐATN\camera-store\frontend\node_modules\vite\bin\vite.js --host 127.0.0.1 --port 5174 --strictPort
+Vite sẵn sàng sau 0.8s: http://127.0.0.1:5174
+trình duyệt (mock): node E:\DATN\thử máy khác 2\ĐATN\camera-store\tools\demo_e2e\find_http_errors.mjs --web http://127.0.0.1:5174 --out E:\DATN\thử máy khác 2\ĐATN\camera-store\results\demo\check_run_demo_mayclone2_20261105_lan1\http_errors_mock.json
+  | trình duyệt: msedge 156.0.4314.58; các bước: mở trang chủ -> bấm Tư vấn thiết bị -> chọn nhanh người 409; danh sách hiện: true
+  | phản hồi HTTP >= 400 (0):
+  | yêu cầu hỏng (1): [{"step":"mở trang chủ","url":"https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=800&q=80","error":"net::ERR_BLOCKED_BY_ORB"}]
+  | lỗi console (1):
+  |   [mở trang chủ] Failed to load resource: the server responded with a status of 404 (Not Found) | http://127.0.0.1:5174/favicon.ico
+đã chép log của run_demo.ps1: ['20261105_160447']
+  ĐẠT: health_200
+  ĐẠT: recommend_409_200_10_items
+  ĐẠT: bodies_409_200
+  ĐẠT: vite_200
+  ĐẠT: browser_list_shown_api
+  ĐẠT: clean_shutdown
+  ĐẠT: browser_list_shown_mock
+KẾT QUẢ: 7/7 mục đạt | RAM trống lúc kết thúc 5.06 GB

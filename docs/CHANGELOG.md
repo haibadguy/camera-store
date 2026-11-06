@@ -6,7 +6,7 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
-## 05/11/2026: làm mới giao diện tư vấn thiết bị. Nhánh `quyen/fron-p2`, người thực hiện: Quyền
+## 05–06/11/2026: làm mới và tối ưu giao diện tư vấn thiết bị. Nhánh `quyen/fron-p2`, người thực hiện: Quyền
 
 **Sửa gì**
 
@@ -14,6 +14,9 @@ Mục mới nhất nằm trên cùng.
   `frontend/src/mock/users_*_bodies.json`; không tạo lại danh sách dữ liệu riêng trong component.
 - Sắp xếp lại header, thẻ hồ sơ, phần tóm tắt, ghi chú tương thích, danh sách gợi ý và trang chi tiết để dễ đọc trên
   desktop lẫn điện thoại. Sửa lỗi dòng chữ “Gợi ý thiết bị” bị vỡ và tách nút “Chọn hồ sơ khác” khỏi nội dung kế bên.
+- Thiết kế lại theo phong cách cửa hàng công nghệ với tông xanh navy/cyan, card và trạng thái tương tác rõ ràng;
+  bổ sung `focus-visible`, `prefers-reduced-motion` và responsive 390–1366 px. Khối “Vì sao sản phẩm này phù hợp?” dùng
+  nền xanh lá riêng để nổi bật nhưng vẫn đảm bảo độ tương phản.
 - Thay các nhãn dành cho nội bộ như `item_id`, hợp đồng API, mã ngàm và điểm mô hình bằng câu chữ dành cho người mua.
   Ví dụ: “Đã ẩn 814 ống kính không lắp được trên máy Nikon D3100 của bạn.” Lời giải thích chỉ xuất hiện khi dữ liệu có
   `verified: true`; tên máy dài trong lời giải thích được rút gọn về tên mẫu máy.
@@ -27,6 +30,8 @@ Mục mới nhất nằm trên cùng.
 - `npm run build`: đạt, 59 modules.
 - E2E chế độ mock trên Microsoft Edge: đạt; hồ sơ 409 trùng `recommend_409.json`, 0 yêu cầu API, mở được chi tiết và
   có điều hướng quay lại.
+- E2E chế độ API thật sau khi nhập main `1d21fa5`: đạt toàn bộ hồ sơ 409, 47, 178, 1476 và 0; lỗi người không tồn tại,
+  ô nhập sai dạng, `verified: false` và luồng React → Spring → FastAPI đều đúng.
 - Kiểm tra trực quan ở kích thước desktop và màn hình rộng 390 px: bố cục không tràn, tiêu đề và nút điều hướng không
   còn dính hoặc vỡ chữ.
 

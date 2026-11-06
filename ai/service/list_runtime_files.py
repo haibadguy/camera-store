@@ -2,6 +2,9 @@
 list_runtime_files.py -- Liệt kê mọi file trong repo mà dịch vụ mô hình FastAPI đọc khi chạy, file nào không có trong
 git, kích thước và sha256 (để gửi cho máy khác chạy demo). Viết 28/10/2026.
 
+Sửa 05/11/2026: móc bật trước mọi import của dịch vụ (bản 28/10 bật sau `import core` nên sót user_map.json mà
+common_05 đọc lúc import).
+
 Cách làm: bật móc kiểm tra (sys.addaudithook, sự kiện "open") rồi chạy app.py trong tiến trình này bằng TestClient
 (lifespan nạp RecommenderCore như run_service.py), gọi đủ 5 điểm cuối: /health, /recommend (409, 47, cả hai chế độ
 exclude), /items, /users/{id}/bodies, /compat. Mọi file mở để đọc nằm trong repo được ghi lại; file nào
@@ -37,7 +40,10 @@ def main():
     ap.add_argument("--label", required=True)
     a = ap.parse_args()
     sys.path.insert(0, str(HERE))
-    import core            # noqa: E402,F401  (thêm ai/pipeline vào sys.path; chưa nạp dữ liệu)
+    # Bật móc TRƯỚC khi import core: common_05 đọc user_map.json, item_map.json ngay lúc import (bản 28/10 bật móc sau
+    # import nên sót user_map.json; Quyền chạy demo trên máy khác 05/11 thì FastAPI thoát vì thiếu file này)
+    sys.addaudithook(hook)
+    import core            # noqa: E402,F401  (thêm ai/pipeline vào sys.path; common_05 đọc 2 file map)
     import eval_05 as E    # noqa: E402  (Log, sha256, git_state)
     import common_05 as C  # noqa: E402
     run_dir = C.RESULTS_DIR / "demo" / f"runtime_files_{a.label}"
@@ -49,7 +55,6 @@ def main():
     os.environ["CAMERA_EMB_DIR"] = str((ROOT / a.emb_dir).resolve())
     os.environ["CAMERA_DEVICE"] = "cpu"
     from fastapi.testclient import TestClient   # noqa: E402
-    sys.addaudithook(hook)
     import app as A   # noqa: E402
     calls = [("/health", None), ("/recommend", {"user_id": 409, "k": 10}), ("/recommend", {"user_id": 47, "k": 10}),
              ("/recommend", {"user_id": 47, "k": 10, "exclude": "train_val"}), ("/items/13466", None),
