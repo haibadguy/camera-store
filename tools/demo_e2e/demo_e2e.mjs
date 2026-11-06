@@ -38,9 +38,10 @@ const USERS = [
 const UNKNOWN_USER = 99999;
 const EXPECTED_ERROR = { unknown: "Không tìm thấy người dùng này.", down: "Dịch vụ gợi ý đang tạm dừng, thử lại sau." };
 // Chữ trái hợp đồng 1.3 / quyết định của Nam 28/10 (dữ liệu là đánh giá, không phải đang dùng; all_history loại hẳn
-// chứ không "ưu tiên"; không gắn "Gợi ý phù hợp" cho mọi mục; giải thích là post-hoc, không phải "vì sao")
-const BANNED = ["đang dùng", "lịch sử sử dụng", "ưu tiên", "Gợi ý phù hợp", "Vì sao gợi ý"];
-const NOT_EXPLAINED = "Chưa đủ thông tin để giải thích gợi ý này.";
+// chứ không "ưu tiên"; không gắn "Gợi ý phù hợp" cho mọi mục; giải thích là post-hoc, không phải lý do mô hình chọn: chương 2, độ trung thực chưa chứng minh). So không phân biệt hoa thường.
+const BANNED = ["đang dùng", "lịch sử sử dụng", "ưu tiên", "Gợi ý phù hợp", "vì sao gợi ý", "được chọn vì", "lý do gợi ý",
+  "vì sao sản phẩm này phù hợp", "lý do sản phẩm phù hợp"];
+const TECHNICAL_UI_WORDS = ["QĐ 4-9", "item_id", "contract", "nikon_f", "bảng tương thích", "điểm của mô hình", "run_demo.ps1", "HTTP"];
 const log = (s) => console.log(s);
 const res = { phase, web, api, checks: {}, users: [], requests: [], console_errors: [] };
 const getJson = async (path) => (await fetch(`${api}${path}`)).json();
@@ -79,16 +80,16 @@ async function shot(name) {
 async function openPicker() {
   await page.goto(web);
   await page.getByRole("button", { name: "Tư vấn thiết bị" }).click();
-  await page.getByRole("heading", { name: "Bạn đang tìm món đồ tiếp theo?" }).waitFor();
+  await page.getByRole("heading", { name: "Chọn hồ sơ để bắt đầu" }).waitFor();
 }
 
 async function pickUser(id, how) {
   if (how === "quick") {
-    await page.locator(".demo-user-card", { has: page.getByRole("heading", { name: `Người dùng ${id}`, exact: true }) })
-      .getByRole("button", { name: "Xem gợi ý" }).click();
+    await page.locator(".demo-user-card", { has: page.getByRole("heading", { name: `Hồ sơ ${id}`, exact: true }) })
+      .getByRole("button", { name: "Xem các lựa chọn" }).click();
   } else {
     await page.locator("#demo-user-id").fill(String(id));
-    await page.getByRole("form", { name: "Nhập mã người dùng" }).getByRole("button", { name: "Xem gợi ý" }).click();
+    await page.getByRole("form", { name: "Tìm hồ sơ khác" }).getByRole("button", { name: "Tìm gợi ý" }).click();
   }
 }
 
@@ -105,8 +106,11 @@ async function errorShown() {
 
 async function bannedWords(where, row) {
   const text = await page.locator("main").innerText();
-  for (const w of BANNED) if (text.includes(w)) row.mismatches.push(`${where}: có chữ "${w}"`);
-  if (await page.getByRole("note", { name: "Dữ liệu mẫu" }).count()) row.mismatches.push(`${where}: chế độ api mà hiện nhãn "Dữ liệu mẫu"`);
+  for (const w of BANNED) if (text.toLowerCase().includes(w.toLowerCase())) row.mismatches.push(`${where}: có chữ "${w}"`);
+  for (const w of TECHNICAL_UI_WORDS) if (text.includes(w)) row.mismatches.push(`${where}: còn thuật ngữ kỹ thuật "${w}"`);
+  if (phase !== "mock" && await page.getByRole("note", { name: "Bản xem trước" }).count()) {
+    row.mismatches.push(`${where}: chế độ api mà hiện nhãn "Bản xem trước"`);
+  }
 }
 
 async function readList() {
@@ -116,7 +120,7 @@ async function readList() {
     const c = cards.nth(i);
     const exp = c.locator(".demo-explanation p");
     shown.push({
-      rank: Number((await c.locator(".demo-rank").innerText()).replace("#", "")),
+      rank: Number(await c.locator(".demo-rank strong").innerText()),
       title: (await c.locator("h2").innerText()).trim(),
       explanation: (await exp.count()) ? (await exp.innerText()).trim() : null,
     });
@@ -125,10 +129,10 @@ async function readList() {
 }
 
 function compareList(shown, items, row) {
-  // Giao diện hiện câu khi verified, ngược lại hiện câu thay thế (hợp đồng 4.3)
+  // Giao diện chỉ hiện lời giải thích đã được xác minh.
   const want = items.map((it) => ({
     rank: it.rank, title: it.title.trim(),
-    explanation: it.explanation ? (it.explanation.verified ? it.explanation.text.trim() : NOT_EXPLAINED) : null,
+    explanation: it.explanation?.verified ? formatExplanation(it.explanation.text) : null,
   }));
   if (shown.length !== want.length) row.mismatches.push(`số mục: màn hình ${shown.length}, dữ liệu ${want.length}`);
   want.forEach((w, i) => {
@@ -140,18 +144,36 @@ function compareList(shown, items, row) {
   return want;
 }
 
+function formatCameraName(title) {
+  return title.match(/\bNikon\s+D\d+[A-Z]*/i)?.[0] ?? title.split(" (")[0].split(" with ")[0];
+}
+
+function joinNames(names) {
+  if (names.length <= 1) return names[0] ?? "máy ảnh của bạn";
+  return `${names.slice(0, -1).join(", ")} và ${names[names.length - 1]}`;
+}
+
+function formatExplanation(text) {
+  return text.replace(/^Gợi ý .*?\bvì\s+ống này\s+/i, "Ống kính này ")
+    .replace(/\s*\(ngàm [^)]+\),?/gi, "")
+    .replace(/\b(Nikon\s+D\d+[A-Z]*)\b.*?(?=\s+bạn đã đánh giá)/gi, "$1")
+    .replace(/\s+\/\s+/g, " và ")
+    .replace(/\s+,/g, ",").replace(/đánh giá\s+và/g, "đánh giá và").trim();
+}
+
 // Câu ghi chú mặt nạ mong đợi: đúng câu Nam chốt 28/10, điền từ trường của API (không theo code React)
 function expectedMaskSentences(rec, bodies) {
   const n = rec.mask.n_lenses_blocked;
   const m = rec.mask.n_blocked_in_topk_before_mask;
+  const names = bodies.map((body) => formatCameraName(body.title));
+  const machineLabel = bodies.length > 1 ? `các máy ${joinNames(names)}` : `máy ${joinNames(names)}`;
   const want = [];
-  if (bodies.length === 0) want.push("Bạn chưa đánh giá thân máy nào nên không có ống kính nào bị loại.");
-  if (n > 0) want.push(`Có ${n} ống kính không lắp được trên bất kỳ máy nào của bạn nên không được gợi ý.`);
+  if (bodies.length === 0) want.push("Hồ sơ này chưa có máy ảnh nên hệ thống chưa ẩn ống kính nào.");
+  if (n > 0) want.push(`Đã ẩn ${n} ống kính không lắp được trên ${machineLabel} của bạn.`);
   const outside = bodies.filter((b) => b.in_matrix === false);
-  if (bodies.length > 0 && n === 0 && outside.length > 0) {
-    want.push(`Máy ${outside.map((b) => b.title).join(", ")} chưa có trong bảng tương thích nên hệ thống không loại ống kính nào.`);
-  }
-  if (m > 0) want.push(`Trong danh sách này, ${m} ống đã bị bỏ ra (vd ${rec.mask.blocked_in_topk_before_mask[0].title}).`);
+  if (bodies.length > 0 && n === 0 && outside.length === 0) want.push(`Không có ống kính nào cần ẩn với ${machineLabel} của bạn.`);
+  if (bodies.length > 0 && n === 0 && outside.length > 0) want.push(`Chưa đủ dữ liệu để kiểm tra ống kính phù hợp với ${machineLabel}.`);
+  if (m > 0) want.push(`${m} sản phẩm không tương thích đã được loại khỏi kết quả đang xem.`);
   return want;
 }
 
@@ -167,10 +189,10 @@ async function checkUser({ id, how, detail }) {
     await bannedWords("trang chọn người", row);
     // Thân ghi trên nút chọn nhanh phải là thân của người đó theo /api/users/{id}/bodies
     for (const u of [409, 47]) {
-      const card = page.locator(".demo-user-card", { has: page.getByRole("heading", { name: `Người dùng ${u}`, exact: true }) });
-      const names = (await card.locator(".demo-card-topline strong").innerText()).split(",").map((x) => x.trim());
-      const titles = (await getJson(`/users/${u}/bodies?exclude=all_history`)).bodies.map((b) => b.title);
-      if (names.length !== titles.length || !names.every((nm) => titles.some((t) => t.startsWith(nm)))) {
+      const card = page.locator(".demo-user-card", { has: page.getByRole("heading", { name: `Hồ sơ ${u}`, exact: true }) });
+      const names = (await card.locator(".demo-profile-devices span").allInnerTexts()).map((x) => x.trim());
+      const titles = (await getJson(`/users/${u}/bodies?exclude=all_history`)).bodies.map((b) => formatCameraName(b.title));
+      if (JSON.stringify(names) !== JSON.stringify(titles)) {
         row.mismatches.push(`nút chọn nhanh ${u}: ghi ${JSON.stringify(names)}, API ${JSON.stringify(titles)}`);
       }
     }
@@ -187,16 +209,16 @@ async function checkUser({ id, how, detail }) {
   const shown = await readList();
   const want = compareList(shown, rec.items, row);
   const eyebrow = (await page.locator(".demo-eyebrow").first().innerText()).trim();
-  if (eyebrow.toLowerCase() !== `người dùng ${id}`) row.mismatches.push(`nhãn người dùng: ${eyebrow}`);
+  if (eyebrow.toLowerCase() !== `hồ sơ ${id}`) row.mismatches.push(`nhãn hồ sơ: ${eyebrow}`);
   const summary = await page.locator(".demo-summary-grid strong").allInnerTexts();
   const wantSummary = [bodies.length, rec.mask.n_lenses_blocked, rec.items.length].map(String);
   if (JSON.stringify(summary) !== JSON.stringify(wantSummary)) row.mismatches.push(`ô tóm tắt: màn hình ${summary}, API ${wantSummary}`);
 
   // Ghi chú mặt nạ: mọi thân, đúng các câu, không thừa câu
-  const note = page.getByRole("complementary", { name: "Lọc ống kính theo máy của bạn" });
-  const noteBodies = await note.locator(".demo-body-list li > strong").allInnerTexts();
-  if (JSON.stringify(noteBodies.map((t) => t.trim())) !== JSON.stringify(bodies.map((b) => b.title.trim()))) {
-    row.mismatches.push(`thân trong ghi chú: ${JSON.stringify(noteBodies)}, API ${JSON.stringify(bodies.map((b) => b.title))}`);
+  const note = page.getByRole("complementary", { name: "Ống kính phù hợp với máy của bạn" });
+  const noteBodies = await note.locator(".demo-profile-devices span").allInnerTexts();
+  if (JSON.stringify(noteBodies.map((t) => t.trim())) !== JSON.stringify(bodies.map((b) => formatCameraName(b.title)))) {
+    row.mismatches.push(`thân trong ghi chú: ${JSON.stringify(noteBodies)}, API ${JSON.stringify(bodies.map((b) => formatCameraName(b.title)))}`);
   }
   row.mask_sentences = (await note.locator(":scope > p").allInnerTexts()).map((t) => t.trim());
   const wantSentences = expectedMaskSentences(rec, bodies);
@@ -237,9 +259,13 @@ async function checkUser({ id, how, detail }) {
     // Thuộc tính mong đợi từ /api/items/{id}
     const prod = await getJson(`/items/${rec.items[pos].item_id}`);
     const wantAttr = { "Loại sản phẩm": rec.items[pos].type_label };
-    if (prod.mount) wantAttr["Ngàm"] = { nikon_f: "Nikon F", canon_ef: "Canon EF" }[prod.mount] ?? prod.mount;
-    if (prod.khung) wantAttr["Định dạng"] = { apsc: "APS-C", ff: "Full-frame" }[prod.khung] ?? prod.khung;
-    if (prod.usecases_label?.length) wantAttr["Phù hợp với"] = prod.usecases_label.join(", ");
+    if (prod.mount) wantAttr["Loại ngàm"] = { nikon_f: "Nikon F", canon_ef: "Canon EF", khong_co: "Không áp dụng" }[prod.mount] ?? prod.mount;
+    if (prod.khung) wantAttr["Kích thước cảm biến"] = { apsc: "APS-C", ff: "Full-frame" }[prod.khung] ?? prod.khung;
+    if (prod.focal_mm) wantAttr["Tiêu cự"] = prod.focal_mm.min === prod.focal_mm.max
+      ? `${prod.focal_mm.min} mm` : `${prod.focal_mm.min}–${prod.focal_mm.max} mm`;
+    if (prod.max_aperture_f) wantAttr["Khẩu độ tối đa"] = prod.max_aperture_f.at_min_focal === prod.max_aperture_f.at_max_focal
+      ? `f/${prod.max_aperture_f.at_min_focal}` : `f/${prod.max_aperture_f.at_min_focal}–${prod.max_aperture_f.at_max_focal}`;
+    if (prod.usecases_label?.length) wantAttr["Phù hợp để chụp"] = prod.usecases_label.join(", ");
     if (JSON.stringify(row.detail.attributes) !== JSON.stringify(wantAttr)) {
       row.mismatches.push(`thuộc tính chi tiết: màn hình ${JSON.stringify(row.detail.attributes)}, /api/items ${JSON.stringify(wantAttr)}`);
     }
@@ -252,7 +278,7 @@ async function checkUser({ id, how, detail }) {
   return row.mismatches.length === 0;
 }
 
-// Bơm một câu verified = false vào phản hồi thật của người 47: giao diện phải hiện câu thay thế, không hiện câu gốc
+// Bơm một câu verified = false vào phản hồi thật của người 47: giao diện phải ẩn câu chưa được xác minh.
 async function checkVerifiedFalse() {
   await openPicker();
   let injected = null;
@@ -270,9 +296,7 @@ async function checkVerifiedFalse() {
   await page.unrouteAll();
   const shown = await readList();
   const s = shown.find((x) => x.rank === injected.rank);
-  const others = shown.filter((x) => x.rank !== injected.rank && x.explanation !== null);
-  const ok = s?.explanation === NOT_EXPLAINED && !shown.some((x) => x.explanation === injected.text)
-    && others.every((x) => x.explanation !== NOT_EXPLAINED);
+  const ok = s?.explanation === null && !shown.some((x) => x.explanation === injected.text);
   res.verified_false = { injected_rank: injected.rank, shown: s?.explanation };
   log(`bơm verified = false ở hạng ${injected.rank} của người 47: màn hình "${s?.explanation}" -> ${ok ? "ĐÚNG" : "SAI"}`);
   await shot("verified_false_bom_thu");
@@ -297,12 +321,12 @@ try {
     log("ô nhập sai dạng: abc");
     await openPicker();
     await page.locator("#demo-user-id").fill("abc");
-    await page.getByRole("form", { name: "Nhập mã người dùng" }).getByRole("button", { name: "Xem gợi ý" }).click();
-    const inputAlert = page.getByRole("form", { name: "Nhập mã người dùng" }).getByRole("alert");
+    await page.getByRole("form", { name: "Tìm hồ sơ khác" }).getByRole("button", { name: "Tìm gợi ý" }).click();
+    const inputAlert = page.getByRole("form", { name: "Tìm hồ sơ khác" }).getByRole("alert");
     res.bad_input = (await inputAlert.count()) ? (await inputAlert.innerText()).trim() : null;
     log(`  giao diện: ${JSON.stringify(res.bad_input)}`);
     res.checks.bad_input_rejected = res.bad_input !== null
-      && (await page.getByRole("heading", { name: "Bạn đang tìm món đồ tiếp theo?" }).count()) === 1;
+      && (await page.getByRole("heading", { name: "Chọn hồ sơ để bắt đầu" }).count()) === 1;
 
     res.checks.verified_false_hidden = await checkVerifiedFalse();
   } else if (phase === "down") {
@@ -317,18 +341,31 @@ try {
   } else {
     log("Vite chế độ dữ liệu mẫu: nhãn và danh sách người 409");
     await openPicker();
-    const labelOnPicker = await page.getByRole("note", { name: "Dữ liệu mẫu" }).isVisible();
+    const labelOnPicker = await page.getByRole("note", { name: "Bản xem trước" }).isVisible();
+    const row = { user_id: 409, how: "mock", mismatches: [] };
+    await bannedWords("trang chọn hồ sơ", row);
     await shot("du_lieu_mau_chon_nguoi");
     await pickUser(409, "quick");
     await waitResult();
-    const labelOnList = await page.getByRole("note", { name: "Dữ liệu mẫu" }).isVisible();
-    const row = { user_id: 409, how: "mock", mismatches: [] };
+    const labelOnList = await page.getByRole("note", { name: "Bản xem trước" }).isVisible();
     compareList(await readList(), JSON.parse(readFileSync(join(MOCK_DIR, "recommend_409.json"), "utf8")).items, row);
-    res.mock = { label_on_picker: labelOnPicker, label_on_list: labelOnList, mismatches: row.mismatches };
-    log(`  nhãn "Dữ liệu mẫu": trang chọn ${labelOnPicker}, danh sách ${labelOnList}; so với recommend_409.json: ` +
+    await bannedWords("danh sách gợi ý", row);
+    const backBox = await page.getByRole("button", { name: "Chọn hồ sơ khác" }).boundingBox();
+    const eyebrowBox = await page.locator(".demo-eyebrow").first().boundingBox();
+    const backButtonSeparated = Boolean(backBox && eyebrowBox && backBox.y + backBox.height <= eyebrowBox.y);
+    if (!backButtonSeparated) row.mismatches.push("nút Chọn hồ sơ khác còn chồng lên nội dung bên cạnh");
+    log(`  nhãn "Bản xem trước": trang chọn ${labelOnPicker}, danh sách ${labelOnList}; so với recommend_409.json: ` +
         `${row.mismatches.length ? "LỆCH " + JSON.stringify(row.mismatches) : "TRÙNG"}`);
     await shot("du_lieu_mau_goi_y_409");
-    res.checks.mock_label_and_list = labelOnPicker && labelOnList && row.mismatches.length === 0
+    await page.locator(".demo-recommendation-card").first().getByRole("button", { name: "Xem thông tin sản phẩm" }).click();
+    await page.locator(".demo-detail-card").waitFor();
+    await bannedWords("chi tiết sản phẩm", row);
+    const detailBackVisible = await page.getByRole("button", { name: "Quay lại danh sách gợi ý" }).isVisible();
+    if (!detailBackVisible) row.mismatches.push("trang chi tiết thiếu nút quay lại danh sách");
+    await shot("du_lieu_mau_chi_tiet_409");
+    res.mock = { label_on_picker: labelOnPicker, label_on_list: labelOnList, back_button_separated: backButtonSeparated,
+                 detail_back_visible: detailBackVisible, mismatches: row.mismatches };
+    res.checks.mock_label_and_list = labelOnPicker && labelOnList && backButtonSeparated && detailBackVisible && row.mismatches.length === 0
       && res.requests.length === 0;
   }
 } finally {

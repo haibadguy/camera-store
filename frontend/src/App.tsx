@@ -370,7 +370,7 @@ export default function App() {
             <h1>Tư Vấn Chọn Máy Ảnh Phù Hợp Nhu Cầu & Ngân Sách</h1>
             <p>
               Thuật toán tự động phân tích thông số kỹ thuật (Cảm biến, Ngàm Lens, ISO) kết hợp ràng buộc ngân sách 
-              để đưa ra danh sách sản phẩm tối ưu kèm <strong>lý do giải thích chi tiết</strong>.
+              để đưa ra danh sách sản phẩm tối ưu kèm <strong>thông tin tương thích với máy của bạn</strong>.
             </p>
             <div className="promo-actions">
               <button className="primary-action-btn" onClick={() => setIsAiWizardOpen(true)}>
@@ -556,7 +556,7 @@ export default function App() {
                     {product.aiReasons && product.aiReasons.length > 0 && (
                       <div className="ai-reason-container">
                         <div className="reason-title">
-                          <SparkleIcon /> Lý do gợi ý phù hợp:
+                          <SparkleIcon /> Điểm nổi bật:
                         </div>
                         <ul className="reason-list">
                           {product.aiReasons.map((reason, idx) => (

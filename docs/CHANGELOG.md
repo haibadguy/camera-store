@@ -6,6 +6,39 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 05–06/11/2026: làm mới và tối ưu giao diện tư vấn thiết bị. Nhánh `quyen/fron-p2`, người thực hiện: Quyền
+
+**Sửa gì**
+
+- Chuyển màn chọn người dùng sang cách gọi “hồ sơ”, lấy tên máy ảnh của hồ sơ 409 và 47 trực tiếp từ
+  `frontend/src/mock/users_*_bodies.json`; không tạo lại danh sách dữ liệu riêng trong component.
+- Sắp xếp lại header, thẻ hồ sơ, phần tóm tắt, ghi chú tương thích, danh sách gợi ý và trang chi tiết để dễ đọc trên
+  desktop lẫn điện thoại. Sửa lỗi dòng chữ “Gợi ý thiết bị” bị vỡ và tách nút “Chọn hồ sơ khác” khỏi nội dung kế bên.
+- Thiết kế lại theo phong cách cửa hàng công nghệ với tông xanh navy/cyan, card và trạng thái tương tác rõ ràng;
+  bổ sung `focus-visible`, `prefers-reduced-motion` và responsive 390–1366 px. Khối “Vì sao sản phẩm này phù hợp?” dùng
+  nền xanh lá riêng để nổi bật nhưng vẫn đảm bảo độ tương phản.
+- Thay các nhãn dành cho nội bộ như `item_id`, hợp đồng API, mã ngàm và điểm mô hình bằng câu chữ dành cho người mua.
+  Ví dụ: “Đã ẩn 814 ống kính không lắp được trên máy Nikon D3100 của bạn.” Lời giải thích chỉ xuất hiện khi dữ liệu có
+  `verified: true`; tên máy dài trong lời giải thích được rút gọn về tên mẫu máy.
+- Giữ nguyên hai chế độ dữ liệu đã có: dữ liệu mẫu từ `frontend/src/mock` và dữ liệu thật qua Spring/FastAPI. Các thông
+  báo lỗi hiển thị cho người mua không còn lộ từ ngữ kỹ thuật của backend.
+- Cập nhật `tools/demo_e2e/demo_e2e.mjs` theo nhãn mới, kiểm tra dữ liệu mẫu trùng file JSON, không gọi API ở chế độ
+  mẫu, không còn từ kỹ thuật trên ba màn hình và nút quay lại không chồng lên nội dung.
+
+**Kiểm tra**
+
+- `npm run build`: đạt, 59 modules.
+- E2E chế độ mock trên Microsoft Edge: đạt; hồ sơ 409 trùng `recommend_409.json`, 0 yêu cầu API, mở được chi tiết và
+  có điều hướng quay lại.
+- E2E chế độ API thật sau khi nhập main `1d21fa5`: đạt toàn bộ hồ sơ 409, 47, 178, 1476 và 0; lỗi người không tồn tại,
+  ô nhập sai dạng, `verified: false` và luồng React → Spring → FastAPI đều đúng.
+- Kiểm tra trực quan ở kích thước desktop và màn hình rộng 390 px: bố cục không tràn, tiêu đề và nút điều hướng không
+  còn dính hoặc vỡ chữ.
+
+Không thay đổi mô hình, backend, dữ liệu mock, `docs/STATUS.md` hay các số liệu của chương 2.
+
+---
+
 ## 28/10/2026 (phiên sau): sửa phần web theo phản biện `E:\DATN\reviews\redteam_code_lan1.md`. Nhánh `nam/fe-integration`, commit `d7d22a8`
 
 Nam chốt 8 điểm. Sửa trên **code frontend của Hải** (`RecommendationDemo.tsx`, `recommendationService.ts`) và backend
