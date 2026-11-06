@@ -1,8 +1,8 @@
 # Kế hoạch đánh giá v3 (nhận xét cô 06/11, mục A1–A3, A5) — đăng ký trước
 
-**Trạng thái:** bản nháp ngày 06/11/2026, **chờ Nam chốt các câu [HỎI]** (mục 12). Chưa huấn luyện dài; chỉ chạy
-RecBole LightGCN để kiểm tái hiện (mục 7) và vài lần đo thời gian ngắn (`--probe-epochs`). Sau khi Nam chốt, bản này
-là **đăng ký trước**: đổi gì phải ghi ở mục 13 kèm lý do, trước khi xem số mới.
+**Trạng thái:** **ĐĂNG KÝ TRƯỚC** — Nam chốt 10 câu [HỎI] tối 06/11/2026 (mục 12.1, kèm điều kiện). Từ đây đổi gì
+phải ghi ở mục 13 kèm lý do, trước khi xem số mới. Còn 1 câu mới [HỎI 11] (mục 12.1) không chặn việc chạy. Đợt dò seed 1
+máy nhóm bắt đầu 06/11 (`ai/pipeline/v3_sweep.py --group s1`, mục 6.1).
 
 Nguồn: nhận xét cô `E:\DATN\co\nhan_xet_co_06112026.md` (ngoài repo); kế hoạch cũ `n5_eval_plan.md`,
 `cakg_eval_plan.md`, `cakg_v2_plan.md`; `docs/STATUS.md`. Nhánh `nam/v3-plan`.
@@ -96,6 +96,32 @@ Chỉ số chọn: **NDCG@20 full ranking trên val, trước mặt nạ, seed 1
    thêm: mỗi baseline mới so với LightGCN (Recall@10, NDCG@10, CVR@10, kịch bản nhóm lắp được). Khác 0 hay không:
    bootstrap theo người, kèm dao động giữa 5 seed.
 4. Test một lần ở cuối (mục 2).
+
+### 6.1. Thứ tự chạy (thêm 06/11 khi chốt; thứ tự không ảnh hưởng kết quả)
+
+**Máy nhóm, đợt `s1` (dò, seed 1, trần 1.000)** — `ai/pipeline/v3_sweep.py --group s1 --label 20261106`, ghi vào
+`results/v3/s1_20261106/<tên>/`:
+
+| # | Lần chạy | Cách | Ước tính giờ [cận dưới; cận trên] (mục 8.2) |
+|---|---|---|---|
+| 1 | LightGCN λ2 = 1e-3 | chạy tiếp 300 → 1.000 (`last.pt` ĐẠT) | 0,2–2,7 |
+| 2 | LightGCN λ2 = 3e-3 | mới | 0,7–3,9 |
+| 3 | LightGCN λ2 = 1e-2 | mới | 0,7–3,9 |
+| 4 | CaKG-Rec v2 A `lens_gate`, λ1 = 0,1 | chạy tiếp (ĐẠT) | 0,3–4,5 |
+| 5 | KGAT lr = 1e-4 | chạy tiếp (ĐẠT) | 0,4–5,4 |
+| 6 | KGAT lr = 3e-3 | mới | 0,6–7,7 |
+| 7 | R-GCN lr = 3e-4 | mới (chấm mỗi 5 epoch) | 0,25–8,3 |
+| 8 | R-GCN lr = 1e-4 | mới | 0,25–8,3 |
+| | **Cộng** | | **3,4–44,7 giờ** (cộng tay từ log `lan1`) |
+
+Kiểm `last.pt` (điều kiện của Nam cho PA2): `ai/survey/v3/kiem_last_pt.py` → `results/v3/kiem_last_pt_lan2.json`,
+**7/7 ĐẠT** (đủ Adam, RNG numpy / torch / CUDA; code + dữ liệu KG trùng sha256). Sau đợt `s1`: chọn theo NDCG@20 val →
+`ai/config/v3_final.toml` (commit) → đợt `s25` (seed 2–5, chạy tiếp seed 2, 3 nếu cấu hình chốt trùng cấu hình cũ) và
+đợt `abl` (2 ablation CaKG-Rec v2 A × seed 1–5); nếu giá trị tốt nhất vẫn ở biên mới: thêm đúng 1 điểm (HỎI 3).
+
+**Kaggle, đợt `thu` (chạy thử baseline, seed 1, một cấu hình, HỎI 10):** BPR-MF (code nhóm, λ2 = 1e-4), BPR (RecBole,
+đối chiếu, HỎI 5), SimGCL (λ = 0,01? xem `kaggle/` README), KGIN (context_hops = 2), UltraGCN (một cấu hình theo bài).
+Chia 3 tài khoản (Nam, Hải, Quyền; HỎI 7). Hướng dẫn từng bước: `kaggle/HUONG_DAN_KAGGLE.md`.
 
 ## 7. RecBole: kiểm tái hiện LightGCN (A3 "trước tiên")
 
@@ -287,9 +313,34 @@ Trước khi chạy thật: một phiên bản ngắn (1 việc `--max-epoch 20`
 | HỎI 9 | Báo số test | (a) bảng chính = test v3 (5 seed), số test cũ (3 seed, 300 epoch) ở phụ lục kèm câu "test đã xem"; (b) chỉ báo test v3 | (a) |
 | HỎI 10 | Baseline mới 151–176 giờ (cận trên, mục 8.2) vượt xa hạn mức Kaggle ~30 giờ / tuần. Giảm thế nào? | (a) giữ trần 1.000 + dừng sớm, chạy song song Kaggle và máy nhóm khi rảnh, chấp nhận ~4–6 tuần; (b) dò chỉ seed 1 ở trần 1.000, seed 2–5 dùng trần = epoch tốt nhất của seed 1 + 100; (c) bớt lưới baseline xuống 2 điểm (PA3) và bỏ UltraGCN (phải tự cài, không có trong RecBole) | chưa đề xuất được: số dừng sớm thật của baseline chưa có; nên chạy seed 1 một cấu hình mỗi baseline trước (~0,5 giờ BPR, ~9–12 giờ SimGCL / KGIN mỗi lần, tính từ mục 8.1) rồi quyết |
 
+### 12.1. Quyết định của Nam (06/11/2026, tối)
+
+Nam: "Chốt 10 câu [HỎI] theo đúng đề xuất, kèm điều kiện":
+
+| # | Quyết định | Điều kiện / ghi chú của Nam |
+|---|---|---|
+| HỎI 1 | (b) CaKG-Rec bản chính = **v2 A `lens_gate`** | ablation làm trên v2 A; **v1 không chạy lại** |
+| HỎI 2 | **PA2** | chỉ khi `last.pt` đủ trạng thái Adam và RNG; kiểm trước, thiếu thì lần đó chạy lại từ đầu → đã kiểm: 7/7 ĐẠT (mục 6.1) |
+| HỎI 3 | đồng ý lưới mục 3 + "vẫn ở biên thì thêm đúng 1 điểm, một lần" | |
+| HỎI 4 | có, sửa `train_05.run` | cùng điều kiện HỎI 2; đã sửa, CHANGELOG 06/11 tối |
+| HỎI 5 | (a) BPR-MF bằng **code nhóm** là số chính | chạy thêm `BPR` RecBole seed 1 để đối chiếu |
+| HỎI 6 | (b) chấm val của RecBole bằng bộ chấm nhóm | |
+| HỎI 7 | đồng ý chia máy | phần Kaggle chia cho **3 tài khoản** (Nam, Hải, Quyền); vẫn giữ "một mô hình cả 5 seed trên cùng loại GPU" (mục 5) |
+| HỎI 8 | dataset **riêng tư**, ẩn mã người dùng | **notebook phải chia sẻ được cho cô xem** |
+| HỎI 9 | (a) bảng chính test v3, test cũ ở phụ lục | |
+| HỎI 10 | **chạy thử mỗi baseline seed 1, một cấu hình trước**, rồi mới quyết lưới / trần | |
+
+Hệ quả Claude rút ra (ghi lại để Nam kiểm):
+- HỎI 1 + "v1 không chạy lại" → bỏ dòng "chạy tiếp cả 3 λ1 của v1" ở mục 3; CaKG-Rec chỉ chạy tiếp **v2 A λ1 = 0,1**
+  (seed 1–3 có `last.pt`), ablation λ1 = 0 / bỏ `suitable_for` dựng mới trên v2 A × seed 1–5.
+- **[HỎI 11] (mới, không chặn):** v2 A chỉ có một giá trị λ1 = 0,1 (lấy từ lúc dò v1). Có dò λ1 cho v2 A không
+  (vd {0,01; 1}, như lưới v1, mỗi điểm ~0,7–6,4 giờ)? Chưa dò thì báo cáo ghi "λ1 lấy từ v1, không dò lại cho v2".
+  Đợt `s1` chưa có các lần này; thêm vào cuối đợt nếu Nam đồng ý.
+
 ## 13. Sửa đổi kế hoạch
 
 | Ngày | Sửa gì | Lý do |
 |---|---|---|
 | 06/11/2026 | Bản đầu | Nhận xét cô 06/11 |
 | 06/11/2026 (tối) | Điền kết quả tái hiện RecBole (mục 7.3–7.5), số đo BPR / ItemKNN / KGIN / SimGCL, bảng giờ GPU (log `lan1`); thêm HỎI 10 | Lần chạy RecBole LightGCN và đo ngắn xong; chưa có số nào của mô hình v3 |
+| 06/11/2026 (khuya) | Nam chốt 10 câu (mục 12.1); thêm thứ tự chạy (mục 6.1), HỎI 11; CaKG-Rec chỉ v2 A | Quyết định của Nam; **trước khi có số v3 nào** (chỉ có smoke 1 lần chấm sau mốc 300, `results/v3/smoke_s1_thu1/`, không dùng để chọn) |

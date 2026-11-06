@@ -6,6 +6,38 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 06/11/2026 (tối): v3 — cho chạy tiếp với trần epoch lớn hơn. Nhánh `nam/v3-plan`
+
+**Sửa gì.** `ai/pipeline/train_05.py`, hàm `run`: trước đây chạy tiếp (đã có `config.json`) bắt cấu hình **trùng hoàn
+toàn**. Nay cho phép đúng một khác biệt: `max_epoch` **tăng** (vd 300 → 1.000), với điều kiện trần cũ chia hết
+`eval_every`. Khi đó ghi thêm vào `config.json` mục `max_epoch_changes` (từ, đến, thời điểm, git, lệnh, sha256 code) rồi
+chạy tiếp từ `last.pt`. Mọi khác biệt khác vẫn báo lỗi như cũ. Thêm `ai/pipeline/v3_sweep.py` (hàng đợi v3, chép lần cũ
+sang `results/v3/…` trước khi chạy tiếp, không động vào kết quả cũ).
+
+**Vì sao.** Nhận xét cô 06/11: các lần chạy chạm trần 300 epoch mà đường val vẫn lên (ví dụ LightGCN λ2 = 1e-3 seed 1:
+0,04034 / 0,04045 / 0,04040 ở epoch 280 / 290 / 300). Nam chốt PA2 (06/11): chạy tiếp từ `last.pt` lên 1.000 epoch,
+**chỉ khi** `last.pt` đủ trạng thái Adam và bộ sinh số. Ví dụ vì sao chạy tiếp = chạy mới với trần 1.000: lịch chấm (mỗi
+10 epoch) và quy tắc dừng (5 lần chấm không tăng) không phụ thuộc trần; lần cũ chưa hề dừng sớm trước 300; `last.pt` ở
+epoch 300 lưu mô hình, Adam, trạng thái numpy / torch / CUDA và bộ đếm "không tăng" → epoch 301 bắt đầu từ đúng trạng
+thái một lần chạy liền sẽ có (trừ sai lệch không tất định của GPU, đã biết).
+
+**Kiểm chứng.**
+- `ai/survey/v3/kiem_last_pt.py` → `results/v3/kiem_last_pt_lan2.json`: **7/7 ĐẠT** (LightGCN λ2 1e-3 seed 1–3, CaKG-Rec v2 A
+  seed 1–3, KGAT lr 1e-4 seed 1): Adam đủ trạng thái, step = 225 batch × 300 epoch = 67.500 (KGAT 450 × 300 = 135.000);
+  RNG numpy PCG64 + torch + CUDA; epoch 300, best / best_epoch khớp `result.json`; code và file KG đầu vào trùng sha256
+  (KGAT `07_kgat_train.py` chỉ khác ký tự xuống dòng CRLF / LF). KGAT: Adam pha CF không có trạng thái cho `Er`, `Wr`
+  vì hai tham số này chỉ có trong loss TransR (Adam riêng `kg_opt`, đủ 3 trạng thái E / Er / Wr, step 163.800 =
+  546 × 300) — chạy mới cũng vậy. Bản `lan1` của script kiểm báo sai 4 lần TRƯỢT (tìm file KG sai thư mục, chưa biết
+  điều trên); giữ làm bằng chứng.
+- Chạy thử `v3_sweep.py --smoke` (`results/v3/smoke_s1_thu1/`, không lên git): LightGCN seed 1 chạy tiếp 300 → 310:
+  NDCG@20 val 0,04052 ở epoch 310 (> 0,04045 cũ ở 290); KGAT lr 1e-4: 0,02156 ở 310 (> 0,02099); log ghi
+  "TĂNG max_epoch 300 -> 310", `config.json` có `max_epoch_changes`.
+
+**Ảnh hưởng.** Không đổi số nào đã báo (kết quả cũ ở `results/n5`, `results/cakg` giữ nguyên). Lần chạy mới / chạy tiếp
+ghi ở `results/v3/`.
+
+---
+
 ## 28/10/2026 (phiên sau): sửa phần web theo phản biện `E:\DATN\reviews\redteam_code_lan1.md`. Nhánh `nam/fe-integration`, commit `d7d22a8`
 
 Nam chốt 8 điểm. Sửa trên **code frontend của Hải** (`RecommendationDemo.tsx`, `recommendationService.ts`) và backend

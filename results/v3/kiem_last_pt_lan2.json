@@ -1,0 +1,375 @@
+{
+  "head": "47d6e1bcf56baf2af81f4567c2a29b38b7f9e832",
+  "dirty": false,
+  "torch": "2.14.1+cu126",
+  "numpy": "2.5.3",
+  "runs": [
+    {
+      "run": "n5/val_sweep_20261010/val_lightgcn_l2-1e-03_s1",
+      "model": "LightGCN",
+      "keys": [
+        "cuda_rng",
+        "model",
+        "np_rng",
+        "opt",
+        "state",
+        "torch_rng"
+      ],
+      "adam": {
+        "n_params": 2,
+        "n_state": 2,
+        "steps": [
+          67500
+        ],
+        "lr": [
+          0.001
+        ],
+        "thieu_trang_thai": [],
+        "steps_mong_doi": 67500
+      },
+      "np_rng": "PCG64",
+      "cuda_rng_n": 1,
+      "state": {
+        "epoch": 300,
+        "best": 0.04044730812275842,
+        "best_epoch": 290,
+        "bad": 1,
+        "stopped": false,
+        "n_history": 300
+      },
+      "code_sha256": {},
+      "git_run": {
+        "commit": "595bc7072a81a3a73902d81e63afe35b4f55bcfb",
+        "dirty": false
+      },
+      "file_doi_tu_lan_chay": [],
+      "last_pt_sha256": "b2b6416ee1a088ff4504cdf1441c7544debdfe9232b76fefaba9f93ba275a115",
+      "best_pt_sha256": "d857e24c3d7fff692c39627b54ee30fb1e62044d9ec6fd932642d892285f5fc2",
+      "loi": [],
+      "dat": true
+    },
+    {
+      "run": "n5/final_20261009/lightgcn_l2-1e-03_s2",
+      "model": "LightGCN",
+      "keys": [
+        "cuda_rng",
+        "model",
+        "np_rng",
+        "opt",
+        "state",
+        "torch_rng"
+      ],
+      "adam": {
+        "n_params": 2,
+        "n_state": 2,
+        "steps": [
+          67500
+        ],
+        "lr": [
+          0.001
+        ],
+        "thieu_trang_thai": [],
+        "steps_mong_doi": 67500
+      },
+      "np_rng": "PCG64",
+      "cuda_rng_n": 1,
+      "state": {
+        "epoch": 300,
+        "best": 0.04040395198502122,
+        "best_epoch": 260,
+        "bad": 4,
+        "stopped": false,
+        "n_history": 300
+      },
+      "code_sha256": {},
+      "git_run": {
+        "commit": "595bc7072a81a3a73902d81e63afe35b4f55bcfb",
+        "dirty": false
+      },
+      "file_doi_tu_lan_chay": [],
+      "last_pt_sha256": "9e2a91d727966f6d6a36f90528ca4188dfe98b3b8cde4426b8c8fac5f2679fd7",
+      "best_pt_sha256": "a6edeaaee0e5946c3fe678130ecb2bf5a174bc61c3a34e6b93f24a17403bd682",
+      "loi": [],
+      "dat": true
+    },
+    {
+      "run": "n5/final_20261009/lightgcn_l2-1e-03_s3",
+      "model": "LightGCN",
+      "keys": [
+        "cuda_rng",
+        "model",
+        "np_rng",
+        "opt",
+        "state",
+        "torch_rng"
+      ],
+      "adam": {
+        "n_params": 2,
+        "n_state": 2,
+        "steps": [
+          67500
+        ],
+        "lr": [
+          0.001
+        ],
+        "thieu_trang_thai": [],
+        "steps_mong_doi": 67500
+      },
+      "np_rng": "PCG64",
+      "cuda_rng_n": 1,
+      "state": {
+        "epoch": 300,
+        "best": 0.0405414241725966,
+        "best_epoch": 300,
+        "bad": 0,
+        "stopped": false,
+        "n_history": 300
+      },
+      "code_sha256": {},
+      "git_run": {
+        "commit": "595bc7072a81a3a73902d81e63afe35b4f55bcfb",
+        "dirty": false
+      },
+      "file_doi_tu_lan_chay": [],
+      "last_pt_sha256": "b589f90b46589ea9eb8b65eaccac0d23d8d57ed69834770bbeb4dd5345464e42",
+      "best_pt_sha256": "9cc8a7922b522596d6fbb132986eb67e456733ea8ea3cab0f6b5a38a8cc2eb51",
+      "loi": [],
+      "dat": true
+    },
+    {
+      "run": "cakg/val_sweep_v2_20261016/val_v2_A_lens_gate_s1",
+      "model": "CaKG-Rec",
+      "keys": [
+        "aux",
+        "cuda_rng",
+        "model",
+        "np_rng",
+        "opt",
+        "state",
+        "torch_rng"
+      ],
+      "adam": {
+        "n_params": 19,
+        "n_state": 19,
+        "steps": [
+          67500
+        ],
+        "lr": [
+          0.001
+        ],
+        "thieu_trang_thai": [],
+        "steps_mong_doi": 67500
+      },
+      "np_rng": "PCG64",
+      "cuda_rng_n": 1,
+      "state": {
+        "epoch": 300,
+        "best": 0.040632539170702406,
+        "best_epoch": 280,
+        "bad": 2,
+        "stopped": false,
+        "n_history": 300
+      },
+      "code_sha256": {
+        "train_05.py": "trùng",
+        "06_cakg_train.py": "trùng",
+        "cakg_model.py": "trùng",
+        "rgat_layer.py": "trùng",
+        "05b_lightgcn_train.py": "trùng",
+        "kg_edges_compatible_with.csv": "trùng",
+        "kg_edges_crops_sensor.csv": "trùng",
+        "kg_edges_requires_adapter.csv": "trùng",
+        "kg_edges_has_spec_mount.csv": "trùng",
+        "kg_edges_has_spec_sensor_format.csv": "trùng",
+        "kg_edges_suitable_for.csv": "trùng",
+        "kg_node_index.json": "trùng"
+      },
+      "git_run": {
+        "commit": "61921d5a14c5accd38f521f19290e30ffba07d2a",
+        "dirty": false
+      },
+      "file_doi_tu_lan_chay": [],
+      "last_pt_sha256": "042826b4057cd2ceafbb9be8b7524d549d806f6aa024d3f7986f7db1e8c55b0a",
+      "best_pt_sha256": "ef77e8ced9dd988cfb62efc143407311c8f4cfee5e7b42a055d13749f72b8ec5",
+      "loi": [],
+      "dat": true
+    },
+    {
+      "run": "cakg/val_sweep_v2seeds_20261016/val_v2_A_lens_gate_s2",
+      "model": "CaKG-Rec",
+      "keys": [
+        "aux",
+        "cuda_rng",
+        "model",
+        "np_rng",
+        "opt",
+        "state",
+        "torch_rng"
+      ],
+      "adam": {
+        "n_params": 19,
+        "n_state": 19,
+        "steps": [
+          67500
+        ],
+        "lr": [
+          0.001
+        ],
+        "thieu_trang_thai": [],
+        "steps_mong_doi": 67500
+      },
+      "np_rng": "PCG64",
+      "cuda_rng_n": 1,
+      "state": {
+        "epoch": 300,
+        "best": 0.04024771365441739,
+        "best_epoch": 280,
+        "bad": 2,
+        "stopped": false,
+        "n_history": 300
+      },
+      "code_sha256": {
+        "train_05.py": "trùng",
+        "06_cakg_train.py": "trùng",
+        "cakg_model.py": "trùng",
+        "rgat_layer.py": "trùng",
+        "05b_lightgcn_train.py": "trùng",
+        "kg_edges_compatible_with.csv": "trùng",
+        "kg_edges_crops_sensor.csv": "trùng",
+        "kg_edges_requires_adapter.csv": "trùng",
+        "kg_edges_has_spec_mount.csv": "trùng",
+        "kg_edges_has_spec_sensor_format.csv": "trùng",
+        "kg_edges_suitable_for.csv": "trùng",
+        "kg_node_index.json": "trùng"
+      },
+      "git_run": {
+        "commit": "b789393e167937ac1b308eabf9d54bfaf8d95ec6",
+        "dirty": false
+      },
+      "file_doi_tu_lan_chay": [],
+      "last_pt_sha256": "db75f47eeeb2cbd521861732dc6456aeff1a028b12b3d5604186b7dc50fc6c28",
+      "best_pt_sha256": "a610f4ecee52f9cfb65905b110f87e00f83bcc48a50662727d98a6ecb49559bc",
+      "loi": [],
+      "dat": true
+    },
+    {
+      "run": "cakg/val_sweep_v2seeds_20261016/val_v2_A_lens_gate_s3",
+      "model": "CaKG-Rec",
+      "keys": [
+        "aux",
+        "cuda_rng",
+        "model",
+        "np_rng",
+        "opt",
+        "state",
+        "torch_rng"
+      ],
+      "adam": {
+        "n_params": 19,
+        "n_state": 19,
+        "steps": [
+          67500
+        ],
+        "lr": [
+          0.001
+        ],
+        "thieu_trang_thai": [],
+        "steps_mong_doi": 67500
+      },
+      "np_rng": "PCG64",
+      "cuda_rng_n": 1,
+      "state": {
+        "epoch": 300,
+        "best": 0.040503093909632394,
+        "best_epoch": 300,
+        "bad": 0,
+        "stopped": false,
+        "n_history": 300
+      },
+      "code_sha256": {
+        "train_05.py": "trùng",
+        "06_cakg_train.py": "trùng",
+        "cakg_model.py": "trùng",
+        "rgat_layer.py": "trùng",
+        "05b_lightgcn_train.py": "trùng",
+        "kg_edges_compatible_with.csv": "trùng",
+        "kg_edges_crops_sensor.csv": "trùng",
+        "kg_edges_requires_adapter.csv": "trùng",
+        "kg_edges_has_spec_mount.csv": "trùng",
+        "kg_edges_has_spec_sensor_format.csv": "trùng",
+        "kg_edges_suitable_for.csv": "trùng",
+        "kg_node_index.json": "trùng"
+      },
+      "git_run": {
+        "commit": "b789393e167937ac1b308eabf9d54bfaf8d95ec6",
+        "dirty": false
+      },
+      "file_doi_tu_lan_chay": [],
+      "last_pt_sha256": "7b301b89544af00c1845d55ed477d56f0b59c67375a20ec31bd8fc5f0d2622ec",
+      "best_pt_sha256": "9b5dcd4dc0de2e6ffa7a401e959919c045bb331db65a9cf45a4e5f998b1de790",
+      "loi": [],
+      "dat": true
+    },
+    {
+      "run": "cakg/val_sweep_20261014/val_kgat_lr-1e-04_s1",
+      "model": "KGAT",
+      "keys": [
+        "aux",
+        "cuda_rng",
+        "model",
+        "np_rng",
+        "opt",
+        "state",
+        "torch_rng"
+      ],
+      "adam": {
+        "n_params": 15,
+        "n_state": 13,
+        "steps": [
+          135000
+        ],
+        "lr": [
+          0.0001
+        ],
+        "thieu_trang_thai": [
+          "Er",
+          "Wr"
+        ],
+        "steps_mong_doi": 135000
+      },
+      "np_rng": "PCG64",
+      "cuda_rng_n": 1,
+      "aux_keys": [
+        "kg_opt"
+      ],
+      "kg_opt": {
+        "E": 163800,
+        "Er": 163800,
+        "Wr": 163800
+      },
+      "state": {
+        "epoch": 300,
+        "best": 0.020990382045282825,
+        "best_epoch": 300,
+        "bad": 0,
+        "stopped": false,
+        "n_history": 300
+      },
+      "code_sha256": {
+        "train_05.py": "trùng",
+        "07_kgat_train.py": "trùng (chỉ khác ký tự xuống dòng CRLF/LF)",
+        "kgat_model.py": "trùng",
+        "05c_rgcn_train.py": "trùng"
+      },
+      "git_run": {
+        "commit": "be94597653c88e65c3d5bd645878f592cab332bb",
+        "dirty": false
+      },
+      "file_doi_tu_lan_chay": [],
+      "last_pt_sha256": "9c0ad2a3facf0b6862727e56cb33c411d367a81084b77a424b4b4e593f3a7e65",
+      "best_pt_sha256": "863c5ba132ebb5e874f4d7c3f7bcef0e02ed17b455c03cda840361a35474c5fb",
+      "loi": [],
+      "dat": true
+    }
+  ]
+}

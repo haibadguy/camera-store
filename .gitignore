@@ -95,3 +95,7 @@ results/recbole/**/*.pth
 
 # RecBole ghi log tensorboard vào thư mục đang đứng
 log_tensorboard/
+results/v3/**/*.pt
+results/v3/**/*.pt.tmp
+results/v3/**/*.npy
+results/v3/smoke_*/

@@ -88,8 +88,25 @@ def run(model_name, cfg, build_model, run_dir, extra_argv=None, monitor=None, fi
     cfg_path = run_dir / "config.json"
     if cfg_path.exists():
         old = json.loads(cfg_path.read_text(encoding="utf-8"))
-        assert old["cfg"] == cfg, f"cấu hình khác lần chạy trước, không chạy tiếp:\n cũ {old['cfg']}\n mới {cfg}"
-        log(f"Chạy tiếp {run_dir} (cấu hình giống lần trước)")
+        diff = sorted(k for k in set(old["cfg"]) | set(cfg) if old["cfg"].get(k) != cfg.get(k))
+        if diff == ["max_epoch"] and cfg["max_epoch"] > old["cfg"]["max_epoch"]:
+            # v3 (06/11/2026, docs/reviews/v3_eval_plan.md mục 4, HỎI 4): cho TĂNG trần epoch khi chạy tiếp, mọi khóa
+            # khác phải trùng. Lịch chấm (mỗi eval_every epoch) và quy tắc dừng không đổi nên chạy tiếp từ last.pt =
+            # cùng quá trình với một lần chạy mới có trần lớn hơn, MIỄN là trần cũ chia hết cho eval_every (nếu không,
+            # lần cũ đã chấm thêm ở epoch = trần cũ, lệch lịch chấm). Ghi lại vào config.json -> max_epoch_changes.
+            assert old["cfg"]["max_epoch"] % cfg["eval_every"] == 0, \
+                f"trần cũ {old['cfg']['max_epoch']} không chia hết eval_every {cfg['eval_every']}: lịch chấm sẽ lệch"
+            old.setdefault("max_epoch_changes", []).append(
+                {"from": old["cfg"]["max_epoch"], "to": cfg["max_epoch"], "time": E.now_tag(), "git": E.git_state(),
+                 "argv": extra_argv,
+                 "code_sha256": {Path(p).name: E.sha256(p) for p in [__file__, *code_files]}})
+            log(f"Chạy tiếp {run_dir}: TĂNG max_epoch {old['cfg']['max_epoch']} -> {cfg['max_epoch']} "
+                f"(mọi khóa khác trùng)")
+            old["cfg"] = cfg
+            cfg_path.write_text(json.dumps(old, indent=2, ensure_ascii=False), encoding="utf-8")
+        else:
+            assert old["cfg"] == cfg, f"cấu hình khác lần chạy trước, không chạy tiếp:\n cũ {old['cfg']}\n mới {cfg}"
+            log(f"Chạy tiếp {run_dir} (cấu hình giống lần trước)")
     else:
         cfg_path.write_text(json.dumps({"model": model_name, "cfg": cfg, "git": E.git_state(),
                                         "inputs_sha256": E.inputs_sha256(),
