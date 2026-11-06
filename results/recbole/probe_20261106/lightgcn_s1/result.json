@@ -1,0 +1,27 @@
+{
+  "model": "LightGCN",
+  "seed": 1,
+  "data_checks": {
+    "n_users": 67661,
+    "n_items": 27940,
+    "n_train": 460193,
+    "n_valid": 67661,
+    "n_test": 67661,
+    "sec_load": 4.7
+  },
+  "epochs_run": 2,
+  "sec_per_epoch": [
+    18.258,
+    19.565
+  ],
+  "median_sec_per_epoch": 19.565,
+  "sec_fit_total": 146.2,
+  "peak_vram_mib": 340.7,
+  "probe": true,
+  "sec_one_valid_eval": 108.45,
+  "note": "chỉ đo thời gian, không phải kết quả (mô hình chưa huấn luyện xong)",
+  "git_at_finish": {
+    "commit": "1d21fa591733db0e43d25f08d0f9f8b679242a14",
+    "dirty": false
+  }
+}

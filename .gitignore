@@ -92,3 +92,6 @@ ai/data/recbole/
 results/recbole/**/ckpt/
 results/recbole/**/*.npz
 results/recbole/**/*.pth
+
+# RecBole ghi log tensorboard vào thư mục đang đứng
+log_tensorboard/

@@ -1,0 +1,28 @@
+command line args [--model SimGCL --seed 1 --probe-epochs 2 --gnn E:/DATN/venvs/src/recbole_gnn_src --run-dir results/recbole/probe_20261106_lan2/simgcl_s1] will not be used in RecBole
+E:\DATN\venvs\recbole\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Traceback (most recent call last):
+  File "E:\DATN\camera-store\ai\recbole\run_recbole.py", line 236, in <module>
+    main()
+  File "E:\DATN\camera-store\ai\recbole\run_recbole.py", line 143, in main
+    config = Config(model=a.model, dataset=DATASET, config_dict=cfg)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\DATN\venvs\src\recbole_gnn_src\recbole_gnn\config.py", line 22, in __init__
+    super(Config, self).__init__(model, dataset, config_file_list, config_dict)
+  File "E:\DATN\venvs\recbole\Lib\site-packages\recbole\config\configurator.py", line 88, in __init__
+    self.model, self.model_class, self.dataset = self._get_model_and_dataset(
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\DATN\venvs\src\recbole_gnn_src\recbole_gnn\config.py", line 50, in _get_model_and_dataset
+    final_model_class = get_model(final_model)
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\DATN\venvs\src\recbole_gnn_src\recbole_gnn\utils.py", line 77, in get_model
+    if importlib.util.find_spec(module_path, __name__):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib.util>", line 91, in find_spec
+  File "E:\DATN\venvs\src\recbole_gnn_src\recbole_gnn\model\general_recommender\__init__.py", line 1, in <module>
+    from recbole_gnn.model.general_recommender.lightgcn import LightGCN
+  File "E:\DATN\venvs\src\recbole_gnn_src\recbole_gnn\model\general_recommender\lightgcn.py", line 23, in <module>
+    from recbole_gnn.model.layers import LightGCNConv
+  File "E:\DATN\venvs\src\recbole_gnn_src\recbole_gnn\model\layers.py", line 5, in <module>
+    from torch_sparse import matmul
+ModuleNotFoundError: No module named 'torch_sparse'

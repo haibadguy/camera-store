@@ -1,0 +1,27 @@
+{
+  "model": "SimGCL",
+  "seed": 1,
+  "data_checks": {
+    "n_users": 67661,
+    "n_items": 27940,
+    "n_train": 460193,
+    "n_valid": 67661,
+    "n_test": 67661,
+    "sec_load": 4.9
+  },
+  "epochs_run": 2,
+  "sec_per_epoch": [
+    31.703,
+    32.766
+  ],
+  "median_sec_per_epoch": 32.766,
+  "sec_fit_total": 64.5,
+  "peak_vram_mib": 720.9,
+  "probe": true,
+  "sec_one_valid_eval": 106.19,
+  "note": "chỉ đo thời gian, không phải kết quả (mô hình chưa huấn luyện xong)",
+  "git_at_finish": {
+    "commit": "54ef9de2e3148ada543c1afc03c0be0bb4bc0a12",
+    "dirty": true
+  }
+}

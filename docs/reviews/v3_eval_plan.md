@@ -14,10 +14,10 @@ Mỗi số trong file này ghi nguồn. **[ĐO]** = đọc từ log / `result.js
 
 | Câu hỏi | Trả lời ngắn | Nguồn |
 |---|---|---|
-| Giờ GPU cho A1–A3 (máy nhóm) | PA1 (chạy lại hết từ đầu) **⟨PA1⟩**; PA2 (chạy tiếp `last.pt`, giữ lần đã dừng sớm) **⟨PA2⟩**; PA3 (tối thiểu) **⟨PA3⟩** — khoảng = [cận dưới; cận trên] | mục 8, log `ai/data/survey/v3/run_uoc_tinh_gio_⟨nhãn⟩.log` |
-| RecBole có tái hiện số LightGCN của nhóm không | ⟨chờ lần chạy RecBole⟩ | mục 7 |
+| Giờ GPU cho A1–A3 (tính theo tốc độ máy nhóm) [ƯỚC TÍNH] | PA1 (chạy lại hết từ đầu) **229–381 giờ**; PA2 (chạy tiếp `last.pt`, giữ lần đã dừng sớm) **205–357 giờ**; PA3 (tối thiểu) **179–311 giờ** — khoảng = [cận dưới; cận trên]. Trong đó 4 baseline mới chiếm 176 giờ (PA1, PA2) / 151 giờ (PA3) vì chưa có số dừng sớm nên tính đủ 1.000 epoch | mục 8, log `ai/data/survey/v3/run_uoc_tinh_gio_lan1.log` |
+| RecBole có tái hiện số LightGCN của nhóm không | **Có.** NDCG@20 val 0,04046 (nhóm 0,04045), test 0,03044 (nhóm 0,03021; TB 3 seed 0,03008 ± 0,00014); cách chấm trùng tới 5·10⁻⁹; hòa điểm không ảnh hưởng | mục 7.3 |
 | Kaggle | Đã có gói (2 dataset riêng tư + notebook mẫu), chưa tải lên | mục 9, `kaggle/README.md` |
-| Cần Nam quyết | 9 câu [HỎI] | mục 12 |
+| Cần Nam quyết | 10 câu [HỎI] | mục 12 |
 
 ## 1. Ví dụ trước
 
@@ -127,38 +127,123 @@ Chỉ số chọn: **NDCG@20 full ranking trên val, trước mặt nạ, seed 1
 | Ma trận kề | D^-½ A D^-½, không tự nối | D^-½ A D^-½ (cộng 1e-7 vào bậc), không tự nối | không đáng kể |
 | Dừng sớm | dừng khi 5 lần không **tăng** (`>`) | dừng khi số lần "không ≥ tốt nhất" > `stopping_step` = 4 (bằng điểm tốt nhất vẫn tính là tăng) | chỉ khác khi hai lần chấm bằng nhau |
 | Seed | `torch.manual_seed`, `numpy default_rng` | `init_seed` (random, numpy, torch, `cudnn.deterministic`) | cùng seed 1 nhưng **khác dãy số** → không mong trùng từng chữ số; so với dao động giữa 3 seed của nhóm |
-| Thời gian | 13,7 s / epoch, chấm val 3,5 s [ĐO] | ⟨s / epoch⟩, chấm valid ⟨s⟩ [ĐO] | RecBole chấm chậm hơn nhiều (mục 7.4) |
+| Thời gian | 13,7 s / epoch, chấm val 3,5 s [ĐO] | 20,65 s / epoch (19,8–22,0), chấm valid 114–137 s / lần, cả lần chạy 9.772 s ≈ 2,7 giờ cho 300 epoch [ĐO, `result.json`] | RecBole chậm hơn ~1,5× khi học và ~35× khi chấm (mục 7.4) |
 
-### 7.3. Kết quả
+### 7.3. Kết quả — **tái hiện được**
 
-⟨chờ lần chạy `results/recbole/repro_lightgcn_20261106/lightgcn_l2-1e-03_s1/`⟩
+Lần chạy: `results/recbole/repro_lightgcn_20261106/lightgcn_l2-1e-03_s1/` (RecBole 1.2.1, seed 1, 300 epoch, chấm mỗi
+10, commit `54ef9de` + sửa chưa commit chỉ ở MODEL_CFG của mô hình khác). Chấm chéo: `cross_eval.py`, log
+`cross_eval_val_20261106_174143.log`, `cross_eval_test_20261106_174152.log` trong cùng thư mục.
+
+**Ví dụ đọc bảng.** Cùng một mô hình (embedding RecBole), RecBole tự chấm NDCG@20 val = 0,04046022, bộ chấm của nhóm
+cho 0,040460225 → lệch 5·10⁻⁹ (chỉ do RecBole làm tròn 8 chữ số). Vậy **cách chấm** hai bên trùng. Còn RecBole học
+ra 0,04046 so với nhóm học ra 0,04045 → lệch do **cài đặt huấn luyện** chỉ 1·10⁻⁵.
+
+| NDCG@20 / Recall@20 | val | test |
+|---|---|---|
+| RecBole tự chấm | 0,040460 / 0,089919 | 0,030436 / 0,066937 |
+| Bộ chấm nhóm trên embedding RecBole | 0,040460 / 0,089919 | 0,030436 / 0,066937 |
+| → lệch do cách chấm | < 5·10⁻⁹ | < 3·10⁻⁹ |
+| Nhóm, LightGCN seed 1 | 0,040447 / 0,089150 | 0,030212 / 0,065739 |
+| → lệch do cài đặt (RecBole − nhóm seed 1) | +0,000013 / +0,00077 | +0,00022 / +0,0012 |
+| Nhóm, trung bình ± ĐLC 3 seed | 0,040464 ± 0,000070 / 0,08954 ± 0,00057 | 0,030083 ± 0,000136 / 0,06572 ± 0,00043 |
+
+(Đủ 4 chỉ số @10 / @20 ở hai file log trên.) [ĐO, `cross_eval.py`]
+
+- **Hòa điểm**: có 14 người (val) / 13 người (test) mà item đúng bị hòa điểm với đúng 1 item khác; cận trên = cận dưới
+  tới 9 chữ số → quy tắc hòa (π của nhóm so với `topk`) **không ảnh hưởng** số liệu.
+- **Đường cong val**: tốt nhất cùng ở epoch 290 (nhóm 0,04045, RecBole 0,04046), chạm trần 300 như nhau; lệch lớn nhất
+  giữa hai đường qua 30 lần chấm 0,00037 (epoch 100: 0,03721 so với 0,03687), trung bình −0,00007 (RecBole hơi chậm hơn
+  ở giữa, bắt kịp ở cuối).
+- **Mức lệch so với dao động seed**: val nằm trong ±1 ĐLC giữa 3 seed của nhóm. Test NDCG@20 lệch +0,00035 so với
+  trung bình 3 seed (~2,6 ĐLC), Recall@20 +0,0012 (~2,8 ĐLC); ĐLC chỉ từ 3 seed nên chưa đáng tin, và một lần chạy
+  RecBole cũng là một mẫu → coi là **cùng cỡ dao động giữa seed**, không phải lỗi. Kiểm chặt hơn cần RecBole nhiều seed
+  (không đề xuất: tốn ~2,7 giờ / seed).
+- Kết luận: LightGCN của nhóm và của RecBole cho cùng kết quả trong giới hạn dao động ngẫu nhiên; bộ chấm của nhóm trùng
+  RecBole tới làm tròn.
 
 ### 7.4. Hệ quả cho baseline mới
 
-⟨điền sau 7.3⟩
+- Bộ chấm và cách chia của nhóm đã được kiểm độc lập bằng RecBole → baseline lấy từ RecBole / RecBole-GNN (BPR, KGIN,
+  SimGCL) dùng được trên cùng dữ liệu, cùng giao thức; số cuối vẫn chấm bằng bộ chấm nhóm cho đồng nhất.
+- RecBole tự chấm valid mất 114–137 s / lần (so với 3,5 s của nhóm): với trần 1.000 epoch, chấm mỗi 10 epoch là 100 lần
+  ≈ 3,3–3,8 giờ chỉ để chấm → [HỎI 6].
+
+### 7.5. Sửa để chạy được KGIN / SimGCL (đo ngắn 06/11)
+
+| Lỗi [ĐO] | Nguyên nhân (đọc mã nguồn) | Sửa |
+|---|---|---|
+| KGIN: `KeyError: 'mount_14'` trong `_merge_item_and_entity` (`probe_20261106_lan2`, `lan3`) | KG chỉ phủ **2.972 / 27.940** sản phẩm; `.link` cũ ghi cả 27.940. Ở chế độ benchmark RecBole **bỏ qua** `_data_filtering` (nên cũng không lọc `.link`), mà phép gộp mã đòi mọi thực thể trong `.link` có mặt trong `.kg` | `to_recbole_kg.py`: `.link` chỉ ghi item có trong `.kg` (2.972 dòng; log `run_to_recbole_kg_20261106_lan3.log`; `.kg` không đổi, sha256 `ba9a9611…`). Item ngoài KG vẫn có mã thực thể, không có cạnh — như code KGIN gốc. Kiểm: không mất tương tác nào (460.193 / 67.661 / 67.661, assert trong `run_recbole.py`) |
+| KGIN: dataloader KG không có thuộc tính `dataset` (`lan4`) | lỗi của `run_recbole.py` (đếm số dòng train) | đếm bằng `train_data._dataset` |
+| KGIN: thiếu `torch_scatter` (`lan5`); SimGCL: thiếu `torch_sparse` (`lan2`) | không có bản dựng sẵn cho torch 2.14.1 (`pip install --only-binary` từ `data.pyg.org/whl/torch-2.14.0+cu126` báo không có bản nào) | `scatter_mean` thay bằng `torch_geometric.utils.scatter(reduce="mean")` (kiểm trên dữ liệu nhỏ: lệch 0,0); `torch_sparse` thay bằng module giả chỉ để import qua — RecBole-GNN tự dùng `edge_index` thường khi thiếu `torch_sparse` (`recbole_gnn/data/dataset.py`), `matmul` giả mà bị gọi thì báo lỗi ngay. Ghi trong `config_used.json` → `patches` |
+
+Lưu ý: log `run_to_recbole_kg_20261106_lan2.log` là lần chạy lại **code cũ** do sửa hỏng (cho đúng kết quả `lan1`);
+bản đúng là `lan3`. Loss SimGCL lớn (~1,2·10⁶ / epoch) vì RecBole-GNN cộng InfoNCE theo **tổng** trên batch
+(`simgcl.py`, `calculate_cl_loss` trả `.sum()`), không phải lỗi.
 
 ## 8. Ngân sách giờ GPU
 
 ### 8.1. Số đo (máy nhóm GTX 1660 Ti) [ĐO]
 
-Script `ai/survey/v3/uoc_tinh_gio_gpu.py` (chỉ đọc `result.json` + log sweep), log ⟨nhãn⟩:
+Script `ai/survey/v3/uoc_tinh_gio_gpu.py` (chỉ đọc `result.json` + log sweep), log
+`ai/data/survey/v3/run_uoc_tinh_gio_lan1.log` (các log `thu1`–`thu5` là bản chạy thử script, trước khi có số RecBole):
 
 | Mô hình | giây huấn luyện / epoch (trung vị; min–max) | giây / lần chấm val | phần cố định / lần chạy | số epoch đã đo |
 |---|---|---|---|---|
-⟨bảng⟩
+| LightGCN (nhóm) | 13,74 (12,32–15,94) | 3,46 (mỗi 10 epoch) | 20,0 | 1.260 (5 lần chạy) |
+| R-GCN (nhóm) | 29,02 (27,21–29,87) | 3,59 (mỗi 5 epoch) | 30,7 | 175 (4) |
+| CaKG-Rec (nhóm, v1 + v2) | 22,20 (19,19–26,51) | 7,18 | 35,2 | 3.600 (12) |
+| KGAT (nhóm) | 27,31 (25,67–29,74) | 3,69 | 23,7 | 550 (4) |
+| LightGCN (RecBole, lần tái hiện) | 20,65 (19,80–21,99) | 119,2 (RecBole tự chấm) | — | 300 |
+| BPR (RecBole) | 1,42 | 101,5 | — | 2 (đo ngắn) |
+| ItemKNN (RecBole) | 1,32 (một lần "fit", không cần GPU) | 130,5 | — | 1 |
+| SimGCL (RecBole-GNN) | 32,77 | 106,2 | — | 2 (đo ngắn) |
+| KGIN (RecBole) | 41,27 | 105,7 | — | 2 (đo ngắn) |
+
+Đo ngắn: `results/recbole/probe_20261106*/` (`--probe-epochs 2`, mặc định RecBole / RecBole-GNN, seed 1). Chạy được
+KGIN / SimGCL cần 3 sửa nhỏ, ghi ở mục 7.5. UltraGCN chưa có cài đặt → tạm lấy bằng LightGCN [ƯỚC TÍNH].
 
 ### 8.2. Ba phương án [ƯỚC TÍNH]
 
 Giờ một lần chạy = cố định + E × (giây / epoch) + số lần chấm × (giây / lần chấm). **Cận trên**: mọi lần chạy chưa
 có số đo chạy đủ 1.000 epoch. **Cận dưới**: dừng ở mức sớm nhất mà số đo cũ cho phép (lần chạy tiếp: epoch tốt nhất
 cũ + 50; seed mới: epoch tốt nhất nhỏ nhất của các seed cũ + 50; điểm lưới mới: số epoch nhỏ nhất đã chạy của mô hình
-đó); baseline mới chưa có số nên cận dưới = cận trên.
+đó); baseline mới chưa có số nên cận dưới = cận trên. Baseline mới giả định chấm val bằng bộ chấm nhóm (3,46 s / lần,
+[HỎI 6]); nếu để RecBole tự chấm (~119 s / lần, 100 lần / 1.000 epoch) thì mỗi lần chạy thêm ~3,3 giờ, tức thêm
+~70 giờ cho BPR + SimGCL + KGIN (3 × 7 lần chạy).
 
-⟨bảng phương án⟩
+| Khối | PA1: chạy lại từ đầu | PA2: chạy tiếp `last.pt` + giữ lần đã dừng sớm | PA3: tối thiểu (1 điểm / biên, không dò lại λ1, baseline 2 cấu hình) |
+|---|---|---|---|
+| LightGCN | 9,2–28,8 | 4,3–23,9 | 3,6–20,0 |
+| CaKG-Rec + 2 ablation | 34,9–108,4 | 21,5–95,0 | 21,0–86,1 |
+| R-GCN | 2,5–34,6 | 1,0–33,1 | 0,8–24,8 |
+| KGAT | 6,5–32,7 | 2,3–28,5 | 2,3–28,5 |
+| *Cộng 4 mô hình cũ (máy nhóm)* | *53,1–204,5* | *29,1–180,5* | *27,7–159,4* |
+| BPR-MF | 3,5 | 3,5 | 3,0 |
+| UltraGCN [ƯỚC TÍNH = LightGCN] | 27,4 | 27,4 | 23,5 |
+| SimGCL | 64,4 | 64,4 | 55,2 |
+| KGIN | 81,0 | 81,0 | 69,4 |
+| *Cộng 4 baseline mới (Kaggle, mục 8.3)* | *176,3* | *176,3* | *151,1* |
+| **Tổng (giờ GPU, tốc độ GTX 1660 Ti)** | **229,4–380,8** | **205,3–356,8** | **178,7–310,5** |
+
+Phát sinh nếu cấu hình chốt khác cấu hình cũ: LightGCN +2,4 giờ, CaKG-Rec +7,7 giờ, KGAT +15,4 giờ (cận trên).
+ItemKNN chạy CPU, không tính. Số từng khối và dòng tổng lấy từ log; các dòng "cộng" do Claude cộng lại từ số trong log (lệch 0,1 so với tổng của log do làm tròn).
+
+**Đọc bảng.** Phần máy nhóm của PA2 là 29–181 giờ (khoảng 1,2–7,5 ngày chạy liền). Phần baseline mới 151–176 giờ là
+cận trên (1.000 epoch không dừng sớm); với hạn mức Kaggle ~30 giờ / tuần (mục 8.3) là ~5–6 tuần nếu chạy hết trên
+Kaggle → đây là điểm nghẽn, xem [HỎI 7], [HỎI 10].
 
 ### 8.3. Chia việc máy nhóm / Kaggle (đề xuất, [HỎI 7])
 
-⟨điền⟩
+| Máy | Việc | Lý do |
+|---|---|---|
+| Máy nhóm (GTX 1660 Ti) | LightGCN, CaKG-Rec + 2 ablation, R-GCN, KGAT (dò + seed 1–5); ItemKNN (CPU); **chấm test cuối** | `last.pt` và các lần chạy cũ nằm ở máy này; mỗi mô hình đủ 5 seed trên một loại máy; test chỉ chấm ở máy nhóm |
+| Kaggle (GPU T4) | BPR-MF, UltraGCN, SimGCL, KGIN (dò + seed 1–5) | khối độc lập, không cần `last.pt`; là notebook gửi cô |
+
+Hạn mức Kaggle (chưa kiểm trên tài khoản Nam): trang hướng dẫn GPU của Kaggle ghi tối đa **30 giờ GPU / tuần**;
+bài thông báo "floating GPU quota" nói có thể hơn 30 giờ tùy tuần; giờ tối đa mỗi phiên các nguồn ghi 9 hoặc 12 giờ
+(https://www.kaggle.com/docs/efficient-gpu-usage, https://www.kaggle.com/product-feedback/173129). Nam xem số đúng ở
+trang tài khoản trước khi lập lịch.
 
 ## 9. Kaggle
 
@@ -182,14 +267,29 @@ Trước khi chạy thật: một phiên bản ngắn (1 việc `--max-epoch 20`
 2. Tốc độ và hạn mức Kaggle (mục 9).
 3. UltraGCN phải tự cài; chưa đo thời gian (tạm lấy bằng LightGCN).
 4. KGIN / SimGCL: số giây / epoch từ lần đo ngắn (2 epoch) với siêu tham số mặc định; cấu hình khác (số tầng) đổi tốc độ.
+   Hai thư viện `torch_scatter` / `torch_sparse` được thay (mục 7.5); KGIN trên KG chỉ phủ 2.972 sản phẩm (10,6 %).
+6. Tái hiện RecBole mới là **một seed**; lệch test (+0,00035 NDCG@20 so với TB 3 seed nhóm) coi là dao động seed dựa
+   trên ĐLC của chỉ 3 seed.
 5. Gộp 5 seed chạy ở hai loại máy cho cùng một mô hình sẽ trộn sai lệch phần cứng vào độ lệch giữa seed (tránh, mục 5).
 
 ## 12. Câu hỏi cho Nam [HỎI]
 
-⟨điền⟩
+| # | Câu hỏi | Lựa chọn | Đề xuất (Claude) |
+|---|---|---|---|
+| HỎI 1 | "CaKG-Rec" trong v3 là bản nào? | (a) v1, λ1 = 0,1 (đã chấm test 15/10); (b) v2 A `lens_gate` (chọn trên val 16/10, DỪNG 2 không đạt, chưa chấm test); (c) cả hai | (b) nếu theo đúng "chọn chỉ trên val" (v2 A có NDCG@20 val seed 1 cao hơn v1: 0,04063 so với 0,03973); ablation λ1 = 0 / bỏ `suitable_for` làm trên bản đã chọn. Bản chưa chọn không chạy thêm; chọn (c) thì gần gấp đôi khối CaKG-Rec, thêm ~21,5–95,0 giờ (PA2, mục 8.2) |
+| HỎI 2 | Phương án ngân sách | PA1 / PA2 / PA3 (mục 8.2) | PA2 |
+| HỎI 3 | Lưới mở rộng (mục 3) và quy tắc "vẫn ở biên thì mở thêm đúng 1 điểm, một lần" | đồng ý / sửa điểm | đồng ý |
+| HỎI 4 | Sửa `train_05.run` để chạy tiếp `last.pt` với `max_epoch` lớn hơn (cần cho PA2 / PA3; ghi CHANGELOG) | có / không (thì PA1) | có |
+| HỎI 5 | BPR-MF cài ở đâu | (a) code nhóm: `05b` với 0 lớp (e = e⁰), cùng L2 λ2 và vòng huấn luyện — trùng giao thức tuyệt đối; (b) `BPR` của RecBole (không có L2, chỉ dò lr) | (a), chạy thêm `BPR` RecBole seed 1 để đối chiếu |
+| HỎI 6 | Chấm val trong vòng huấn luyện của RecBole | (a) để RecBole tự chấm (~108–137 s / lần, mục 7.2); (b) thay bằng bộ chấm nhóm (cùng giao thức, ~3,5 s / lần), kiểm bằng `cross_eval.py` trên một checkpoint | (b); số cuối luôn chấm bằng bộ chấm nhóm |
+| HỎI 7 | Chia máy nhóm / Kaggle (mục 8.3) | đồng ý / sửa | đồng ý |
+| HỎI 8 | Kaggle: tải 2 dataset **riêng tư** lên tài khoản của Nam; `user_map.json` ẩn mã; bật Internet để cài đúng torch / PyG như file lock (không bật thì dùng torch sẵn của Kaggle và ghi phiên bản) | đồng ý / sửa | đồng ý; Nam tự chạy lệnh tải lên |
+| HỎI 9 | Báo số test | (a) bảng chính = test v3 (5 seed), số test cũ (3 seed, 300 epoch) ở phụ lục kèm câu "test đã xem"; (b) chỉ báo test v3 | (a) |
+| HỎI 10 | Baseline mới 151–176 giờ (cận trên, mục 8.2) vượt xa hạn mức Kaggle ~30 giờ / tuần. Giảm thế nào? | (a) giữ trần 1.000 + dừng sớm, chạy song song Kaggle và máy nhóm khi rảnh, chấp nhận ~4–6 tuần; (b) dò chỉ seed 1 ở trần 1.000, seed 2–5 dùng trần = epoch tốt nhất của seed 1 + 100; (c) bớt lưới baseline xuống 2 điểm (PA3) và bỏ UltraGCN (phải tự cài, không có trong RecBole) | chưa đề xuất được: số dừng sớm thật của baseline chưa có; nên chạy seed 1 một cấu hình mỗi baseline trước (~0,5 giờ BPR, ~9–12 giờ SimGCL / KGIN mỗi lần, tính từ mục 8.1) rồi quyết |
 
 ## 13. Sửa đổi kế hoạch
 
 | Ngày | Sửa gì | Lý do |
 |---|---|---|
 | 06/11/2026 | Bản đầu | Nhận xét cô 06/11 |
+| 06/11/2026 (tối) | Điền kết quả tái hiện RecBole (mục 7.3–7.5), số đo BPR / ItemKNN / KGIN / SimGCL, bảng giờ GPU (log `lan1`); thêm HỎI 10 | Lần chạy RecBole LightGCN và đo ngắn xong; chưa có số nào của mô hình v3 |

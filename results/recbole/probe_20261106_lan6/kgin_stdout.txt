@@ -1,0 +1,26 @@
+E:\DATN\venvs\recbole\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+command line args [--model KGIN --seed 1 --probe-epochs 2 --run-dir results/recbole/probe_20261106_lan6/kgin_s1] will not be used in RecBole
+KGIN seed 1 | RecBole 1.2.1 torch 2.14.1+cu126 | NVIDIA GeForce GTX 1660 Ti | git {'commit': '54ef9de2e3148ada543c1afc03c0be0bb4bc0a12', 'dirty': True}
+E:\DATN\venvs\recbole\Lib\site-packages\recbole\data\dataset\dataset.py:648: FutureWarning: A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
+The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
+
+For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' or df[col] = df[col].method(value) instead, to perform the operation inplace on the original object.
+
+
+  feat[field].fillna(value=0, inplace=True)
+06 Nov 17:56    INFO  [Training]: train_batch_size = [2048] train_neg_sample_args: [{'distribution': 'uniform', 'sample_num': 1, 'dynamic': False, 'candidate_num': 0, 'alpha': 1.0}]
+06 Nov 17:56    INFO  [Evaluation]: eval_batch_size = [4096] eval_args: [{'split': {'RS': [0.8, 0.1, 0.1]}, 'order': 'RO', 'group_by': 'user', 'mode': {'valid': 'full', 'test': 'full'}}]
+Dữ liệu: {'n_users': 67661, 'n_items': 27940, 'n_train': 460193, 'n_valid': 67661, 'n_test': 67661, 'sec_load': 4.9}
+E:\DATN\venvs\recbole\Lib\site-packages\recbole\model\knowledge_aware_recommender\kgin.py:331: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+E:\DATN\venvs\recbole\Lib\site-packages\recbole\model\knowledge_aware_recommender\kgin.py:369: UserWarning: torch.sparse.SparseTensor(indices, values, shape, *, device=) is deprecated.  Please use torch.sparse_coo_tensor(indices, values, shape, dtype=, device=). (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\utils\tensor_new.cpp:655.)
+  norm_graph = torch.sparse.FloatTensor(i, data, L.shape)
+E:\DATN\venvs\recbole\Lib\site-packages\recbole\trainer\trainer.py:235: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = amp.GradScaler(enabled=self.enable_scaler)
+  epoch 1 | 39.99s | loss 135.18922436237335
+06 Nov 17:57    INFO  epoch 0 training [time: 39.99s, train loss: 135.1892]
+  epoch 2 | 41.27s | loss 113.39520591497421
+06 Nov 17:57    INFO  epoch 1 training [time: 41.27s, train loss: 113.3952]
+Đo thời gian: trung vị 41.274s / epoch, một lần chấm valid 105.68s
+Xong: E:\DATN\camera-store\results\recbole\probe_20261106_lan6\kgin_s1\result.json

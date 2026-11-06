@@ -1,0 +1,20 @@
+command line args [--model BPR --seed 1 --probe-epochs 2 --run-dir results/recbole/probe_20261106_lan2/bpr_s1] will not be used in RecBole
+BPR seed 1 | RecBole 1.2.1 torch 2.14.1+cu126 | NVIDIA GeForce GTX 1660 Ti | git {'commit': '54ef9de2e3148ada543c1afc03c0be0bb4bc0a12', 'dirty': True}
+E:\DATN\venvs\recbole\Lib\site-packages\recbole\data\dataset\dataset.py:648: FutureWarning: A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
+The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
+
+For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' or df[col] = df[col].method(value) instead, to perform the operation inplace on the original object.
+
+
+  feat[field].fillna(value=0, inplace=True)
+06 Nov 17:42    INFO  [Training]: train_batch_size = [2048] train_neg_sample_args: [{'distribution': 'uniform', 'sample_num': 1, 'dynamic': False, 'candidate_num': 0, 'alpha': 1.0}]
+06 Nov 17:42    INFO  [Evaluation]: eval_batch_size = [4096] eval_args: [{'split': {'RS': [0.8, 0.1, 0.1]}, 'order': 'RO', 'group_by': 'user', 'mode': {'valid': 'full', 'test': 'full'}}]
+Dữ liệu: {'n_users': 67661, 'n_items': 27940, 'n_train': 460193, 'n_valid': 67661, 'n_test': 67661, 'sec_load': 4.8}
+E:\DATN\venvs\recbole\Lib\site-packages\recbole\trainer\trainer.py:235: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = amp.GradScaler(enabled=self.enable_scaler)
+  epoch 1 | 1.42s | loss 155.9285044670105
+06 Nov 17:42    INFO  epoch 0 training [time: 1.42s, train loss: 155.9285]
+  epoch 2 | 1.37s | loss 151.40314722061157
+06 Nov 17:42    INFO  epoch 1 training [time: 1.37s, train loss: 151.4031]
+Đo thời gian: trung vị 1.422s / epoch, một lần chấm valid 101.53s
+Xong: E:\DATN\camera-store\results\recbole\probe_20261106_lan2\bpr_s1\result.json

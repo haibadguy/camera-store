@@ -1,0 +1,25 @@
+command line args [--model KGIN --seed 1 --probe-epochs 2 --run-dir results/recbole/probe_20261106_lan2/kgin_s1] will not be used in RecBole
+KGIN seed 1 | RecBole 1.2.1 torch 2.14.1+cu126 | NVIDIA GeForce GTX 1660 Ti | git {'commit': '54ef9de2e3148ada543c1afc03c0be0bb4bc0a12', 'dirty': True}
+Traceback (most recent call last):
+  File "E:\DATN\camera-store\ai\recbole\run_recbole.py", line 236, in <module>
+    main()
+  File "E:\DATN\camera-store\ai\recbole\run_recbole.py", line 160, in main
+    dataset = create_dataset(config)
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\DATN\venvs\recbole\Lib\site-packages\recbole\data\utils.py", line 72, in create_dataset
+    dataset = dataset_class(config)
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\DATN\venvs\recbole\Lib\site-packages\recbole\data\dataset\kg_dataset.py", line 68, in __init__
+    super().__init__(config)
+  File "E:\DATN\venvs\recbole\Lib\site-packages\recbole\data\dataset\dataset.py", line 108, in __init__
+    self._from_scratch()
+  File "E:\DATN\venvs\recbole\Lib\site-packages\recbole\data\dataset\dataset.py", line 120, in _from_scratch
+    self._data_processing()
+  File "E:\DATN\venvs\recbole\Lib\site-packages\recbole\data\dataset\dataset.py", line 164, in _data_processing
+    self._remap_ID_all()
+  File "E:\DATN\venvs\recbole\Lib\site-packages\recbole\data\dataset\kg_dataset.py", line 407, in _remap_ID_all
+    self._merge_item_and_entity()
+  File "E:\DATN\venvs\recbole\Lib\site-packages\recbole\data\dataset\kg_dataset.py", line 349, in _merge_item_and_entity
+    entity_id_map[i] = new_item_token2id[self.entity2item[entity_token[i]]]
+                                         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'mount_14'

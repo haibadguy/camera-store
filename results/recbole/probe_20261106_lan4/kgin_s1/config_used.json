@@ -1,0 +1,186 @@
+{
+  "model": "KGIN",
+  "seed": 1,
+  "probe_epochs": 2,
+  "argv": [
+    "ai/recbole/run_recbole.py",
+    "--model",
+    "KGIN",
+    "--seed",
+    "1",
+    "--probe-epochs",
+    "2",
+    "--run-dir",
+    "results/recbole/probe_20261106_lan4/kgin_s1"
+  ],
+  "git": {
+    "commit": "54ef9de2e3148ada543c1afc03c0be0bb4bc0a12",
+    "dirty": true
+  },
+  "recbole": "1.2.1",
+  "recbole_gnn_commit": null,
+  "patches": [],
+  "torch": "2.14.1+cu126",
+  "python": "3.12.10",
+  "gpu": "NVIDIA GeForce GTX 1660 Ti",
+  "inputs_sha256": {
+    "camera_loo.kg": "ba9a96114358c8fbaf2c60aeb3d38b53829b2add280d240fbf5416d4f009001b",
+    "camera_loo.link": "47fd31f3acdc24cc19ab2c97be757e1648a06854d813548667dadd7d8ad54771",
+    "camera_loo.link.bak_lan1": "db9eb588af6bebe9dcae95287f2b226c47bdc349a5bb0b6d145aed24b99f6e78",
+    "camera_loo.test.inter": "62df3892096b8478311ef5adc5f683c84d206afafec9f32733cf5fbe1ccb59ac",
+    "camera_loo.train.inter": "6bc27eb3526c6abe05dad83caf29220333c7ea6e1e7fe86147201e54942ba274",
+    "camera_loo.valid.inter": "a1502629765c7f9a5c48816b89fb5afb0f7e5ed30ccbc697cb48ce11eede3c40"
+  },
+  "config": {
+    "gpu_id": "0",
+    "worker": 0,
+    "use_gpu": true,
+    "seed": 1,
+    "state": "INFO",
+    "reproducibility": true,
+    "data_path": "E:\\DATN\\camera-store\\ai\\data\\recbole\\camera_loo",
+    "checkpoint_dir": "E:\\DATN\\camera-store\\results\\recbole\\probe_20261106_lan4\\kgin_s1\\ckpt",
+    "show_progress": false,
+    "save_dataset": false,
+    "dataset_save_path": null,
+    "save_dataloaders": false,
+    "dataloaders_save_path": null,
+    "log_wandb": false,
+    "wandb_project": "recbole",
+    "shuffle": true,
+    "epochs": 2,
+    "train_batch_size": 2048,
+    "learner": "adam",
+    "learning_rate": 0.001,
+    "train_neg_sample_args": {
+      "distribution": "uniform",
+      "sample_num": 1,
+      "dynamic": false,
+      "candidate_num": 0,
+      "alpha": 1.0
+    },
+    "eval_step": 1000000,
+    "stopping_step": 4,
+    "clip_grad_norm": null,
+    "weight_decay": 0.0,
+    "loss_decimal_place": 4,
+    "require_pow": false,
+    "enable_amp": false,
+    "enable_scaler": false,
+    "transform": null,
+    "eval_args": {
+      "split": {
+        "RS": [
+          0.8,
+          0.1,
+          0.1
+        ]
+      },
+      "order": "RO",
+      "group_by": "user",
+      "mode": {
+        "valid": "full",
+        "test": "full"
+      }
+    },
+    "repeatable": false,
+    "metrics": [
+      "Recall",
+      "NDCG",
+      "Hit"
+    ],
+    "topk": [
+      5,
+      10,
+      20
+    ],
+    "valid_metric": "NDCG@20",
+    "valid_metric_bigger": true,
+    "eval_batch_size": 4096,
+    "metric_decimal_place": 8,
+    "embedding_size": 64,
+    "reg_weight": 1e-05,
+    "node_dropout_rate": 0.5,
+    "mess_dropout_rate": 0.0,
+    "sim_regularity": 0.0001,
+    "context_hops": 2,
+    "n_factors": 4,
+    "ind": "cosine",
+    "temperature": 0.2,
+    "field_separator": "\t",
+    "seq_separator": " ",
+    "USER_ID_FIELD": "user_id",
+    "ITEM_ID_FIELD": "item_id",
+    "RATING_FIELD": null,
+    "TIME_FIELD": null,
+    "seq_len": null,
+    "LABEL_FIELD": "label",
+    "threshold": null,
+    "NEG_PREFIX": "neg_",
+    "numerical_features": [],
+    "load_col": {
+      "inter": [
+        "user_id",
+        "item_id"
+      ],
+      "kg": [
+        "head_id",
+        "relation_id",
+        "tail_id"
+      ],
+      "link": [
+        "item_id",
+        "entity_id"
+      ]
+    },
+    "unload_col": null,
+    "unused_col": null,
+    "additional_feat_suffix": null,
+    "rm_dup_inter": null,
+    "val_interval": null,
+    "filter_inter_by_user_or_item": false,
+    "user_inter_num_interval": "[0,inf)",
+    "item_inter_num_interval": "[0,inf)",
+    "alias_of_user_id": null,
+    "alias_of_item_id": null,
+    "alias_of_entity_id": null,
+    "alias_of_relation_id": null,
+    "preload_weight": null,
+    "normalize_field": null,
+    "normalize_all": null,
+    "discretization": null,
+    "ITEM_LIST_LENGTH_FIELD": "item_length",
+    "LIST_SUFFIX": "_list",
+    "MAX_ITEM_LIST_LENGTH": 50,
+    "POSITION_FIELD": "position_id",
+    "HEAD_ENTITY_ID_FIELD": "head_id",
+    "TAIL_ENTITY_ID_FIELD": "tail_id",
+    "RELATION_ID_FIELD": "relation_id",
+    "ENTITY_ID_FIELD": "entity_id",
+    "kg_reverse_r": false,
+    "entity_kg_num_interval": "[0,inf)",
+    "relation_kg_num_interval": "[0,inf)",
+    "benchmark_filename": [
+      "train",
+      "valid",
+      "test"
+    ],
+    "MODEL_TYPE": "ModelType.KNOWLEDGE",
+    "device": "cuda",
+    "log_root": "E:\\DATN\\camera-store\\results\\recbole\\probe_20261106_lan4\\kgin_s1\\recbole_log/",
+    "dataset": "camera_loo",
+    "model": "KGIN",
+    "MODEL_INPUT_TYPE": "InputType.PAIRWISE",
+    "eval_type": "EvaluatorType.RANKING",
+    "single_spec": true,
+    "local_rank": 0,
+    "valid_neg_sample_args": {
+      "distribution": "uniform",
+      "sample_num": "none"
+    },
+    "test_neg_sample_args": {
+      "distribution": "uniform",
+      "sample_num": "none"
+    }
+  }
+}

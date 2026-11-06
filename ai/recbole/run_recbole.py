@@ -36,17 +36,10 @@ ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "ai" / "data" / "recbole"
 DATASET = "camera_loo"
 
-MODEL_CFG = {   # siêu tham số theo mô hình; chỉ LightGCN đã chốt (= n5_final.toml), còn lại là mặc định để đo giờ
+MODEL_CFG = {   # chỉ LightGCN đã chốt (= n5_final.toml); mô hình khác: mặc định yaml của RecBole / RecBole-GNN
     "LightGCN": {"embedding_size": 64, "n_layers": 3, "reg_weight": 1e-3, "require_pow": True},
-    "BPR": {"embedding_size": 64},
-    "ItemKNN": {"k": 100, "shrink": 0.0},
-    "KGIN": {"embedding_size": 64, "n_factors": 4, "context_hops": 3, "node_dropout_rate": 0.5,
-             "mess_dropout_rate": 0.1, "sim_regularity": 1e-4, "reg_weight": 1e-5, "ind": "distance",
-             "temperature": 0.2},
-    "SimGCL": {"embedding_size": 64, "n_layers": 2, "reg_weight": 1e-4, "lambda": 0.5, "eps": 0.1,
-               "temperature": 0.2},
-    "KGAT": {"embedding_size": 64, "kg_embedding_size": 64, "layers": [64, 32, 16], "mess_dropout": 0.1,
-             "reg_weight": 1e-5, "aggregator_type": "bi"},
+    # BPR: embedding 64; ItemKNN: k 100, shrink 0; KGIN: d 64, 4 ý định, 2 tầng, node dropout 0,5;
+    # SimGCL (RecBole-GNN): 2 lớp, reg 1e-4, lambda 0,5, eps 0,1, τ 0,2. Ghi đè bằng --set khóa=giá_trị_json.
 }
 
 
@@ -104,7 +97,32 @@ def main():
     import recbole
     from recbole.utils import init_logger, init_seed
     gnn_commit = None
+    patches = []
+    try:
+        import torch_scatter  # noqa: F401
+    except ImportError:       # KGIN (RecBole) cần torch_scatter.scatter_mean; không có bản cho torch 2.14 (06/11)
+        import types          # -> thay bằng torch_geometric.utils.scatter(reduce="mean"): cùng phép tính (trung bình
+        from torch_geometric.utils import scatter as _pyg_scatter   # theo chỉ số, hàng không có phần tử = 0)
+        ts_mod = types.ModuleType("torch_scatter")
+
+        def _scatter_mean(src, index, dim=0, out=None, dim_size=None):
+            assert out is None
+            return _pyg_scatter(src, index, dim=dim, dim_size=dim_size, reduce="mean")
+        ts_mod.scatter_mean = _scatter_mean
+        sys.modules["torch_scatter"] = ts_mod
+        patches.append("torch_scatter.scatter_mean = torch_geometric.utils.scatter(reduce='mean')")
     if a.gnn:
+        try:
+            import torch_sparse  # noqa: F401
+        except ImportError:   # không có bản torch_sparse cho torch 2.14 (06/11). RecBole-GNN tự lùi về edge_index
+            import types      # thường khi thiếu torch_sparse (data/dataset.py), chỉ layers.py import cứng `matmul`
+            stub = types.ModuleType("torch_sparse")   # -> module giả: chỉ để import qua; gọi tới là báo lỗi ngay
+
+            def _no_sparse(*_a, **_k):
+                raise RuntimeError("torch_sparse chưa cài: chỉ chạy được đường edge_index của RecBole-GNN")
+            stub.matmul = _no_sparse
+            sys.modules["torch_sparse"] = stub
+            patches.append("torch_sparse giả (chỉ matmul báo lỗi); RecBole-GNN dùng edge_index thường")
         sys.path.insert(0, str(Path(a.gnn).resolve()))
         from recbole_gnn.config import Config
         from recbole_gnn.utils import create_dataset, data_preparation, get_model, get_trainer
@@ -143,6 +161,9 @@ def main():
         **mcfg,
     }
     if is_kg:
+        # KG chỉ phủ sản phẩm máy ảnh (2.972 / 27.940). Chế độ benchmark bỏ qua _data_filtering (không xóa tương tác
+        # nào, kiểm bằng assert số dòng bên dưới); .link chỉ chứa item có trong .kg (to_recbole_kg.py) -> item ngoài KG
+        # vẫn là thực thể nhưng không có cạnh tri thức.
         cfg.update({"HEAD_ENTITY_ID_FIELD": "head_id", "TAIL_ENTITY_ID_FIELD": "tail_id",
                     "RELATION_ID_FIELD": "relation_id", "ENTITY_ID_FIELD": "entity_id",
                     "kg_reverse_r": False, "entity_kg_num_interval": "[0,inf)",
@@ -152,7 +173,7 @@ def main():
     init_logger(config)
     inputs = {p.name: sha256(p) for p in sorted((DATA / DATASET).glob(f"{DATASET}.*"))}
     meta = {"model": a.model, "seed": a.seed, "probe_epochs": a.probe_epochs, "argv": sys.argv,
-            "git": git_state(), "recbole": recbole.__version__, "recbole_gnn_commit": gnn_commit, "torch": torch.__version__,
+            "git": git_state(), "recbole": recbole.__version__, "recbole_gnn_commit": gnn_commit, "patches": patches, "torch": torch.__version__,
             "python": platform.python_version(),
             "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
             "inputs_sha256": inputs, "config": {k: (v if isinstance(v, (int, float, str, bool, list, dict,
@@ -168,7 +189,7 @@ def main():
     train_data, valid_data, test_data = data_preparation(config, dataset)
     uf, itf = config["USER_ID_FIELD"], config["ITEM_ID_FIELD"]
     n_u, n_i = dataset.user_num - 1, dataset.item_num - 1        # trừ [PAD]
-    chk = {"n_users": n_u, "n_items": n_i, "n_train": len(train_data.dataset), "n_valid": len(valid_data.dataset),
+    chk = {"n_users": n_u, "n_items": n_i, "n_train": len(train_data._dataset), "n_valid": len(valid_data.dataset),
            "n_test": len(test_data.dataset), "sec_load": round(time.time() - t0, 1)}
     log(f"Dữ liệu: {chk}")
     assert (n_u, n_i, chk["n_train"], chk["n_valid"], chk["n_test"]) == (67661, 27940, 460193, 67661, 67661), chk
