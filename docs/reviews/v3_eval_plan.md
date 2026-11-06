@@ -135,6 +135,32 @@ Baseline RecBole chạy `run_recbole.py --group-eval` (chấm val bằng bộ ch
 ở mốc 8,5 giờ / phiên (giới hạn phiên 9 hay 12 giờ chưa kiểm, mục 8.3) và chạy tiếp ở phiên bản sau. Chia 3 tài khoản
 (HỎI 7). Hướng dẫn từng bước: `kaggle/HUONG_DAN_KAGGLE.md`. Sau đợt này mới quyết lưới / số seed baseline (HỎI 10).
 
+### 6.2. Các đợt sau `s1` trên máy nhóm — chạy nối tiếp tự động (thêm 06/11 khuya)
+
+Nam 06/11: "khi [đợt s1] xong thì chạy các đợt sau theo kế hoạch, không cần chờ tôi". `ai/pipeline/v3_chain.py
+--label 20261106 --wait-pid <PID đợt s1>` làm đúng các bước dưới, mỗi bước gọi `v3_sweep.py` (log, đường cong như đợt
+s1), log `results/v3/chain_20261106/chain_*.log`. Quy tắc ghi ở đây **trước khi đợt s1 xong** (lúc viết mới thấy số đang
+chạy của lần [1/8] LightGCN λ2 1e-3: tốt nhất 0,04057 ở epoch 380); các chi tiết mục 3 / 6 chưa nói rõ được chốt như sau:
+
+1. **Chọn** (seed 1, NDCG@20 full ranking val, trước mặt nạ) trên lưới = lần cũ đã dừng sớm (giữ) + đợt s1:
+   LightGCN λ2 {1e-5, 1e-4, 1e-3, 3e-3, 1e-2}; KGAT lr {1e-4, 1e-3, 3e-3}; R-GCN lr {1e-4, 3e-4, 1e-3, 1e-2}.
+   CaKG-Rec v2 A: chỉ λ1 = 0,1 (HỎI 11), không chọn. Bằng nhau tuyệt đối: lấy giá trị đứng trước trong lưới.
+2. **Ở biên** (HỎI 3: "vẫn ở biên thì thêm đúng 1 điểm, một lần") — áp cho **cả hai biên**, điểm thêm theo bước ~½ bậc
+   như lưới: LightGCN 3e-2 (trên) / 3e-6 (dưới); KGAT 1e-2 / 3e-5; R-GCN 3e-2 / 3e-5. Chạy seed 1 (đợt `s1b`), chọn lại
+   một lần; điểm thêm vẫn tốt nhất → chọn nó, ghi `still_at_edge_after_extension = true` và hạn chế, không mở thêm.
+3. Ghi `ai/config/v3_final.toml` (do script sinh) và **commit riêng file đó** trước khi chạy seed 2–5 (mục 6.1). Không push.
+4. **Đợt `s25`**: seed 2–5 của cấu hình chốt cho LightGCN, CaKG-Rec v2 A, KGAT, R-GCN. Lần cũ cùng cấu hình + seed: đã dừng
+   sớm → giữ (mục 4); chạm trần → chạy tiếp từ `last.pt` nếu ĐẠT kiểm (`kiem_last_pt_lan2.json`), không thì chạy lại.
+   Ví dụ nếu chốt LightGCN 1e-3: seed 2, 3 chạy tiếp từ `results/n5/final_20261009/`, seed 4, 5 mới; chốt KGAT 1e-3: seed
+   2, 3 giữ lần cũ (dừng sớm ở 80 / 90), seed 4, 5 mới.
+5. **Đợt `abl`**: CaKG-Rec v2 A λ1 = 0 và λ1 = 0,1 bỏ `suitable_for`, seed 1–5, mới (10 lần).
+6. **ItemKNN** (RecBole, `--group-eval`, tất định): k ∈ {50, 100, 200}, shrink 0; chọn k ở bước tổng hợp sau.
+7. Không chấm test (mục 2: một lần ở cuối, khi đủ cả baseline Kaggle). Trước mỗi lần gọi `v3_sweep`, cây git phải sạch
+   (không thì chờ, kiểm lại mỗi 10 phút). Một lần chạy lỗi → dừng cả chuỗi, chờ Nam / Claude xem.
+
+Đã thử khô (`--dry-run`) với kết quả giả ở thư mục tạm, 3 kịch bản (không ở biên / ở biên / vẫn ở biên sau khi thêm):
+danh sách lần chạy và file toml đúng như các quy tắc trên.
+
 ## 7. RecBole: kiểm tái hiện LightGCN (A3 "trước tiên")
 
 ### 7.1. Cách làm
@@ -368,3 +394,4 @@ Hệ quả Claude rút ra (ghi lại để Nam kiểm):
 | 06/11/2026 (tối) | Điền kết quả tái hiện RecBole (mục 7.3–7.5), số đo BPR / ItemKNN / KGIN / SimGCL, bảng giờ GPU (log `lan1`); thêm HỎI 10 | Lần chạy RecBole LightGCN và đo ngắn xong; chưa có số nào của mô hình v3 |
 | 06/11/2026 (khuya) | Nam chốt 10 câu (mục 12.1); thêm thứ tự chạy (mục 6.1), HỎI 11; CaKG-Rec chỉ v2 A | Quyết định của Nam; **trước khi có số v3 nào** (chỉ có smoke 1 lần chấm sau mốc 300, `results/v3/smoke_s1_thu1/`, không dùng để chọn) |
 | 06/11/2026 (khuya, sau) | Cấu hình đợt Kaggle `thu` (mục 6.1: điểm giữa lưới; UltraGCN theo cấu hình Electronics của tác giả); cập nhật mục 9 | Chuẩn bị gói Kaggle; chưa có số baseline nào |
+| 06/11/2026 (khuya, sau nữa) | HỎI 11 chốt (không dò λ1 v2 A); thêm mục 6.2 (chạy nối tiếp sau s1: điểm thêm ở biên cho cả hai biên, quy tắc hòa, commit toml tự động, ItemKNN k {50, 100, 200}) | Nam giao chạy các đợt sau không cần chờ; ghi trước khi s1 xong (mới thấy số đang chạy của LightGCN 1e-3 seed 1) |

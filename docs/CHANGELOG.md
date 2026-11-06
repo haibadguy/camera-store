@@ -6,6 +6,40 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 06/11/2026 (khuya, sau): v3 — kiểm UltraGCN bằng code tác giả có log; ItemKNN với `--group-eval`; chạy nối tiếp sau s1
+
+**Sửa gì.** Không sửa file nào của Hải. Thêm `ai/survey/v3/kiem_ultragcn_tacgia.py` (chỉ đọc), `ai/pipeline/v3_chain.py`
+(chạy nối tiếp các đợt sau s1, quy tắc ở `v3_eval_plan.md` mục 6.2); `v3_sweep.py` nhận `--runs-json` (danh sách lần chạy
+do `v3_chain` sinh); `run_recbole.py`: ItemKNN / Pop chấm ngay sau epoch 1 khi `--group-eval`.
+
+**Vì sao / kiểm chứng.**
+- Mục 06/11 khuya bên dưới ghi sai nguồn của phép kiểm UltraGCN (đồ chơi 60×40, công thức chép tay, không phải dữ liệu
+  nhóm). Chạy lại: `results/v3/kiem_ultragcn/kiem_ultragcn_lan1.log` / `.json`, cây git sạch `181867a`, CPU. Code tác giả
+  (RecZoo `88fae23`, `main.py` sha256 `17ec634e48a3…`) được tách **nguyên văn** bằng ast (`load_data`,
+  `get_ii_constraint_mat`, lớp `UltraGCN`). Kết quả — **ĐẠT**:
+  - `load_data` của tác giả trên train / val nhóm: 67.661 người, 27.940 item, 460.193 cặp (trùng); β_u, β_i lệch tương
+    đối tối đa 7,6·10⁻⁸ / 8,8·10⁻⁸ (float32 của tác giả so với float64).
+  - `get_ii_constraint_mat` nguyên văn trên đồ thị con thật 4.000 item nhiều tương tác nhất (267.673 cặp): trọng số lệch
+    tương đối ≤ 2,4·10⁻⁷; 79 / 4.000 hàng khác tập 10 láng giềng, **cả 79 do hòa điểm ở vị trí thứ 10** (05e lấy chỉ số
+    nhỏ hơn, `torch.topk` của tác giả không quy định), 0 hàng khác thật. (Hàm nguyên văn dựng ma trận dày 27.940² ≈ 3,1 GB
+    nên không chạy cho toàn bộ với RAM trống ~5 GB.)
+  - Toàn bộ 27.940 item, chép đúng phép tính của hàm theo từng hàng (float32 như tác giả): trọng số lệch tương đối ≤
+    2,4·10⁻⁷; 1.611 / 27.869 hàng khác tập láng giềng, **cả 1.611 do hòa ở vị trí 10**, 0 khác thật; 71 item không có
+    trong train: tác giả ra NaN, 05e ra 0 (không bao giờ dùng).
+  - Loss: lớp `UltraGCN` của tác giả và 05e, cùng embedding, cùng 3 batch thật 2.048 cặp, cùng âm mẫu: loss lệch tương
+    đối ≤ 6,9·10⁻⁸, gradient lệch tuyệt đối ≤ 7,5·10⁻⁸ (gradient lớn nhất ~0,42–0,49); dùng ma trận láng giềng của tác giả
+    hay của 05e cho cùng số.
+  - Âm mẫu 05e: 0 / 153.600 trúng item train; người dùng 60465 (182 item train) lấy 1,5 triệu lượt: 0 trúng, chi-bình
+    phương 27.843,7 với 27.757 bậc tự do, p = 0,355 (không bác bỏ phân phối đều).
+- ItemKNN `--group-eval` lần đầu (thư mục tạm): RecBole chỉ chạy 1 epoch cho ItemKNN, lịch chấm mỗi 10 epoch nên **không
+  chấm lần nào** → NDCG@20 −1 và lỗi thiếu checkpoint. Sửa: `eval_step = 1` cho ItemKNN / Pop. Chạy lại (k = 100, CPU):
+  chấm được sau epoch 1, NDCG@20 val 0,01992 (thư mục tạm, chỉ để kiểm, không phải số báo cáo).
+- `v3_chain.py --dry-run` trên kết quả giả 3 kịch bản: danh sách lần chạy, điểm thêm ở biên, file toml đúng quy tắc.
+
+**Ảnh hưởng.** Không đổi số nào đã báo.
+
+---
+
 ## 06/11/2026 (khuya): v3 — thêm baseline BPR-MF, UltraGCN; RecBole chấm bằng bộ chấm nhóm và chạy tiếp được. Nhánh `nam/v3-plan`
 
 **Sửa gì.** Không sửa file nào của Hải (`05b_lightgcn_train.py`, `train_05.py`, `eval_05.py` giữ nguyên). Thêm:
@@ -21,9 +55,10 @@ Mục mới nhất nằm trên cùng.
   mốc giờ, chạy tiếp; `kaggle/HUONG_DAN_KAGGLE.md`.
 
 **Vì sao / kiểm chứng.**
-- UltraGCN: so trọng số láng giềng item–item của `05e` với hàm của tác giả trên dữ liệu nhóm: lệch tối đa 7,4·10⁻⁹,
-  0 / 38 hàng lấy mẫu khác tập láng giềng (kiểm bằng script tạm ngày 06/11, chưa lưu log — **chạy lại và lưu log trước khi
-  báo cáo**). Chạy thử CPU 1 epoch: G = RᵀR có 5.185.747 phần tử khác 0, 27.869 / 27.940 item có láng giềng.
+- UltraGCN: ~~so trọng số láng giềng item–item của `05e` với hàm của tác giả trên dữ liệu nhóm: lệch tối đa 7,4·10⁻⁹,
+  0 / 38 hàng~~ — **ghi sai, sửa 06/11 khuya**: lần kiểm đó chạy trên **ma trận đồ chơi 60×40 ngẫu nhiên**, công thức tác
+  giả chép tay, không phải dữ liệu nhóm, không lưu log. Đã chạy lại đúng cách, xem mục "06/11/2026 (khuya, sau)" ở trên.
+  Chạy thử CPU 1 epoch: G = RᵀR có 5.185.747 phần tử khác 0, 27.869 / 27.940 item có láng giềng.
 - RecBole chạy tiếp — **lần đầu chưa đúng**: BPR seed 1, CPU, chạy liền 30 epoch (A) so với dừng sau lần chấm thứ nhất
   rồi chạy tiếp (B): epoch 1–10 trùng, **từ epoch 11 loss lệch** (vd 49,2540 so với 49,1427), NDCG@20 val cuối 0,03009 so
   với 0,03004. Nguyên nhân: dataloader RecBole có `torch.Generator` **riêng** (seed = `config["seed"]`, dùng để xáo thứ tự

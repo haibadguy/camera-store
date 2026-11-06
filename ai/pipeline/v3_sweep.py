@@ -104,7 +104,9 @@ def prepare_resume(src_rel, rd, kiem, log):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--group", required=True, choices=sorted(GROUPS))
+    ap.add_argument("--group", required=True, help=f"{sorted(GROUPS)} hoặc tên bất kỳ khi có --runs-json")
+    ap.add_argument("--runs-json", default=None, help="danh sách lần chạy [[tên, script, tham số, nguồn chạy tiếp|null]] "
+                    "do v3_chain.py sinh (đợt s1b / s25 / abl, theo ai/config/v3_final.toml)")
     ap.add_argument("--label", required=True, help="nhãn đợt, vd 20261106 (giữ nguyên khi chạy tiếp)")
     ap.add_argument("--kiem", required=True, help="results/v3/kiem_last_pt_<nhãn>.json (ai/survey/v3/kiem_last_pt.py)")
     ap.add_argument("--allow-dirty", action="store_true")
@@ -114,13 +116,19 @@ def main():
     a = ap.parse_args()
     kiem = json.loads((C.ROOT / a.kiem).read_text(encoding="utf-8"))
     kiem["_file"] = a.kiem
-    runs = [r for r in GROUPS[a.group] if not a.only or r[0] in a.only]
+    if a.runs_json:
+        all_runs = [tuple(r) for r in json.loads((C.ROOT / a.runs_json).read_text(encoding="utf-8"))]
+    else:
+        assert a.group in GROUPS, f"nhóm {a.group} không có sẵn, cần --runs-json"
+        all_runs = GROUPS[a.group]
+    runs = [r for r in all_runs if not a.only or r[0] in a.only]
     assert runs, "không có lần chạy nào"
     root = OUT_DIR / f"{'smoke_' if a.smoke else ''}{a.group}_{a.label}"
     root.mkdir(parents=True, exist_ok=True)
     log = E.Log(root / f"sweep_{a.group}_{E.now_tag()}.log")
     git = E.git_state()
     log(f"v3 | nhóm {a.group} | {root} | git {git} | {len(runs)} lần chạy | trần {MAX_EPOCH} epoch | kiểm {a.kiem}"
+        + (f" | danh sách {a.runs_json}" if a.runs_json else "")
         + (" | SMOKE" if a.smoke else ""))
     if git["dirty"] and not a.allow_dirty:
         log("DỪNG: có file đã theo dõi trong git bị sửa mà chưa commit. Commit trước (hoặc --allow-dirty).")

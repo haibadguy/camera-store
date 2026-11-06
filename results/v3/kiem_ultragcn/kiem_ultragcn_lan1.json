@@ -1,0 +1,156 @@
+{
+  "label": "lan1",
+  "time": "2026-11-06 20:28:14",
+  "src": {
+    "author_commit": "88fae23ff0b8321c60655d9c21e0a1bb1173f6af",
+    "main_py_sha256": "17ec634e48a370f24b1c2a131bff4c7e97c7d9579fb70ac5f087062697064373",
+    "repo_commit": "181867a4d10869d02479506ad793f63faccd13eb",
+    "repo_dirty": false,
+    "05e_sha256": "065c2a2f55a814ce811699b110c642460eace0796d7f3b4f2d4b901b988e9ecf",
+    "train_txt_sha256": "ebd29b03a4866cfca243edc1ee31539f16be19b756bfbd4c388e3f20ca06a5c5"
+  },
+  "1_load_data": {
+    "n_user_tac_gia": 67661,
+    "n_item_tac_gia": 27940,
+    "n_user_nhom": 67661,
+    "n_item_nhom": 27940,
+    "cap_train_tac_gia": 460193,
+    "cap_train_nhom": 460193,
+    "train_mat_nnz": 460193,
+    "max_rel_beta_u": 7.638607018397318e-08,
+    "max_rel_beta_i": 8.803520340216465e-08,
+    "sec": 7.6
+  },
+  "2a_do_choi": {
+    "rows": 38,
+    "max_abs_w": 1.4901161193847656e-08,
+    "max_rel_w": 1.6230275143739375e-07,
+    "rows_set_differ": 0,
+    "rows_differ_only_by_tie_at_k": 0,
+    "rows_real_difference": 0,
+    "examples": [],
+    "item_khong_co_trong_train": {
+      "tac_gia_w": [
+        [
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN
+        ],
+        [
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN
+        ]
+      ],
+      "05e_w": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    }
+  },
+  "2a_do_thi_con_that": {
+    "rows": 4000,
+    "max_abs_w": 2.9802322387695312e-08,
+    "max_rel_w": 2.4094889530152066e-07,
+    "rows_set_differ": 79,
+    "rows_differ_only_by_tie_at_k": 79,
+    "rows_real_difference": 0,
+    "examples": [],
+    "n_items": 4000,
+    "n_pairs": 267673,
+    "sec": 21.5
+  },
+  "2b_toan_bo_chep_theo_hang": {
+    "rows": 27869,
+    "max_abs_w": 2.9802322387695312e-08,
+    "max_rel_w": 2.372563955130545e-07,
+    "rows_set_differ": 1611,
+    "rows_differ_only_by_tie_at_k": 1611,
+    "rows_real_difference": 0,
+    "examples": [],
+    "n_items": 27940,
+    "G_nnz": 5185747,
+    "items_g0": 71,
+    "g0_tac_gia_nan": true,
+    "g0_05e_w0": true,
+    "sec_tac_gia": 10.4,
+    "sec_05e": 2.1
+  },
+  "3_loss": [
+    {
+      "batch": 0,
+      "loss_05e": 14075.626953125,
+      "ii_cua_05e": {
+        "loss_tac_gia": 14075.626953125,
+        "rel_loss": 0.0,
+        "max_abs_grad_diff": 7.450580596923828e-08,
+        "max_abs_grad": 0.41716378927230835
+      },
+      "ii_cua_tac_gia": {
+        "loss_tac_gia": 14075.626953125,
+        "rel_loss": 0.0,
+        "max_abs_grad_diff": 7.450580596923828e-08,
+        "max_abs_grad": 0.41716378927230835
+      }
+    },
+    {
+      "batch": 1,
+      "loss_05e": 14143.8134765625,
+      "ii_cua_05e": {
+        "loss_tac_gia": 14143.8125,
+        "rel_loss": 6.904520493134663e-08,
+        "max_abs_grad_diff": 5.960464477539063e-08,
+        "max_abs_grad": 0.49473118782043457
+      },
+      "ii_cua_tac_gia": {
+        "loss_tac_gia": 14143.8125,
+        "rel_loss": 6.904520493134663e-08,
+        "max_abs_grad_diff": 5.960464477539063e-08,
+        "max_abs_grad": 0.49473118782043457
+      }
+    },
+    {
+      "batch": 2,
+      "loss_05e": 14038.7412109375,
+      "ii_cua_05e": {
+        "loss_tac_gia": 14038.7412109375,
+        "rel_loss": 0.0,
+        "max_abs_grad_diff": 7.450580596923828e-08,
+        "max_abs_grad": 0.449347585439682
+      },
+      "ii_cua_tac_gia": {
+        "loss_tac_gia": 14038.7412109375,
+        "rel_loss": 0.0,
+        "max_abs_grad_diff": 7.450580596923828e-08,
+        "max_abs_grad": 0.449347585439682
+      }
+    }
+  ],
+  "4_am_mau": {
+    "batch_2048x75_trung_item_train": 0,
+    "user": 60465,
+    "so_item_train_cua_user": 182,
+    "so_luot_lay": 1500000,
+    "trung_item_train": 0,
+    "chi2": 27843.733512,
+    "df": 27757,
+    "p_value": 0.3554815757696381
+  },
+  "ket_luan_dat": true
+}
