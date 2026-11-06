@@ -187,11 +187,20 @@ def group_mode(a, run_dir, log, config, dataset, train_data, valid_data, model, 
            "data_checks": chk, "best_epoch": best["epoch"], "best_val_ndcg@20_during_training": best["score"],
            "epochs_run": n_ep, "stopped_early": stopped, "chua_chac_hoi_tu": not stopped,
            "median_sec_per_epoch": float(np.median(secs)), "sec_fit_this_call": round(t_fit, 1), "history": hist,
-           "checkpoint": str(Path(trainer.saved_model_file).resolve().relative_to(ROOT)).replace("\\", "/"),
+           "checkpoint": rel_or_abs(trainer.saved_model_file),
            "git_at_finish": git_state(), "val": res_val}
     log(f"NDCG@20 val chấm lại từ checkpoint: {res_val['full']['ndcg@20']:.5f} (lúc huấn luyện {best['score']:.5f})")
     (run_dir / "result.json").write_text(json.dumps(out, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
     log(f"Xong: {run_dir / 'result.json'}")
+
+
+def rel_or_abs(p):
+    """Đường dẫn tính từ thư mục camera-store nếu nằm trong đó, không thì đường dẫn tuyệt đối (vd chạy thử ở thư mục tạm)."""
+    p = Path(p).resolve()
+    try:
+        return str(p.relative_to(ROOT)).replace("\\", "/")
+    except ValueError:
+        return str(p)
 
 
 def main():
@@ -377,7 +386,7 @@ def main():
         tr = trainer.evaluate(test_data, load_best_model=True, show_progress=False)
         res["valid_recbole"] = {k: float(v) for k, v in vr.items()}
         res["test_recbole"] = {k: float(v) for k, v in tr.items()}
-        res["checkpoint"] = str(Path(trainer.saved_model_file).relative_to(ROOT)).replace("\\", "/")
+        res["checkpoint"] = rel_or_abs(trainer.saved_model_file)
         log(f"valid (RecBole): {res['valid_recbole']}")
         log(f"test  (RecBole): {res['test_recbole']}")
         if a.model == "LightGCN":                           # embedding của checkpoint tốt nhất, theo mã của nhóm
