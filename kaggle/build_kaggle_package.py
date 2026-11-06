@@ -6,8 +6,10 @@ Nam tự chạy sau khi đồng ý).
 
 Đầu ra: <out>/<tag>/
   camera-store-v3-code/   camera-store.bundle (git bundle đến commit HEAD: notebook clone + checkout đúng commit),
-                          COMMIT.txt, dataset-metadata.json
-  camera-store-v3-data/   ai/data/processed/..., ai/data/kg/... (đúng đường dẫn trong repo), manifest_sha256.json,
+                          COMMIT.txt, recbole_gnn.bundle + RECBOLE_GNN_COMMIT.txt (mã RecBole-GNN cho SimGCL, không
+                          phải gói pip), dataset-metadata.json
+  camera-store-v3-data/   ai/data/processed/..., ai/data/kg/..., ai/data/recbole/camera_loo/... (file RecBole do
+                          to_recbole.py / to_recbole_kg.py sinh ở máy nhóm; đúng đường dẫn trong repo), manifest_sha256.json,
                           dataset-metadata.json
   kernel/                 v3_runner.ipynb (sinh từ kaggle/v3_runner.py, đã điền commit), kernel-metadata.json
   PACKAGE.md              kích thước, sha256, lệnh kaggle CLI để tải lên (chưa chạy)
@@ -41,7 +43,15 @@ DATA_FILES = [
     "ai/data/kg/kg_edges_requires_adapter.csv", "ai/data/kg/kg_edges_has_spec_mount.csv",
     "ai/data/kg/kg_edges_has_spec_sensor_format.csv", "ai/data/kg/kg_edges_has_spec_focal_range.csv",
     "ai/data/kg/kg_edges_has_spec_aperture_class.csv", "ai/data/kg/kg_edges_suitable_for.csv",
+    # RecBole (v3, 06/11): chép nguyên file đã sinh ở máy nhóm, không sinh lại trên Kaggle -> đầu vào RecBole trùng
+    # sha256 với lần đối chiếu ở máy nhóm (docs/reviews/v3_eval_plan.md mục 7). Mã người dùng ở đây là số thứ tự.
+    "ai/data/recbole/camera_loo/camera_loo.train.inter", "ai/data/recbole/camera_loo/camera_loo.valid.inter",
+    "ai/data/recbole/camera_loo/camera_loo.test.inter", "ai/data/recbole/camera_loo/camera_loo.kg",
+    "ai/data/recbole/camera_loo/camera_loo.link",
+    "ai/data/recbole/camera_loo/manifest.json", "ai/data/recbole/camera_loo/manifest_kg.json",
 ]
+GNN_SRC = r"E:\DATN\venvs\src\recbole_gnn_src"
+GNN_COMMIT = "632ef888589944c190ad8f449b49ca559618d4df"   # bản đã dùng ở máy nhóm (ai/recbole/README.md)
 OWNER = "KAGGLE_USERNAME"     # Nam điền tên tài khoản Kaggle khi tải lên (không ghi vào repo)
 
 
@@ -93,6 +103,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--tag", required=True)
     ap.add_argument("--keep-user-ids", action="store_true")
+    ap.add_argument("--gnn-src", default=GNN_SRC, help="bản clone RecBole-GNN (phải ở commit GNN_COMMIT, không sửa)")
     ap.add_argument("--allow-dirty", action="store_true", help="chỉ để thử script; gói như vậy không dùng để chạy thật")
     a = ap.parse_args()
     dirty = bool(git("status", "--porcelain", "--untracked-files=no"))
@@ -107,6 +118,14 @@ def main():
     # 1. code: git bundle đến HEAD (cả lịch sử của nhánh, để `git checkout <commit>` được)
     git("bundle", "create", str(code_d / "camera-store.bundle"), "HEAD")
     (code_d / "COMMIT.txt").write_text(commit + "\n", encoding="utf-8")
+    gnn_head = subprocess.run(["git", "-C", a.gnn_src, "rev-parse", "HEAD"], capture_output=True, text=True,
+                              check=True).stdout.strip()
+    assert gnn_head == GNN_COMMIT, f"RecBole-GNN ở {gnn_head}, cần {GNN_COMMIT}"
+    assert not subprocess.run(["git", "-C", a.gnn_src, "status", "--porcelain"], capture_output=True, text=True,
+                              check=True).stdout.strip(), "bản clone RecBole-GNN có file bị sửa"
+    subprocess.run(["git", "-C", a.gnn_src, "bundle", "create", str(code_d / "recbole_gnn.bundle"), "HEAD"],
+                   capture_output=True, check=True)
+    (code_d / "RECBOLE_GNN_COMMIT.txt").write_text(GNN_COMMIT + "\n", encoding="utf-8")
     (code_d / "dataset-metadata.json").write_text(json.dumps(
         {"title": "camera-store-v3-code", "id": f"{OWNER}/camera-store-v3-code",
          "licenses": [{"name": "other"}]}, indent=2), encoding="utf-8")
@@ -134,6 +153,7 @@ def main():
 
     # 3. notebook
     nb = py_to_ipynb(ROOT / "kaggle" / "v3_runner.py", commit)
+    assert "__COMMIT__" not in json.dumps(nb, ensure_ascii=False)
     (kern_d / "v3_runner.ipynb").write_text(json.dumps(nb, indent=1, ensure_ascii=False), encoding="utf-8")
     (kern_d / "kernel-metadata.json").write_text(json.dumps(
         {"id": f"{OWNER}/camera-store-v3-runner", "title": "camera-store-v3-runner", "code_file": "v3_runner.ipynb",
@@ -142,14 +162,24 @@ def main():
          "dataset_sources": [f"{OWNER}/camera-store-v3-code", f"{OWNER}/camera-store-v3-data"],
          "competition_sources": [], "kernel_sources": []}, indent=2), encoding="utf-8")
 
+    # 3b. bản .zip của 2 dataset (để tải lên bằng trình duyệt: 1 file / dataset; trong zip giữ nguyên cây thư mục)
+    zips = {}
+    for d in (code_d, data_d):
+        zp = shutil.make_archive(str(out / d.name), "zip", root_dir=d)
+        zips[Path(zp).name] = sha256(zp)
+
     # 4. PACKAGE.md
     def size(d):
         return sum(p.stat().st_size for p in d.rglob("*") if p.is_file()) / 2 ** 20
     md = [f"# Gói Kaggle {a.tag}", "", f"- commit `{commit}` (dirty: {dirty})",
           f"- code: {size(code_d):.1f} MiB; dữ liệu: {size(data_d):.1f} MiB ({len(files)} file); "
           f"user_map ẩn mã: {not a.keep_user_ids}",
-          f"- sha256 bundle `{sha256(code_d / 'camera-store.bundle')}`",
-          f"- sha256 manifest dữ liệu `{sha256(data_d / 'manifest_sha256.json')}`", "",
+          f"- sha256 bundle `{sha256(code_d / 'camera-store.bundle')}`; RecBole-GNN `{GNN_COMMIT}` "
+          f"(bundle `{sha256(code_d / 'recbole_gnn.bundle')}`)",
+          f"- sha256 manifest dữ liệu `{sha256(data_d / 'manifest_sha256.json')}`",
+          *[f"- `{k}` ({(out / k).stat().st_size / 2 ** 20:.1f} MiB) sha256 `{v}`" for k, v in zips.items()], "",
+          "Tải lên bằng trình duyệt: làm theo `kaggle/HUONG_DAN_KAGGLE.md` (dùng 2 file .zip và `kernel/v3_runner.ipynb`).",
+          "",
           "## Lệnh tải lên (CHƯA CHẠY — chỉ chạy khi Nam đồng ý)", "",
           f"Trước khi chạy: thay `{OWNER}` trong 3 file `*-metadata.json` bằng tên tài khoản Kaggle.", "",
           "```", f"kaggle datasets create -p \"{code_d}\" --dir-mode zip",

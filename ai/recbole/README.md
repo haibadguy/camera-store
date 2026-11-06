@@ -32,3 +32,13 @@ E:\DATN\venvs\recbole\Scripts\python.exe -m pip install --no-deps -r ai/recbole/
    (`--probe-epochs N`: chỉ đo thời gian).
 4. `ai\.venv\Scripts\python.exe ai/recbole/cross_eval.py --run-dir results/recbole/<đợt>/<tên> --split val` (và `test`)
    — chấm lại embedding RecBole bằng bộ chấm của nhóm (quy tắc hòa π), so với số RecBole tự chấm và số nhóm.
+
+## Baseline v3: `--group-eval` (thêm 06/11 khuya)
+
+`run_recbole.py --model KGIN --seed 1 --epochs 1000 --group-eval --run-dir <...>` (SimGCL thêm `--gnn <RecBole-GNN>`):
+RecBole huấn luyện như thường nhưng **chấm val bằng bộ chấm nhóm** (`eval_05`, full ranking, quy tắc hòa π) mỗi 10
+epoch, dừng sau 5 lần không tăng (quy tắc RecBole `>=`, `stopping_step` 4); không chấm test. Mỗi lần chấm lưu
+`last_state.pth` (mô hình, Adam, bộ đếm dừng sớm, lịch sử, bộ sinh số random / numpy / torch / CUDA **và
+`torch.Generator` riêng của dataloader**); gọi lại đúng lệnh → chạy tiếp. Kiểm 06/11 (BPR, CPU): chạy liền 20 epoch và
+dừng ở 10 rồi chạy tiếp cho loss / NDCG@20 trùng ở mọi epoch (trước khi lưu generator dataloader thì lệch từ epoch 11 —
+CHANGELOG 06/11 khuya). `--stop-after-evals N`: chỉ để kiểm chạy tiếp.

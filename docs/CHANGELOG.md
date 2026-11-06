@@ -6,6 +6,39 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
+## 06/11/2026 (khuya): v3 — thêm baseline BPR-MF, UltraGCN; RecBole chấm bằng bộ chấm nhóm và chạy tiếp được. Nhánh `nam/v3-plan`
+
+**Sửa gì.** Không sửa file nào của Hải (`05b_lightgcn_train.py`, `train_05.py`, `eval_05.py` giữ nguyên). Thêm:
+- `ai/pipeline/05d_bprmf_train.py`: BPR-MF = lớp `LightGCN` của `05b` với **0 lớp lan truyền** (e = e⁰), cùng loss BPR,
+  L2, vòng huấn luyện `train_05` (HỎI 5: số chính là code nhóm).
+- `ai/pipeline/05e_ultragcn_train.py`: UltraGCN theo code tác giả (RecZoo `matching/gnn/UltraGCN` @`88fae23`), mặc định =
+  file cấu hình Amazon Electronics của tác giả; các chỗ khác code tác giả ghi ở docstring (dừng sớm theo giao thức nhóm
+  thay vì theo Recall@20 **test** như file của tác giả; âm mẫu sinh trên GPU; hòa điểm khi chọn láng giềng).
+- `ai/recbole/run_recbole.py --group-eval`: trong lúc huấn luyện, RecBole chấm val bằng **bộ chấm nhóm** (`eval_05`,
+  HỎI 6), không chấm test; ở mỗi lần chấm lưu `last_state.pth` (mô hình, Adam, bộ đếm dừng sớm, lịch sử, mọi bộ sinh số)
+  để chạy tiếp được trên Kaggle; `result.json` cùng dạng `train_05`.
+- Gói Kaggle (`kaggle/`): thêm môi trường RecBole, bundle RecBole-GNN, file RecBole, bộ việc theo tài khoản, ngắt theo
+  mốc giờ, chạy tiếp; `kaggle/HUONG_DAN_KAGGLE.md`.
+
+**Vì sao / kiểm chứng.**
+- UltraGCN: so trọng số láng giềng item–item của `05e` với hàm của tác giả trên dữ liệu nhóm: lệch tối đa 7,4·10⁻⁹,
+  0 / 38 hàng lấy mẫu khác tập láng giềng (kiểm bằng script tạm ngày 06/11, chưa lưu log — **chạy lại và lưu log trước khi
+  báo cáo**). Chạy thử CPU 1 epoch: G = RᵀR có 5.185.747 phần tử khác 0, 27.869 / 27.940 item có láng giềng.
+- RecBole chạy tiếp — **lần đầu chưa đúng**: BPR seed 1, CPU, chạy liền 30 epoch (A) so với dừng sau lần chấm thứ nhất
+  rồi chạy tiếp (B): epoch 1–10 trùng, **từ epoch 11 loss lệch** (vd 49,2540 so với 49,1427), NDCG@20 val cuối 0,03009 so
+  với 0,03004. Nguyên nhân: dataloader RecBole có `torch.Generator` **riêng** (seed = `config["seed"]`, dùng để xáo thứ tự
+  mỗi epoch), không nằm trong trạng thái torch chung nên chưa được lưu. Sửa: lưu / nạp thêm các generator đó
+  (`train`, `train.sampler`). Kiểm lại (20 epoch, A2 liền / B2 dừng ở 10 rồi chạy tiếp): **0 chỗ khác** về loss và
+  NDCG@20 val ở mọi epoch, NDCG@20 val cuối cùng 0,028772 cả hai. (Thư mục thử ở thư mục tạm của phiên, không lên git.)
+- Notebook Kaggle: mô phỏng trên máy (đường dẫn giả `/kaggle`, CPU, việc BPR-MF 20 epoch): giải nén zip, clone bundle
+  đúng commit, kiểm sha256 30 file đạt; ngắt ở mốc giờ khi đang epoch 19 → còn `last.pt` epoch 10; phiên sau
+  `RESUME = True` nạp `last.pt` epoch 10 và chạy tiếp. Môi trường `recbole` trên Kaggle **chưa kiểm chứng**.
+
+**Ảnh hưởng.** Không đổi số nào đã báo. Số của baseline mới chỉ có sau đợt Kaggle `thu` (`docs/reviews/v3_eval_plan.md`
+mục 6.1).
+
+---
+
 ## 06/11/2026 (tối): v3 — cho chạy tiếp với trần epoch lớn hơn. Nhánh `nam/v3-plan`
 
 **Sửa gì.** `ai/pipeline/train_05.py`, hàm `run`: trước đây chạy tiếp (đã có `config.json`) bắt cấu hình **trùng hoàn

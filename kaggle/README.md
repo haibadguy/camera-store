@@ -1,5 +1,11 @@
 # Chạy huấn luyện v3 trên Kaggle — cách đóng gói (chưa tải lên, chưa chạy)
 
+> **Cập nhật 06/11 khuya:** cách làm trên web cho đợt `thu` (3 tài khoản) ở `kaggle/HUONG_DAN_KAGGLE.md` — file đó
+> mới hơn file này ở các điểm: `JOBS` nay có 4 phần tử `(tên, môi trường "nhom"/"recbole", script, tham số)` và chọn
+> theo `ACCOUNT`; chạy tiếp bằng `RESUME = True` (tự tìm output phiên bản trước trong input), không còn `RESUME_FROM`;
+> RecBole đã có trong notebook (venv `/tmp/rbenv`, `kaggle/requirements-kaggle-recbole.txt`); gói có thêm
+> `ai/data/recbole/camera_loo/` và `recbole_gnn.bundle`; builder sinh thêm 2 file `.zip` để tải lên bằng trình duyệt.
+
 Viết 06/11/2026 theo nhận xét cô 06/11 ("đưa code lên Kaggle ..., cố định seed, ghi log, lưu phiên bản; tính giờ chạy
 trước; gửi cô link notebook"). Kế hoạch chạy và ngân sách giờ: `docs/reviews/v3_eval_plan.md`.
 

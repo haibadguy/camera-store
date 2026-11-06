@@ -119,9 +119,21 @@ Kiểm `last.pt` (điều kiện của Nam cho PA2): `ai/survey/v3/kiem_last_pt.
 `ai/config/v3_final.toml` (commit) → đợt `s25` (seed 2–5, chạy tiếp seed 2, 3 nếu cấu hình chốt trùng cấu hình cũ) và
 đợt `abl` (2 ablation CaKG-Rec v2 A × seed 1–5); nếu giá trị tốt nhất vẫn ở biên mới: thêm đúng 1 điểm (HỎI 3).
 
-**Kaggle, đợt `thu` (chạy thử baseline, seed 1, một cấu hình, HỎI 10):** BPR-MF (code nhóm, λ2 = 1e-4), BPR (RecBole,
-đối chiếu, HỎI 5), SimGCL (λ = 0,01? xem `kaggle/` README), KGIN (context_hops = 2), UltraGCN (một cấu hình theo bài).
-Chia 3 tài khoản (Nam, Hải, Quyền; HỎI 7). Hướng dẫn từng bước: `kaggle/HUONG_DAN_KAGGLE.md`.
+**Kaggle, đợt `thu` (chạy thử baseline, seed 1, một cấu hình, HỎI 10; chọn 06/11 trước khi có số nào):** mỗi baseline
+lấy điểm **giữa** lưới đã đăng ký ở mục 3 (hoặc cấu hình của tác giả khi chưa có lưới), chỉ chấm val, trần 1.000 epoch,
+chấm mỗi 10 epoch, dừng sau 5 lần chấm không tăng:
+
+| Tài khoản (`ACCOUNT`) | Lần chạy (`RUN_LABEL = thu_s1_<tài khoản>`) | Cấu hình |
+|---|---|---|
+| Nam (`nam`) | `kgin_hops2_s1` | KGIN (RecBole) mặc định, context_hops = 2 (giữa {1, 2, 3}) |
+| Hải (`hai`) | `simgcl_lam0.01_s1` | SimGCL (RecBole-GNN `632ef88`) mặc định, λ = 0,01 (giữa {0,005; 0,01; 0,05}) |
+| Quyền (`quyen`) | `bprmf_l2-1e-04_s1` | BPR-MF code nhóm (`05d`), λ2 = 1e-4 (giữa {1e-5, 1e-4, 1e-3}) |
+| | `ultragcn_electronics_s1` | UltraGCN code nhóm (`05e`) theo file cấu hình Amazon Electronics của tác giả (RecZoo `88fae23`) |
+| | `recbole_bpr_s1` | BPR (RecBole) mặc định, để đối chiếu (HỎI 5) |
+
+Baseline RecBole chạy `run_recbole.py --group-eval` (chấm val bằng bộ chấm nhóm, HỎI 6; chạy tiếp được). Notebook tự ngắt
+ở mốc 8,5 giờ / phiên (giới hạn phiên 9 hay 12 giờ chưa kiểm, mục 8.3) và chạy tiếp ở phiên bản sau. Chia 3 tài khoản
+(HỎI 7). Hướng dẫn từng bước: `kaggle/HUONG_DAN_KAGGLE.md`. Sau đợt này mới quyết lưới / số seed baseline (HỎI 10).
 
 ## 7. RecBole: kiểm tái hiện LightGCN (A3 "trước tiên")
 
@@ -273,6 +285,12 @@ trang tài khoản trước khi lập lịch.
 
 ## 9. Kaggle
 
+Cập nhật 06/11 khuya: gói thêm file RecBole (`ai/data/recbole/camera_loo/`, trùng sha256 với lần đối chiếu ở máy nhóm)
+và bundle RecBole-GNN; notebook thêm môi trường `recbole` (venv `--system-site-packages`, dùng torch của python chính),
+bộ việc theo tài khoản, ngắt theo mốc giờ, chạy tiếp từ output phiên bản trước. Đã **mô phỏng trên máy** (đường dẫn
+giả `/kaggle`, CPU, 1 việc BPR-MF 20 epoch): giải nén zip, clone bundle đúng commit, kiểm sha256 30 file, ngắt ở mốc giờ
+còn `last.pt`, phiên bản sau chạy tiếp đến xong. Môi trường `recbole` và cài thư viện trên Kaggle **chưa kiểm chứng**.
+
 Gói: `kaggle/build_kaggle_package.py` (đã thử trên máy, chưa tải lên), hướng dẫn `kaggle/README.md`. Tóm tắt: dataset
 riêng tư `camera-store-v3-code` (git bundle, notebook checkout đúng commit) + `camera-store-v3-data` (129,2 MiB, 23
 file, kiểm sha256 từng file; `user_map.json` thay mã người dùng Amazon bằng `u0…`) + notebook mẫu `v3_runner.ipynb`
@@ -344,3 +362,4 @@ Hệ quả Claude rút ra (ghi lại để Nam kiểm):
 | 06/11/2026 | Bản đầu | Nhận xét cô 06/11 |
 | 06/11/2026 (tối) | Điền kết quả tái hiện RecBole (mục 7.3–7.5), số đo BPR / ItemKNN / KGIN / SimGCL, bảng giờ GPU (log `lan1`); thêm HỎI 10 | Lần chạy RecBole LightGCN và đo ngắn xong; chưa có số nào của mô hình v3 |
 | 06/11/2026 (khuya) | Nam chốt 10 câu (mục 12.1); thêm thứ tự chạy (mục 6.1), HỎI 11; CaKG-Rec chỉ v2 A | Quyết định của Nam; **trước khi có số v3 nào** (chỉ có smoke 1 lần chấm sau mốc 300, `results/v3/smoke_s1_thu1/`, không dùng để chọn) |
+| 06/11/2026 (khuya, sau) | Cấu hình đợt Kaggle `thu` (mục 6.1: điểm giữa lưới; UltraGCN theo cấu hình Electronics của tác giả); cập nhật mục 9 | Chuẩn bị gói Kaggle; chưa có số baseline nào |
