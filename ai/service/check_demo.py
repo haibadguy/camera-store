@@ -64,9 +64,12 @@ def kill(p):
     for x in reversed(CS.tree(p)):
         try:
             x.kill()
-        except psutil.NoSuchProcess:
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
             pass
-    p.wait(30)
+    try:
+        p.wait(30)
+    except (subprocess.TimeoutExpired, psutil.NoSuchProcess, OSError):
+        pass
 
 
 def start_vite(port, api_base, log_file, log, source="api"):

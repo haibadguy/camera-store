@@ -354,11 +354,11 @@ export default function CompatibilityChecker({ onExit }: Props) {
       {/* Header giống luồng tư vấn để nhất quán UX */}
       <header className="demo-header">
         <div className="demo-shell demo-header-content">
-          <button className="demo-brand" onClick={onExit}>
-            CAMERA STORE <span>Kiểm tra tương thích</span>
+          <button type="button" className="demo-brand" onClick={onExit}>
+            CAMERA RECOMMENDER <span>Compatibility</span>
           </button>
           <p>Tra cứu mức tương thích thân máy – ống kính dựa trên ma trận M và quy tắc ngàm</p>
-          <button className="demo-link-button" onClick={onExit}>
+          <button type="button" className="demo-link-button" onClick={onExit}>
             Quay về catalog
           </button>
         </div>
@@ -398,7 +398,7 @@ export default function CompatibilityChecker({ onExit }: Props) {
             }}
           >
             {EXAMPLE_PAIRS.map((pair) => (
-              <button
+              <button type="button"
                 key={`${pair.bodyId}-${pair.lensId}`}
                 onClick={() => void lookup(pair.bodyId, pair.lensId)}
                 disabled={loading}

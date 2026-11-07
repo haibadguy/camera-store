@@ -5,7 +5,7 @@ type Props = {
   compatibilityStatus: Record<number, "compatible" | "incompatible" | "unknown">;
   compatibilityEnabled: boolean;
   onDetail: (product: Product) => void;
-  onAddToCart: () => void;
+  onAddToCart: (product: Product) => void;
   onReset: () => void;
 };
 
@@ -15,7 +15,7 @@ export default function CatalogProductGrid({ products, compatibilityStatus, comp
       <div className="no-products-card">
         <h3>Không tìm thấy sản phẩm phù hợp</h3>
         <p>Rất tiếc, không có máy ảnh nào khớp với các tiêu chí lọc hiện tại của bạn.</p>
-        <button className="secondary-action-btn dark" onClick={onReset}>Xóa bộ lọc tìm kiếm</button>
+        <button type="button" className="secondary-action-btn dark" onClick={onReset}>Xóa bộ lọc tìm kiếm</button>
       </div>
     );
   }
@@ -27,7 +27,7 @@ export default function CatalogProductGrid({ products, compatibilityStatus, comp
           product={product}
           compatibility={compatibilityEnabled ? compatibilityStatus[product.id] : undefined}
           onDetail={onDetail}
-          onAddToCart={onAddToCart}
+          onAddToCart={() => onAddToCart(product)}
         />
       ))}
     </div>

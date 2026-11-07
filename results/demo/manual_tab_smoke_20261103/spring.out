@@ -1,0 +1,20 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-11-03T04:55:43.261+07:00  INFO 19084 --- [           main] com.camerastore.CameraStoreApplication   : Starting CameraStoreApplication v0.1.0 using Java 21.0.9 with PID 19084 (D:\camera-store\backend\target\camera-store-backend-0.1.0.jar started by haica in D:\camera-store\backend)
+2026-11-03T04:55:43.265+07:00  INFO 19084 --- [           main] com.camerastore.CameraStoreApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-11-03T04:55:44.711+07:00  INFO 19084 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8089 (http)
+2026-11-03T04:55:44.724+07:00  INFO 19084 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-03T04:55:44.725+07:00  INFO 19084 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2026-11-03T04:55:44.763+07:00  INFO 19084 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-11-03T04:55:44.765+07:00  INFO 19084 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1435 ms
+2026-11-03T04:55:45.340+07:00  INFO 19084 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8089 (http) with context path '/'
+2026-11-03T04:55:45.364+07:00  INFO 19084 --- [           main] com.camerastore.CameraStoreApplication   : Started CameraStoreApplication in 2.689 seconds (process running for 3.348)
+2026-11-03T04:55:45.424+07:00  WARN 19084 --- [           main] c.c.m.advisor.ModelServiceStartupCheck   : Chưa gọi được dịch vụ mô hình lúc khởi động (MODEL_SERVICE_UNAVAILABLE: Không kết nối được dịch vụ gợi ý (FastAPI) ở http://127.0.0.1:8009: dịch vụ chưa chạy hoặc sai địa chỉ (model-service.base-url).). /api/* sẽ trả lỗi tới khi FastAPI chạy.

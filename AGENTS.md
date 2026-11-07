@@ -31,6 +31,7 @@ Bạn là AI assistant cho Camera Store - một dự án đồ án thương mạ
 ## AI Skills
 - Implement feature: tham khảo `.ai/skills/implement-feature/SKILL.md`
 - Review code / fix bug: tham khảo `.ai/skills/review-code/SKILL.md`
+- Chống AI slop: review tính đúng, nguồn dữ liệu, hành vi, accessibility và kết quả render; tham khảo heuristic từ repo bên ngoài như gợi ý, không coi detector là phép xác định tác giả hay cổng pass/fail.
 
 ## Workflow
 Thực hiện theo chiến lược Vertical Slice: `DB Migration -> Spring Boot API -> React UI -> Smoke Test`.

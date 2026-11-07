@@ -212,8 +212,16 @@ def start_server(emb_dir, port, log_file, log):
 
 def tree(p):
     """Tiến trình dịch vụ và các tiến trình con (trên Windows, python.exe của venv khởi chạy một tiến trình con)."""
-    pp = psutil.Process(p.pid)
-    return [pp] + pp.children(recursive=True)
+    try:
+        pp = psutil.Process(p.pid)
+        children = []
+        try:
+            children = [c for c in pp.children(recursive=True) if c.is_running()]
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            pass
+        return [pp] + children
+    except (psutil.NoSuchProcess, psutil.AccessDenied):
+        return []
 
 
 def contract_checks(cl, log):
@@ -354,8 +362,14 @@ def main():
                 log(f"  bộ nhớ dịch vụ (RSS, cả tiến trình con) sau khi đo: {res['latency_http']['server_rss_mib']:.0f} MiB")
         finally:
             for x in reversed(tree(p)):
-                x.kill()
-            p.wait(30)
+                try:
+                    x.kill()
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    pass
+            try:
+                p.wait(30)
+            except (subprocess.TimeoutExpired, psutil.NoSuchProcess, OSError):
+                pass
     (out_dir / "summary.json").write_text(json.dumps(res, indent=2, ensure_ascii=False), encoding="utf-8")
     log(f"-> {out_dir / 'summary.json'}")
     log.close()

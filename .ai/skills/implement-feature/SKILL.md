@@ -73,3 +73,9 @@ public class ProductController {
     }
 }
 ```
+
+### 6. Kiểm tra trước khi bàn giao
+- Chỉ thêm nội dung/dữ liệu có nguồn hoặc được đánh dấu rõ là minh họa; không tạo claim về tồn kho, giá, bảo hành hay năng lực hệ thống nếu chưa có nguồn thật.
+- Với UI, thực hiện build và smoke test luồng thay đổi; kiểm tra ít nhất trạng thái thường và trạng thái rỗng/lỗi liên quan, kích thước màn hình phù hợp, alt text và thao tác bàn phím.
+- Chạy test liên quan và báo chính xác lệnh, kết quả, giới hạn. Không coi việc detector AI không phát hiện là bằng chứng chất lượng.
+- Ưu tiên tính đúng, rõ ràng, accessibility và phù hợp brief hơn việc xóa dấu hiệu phong cách bề mặt. Không áp dụng máy móc danh sách cấm từ công cụ heuristic; dấu hiệu chỉ cần review theo ngữ cảnh.

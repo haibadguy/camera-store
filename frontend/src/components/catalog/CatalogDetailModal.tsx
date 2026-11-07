@@ -9,13 +9,13 @@ type Props = {
 export default function CatalogDetailModal({ product, onClose, onAddToCart }: Props) {
   return (
     <div className="dialog-overlay" onClick={onClose}>
-      <div className="detail-dialog-box" onClick={(event) => event.stopPropagation()}>
-        <button className="dialog-close-btn" onClick={onClose}>×</button>
+      <div className="detail-dialog-box" role="dialog" aria-modal="true" aria-labelledby="catalog-detail-title" onClick={(event) => event.stopPropagation()}>
+        <button type="button" className="dialog-close-btn" aria-label="Đóng chi tiết sản phẩm" onClick={onClose}>×</button>
         <div className="detail-dialog-layout">
         <div className="detail-media-wrap"><img src={product.image} alt={product.name} /></div>
         <div className="detail-specs-wrap">
           <div className="product-brand-meta">{product.brand} • {product.category}</div>
-          <h2>{product.name}</h2>
+          <h2 id="catalog-detail-title">{product.name}</h2>
           <div className="detail-price">{formatVND(product.price)}</div>
           <p className="detail-description">{product.description}</p>
           <h4>Thông số kỹ thuật chi tiết:</h4>
@@ -26,13 +26,8 @@ export default function CatalogDetailModal({ product, onClose, onAddToCart }: Pr
             <tr><td>Quay video</td><td><strong>{product.specs.video}</strong></td></tr>
             <tr><td>Trọng lượng body</td><td><strong>{product.specs.weight}</strong></td></tr>
           </tbody></table>
-          {product.aiReasons && (
-            <div className="ai-reason-container highlight">
-              <div className="reason-title">Tiêu chí minh họa:</div>
-              <ul className="reason-list">{product.aiReasons.map((reason) => <li key={reason}>✓ {reason}</li>)}</ul>
-            </div>
-          )}
-          <button className="add-cart-large-btn" onClick={onAddToCart}>Thêm vào giỏ hàng</button>
+          <p className="catalog-demo-note">Thông số và giá chỉ để minh họa giao diện, không có giao dịch thật.</p>
+          <button type="button" className="add-cart-large-btn" onClick={onAddToCart}>Chọn trong demo</button>
         </div>
         </div>
       </div>

@@ -64,9 +64,17 @@ Nối React → Spring Boot → FastAPI (Contract 1.3, E2E Check Demo 12/12 Đ�
 │   └── Gọi /api/health → hiển thị badge 🟢 Live API FastAPI Seed 1 vs 🟡 Dữ liệu mẫu
 ├── Task 4: Cá nhân hóa Catalog theo Profile đang chọn (Personalized Storefront) [✔ ĐÃ HOÀN THÀNH]
 │   └── Chọn Profile trên Header → gắn badge tương thích trực tiếp lên sản phẩm Catalog
-└── Task 5: Tái cấu trúc Clean Code & Khóa chất lượng E2E [✔ ĐÃ HOÀN THÀNH]
-    ├── Tách App.tsx thành các component con độc lập
-    └── Kiểm tra Playwright tools/demo_e2e/demo_e2e.mjs pass 100%
+├── Task 5: Tái cấu trúc Clean Code & Khóa chất lượng E2E [✔ ĐÃ HOÀN THÀNH]
+│   ├── Tách App.tsx thành các component con độc lập
+│   └── Kiểm tra Playwright tools/demo_e2e/demo_e2e.mjs pass 100%
+├── Task 6: Dọn AI slop và khóa phạm vi demo [✔ ĐÃ HOÀN THÀNH]
+│   ├── Khử bỏ claim thương mại bịa đặt ("Còn hàng", "Bảo hành 24 tháng")
+│   ├── Thay ép kiểu as any bằng Union Types và Type Guards
+│   └── Ghi rõ catalog chỉ là minh họa, luồng chính là Recommendation
+└── Task 7: Chuẩn hóa Research Demo, Khắc phục Harness Cleanup & Nghiệm thu End-to-End [ĐANG THỰC HIỆN]
+    ├── Redesign UI theo hướng trung tính (shadcn/ui, Vercel Commerce), hỗ trợ bàn phím & ARIA
+    ├── Khắc phục triệt để race condition psutil.NoSuchProcess trong check_service.py / check_demo.py
+    └── Chạy bộ kiểm thử nghiêm ngặt check_demo.py (1.000–2.000 requests, p50 ~18ms) đạt 100%
 ```
 
 ---
@@ -120,3 +128,28 @@ Nối React → Spring Boot → FastAPI (Contract 1.3, E2E Check Demo 12/12 Đ�
 - Thêm citation/giới hạn cho compatibility và smoke test catalog vào `tools/demo_e2e/demo_e2e.mjs`.
 - Thay cast `as any` ở bộ sắp xếp bằng union type và type guard.
 - Kiểm chứng: `npm run build` đạt 67 modules; E2E catalog đạt 28 card, profile 409, compatibility badge và wizard.
+
+
+#### Task 7: Chuẩn hóa Research Demo, Khắc phục Harness Cleanup & Nghiệm thu End-to-End [ĐANG THỰC HIỆN]
+- **Mục tiêu:**
+  - Hoàn thiện giao diện demo nghiên cứu: loại bỏ hoàn toàn các cliches "AI slop" bề mặt (gradient sặc sỡ, banner phô trương số liệu ở trang mua sắm, card không có ngữ nghĩa).
+  - Tối ưu hóa Accessibility: chuẩn hóa nút bấm bàn phím, modal dialog ARIA (`role="dialog"`, `aria-modal="true"`, `aria-labelledby`), ảnh có `alt`.
+  - Khắc phục lỗi race condition `psutil.NoSuchProcess` trong test harness `ai/service/check_service.py` và `check_demo.py` khi dọn dẹp các tiến trình con.
+  - Chạy lại toàn bộ kịch bản E2E Playwright và đo độ trễ HTTP qua Spring Boot (1.000–2.000 requests), xuất file bằng chứng `summary.json` sạch sẽ.
+- **Tiêu chí nghiệm thu (Acceptance Criteria):**
+  - [ ] `cd frontend && npm run build`: 67 modules, 0 lỗi TypeScript, 0 cảnh báo.
+  - [ ] `git diff --check`: không có lỗi khoảng trắng thừa.
+  - [ ] `git grep "as any"` / `"as unknown"` trong frontend: 0 kết quả.
+  - [ ] `tools/demo_e2e/demo_e2e.mjs` pass 100% tất cả các màn hình (catalog, wizard, profile 409, 47, 178, 1476, 0, lỗi input, FastAPI down).
+  - [ ] Không còn lỗi crash cleanup của `psutil.NoSuchProcess`.
+
+---
+
+## 4. Bảng Tiêu Chuẩn Đối Chiếu Chống AI Slop (Tham chiếu quốc tế & Quy chuẩn Đồ án)
+
+| Phân hệ / Tầng | Công cụ tham chiếu | Tiêu chí chống Slop | Triển khai trong Đồ án Camera Store |
+| :--- | :--- | :--- | :--- |
+| **Code & AST** | `dmmulroy/anti-slop`, `cm2435/slopcop` | Cấm ép kiểu mù (`as any`, `as unknown as T`), cấm `catch {}` rỗng, cấm abstraction rỗng. | 100% Clean Types trong `recommendationService.ts` và `catalogData.ts`. Controller Spring Boot bọc `ApiResponse<T>`. |
+| **UI & Design** | `hahahahahahahahah6/css-slop-detector`, `molveau/skills` | Tránh gradient sặc sỡ, bo góc quá lố, hero dashboard rỗng ruột; đảm bảo phím tab/enter và ARIA modal. | UI chuyển sang phong cách neutral slate/navy tinh gọn; Modal có đầy đủ ARIA role/labelled-by; thẻ sản phẩm click bằng button chuẩn. |
+| **Copywriting & Claims** | `hardikpandya/stop-slop`, `FeedHive/ai-slop-detector` | Không dùng từ ngữ sáo rỗng ("AI đột phá", "lựa chọn tối ưu"); không bịa tồn kho/bảo hành; đúng thuật ngữ dữ liệu. | Catalog dán nhãn "Dữ liệu thương mại minh họa · không bán hàng". Dữ liệu Amazon là "bạn đã đánh giá", không gọi là "bạn đã mua". |
+| **Thực nghiệm & CI** | `peakoss/anti-slop` | Không dùng detector làm cổng pass/fail; đo bằng test E2E thực tế và latency thực nghiệm. | Chứng minh bằng 37/37 Spring unit test, Playwright E2E 12/12 testcases, latency p50 ~18ms trên 1.000–2.000 request thật. |

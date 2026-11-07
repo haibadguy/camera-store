@@ -321,7 +321,7 @@ async function checkCatalogSurface() {
     }
   }
 
-  await page.getByRole("button", { name: "Bắt đầu tư vấn ngay" }).click();
+  await page.getByRole("button", { name: "Mở bộ lọc catalog" }).click();
   if (await page.getByRole("heading", { name: "Lọc thiết bị theo nhu cầu" }).count() !== 1) {
     row.mismatches.push("wizard catalog không mở đúng tiêu đề");
   }

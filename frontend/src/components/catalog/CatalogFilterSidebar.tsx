@@ -29,7 +29,7 @@ export default function CatalogFilterSidebar({
     <aside className="sidebar-filter-panel">
       <div className="filter-panel-header">
         <div className="panel-title"><span aria-hidden="true">⌕</span><span>Bộ lọc tìm kiếm</span></div>
-        {hasFilters && <button className="reset-filter-btn" onClick={onReset}>Xóa lọc</button>}
+        {hasFilters && <button type="button" className="reset-filter-btn" onClick={onReset}>Xóa lọc</button>}
       </div>
       <div className="filter-block">
         <h4 className="filter-heading">Nhu cầu sử dụng</h4>
@@ -60,7 +60,7 @@ export default function CatalogFilterSidebar({
         <h4 className="filter-heading">Thương hiệu</h4>
         <div className="chip-options-grid">
           {["All", "Sony", "Canon", "Fujifilm", "Nikon"].map((brand) => (
-            <button key={brand} className={selectedBrand === brand ? "chip-btn active" : "chip-btn"} onClick={() => onBrandChange(brand)}>
+            <button type="button" key={brand} className={selectedBrand === brand ? "chip-btn active" : "chip-btn"} onClick={() => onBrandChange(brand)}>
               {brand === "All" ? "Tất cả" : brand}
             </button>
           ))}

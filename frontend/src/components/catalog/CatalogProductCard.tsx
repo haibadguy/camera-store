@@ -38,16 +38,19 @@ type Props = {
 export default function CatalogProductCard({ product, compatibility, onDetail, onAddToCart }: Props) {
   return (
     <article className="product-card">
-      <div className="product-image-container" onClick={() => onDetail(product)}>
+      <div className="product-image-container">
         <img src={product.image} alt={product.name} />
         {product.badge && <span className="status-badge">{product.badge}</span>}
-        {product.aiMatchScore && <span className="ai-score-badge">Điểm minh họa · không phải score model</span>}
         {compatibility === "compatible" && <span className="compatibility-badge compatible">Tương thích với hồ sơ</span>}
         {compatibility === "incompatible" && <span className="compatibility-badge incompatible">Không tương thích với hồ sơ</span>}
       </div>
       <div className="product-card-body">
         <div className="product-brand-meta">{product.brand} • {product.category}</div>
-        <h3 className="product-title" onClick={() => onDetail(product)}>{product.name}</h3>
+          <h3 className="product-title">
+            <button type="button" className="product-title-button" onClick={() => onDetail(product)}>
+              {product.name}
+            </button>
+          </h3>
         <div className="rating-summary">
           <span className="star-icon">★</span>
           <span className="score">{product.rating}</span>
@@ -58,24 +61,16 @@ export default function CatalogProductCard({ product, compatibility, onDetail, o
           <span className="spec-pill">{product.specs.resolution}</span>
           <span className="spec-pill">Ngàm {product.specs.mount}</span>
         </div>
-        {product.aiReasons && product.aiReasons.length > 0 && (
-          <div className="ai-reason-container">
-            <div className="reason-title">Tiêu chí minh họa:</div>
-            <ul className="reason-list">
-              {product.aiReasons.map((reason) => <li key={reason}>✓ {reason}</li>)}
-            </ul>
-          </div>
-        )}
         <div className="price-stock-row">
           <div className="price-container">
             <span className="main-price">{formatVND(product.price)}</span>
             {product.originalPrice && <span className="old-price">{formatVND(product.originalPrice)}</span>}
           </div>
-          <div className="stock-indicator">Thông tin thương mại minh họa</div>
+          <div className="stock-indicator">Giá tham khảo · không bán hàng</div>
         </div>
         <div className="card-buttons-row">
-          <button className="add-cart-btn" onClick={onAddToCart}>Thêm vào giỏ</button>
-          <button className="view-detail-btn" onClick={() => onDetail(product)}>Chi tiết</button>
+          <button type="button" className="add-cart-btn" onClick={onAddToCart}>Chọn trong demo</button>
+          <button type="button" className="view-detail-btn" onClick={() => onDetail(product)}>Chi tiết</button>
         </div>
       </div>
     </article>
