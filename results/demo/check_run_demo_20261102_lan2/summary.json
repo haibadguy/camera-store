@@ -1,0 +1,148 @@
+{
+  "git": {
+    "commit": "be6bd8ce0993c51c6b812535e0c506ca615d127b",
+    "dirty": false
+  },
+  "run_demo_sha256": "13cc8a97ad728c924babebaa32e9584b2bf53478cf0d165aa421ccd79a3eee49",
+  "script_sha256": "54cd301977707d841a19b5d01bf8fe912ff9182b3865c1dd35cbee23342be3c9",
+  "find_http_errors_sha256": "37e0f4250a38b9759d7221f525d2c6b42f8df214e79af96a6bbbddcefe663fa4",
+  "jar_sha256": "f5c4b54951ce3964a423961354dae6130efd4914354bc085b6c3f66d18eab341",
+  "ram_free_gb_start": 5.36,
+  "ready": true,
+  "ready_after_s": 26.0,
+  "service_ready_s": {
+    "FastAPI": 17.7,
+    "Spring Boot": 5.4,
+    "Vite": 0.6
+  },
+  "process_tree": [
+    {
+      "pid": 17616,
+      "name": "python.exe",
+      "create_time": 1793620533.1818736,
+      "rss_mib": 4.1
+    },
+    {
+      "pid": 18128,
+      "name": "java.exe",
+      "create_time": 1793620550.9313033,
+      "rss_mib": 9.5
+    },
+    {
+      "pid": 18780,
+      "name": "node.exe",
+      "create_time": 1793620556.3337297,
+      "rss_mib": 83.9
+    },
+    {
+      "pid": 18452,
+      "name": "esbuild.exe",
+      "create_time": 1793620556.8971844,
+      "rss_mib": 15.7
+    },
+    {
+      "pid": 9788,
+      "name": "java.exe",
+      "create_time": 1793620551.0149157,
+      "rss_mib": 171.9
+    },
+    {
+      "pid": 15224,
+      "name": "python.exe",
+      "create_time": 1793620533.1962042,
+      "rss_mib": 1000.7
+    }
+  ],
+  "listeners_running": {
+    "FastAPI": [
+      {
+        "pid": 15224,
+        "name": "python.exe"
+      }
+    ],
+    "Spring Boot": [
+      {
+        "pid": 9788,
+        "name": "java.exe"
+      }
+    ],
+    "Vite": [
+      {
+        "pid": 18780,
+        "name": "node.exe"
+      }
+    ]
+  },
+  "http_errors_api": {
+    "web": "http://127.0.0.1:5173",
+    "steps": [
+      "mở trang chủ",
+      "bấm Tư vấn thiết bị",
+      "chọn nhanh người 409"
+    ],
+    "http_errors": [],
+    "request_failed": [
+      {
+        "step": "mở trang chủ",
+        "url": "https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=800&q=80",
+        "error": "net::ERR_BLOCKED_BY_ORB"
+      }
+    ],
+    "console_errors": [
+      {
+        "step": "mở trang chủ",
+        "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "url": "http://127.0.0.1:5173/favicon.ico"
+      }
+    ],
+    "browser": "msedge 156.0.4314.58",
+    "list_shown": true
+  },
+  "powershell_exit_code": 0,
+  "stop_s": 1.2,
+  "alive_after_stop": [],
+  "listeners_after_stop": {
+    "FastAPI": [],
+    "Spring Boot": [],
+    "Vite": []
+  },
+  "http_errors_mock": {
+    "web": "http://127.0.0.1:5174",
+    "steps": [
+      "mở trang chủ",
+      "bấm Tư vấn thiết bị",
+      "chọn nhanh người 409"
+    ],
+    "http_errors": [],
+    "request_failed": [
+      {
+        "step": "mở trang chủ",
+        "url": "https://images.unsplash.com/photo-1606986628253-3b2f4a1a8b75?auto=format&fit=crop&w=800&q=80",
+        "error": "net::ERR_BLOCKED_BY_ORB"
+      }
+    ],
+    "console_errors": [
+      {
+        "step": "mở trang chủ",
+        "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "url": "http://127.0.0.1:5174/favicon.ico"
+      }
+    ],
+    "browser": "msedge 156.0.4314.58",
+    "list_shown": true
+  },
+  "run_demo_log_dirs": [
+    "20261102_185531"
+  ],
+  "checks": {
+    "health_200": true,
+    "recommend_409_200_10_items": true,
+    "bodies_409_200": true,
+    "vite_200": true,
+    "browser_list_shown_api": true,
+    "clean_shutdown": true,
+    "browser_list_shown_mock": true
+  },
+  "ok": true,
+  "ram_free_gb_end": 5.41
+}

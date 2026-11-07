@@ -33,6 +33,11 @@ export type RecommendationBody = {
   source?: "train" | "val" | "test";
 };
 
+export const QUICK_USER_PROFILES = [
+  { id: 409, bodyTitles: mockBodies409.bodies.map((body) => body.title) },
+  { id: 47, bodyTitles: mockBodies47.bodies.map((body) => body.title) },
+];
+
 type BlockedRecommendationItem = Pick<RecommendationItem, "item_id" | "asin" | "title" | "type" | "type_label">;
 
 export type RecommendationExplanation = {
@@ -144,7 +149,7 @@ function toUserMessage(status: number, payload: unknown): string {
   if (code === "USER_NOT_FOUND") return USER_NOT_FOUND_MESSAGE;
   // Spring: 503 FastAPI không chạy, 504 hết giờ, 502 FastAPI lỗi / trả dữ liệu hỏng (backend/README.md mục 2)
   if (code?.startsWith("MODEL_SERVICE_") || status >= 500) return SERVICE_DOWN_MESSAGE;
-  return `Không tải được dữ liệu (HTTP ${status}).`;
+  return "Chưa tải được dữ liệu. Bạn thử lại sau nhé.";
 }
 
 // Chế độ dữ liệu mẫu (mặc định khi chạy Vite tay): đọc frontend/src/mock/, không gọi Spring / mô hình.
@@ -170,24 +175,24 @@ function extractResponse(payload: unknown): RecommendationResponse {
     if (isRecommendationResponse(envelope.data)) return envelope.data;
     if (isRecommendationResponse(envelope.result)) return envelope.result;
   }
-  throw new Error("Backend trả về dữ liệu gợi ý không hợp lệ.");
+  throw new Error("Danh sách gợi ý chưa sẵn sàng. Bạn thử lại sau nhé.");
 }
 
 function toHistorySource(value: string): "train" | "val" | "test" {
   if (value === "train" || value === "val" || value === "test") return value;
-  throw new Error("Dữ liệu lịch sử thiết bị không hợp lệ.");
+  throw new Error("Thông tin thiết bị chưa sẵn sàng. Bạn thử lại sau nhé.");
 }
 
 function toExcludeMode(value: string): "all_history" | "train_val" {
   if (value === "all_history" || value === "train_val") return value;
-  throw new Error("Chế độ lọc lịch sử thiết bị không hợp lệ.");
+  throw new Error("Danh sách gợi ý chưa sẵn sàng. Bạn thử lại sau nhé.");
 }
 
 function getMockResponse(userId: number): RecommendationResponse {
   const source = userId === 409 ? mockRecommend409 : userId === 47 ? mockRecommend47 : null;
   const bodies = userId === 409 ? mockBodies409.bodies : userId === 47 ? mockBodies47.bodies : null;
   if (!source || !bodies) {
-    throw new Error("Dữ liệu mẫu chỉ có người dùng 409 và 47.");
+    throw new Error("Bản xem trước hiện có hồ sơ 409 và 47. Bạn hãy chọn một trong hai hồ sơ này nhé.");
   }
   return {
     ...source,
@@ -217,7 +222,7 @@ async function getJson(path: string, signal?: AbortSignal): Promise<unknown> {
   try {
     payload = await response.json();
   } catch {
-    if (response.ok) throw new Error(`Backend trả về HTTP ${response.status} nhưng không có JSON hợp lệ.`);
+    if (response.ok) throw new Error("Cửa hàng chưa nhận được dữ liệu. Bạn thử lại sau nhé.");
   }
 
   if (!response.ok) throw new Error(toUserMessage(response.status, payload));
@@ -256,7 +261,7 @@ async function fetchLiveRecommendations(
   ]);
   const response = extractResponse(payload);
   const bodies = (bodiesPayload as BodiesPayload | null)?.bodies;
-  if (!Array.isArray(bodies)) throw new Error("Dữ liệu lịch sử thiết bị không hợp lệ.");
+  if (!Array.isArray(bodies)) throw new Error("Thông tin thiết bị chưa sẵn sàng. Bạn thử lại sau nhé.");
   return {
     ...response,
     bodies: bodies.map((body) => ({
@@ -319,7 +324,7 @@ export async function fetchProductDetail(
     const payload = await getJson(`/items/${itemId}`, timeoutSignal);
     const product = payload as Partial<RecommendationProductDetail> | null;
     if (typeof product?.item_id !== "number" || typeof product.title !== "string") {
-      throw new Error("Backend trả về thông tin sản phẩm không hợp lệ.");
+      throw new Error("Thông tin sản phẩm chưa sẵn sàng. Bạn thử lại sau nhé.");
     }
     return product as RecommendationProductDetail;
   }, signal);

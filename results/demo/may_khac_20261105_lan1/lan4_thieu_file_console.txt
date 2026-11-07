@@ -1,0 +1,6 @@
+﻿Kiểm máy...
+  THIẾU  ai/data/processed/test.txt
+  THIẾU  ai/data/processed/user_map.json
+  SAI    ai/data/processed/val.txt (sha256 d2bed2613eafe02c8b1bebe0bbb21aa5ed972a46d9decae712d94fa3175eca48, cần e8a47d06bd6e6977fe7eebc485cbf07eb75e7e9bdb651da955e8fd7f85a3a900)
+DỪNG: 2 file dữ liệu thiếu, 1 file sai sha256 (không có trong git; giải nén demo_data_v2.zip vào thư mục camera-store, README mục 'Chạy demo trên máy khác')
+EXIT 1

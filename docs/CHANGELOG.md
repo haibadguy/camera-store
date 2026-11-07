@@ -1,77 +1,3 @@
-## 02/11/2026 (tiếp): dọn claim AI slop và kiểm thử catalog
-
-**Sửa gì**
-- Đổi badge marketing và trạng thái “Còn hàng” trong catalog thành nhãn minh họa; footer nêu rõ không có thanh toán hoặc tồn kho thật.
-- Đổi wording luồng recommendation để phân biệt với catalog/filter tĩnh; điểm trên card ghi rõ không phải score model.
-- `CompatibilityChecker.tsx` trỏ người xem tới nguồn và giới hạn trong `docs/STATUS.md` và `docs/DATA_SOURCES.md`.
-- `tools/demo_e2e/demo_e2e.mjs` kiểm tra 28 card, profile User 409, compatibility badge và wizard catalog.
-
-**Vì sao**
-- Catalog hiện không có backend thương mại nên các claim giá, tồn kho, bảo hành và đổi trả dễ bị hiểu là dữ liệu thật.
-- Demo cần chứng minh đường đi compatibility qua Spring và không gọi wizard filter là recommendation model.
-
-**Ảnh hưởng thế nào**
-- Claim thương mại: hiển thị như thật → hiển thị minh họa/phạm vi giao diện.
-- E2E catalog: chưa có → **28 card, profile compatibility và wizard đạt**.
-- `npm run build`: **66 modules, đạt**.
-- `check_demo.py --label fev2_ai_slop_20261102_lan1 --n-latency 1000 --warmup 50`: **ĐẠT** toàn bộ cờ; bằng chứng `results/demo/check_demo_fev2_ai_slop_20261102_lan1/summary.json`.
-
-## 02/11/2026 (phiên sau): hoàn thiện giao diện demo FE v2 và kiểm chứng end-to-end
-
-**Sửa gì**
-- `frontend/src/App.tsx`: mở catalog minh họa từ 6 lên 28 sản phẩm đại diện (thân máy, ống kính, phụ kiện); đổi tên các nhãn bộ lọc để không đánh đồng với LightGCN; thêm thông báo rõ catalog là dữ liệu thương mại minh họa.
-- `frontend/src/App.tsx`, `frontend/public/camera-placeholder.svg`: thay ảnh Unsplash bằng placeholder cục bộ để demo không phụ thuộc Internet.
-- `frontend/src/services/recommendationService.ts`, `frontend/src/RecommendationDemo.tsx`, `frontend/src/styles.css`: thêm health/mode indicator, quy mô dataset, trang giới thiệu kiến trúc và 5 hồ sơ demo.
-
-**Vì sao**
-- Catalog 6 sản phẩm và ảnh ngoài Internet khiến giao diện trông như mock nhỏ, dễ bị hỏi về quy mô và khả năng chạy offline.
-- Bộ lọc catalog là logic trình bày, không phải mô hình đề xuất; cần tách rõ với luồng React → Spring Boot → FastAPI dùng LightGCN + mặt nạ QĐ 4-9.
-
-**Ảnh hưởng thế nào**
-- Số thẻ catalog: **6 → 28**; ảnh sản phẩm: **host ngoài → placeholder cục bộ**.
-- `npm run build`: **61 modules, đạt**.
-- `check_demo.py --label fev2_full_20261102_lan5`: HTTP, 5 hồ sơ (409, 47, 178, 1476, 0), lỗi input, FastAPI down, mock mode và chỉ gọi Spring đều **đạt**; p50/p95/p99 qua Spring **23,38 / 30,58 / 37,63 ms** trên 1.000 yêu cầu, RAM trống 2,06 → 2,03 GB.
-- Bằng chứng: `results/demo/check_demo_fev2_full_20261102_lan5/summary.json`.
-
-## 02/11/2026 (tiếp): hoàn tất Personalized Storefront và tách component catalog
-
-**Sửa gì**
-- `frontend/src/App.tsx`: thêm chọn hồ sơ User 409/47; khi chọn, catalog gọi `/api/compat` qua Spring cho các item có `item_id` đối chiếu được và gắn nhãn tương thích/không tương thích.
-- Tách thẻ sản phẩm và bộ chọn hồ sơ sang `frontend/src/components/catalog/`.
-
-**Vì sao**
-- Hoàn thiện Task 4 của kế hoạch: người xem có thể thấy trực tiếp ràng buộc tương thích trong catalog thay vì chỉ ở trang tra cứu riêng.
-- Giảm JSX catalog trong `App.tsx`, tách phần hiển thị thành component có thể kiểm thử độc lập.
-
-**Kiểm chứng**
-- `npm run build`: đạt, 63 modules.
-- `check_demo.py --label fev2_full_20261102_lan6`: đạt toàn bộ HTTP/E2E/mock/down/only-Spring; 5 hồ sơ không lệch dữ liệu; p50/p95/p99 qua Spring **23,19 / 29,26 / 39,22 ms** trên 1.000 yêu cầu, RAM trống 2,62→2,66 GB.
-- Bằng chứng: `results/demo/check_demo_fev2_full_20261102_lan6/summary.json`.
-
-## 02/11/2026 (tiếp): hoàn tất tách cấu trúc catalog
-
-**Sửa gì**
-- Tách đầy đủ các khối catalog theo kế hoạch: `CatalogFilterSidebar.tsx`, `CatalogProductGrid.tsx`, `CatalogProductCard.tsx`, `CatalogDetailModal.tsx` và `CatalogProfileSelector.tsx`.
-- `App.tsx` chỉ còn điều phối trạng thái, lọc dữ liệu và luồng trang; hành vi hiển thị catalog được giữ nguyên.
-
-**Kiểm chứng**
-- `npm run build`: đạt, **66 modules**, không lỗi.
-- `check_demo.py --label fev2_full_20261102_lan7`: đạt toàn bộ HTTP/E2E/mock/down/only-Spring; p50/p95/p99 qua Spring **22,57 / 29,61 / 34,94 ms** trên 1.000 yêu cầu.
-- Bằng chứng: `results/demo/check_demo_fev2_full_20261102_lan7/summary.json`.
-
-## 02/11/2026 (tiếp): nghiệm thu nghiêm ngặt FE v2
-
-**Kiểm thử**
-- `frontend`: `npm run build` đạt, 66 modules.
-- `backend`: `mvn test` đạt **37/37**, 0 lỗi.
-- `check_demo.py --label fev2_strict_20261102_lan2 --n-latency 2000 --warmup 100`: tất cả cờ HTTP, 5 hồ sơ, input lỗi, mock, FastAPI down, chỉ gọi Spring và console đều `true`.
-- Độ trễ qua Spring trên 2.000 yêu cầu: p50/p95/p99 **18,28 / 22,44 / 25,67 ms**; FastAPI trực tiếp **16,54 / 18,85 / 19,89 ms**. RAM trống 3,66→3,77 GB.
-- Bằng chứng: `results/demo/check_demo_fev2_strict_20261102_lan2/summary.json`.
-
-**Sửa harness**
-- `ai/service/check_demo.py` nay truyền `--cors.allowed-origins` theo `--vite-port`, đồng bộ với `run_demo.ps1`; vì vậy kiểm thử được cả port tùy ý thay vì phụ thuộc cổng mặc định 5173.
-- Xác nhận lại bằng `fev2_strict_20261102_lan3` trên port 5181/5182: mọi cờ vẫn `true`; Spring p50/p95/p99 **19,54 / 24,84 / 30,99 ms**.
-
 # Nhật ký thay đổi so với bản của Hải
 
 Bản gốc để so sánh: commit `62abf54` (Hải, 28/09/2026).
@@ -80,31 +6,38 @@ Mục mới nhất nằm trên cùng.
 
 ---
 
-## 02/11/2026 (phiên sau): kiểm thử E2E demo FE v2 đạt
-
-**Kiểm chứng**
-- Chạy `ai\.venv\Scripts\python.exe ai/service/check_demo.py --label fev2_20261102_lan1` trên commit `e7a08e9`.
-- Kết quả tổng: **ĐẠT**; tất cả cờ HTTP, trình duyệt, down FastAPI, mock mode và chỉ gọi Spring đều `true`.
-- 5 ca giao diện (user 409, 47, 178, 1476, 0) khớp API; user không tồn tại, mã nhập sai và `verified=false` xử lý đúng.
-- Độ trễ qua Spring: p50 **20,77 ms**, p95 **24,55 ms**, p99 **28,95 ms** trên 1.000 yêu cầu; máy được ghi nhận là đang bận vì RAM trống 1,99–2,06 GB.
-- FastAPI tắt: Spring trả HTTP 503 đúng hợp đồng; chế độ mock hiển thị nhãn "Dữ liệu mẫu" và khớp `recommend_409.json`.
-- Bằng chứng: `results/demo/check_demo_fev2_20261102_lan1/summary.json`.
-
-## 02/11/2026: đồng bộ `user_map.json` để chạy demo FE v2
+## 05–06/11/2026: làm mới và tối ưu giao diện tư vấn thiết bị. Nhánh `quyen/fron-p2`, người thực hiện: Quyền
 
 **Sửa gì**
-- `ai/data/processed/user_map.json` (file runtime không nằm trong git): giữ lại 67.661 mục đầu, có ID liên tục `0..67.660`, phù hợp với embedding seed 1 và các file `train.txt`, `val.txt`, `test.txt`.
-- Sao lưu bản map 70.424 mục trước khi sửa tại thư mục trạng thái phiên làm việc, không ghi đè dữ liệu sao lưu.
 
-**Vì sao**
-- `run_demo.ps1` dừng ở `ai/service/core.py:102`: embedding có `eU.shape[0] = 67.661`, trong khi `common_05.py` đọc `N_USERS = 70.424` từ `user_map.json`.
-- `train.txt`, `val.txt`, `test.txt` đều có 67.661 dòng và chỉ dùng user ID `0..67.660`; metadata embedding cũng ghi `n_users = 67.661`.
+- Chuyển màn chọn người dùng sang cách gọi “hồ sơ”, lấy tên máy ảnh của hồ sơ 409 và 47 trực tiếp từ
+  `frontend/src/mock/users_*_bodies.json`; không tạo lại danh sách dữ liệu riêng trong component.
+- Sắp xếp lại header, thẻ hồ sơ, phần tóm tắt, ghi chú tương thích, danh sách gợi ý và trang chi tiết để dễ đọc trên
+  desktop lẫn điện thoại. Sửa lỗi dòng chữ “Gợi ý thiết bị” bị vỡ và tách nút “Chọn hồ sơ khác” khỏi nội dung kế bên.
+- Thiết kế lại theo phong cách cửa hàng công nghệ với tông xanh navy/cyan, card và trạng thái tương tác rõ ràng;
+  bổ sung `focus-visible`, `prefers-reduced-motion` và responsive 390–1366 px. Khối “Vì sao sản phẩm này phù hợp?” dùng
+  nền xanh lá riêng để nổi bật nhưng vẫn đảm bảo độ tương phản.
+- Thay các nhãn dành cho nội bộ như `item_id`, hợp đồng API, mã ngàm và điểm mô hình bằng câu chữ dành cho người mua.
+  Ví dụ: “Đã ẩn 814 ống kính không lắp được trên máy Nikon D3100 của bạn.” Lời giải thích chỉ xuất hiện khi dữ liệu có
+  `verified: true`; tên máy dài trong lời giải thích được rút gọn về tên mẫu máy.
+- Giữ nguyên hai chế độ dữ liệu đã có: dữ liệu mẫu từ `frontend/src/mock` và dữ liệu thật qua Spring/FastAPI. Các thông
+  báo lỗi hiển thị cho người mua không còn lộ từ ngữ kỹ thuật của backend.
+- Cập nhật `tools/demo_e2e/demo_e2e.mjs` theo nhãn mới, kiểm tra dữ liệu mẫu trùng file JSON, không gọi API ở chế độ
+  mẫu, không còn từ kỹ thuật trên ba màn hình và nút quay lại không chồng lên nội dung.
 
-**Ảnh hưởng thế nào**
-- Số user runtime: **70.424 → 67.661**.
-- Trước sửa: FastAPI không khởi động, smoke test thất bại tại assertion kích thước embedding.
-- Sau sửa: `run_demo.ps1` khởi động thành công FastAPI sau 11,7 s, Spring Boot sau 5,2 s và Vite sau 0,6 s; log: `results/demo/run_demo_logs/20261102_174556/`.
-- Đã kiểm chứng SHA-256 embedding và 4 file `ai/data/processed` theo script; các kiểm thử E2E đầy đủ chưa chạy trong phiên này.
+**Kiểm tra**
+
+- `npm run build`: đạt, 59 modules.
+- E2E chế độ mock trên Microsoft Edge: đạt; hồ sơ 409 trùng `recommend_409.json`, 0 yêu cầu API, mở được chi tiết và
+  có điều hướng quay lại.
+- E2E chế độ API thật sau khi nhập main `1d21fa5`: đạt toàn bộ hồ sơ 409, 47, 178, 1476 và 0; lỗi người không tồn tại,
+  ô nhập sai dạng, `verified: false` và luồng React → Spring → FastAPI đều đúng.
+- Kiểm tra trực quan ở kích thước desktop và màn hình rộng 390 px: bố cục không tràn, tiêu đề và nút điều hướng không
+  còn dính hoặc vỡ chữ.
+
+Không thay đổi mô hình, backend, dữ liệu mock, `docs/STATUS.md` hay các số liệu của chương 2.
+
+---
 
 ## 28/10/2026 (phiên sau): sửa phần web theo phản biện `E:\DATN\reviews\redteam_code_lan1.md`. Nhánh `nam/fe-integration`, commit `d7d22a8`
 
@@ -1560,46 +1493,3 @@ Mã số người dùng và sản phẩm (`user_map.json`, `item_map.json`) đã
 ### 6. Chưa kiểm chứng
 - 18.286.191 người dùng thô của Electronics: script không đếm. Số này khớp với con số 18,3M ghi trên trang dataset, nhưng nhóm chưa tự đếm.
 - Bảng 2.3 trong báo cáo 2 (1.414 thân máy / 1.462 ống kính) và mục 5 của báo cáo 2.
-## 02/11/2026 (tiếp): hoàn tất dọn AI slop và tách catalog data
-
-**Sửa gì**
-- Tách `PRODUCTS_DATA`, `makeCatalogProduct`, `CATALOG_PRODUCTS` khỏi `App.tsx` sang `frontend/src/catalog/catalogData.ts`.
-- Thay cast `as any` ở sort bằng union type và type guard.
-- Đánh dấu Task 6 trong kế hoạch FE v2 là hoàn tất.
-
-**Vì sao**
-- `App.tsx` vừa điều phối trang vừa chứa toàn bộ dữ liệu catalog, khó đọc và khó kiểm thử.
-- Cast `as any` làm mất kiểm tra kiểu ở input select.
-
-**Ảnh hưởng thế nào**
-- `App.tsx`: 768 → khoảng **550 dòng**; catalog data được quản lý ở module riêng.
-- `as any` trong phần catalog: **1 → 0**.
-- `npm run build`: **67 modules, đạt**.
-- E2E catalog vẫn đạt sau refactor; không đổi hợp đồng React → Spring Boot → FastAPI.
-## 03/11/2026: kiểm chéo sau refactor FE v2
-
-**Kiểm chứng**
-- Đối chiếu plan với code: 28 sản phẩm nằm ở `frontend/src/catalog/catalogData.ts`; `App.tsx` chỉ import và điều phối.
-- Đối chiếu plan với harness: smoke test kiểm đúng 28 card và cả profile 409/47.
-- `npm run build`: **67 modules, đạt**; `git diff --check`: đạt.
-- `check_demo.py --label fev2_crosscheck_20261103_lan1 --n-latency 1000 --warmup 50`: catalog và toàn bộ HTTP/E2E/mock/down/only-Spring **ĐẠT**.
-- Bằng chứng: `results/demo/check_demo_fev2_crosscheck_20261103_lan1/summary.json`.
-## 03/11/2026 (tiếp): xử lý điểm type-safety trong audit
-
-- Thay `as unknown as CompatResponse` ở mock compatibility bằng guard runtime kiểm tra toàn bộ trường theo hợp đồng `/api/compat`.
-- Mục tiêu là không để dữ liệu mẫu sai schema đi qua dưới dạng response hợp lệ.
-- Sẽ xác nhận lại bằng build và strict E2E trước khi chốt audit.
-## 03/11/2026 (tiếp): nghiệm thu chức năng và phi chức năng lần cuối
-
-**Kiểm chức năng**
-- `mvn test`: **37/37**, không failure/error.
-- `check_demo.py --label fev2_full_audit_20261103_lan2 --n-latency 2000 --warmup 100`: **12/12 checks đạt**; gồm 5 user, user không tồn tại, input sai, `verified=false`, mock, FastAPI down, chỉ gọi Spring và console.
-- Catalog smoke: đúng **28 card**, profile **409/47**, compatibility badge và wizard đều đạt.
-
-**Kiểm phi chức năng**
-- `npm run build`: **67 modules**, type-check đạt.
-- `git diff --check`: đạt.
-- Không có gọi trực tiếp FastAPI từ `frontend/src`; không còn `as any`/`as unknown`.
-- Ảnh catalog dùng local placeholder; sản phẩm có `alt`; E2E không phát hiện console error ngoài HTTP lỗi được tạo có chủ đích.
-- Latency 2.000 request sau 100 warm-up: qua Spring p50/p95/p99 **25,74/30,42/35,04 ms**; FastAPI tham khảo **23,80/26,89/30,46 ms**. Đo khi máy bận (RAM trống khoảng 3,31–3,41 GB).
-- Bằng chứng: `results/demo/check_demo_fev2_full_audit_20261103_lan2/summary.json`.
